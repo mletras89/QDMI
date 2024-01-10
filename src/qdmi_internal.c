@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-#include <qdmi_internal.h>
+#include "qdmi_internal.h"
     
+
 
 /*----------------------------------------*/
 /* QDMI core implementation support functions */
@@ -13,13 +15,13 @@
     RET: QDMI error code
 */
 
-qdmi_internal_translate_qinfo_error(int err)
+int qdmi_internal_translate_qinfo_error(int err)
 {
     switch (err) {
         case QINFO_SUCCESS:
             return QDMI_SUCCESS;
             break;
-        case QINFO_ERROR_OUTOFMEM;
+        case QINFO_ERROR_OUTOFMEM:
             return QDMI_ERROR_OUTOFMEM;
     }
     
@@ -38,10 +40,10 @@ qdmi_internal_translate_qinfo_error(int err)
  Note: returned pointer will always point to within line string
 */
 
-char *trim_line(char *line);
+char *trim_line(char *line)
 {
-    int pos=0,poschar;
-    char *starter;
+    int pos=0;
+    char *starter,*poschar;
     
     while ((line[pos]==' ') || (line[pos]=='\t'))
         {
@@ -69,7 +71,7 @@ char *trim_line(char *line);
             
             /* something went wrong, return that we didn't find a proper string */
             
-            return=NULL;
+            return NULL;
         }
         pos++;
     }

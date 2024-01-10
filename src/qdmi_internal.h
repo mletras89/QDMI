@@ -9,7 +9,7 @@
 #include <qinfo.h>
 #include <qdmi_backend.h>
     
-/*----------------------------------------*/
+/*--------------------------------w--------*/
 /* Internal-use constants */
 
 #define QDMI_CONFIG_FILE "QDMI_CONFIG_FILE"
@@ -19,7 +19,17 @@
 /*----------------------------------------*/
 /* Internal-use types */
 
-typedef struct QDMI_internal_library_d
+typedef struct QDMI_Devicelist_d
+{
+    QDMI_Device device;
+    struct QDMI_Devicelist_d *next;
+} QDMI_Devicelist_t;
+
+
+/*----------------------------------------*/
+/* QDMI Type concretizations */
+
+typedef struct QDMI_Library_impl_d
 {
     /* Info object */
     
@@ -37,7 +47,6 @@ typedef struct QDMI_internal_library_d
     
     QDMI_backend_init_t                 QDMI_backend_init;
 
-    
     /* All public functions */
     
     QDMI_control_pack_qasm2_t           QDMI_control_pack_qasm2;
@@ -75,36 +84,31 @@ typedef struct QDMI_internal_library_d
     
     /* Pointer to next library */
     
-    QDMI_internal_library_t *next;
-} QDMI_internal_library_t;
+    struct QDMI_Library_impl_d *next;
+} QDMI_Library_impl_t;
+typedef QDMI_Library_impl_t *QDMI_Library;
 
-typedef QDMI_internal_library_t *QDMI_library;
-
-typedef struct QDMI_devicelist_d
-{
-    QDMI_device_impl_t device;
-    QDMI_devicelist_t *next;
-} QDMI_devicelist_t;
-
-
-/*----------------------------------------*/
-/* Type concretizations */
-
-typedef struct QDMI_Session_impl_d;
+typedef struct QDMI_Session_impl_d
 {
     QInfo info;
-    QDMI_Session_impl_t *next;
+    struct QDMI_Session_impl_d *next;
 } QDMI_Session_impl_t;
 
-typedef QDMI_Session *QDMI_Session_impl_t;
+typedef struct QDMI_Device_impl_d
+{
+    QInfo                  libinfo;
+    QInfo                  sessioninfo;
+    QDMI_Library_impl_t    library;
+    void                   *device_state;
+} QDMI_Device_impl_t;
 
 
 /*----------------------------------------*/
 /* Anchors for global lists */
 
-QDMI_session      *qdmi_session_list = NULL;
-QDMI_library      *qdmi_library_list = NULL;
-QDMI_devicelist_t *qdmi-device_list  = NULL;
+QDMI_Session      qdmi_session_list = NULL;
+QDMI_Library      qdmi_library_list = NULL;
+QDMI_Devicelist_t *qdmi_device_list  = NULL;
 
 
 /*----------------------------------------*/

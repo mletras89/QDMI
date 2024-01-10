@@ -36,7 +36,9 @@
 #define QDMI_ERROR_NOSESSION  -3
 #define QDMI_ERROR_NOCFGFILE  -4
 #define QDMI_ERROR_CONFIG     -5
-#define QDMI_ERROR_BACKEND    -6
+#define QDMI_ERROR_CFGFILE    -6
+#define QDMI_ERROR_BACKEND    -7
+#define QDMI_ERROR_NOTIMPL    -8
 
 #define QDMI_IS_SUCCESS(err) (err==QDMI_SUCCESS)
 #define QDMI_IS_WARNING(err) (err>QDMI_SUCCESS)
@@ -71,19 +73,20 @@
 /*----------------------------------------*/
 /* QDMI Type defintions */
 
-typedef void* QDMI_session;
-typedef void* QDMI_device;
+typedef struct QDMI_Session_impl_d      *QDMI_Session;
+typedef struct QDMI_Device_impl_d       *QDMI_Device;
 
-typedef void* QDMI_job;
-typedef void* QDMI_fragment;
-typedef int QDMI_status;
+typedef struct QDMI_Job_impl_d  *QDMI_Job;
+typedef struct QDMI_Fragment_d  *QDMI_Fragment;
+
+typedef int QDMI_Status;
 
 typedef int QDMI_qubit_index;
-typedef int QDMI_device_property;
-typedef int QDMI_gate_property;
+typedef int QDMI_Device_property;
+typedef int QDMI_Gate_property;
 
-typedef void* QDMI_gate;
-typedef void* QDMI_unitary;
+typedef struct QDMI_Gate_impl_d     *QDMI_Gate;
+typedef struct QDMI_Unitary_impl_d  *QDMI_Unitary;
 
 
 
@@ -97,17 +100,17 @@ extern "C" {
 
 /* Core Session, basic start/close routines */
 
-int QDMI_session_init(QInfo info, QDMI_session *session);
-int QDMI_session_finalize(QDMI_session session);
+int QDMI_session_init(QInfo info, QDMI_Session *session);
+int QDMI_session_finalize(QDMI_Session session);
 
 
 /* Core Interface */
 
-int QDMI_core_version(QDMI_session *session, int* major, int* minor);
-int QDMI_core_device_count(QDMI_session *session, int *count);
-int QDMI_core_open_device(QDMI_session *session, int idx, QInfo *info, QDMI_device* handle);
-int QMPI_core_query_device(QDMI_session *session, int idx, QInfo *info);
-int QDMI_core_close_device(QDMI_session *session, QDMI_device handle);
+int QDMI_core_version(QDMI_Session *session, int* major, int* minor);
+int QDMI_core_device_count(QDMI_Session *session, int *count);
+int QDMI_core_open_device(QDMI_Session *session, int idx, QInfo *info, QDMI_Device* handle);
+int QMPI_core_query_device(QDMI_Session *session, int idx, QInfo *info);
+int QDMI_core_close_device(QDMI_Session *session, QDMI_Device handle);
 
 // support linear queue with reordering without QPU splitting
 // consider packing
@@ -117,107 +120,107 @@ int QDMI_core_close_device(QDMI_session *session, QDMI_device handle);
 
 /* Pack routines */
 
-int QDMI_control_pack_qasm2(QDMI_device dev, char *qasmstr, QDMI_fragment *frag);
-typedef int (*QDMI_control_pack_qasm2_t)(QDMI_device dev, char *qasmstr, QDMI_fragment *frag);
+int QDMI_control_pack_qasm2(QDMI_Device dev, char *qasmstr, QDMI_Fragment *frag);
+typedef int (*QDMI_control_pack_qasm2_t)(QDMI_Device dev, char *qasmstr, QDMI_Fragment *frag);
 
-int QDMI_control_pack_qir(QDMI_device dev, Module *qirmod, QDMI_fragment *frag);
-typedef int (*QDMI_control_pack_qir_t)(QDMI_device dev, Module *qirmod, QDMI_fragment *frag);
+int QDMI_control_pack_qir(QDMI_Device dev, void *qirmod, QDMI_Fragment *frag);
+typedef int (*QDMI_control_pack_qir_t)(QDMI_Device dev, void *qirmod, QDMI_Fragment *frag);
 
 /* QC job control routines */
 
-int QDMI_control_submit(QDMI_device dev, QDMI_fragment *frag, int numshots, QInfo info, QDMI_job *job);
-typedef int (*QDMI_control_submit_t)(QDMI_device dev, QDMI_fragment *frag, int numshots, QInfo info, QDMI_job *job);
+int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInfo info, QDMI_Job *job);
+typedef int (*QDMI_control_submit_t)(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInfo info, QDMI_Job *job);
 
-int QDMI_control_cancel(QDMI_device dev, QDMI_job *job, QInfo info);
-typedef int (*int QDMI_control_cancel_t)(QDMI_device dev, QDMI_job *job, QInfo info);
+int QDMI_control_cancel(QDMI_Device dev, QDMI_Job *job, QInfo info);
+typedef int (*QDMI_control_cancel_t)(QDMI_Device dev, QDMI_Job *job, QInfo info);
 
-int QDMI_control_pause(QDMI_device dev, QDMI_job *job, QInfo info);
-typedef int (*QDMI_control_pause_t)(QDMI_device dev, QDMI_job *job, QInfo info);
+int QDMI_control_pause(QDMI_Device dev, QDMI_Job *job, QInfo info);
+typedef int (*QDMI_control_pause_t)(QDMI_Device dev, QDMI_Job *job, QInfo info);
 
-int QDMI_control_test(QDMI_device dev, QDMI_job *job, int *flag, QDMI_status *status);
-typedef int (*QDMI_control_test_t)(QDMI_device dev, QDMI_job *job, int *flag, QDMI_status *status);
+int QDMI_control_test(QDMI_Device dev, QDMI_Job *job, int *flag, QDMI_Status *status);
+typedef int (*QDMI_control_test_t)(QDMI_Device dev, QDMI_Job *job, int *flag, QDMI_Status *status);
 
-int QDMI_control_wait(QDMI_device dev, QDMI_job *job, QDMI_status *status);
-typedef int (*QDMI_control_wait_t)(QDMI_device dev, QDMI_job *job, QDMI_status *status);
+int QDMI_control_wait(QDMI_Device dev, QDMI_Job *job, QDMI_Status *status);
+typedef int (*QDMI_control_wait_t)(QDMI_Device dev, QDMI_Job *job, QDMI_Status *status);
 
-int QDMI_control_extract_state(QDMI_device dev, QDMI_status status, int *state);
-typedef int (*QDMI_control_extract_state_t)(QDMI_device dev, QDMI_status status, int *state);
+int QDMI_control_extract_state(QDMI_Device dev, QDMI_Status status, int *state);
+typedef int (*QDMI_control_extract_state_t)(QDMI_Device dev, QDMI_Status status, int *state);
 
 /* read out routines */
 
-int QDMI_control_readout_size(QDMI_device dev, QDMI_status *status, int *numbits);
-typedef int (*QDMI_control_readout_size_t)(QDMI_device dev, QDMI_status *status, int *numbits);
+int QDMI_control_readout_size(QDMI_Device dev, QDMI_Status *status, int *numbits);
+typedef int (*QDMI_control_readout_size_t)(QDMI_Device dev, QDMI_Status *status, int *numbits);
 
 /* Histogram */
-int QDMI_control_readout_hist_size(QDMI_device dev, QDMI_status *status, int *size);
-typedef int (*QDMI_control_readout_hist_size_t)(QDMI_device dev, QDMI_status *status, int *size);
-int QDMI_control_readout_hist_top(QDMI_device dev, QDMI_status *status, int numhist, QInfo info, long *hist);
-typedef int (*QDMI_control_readout_hist_top_t)(QDMI_device dev, QDMI_status *status, int numhist, QInfo info, long *hist);
+int QDMI_control_readout_hist_size(QDMI_Device dev, QDMI_Status *status, int *size);
+typedef int (*QDMI_control_readout_hist_size_t)(QDMI_Device dev, QDMI_Status *status, int *size);
+int QDMI_control_readout_hist_top(QDMI_Device dev, QDMI_Status *status, int numhist, QInfo info, long *hist);
+typedef int (*QDMI_control_readout_hist_top_t)(QDMI_Device dev, QDMI_Status *status, int numhist, QInfo info, long *hist);
 
 /* Full data */
-int QDMI_control_readout_raw_num(QDMI_device dev, QDMI_status *status, int *num);
-typedef int (*QDMI_control_readout_raw_num_t)(QDMI_device dev, QDMI_status *status, int *num);
-int QDMI_control_readout_raw_sample(QDMI_device dev, QDMI_status *status, int numraw, QInfo info, long *hist);
-typedef int (*QDMI_control_readout_raw_sample_t)(QDMI_device dev, QDMI_status *status, int numraw, QInfo info, long *hist);
+int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int *num);
+typedef int (*QDMI_control_readout_raw_num_t)(QDMI_Device dev, QDMI_Status *status, int *num);
+int QDMI_control_readout_raw_sample(QDMI_Device dev, QDMI_Status *status, int numraw, QInfo info, long *hist);
+typedef int (*QDMI_control_readout_raw_sample_t)(QDMI_Device dev, QDMI_Status *status, int numraw, QInfo info, long *hist);
 
 
 /* Query Interface */
 
 // check if a specific device property exists
-int QDMI_query_device_property_exists(QDMI_device dev, QDMI_device_property prop, int* scope);
-typedef int (*QDMI_query_device_property_exists_t)(QDMI_device dev, QDMI_device_property prop, int* scope);
+int QDMI_query_device_property_exists(QDMI_Device dev, QDMI_Device_property prop, int* scope);
+typedef int (*QDMI_query_device_property_exists_t)(QDMI_Device dev, QDMI_Device_property prop, int* scope);
 
 // query device property as int or float
-int QDMI_query_device_property_i(QDMI_device dev, QDMI_device_property prop, int *value);
-typedef int (*QDMI_query_device_property_i_t)(QDMI_device dev, QDMI_device_property prop, int *value);
-int QDMI_query_device_property_f(QDMI_device dev, QDMI_device_property prop, float *value);
-typedef int (*QDMI_query_device_property_f_t)(QDMI_device dev, QDMI_device_property prop, float *value);
-int QDMI_query_device_property_d(QDMI_device dev, QDMI_device_property prop, double *value);
-typedef int (*QDMI_query_device_property_d_t)(QDMI_device dev, QDMI_device_property prop, double *value);
+int QDMI_query_device_property_i(QDMI_Device dev, QDMI_Device_property prop, int *value);
+typedef int (*QDMI_query_device_property_i_t)(QDMI_Device dev, QDMI_Device_property prop, int *value);
+int QDMI_query_device_property_f(QDMI_Device dev, QDMI_Device_property prop, float *value);
+typedef int (*QDMI_query_device_property_f_t)(QDMI_Device dev, QDMI_Device_property prop, float *value);
+int QDMI_query_device_property_d(QDMI_Device dev, QDMI_Device_property prop, double *value);
+typedef int (*QDMI_query_device_property_d_t)(QDMI_Device dev, QDMI_Device_property prop, double *value);
 
 // routines to query gate set
-int QDMI_query_gateset_num(QDMI_device dev, int *num_gates);
-typedef int (*QDMI_query_gateset_num_t)(QDMI_device dev, int *num_gates);
-int QDMI_query_one_gate(QDMI_device dev, QDMI_gate *gate);
-typedef int (*QDMI_query_one_gate_t)(QDMI_device dev, QDMI_gate *gate);
-int QDMI_query_all_gates(QDMI_device dev, QDMI_gate *gates);
-typedef int (*QDMI_query_all_gates_t)(QDMI_device dev, QDMI_gate *gates);
-int QDMI_query_byname(QDMI_device dev, char *name, QDMI_gate *gate);
-typedef int (*QDMI_query_byname_t)(QDMI_device dev, char *name, QDMI_gate *gate);
+int QDMI_query_gateset_num(QDMI_Device dev, int *num_gates);
+typedef int (*QDMI_query_gateset_num_t)(QDMI_Device dev, int *num_gates);
+int QDMI_query_one_gate(QDMI_Device dev, QDMI_Gate *gate);
+typedef int (*QDMI_query_one_gate_t)(QDMI_Device dev, QDMI_Gate *gate);
+int QDMI_query_all_gates(QDMI_Device dev, QDMI_Gate *gates);
+typedef int (*QDMI_query_all_gates_t)(QDMI_Device dev, QDMI_Gate *gates);
+int QDMI_query_byname(QDMI_Device dev, char *name, QDMI_Gate *gate);
+typedef int (*QDMI_query_byname_t)(QDMI_Device dev, char *name, QDMI_Gate *gate);
 
-int QDMI_query_gate_name(QDMI_device dev, QDMI_gate gate, char* name, int* len);
-typedef int (*QDMI_query_gate_name_t)(QDMI_device dev, QDMI_gate gate, char* name, int* len);
-int QDMI_query_gate_size(QDMI_device dev, QDMI_gate gate, int* gatesize);
-typedef int (*QDMI_query_gate_size_t)(QDMI_device dev, QDMI_gate gate, int* gatesize);
-int QDMI_query_gate_unitary(QDMI_device dev, QDMI_gate gate, QDMI_unitary *unitary);
-typedef int (*QDMI_query_gate_unitary_t)(QDMI_device dev, QDMI_gate gate, QDMI_unitary *unitary);
+int QDMI_query_gate_name(QDMI_Device dev, QDMI_Gate gate, char* name, int* len);
+typedef int (*QDMI_query_gate_name_t)(QDMI_Device dev, QDMI_Gate gate, char* name, int* len);
+int QDMI_query_gate_size(QDMI_Device dev, QDMI_Gate gate, int* gatesize);
+typedef int (*QDMI_query_gate_size_t)(QDMI_Device dev, QDMI_Gate gate, int* gatesize);
+int QDMI_query_gate_unitary(QDMI_Device dev, QDMI_Gate gate, QDMI_Unitary *unitary);
+typedef int (*QDMI_query_gate_unitary_t)(QDMI_Device dev, QDMI_Gate gate, QDMI_Unitary *unitary);
 
   
 // routines to query gate properties
-int QDMI_query_gate_property_exists(QDMI_device dev, QDMI_gate gate, QDMI_gate_property prop, int* scope);
-typedef int (*QDMI_query_gate_property_exists_t)(QDMI_device dev, QDMI_gate gate, QDMI_gate_property prop, int* scope);
-int QDMI_query_gate_property_i(QDMI_device dev, QDMI_gate_property prop, QDMI_gate gate, int *coor, int* value);
-typedef int (*QDMI_query_gate_property_i_t)(QDMI_device dev, QDMI_gate_property prop, QDMI_gate gate, int *coor, int* value);
-int QDMI_query_gate_property_f(QDMI_device dev, QDMI_gate_property prop, QDMI_gate gate, int *coor, float* value);
-typedef int (*QDMI_query_gate_property_f_t)(QDMI_device dev, QDMI_gate_property prop, QDMI_gate gate, int *coor, float* value);
-int QDMI_query_gate_property_d(QDMI_device dev, QDMI_gate_property prop, QDMI_gate gate, int *coor, double* value);
-typedef int (*QDMI_query_gate_property_d_t)(QDMI_device dev, QDMI_gate_property prop, QDMI_gate gate, int *coor, double* value);
+int QDMI_query_gate_property_exists(QDMI_Device dev, QDMI_Gate gate, QDMI_Gate_property prop, int* scope);
+typedef int (*QDMI_query_gate_property_exists_t)(QDMI_Device dev, QDMI_Gate gate, QDMI_Gate_property prop, int* scope);
+int QDMI_query_gate_property_i(QDMI_Device dev, QDMI_Gate_property prop, QDMI_Gate gate, int *coor, int* value);
+typedef int (*QDMI_query_gate_property_i_t)(QDMI_Device dev, QDMI_Gate_property prop, QDMI_Gate gate, int *coor, int* value);
+int QDMI_query_gate_property_f(QDMI_Device dev, QDMI_Gate_property prop, QDMI_Gate gate, int *coor, float* value);
+typedef int (*QDMI_query_gate_property_f_t)(QDMI_Device dev, QDMI_Gate_property prop, QDMI_Gate gate, int *coor, float* value);
+int QDMI_query_gate_property_d(QDMI_Device dev, QDMI_Gate_property prop, QDMI_Gate gate, int *coor, double* value);
+typedef int (*QDMI_query_gate_property_d_t)(QDMI_Device dev, QDMI_Gate_property prop, QDMI_Gate gate, int *coor, double* value);
 
 
 /* Device Interface */
 
 /* general query */
 
-int QDMI_device_status(QDMI_device dev, QInfo info, int *status);
-typedef int (*QDMI_device_status_t)(QDMI_device dev, QInfo info, int *status);
+int QDMI_device_status(QDMI_Device dev, QInfo info, int *status);
+typedef int (*QDMI_device_status_t)(QDMI_Device dev, QInfo info, int *status);
 
 /* calibration management */
-int QDMI_device_quality_check(QDMI_device dev, double *result);
-typedef int (*QDMI_device_quality_check_t)(QDMI_device dev, double *result);
-int QDMI_device_quality_limit(QDMI_device dev, double *result);
-typedef int (*QDMI_device_quality_limit_t)(QDMI_device dev, double *result);
-int QDMI_device_quality_calibrate(QDMI_device dev);
-typedef int (*QDMI_device_quality_calibrate_t)(QDMI_device dev);
+int QDMI_device_quality_check(QDMI_Device dev, double *result);
+typedef int (*QDMI_device_quality_check_t)(QDMI_Device dev, double *result);
+int QDMI_device_quality_limit(QDMI_Device dev, double *result);
+typedef int (*QDMI_device_quality_limit_t)(QDMI_Device dev, double *result);
+int QDMI_device_quality_calibrate(QDMI_Device dev);
+typedef int (*QDMI_device_quality_calibrate_t)(QDMI_Device dev);
 
 
 #ifdef __cplusplus

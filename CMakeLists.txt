@@ -1,47 +1,66 @@
 cmake_minimum_required(VERSION 3.9)
 
-project(qinfo VERSION 0.1 DESCRIPTION "QInfo Library")
+project(qdmi VERSION 0.1 DESCRIPTION "QDMI Core Library")
+
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/../install CACHE PATH "..." FORCE)
+endif()
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_INSTALL_PREFIX}/cmake")
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}/cmake")
+include_directories("${CMAKE_INSTALL_PREFIX}/include")
 
 include(GNUInstallDirs)
 include(CTest)
 
+find_package(qinfo REQUIRED)
+
 add_compile_options("-g")
 
-add_library(qinfo SHARED src/qinfo.c)
+add_library(qdmi SHARED src/qdmi_core.c src/qdmi_internal.c src/qdmi_stubs.c)
+target_link_libraries(qdmi qinfo)
 
-set_target_properties(qinfo PROPERTIES
+set_target_properties(qdmi PROPERTIES
     VERSION ${PROJECT_VERSION}
     SOVERSION ${PROJECT_VERSION_MAJOR}
-    PUBLIC_HEADER include/qinfo.h)
+    PUBLIC_HEADER include/qdmi.h
+    PUBLUC HEADER
+    )
+    
     
 # configure_file(qinfo.pc.in qinfo.pc @ONLY)
 
-target_include_directories(qinfo PUBLIC include)
+target_include_directories(qdmi PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
 
-install(TARGETS qinfo
+
+install(
+    TARGETS qdmi
+    EXPORT qdmiConfig
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+export(
+    TARGETS qdmi
+    NAMESPACE qdmi::
+    FILE "${CMAKE_CURRENT_BINARY_DIR}/qdmionfig.cmake"
+)
+
+install(
+    EXPORT qdmiConfig
+    FILE qdmiConfig.cmake
+    DESTINATION "${CMAKE_INSTALL_PREFIX}/cmake"
+    NAMESPACE qdmi::
+)
     
 # install(FILES ${CMAKE_BINARY_DIR}/mylib.pc
 #     DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig)
 
-add_executable(InfoCreation testing/create.c)
-target_link_libraries(InfoCreation qinfo)
-add_test(InfoCreation InfoCreation)
+add_executable(QDMIOpenClose testing/openclose.c)
+target_link_libraries(QDMIOpenClose qdmi)
+add_test(QDMIOpenClose QDMIOpenClose)
 
-add_executable(InfoAddDel testing/adddel.c)
-target_link_libraries(InfoAddDel qinfo)
-add_test(InfoAddDel InfoAddDel)
-
-add_executable(InfoAddMany testing/addmany.c)
-target_link_libraries(InfoAddMany qinfo)
-add_test(InfoAddMany InfoAddMany)
-
-add_executable(InfoAddDouble testing/adddouble.c)
-target_link_libraries(InfoAddDouble qinfo)
-add_test(InfoAddDouble InfoAddDouble)
-
-add_executable(InfoValue testing/value.c)
-target_link_libraries(InfoValue qinfo)
-add_test(InfoValue InfoValue)
-
+ 

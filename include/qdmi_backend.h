@@ -25,23 +25,6 @@ typedef struct QInfo_value_space_d
 } QInfo_value_space_t;
 
 
-/*----------------------------------------*/
-/* Type concretizations for all backends */
-
-typedef struct QDMI_device_impl_d
-{
-    QInfo           libinfo;
-    QInfo           sessioninfo;
-    QDMI_library    *library;
-    void            *device_state;
-} QDMI_device_impl_t;
-typedef QDMI_device_impl_t* QDMI_device;
-
-typedef void* QDMI_job;
-typedef void* QDMI_fragment;
-
-typedef void* QDMI_gate;
-typedef void* QDMI_unitary;
 
 /*----------------------------------------*/
 /* Backend-only Function defintions */
@@ -57,8 +40,8 @@ int QDMI_core_unregister_belib(char *uri);
 
 /* Functions that the backend libraries need to provide */
 
-int QDMI_backend_init(Qinfo info);
-typedef int (*QDMI_backend_init_t)(Qinfo info);
+int QDMI_backend_init(QInfo info);
+typedef int (*QDMI_backend_init_t)(QInfo info);
 
 #ifdef __cplusplus
 } // extern "C"
