@@ -4,7 +4,9 @@
 
 #include "qdmi_internal.h"
     
-
+QDMI_Session       qdmi_session_list = NULL;
+QDMI_Library       qdmi_library_list = NULL;
+QDMI_Devicelist_t *qdmi_device_list  = NULL; 
 
 /*----------------------------------------*/
 /* QDMI core implementation support functions */
@@ -50,7 +52,7 @@ char *trim_line(char *line)
             pos++;
         }
     starter=&(line[pos]);
-    
+   
     /* now: leading chars are removed */
     
     do

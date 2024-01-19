@@ -15,12 +15,12 @@
 
 int QDMI_load_libraries(QInfo sesioninfo)
 {
-    char *configfilename;
+    char *configfilename = NULL;
     FILE *configfile;
     char *line;
     size_t  length;
     int  readlen;
-    char *separator,*key,*param;
+    //char *separator,*key,*param;
     QDMI_Library newlib,runlib,prevlib;
     double dval;
     long   lval;
@@ -33,9 +33,7 @@ int QDMI_load_libraries(QInfo sesioninfo)
     
     getenv(QDMI_CONFIG_FILE);
     if (configfilename==NULL)
-    {
         configfilename=strdup(QDMI_CONFIG_FILE_DEFAULT);
-    }
     
     /* Read configuration file */
     
@@ -64,7 +62,7 @@ int QDMI_load_libraries(QInfo sesioninfo)
         {
             /* not a comment */
             
-            separator=strchr(line,'=');
+            const char *separator = strchr(line,'=');
             
             if (separator==NULL)
             {
@@ -103,102 +101,128 @@ int QDMI_load_libraries(QInfo sesioninfo)
                 
                 /* must be a parameter for an already started library */
                 
-                if (qdmi_library_list==NULL)
+                if (qdmi_library_list == NULL)
                 {
                     /* no library started */
-                    if (line!=NULL) free(line);
+                    if (line != NULL) 
+			free(line);
+
                     return QDMI_ERROR_CFGFILE;
                 }
                 
                 /* get the strings from the file */
                 
-                *separator='\0';
-                key=trim_line(line);
-                if (key==NULL)
-                {
-                    /* no library started */
-                    if (line!=NULL) free(line);
-                    return QDMI_ERROR_CFGFILE;
-                }
-                param=trim_line(separator+1);
-                if (param==NULL)
-                {
-                    /* no library started */
-                    if (line!=NULL) free(line);
-                    return QDMI_ERROR_CFGFILE;
-                }
-                
+		size_t paramLength = separator - line;
+                char *param = (char *)malloc(paramLength + 1);
+
+	        strncpy(param, line, paramLength);
+	        param[paramLength] = '\0';
+
                 /* check type */
                 
-                value.value_double=strtod(param,&separator);
-                if (param!=separator)
-                {
-                    /* we have a double */
-                    
-                    err=QInfo_topic_add(newlib->info,key,QINFO_TYPE_DOUBLE,&topic);
-                    if (err!=QINFO_SUCCESS)
-                    {
-                        if (line!=NULL) free(line);
-                        return qdmi_internal_translate_qinfo_error(err);
-                    }
-                    
-                    err=QInfo_topic_set(newlib->info,topic,&value);
-                    {
-                        if (line!=NULL) free(line);
-                        return qdmi_internal_translate_qinfo_error(err);
-                    }
-                    
-                }
-                else
-                {
-                    value.value_long=strtol(param,&separator,0);
-                    if (param!=separator)
-                    {
-                        /* now we have a long */
+		if (param != NULL)
+        	{
+		    const char *valueString = separator + 1;
 
-                        err=QInfo_topic_add(newlib->info,key,QINFO_TYPE_LONG,&topic);
-                        if (err!=QINFO_SUCCESS)
+		    if (strchr(valueString, '.') != NULL)
+            	    {
+	        	value.value_double = strtod(valueString, NULL);
+    
+                        /* we have a double */
+    
+		        value.value_long = 0;
+		        value.value_string = NULL;
+		
+		        err = QInfo_topic_add(newlib->info, param, QINFO_TYPE_DOUBLE, &topic);
+                        if (err != QINFO_SUCCESS)
                         {
-                            if (line!=NULL) free(line);
+                            if (line != NULL)
+		                free(line);
+
                             return qdmi_internal_translate_qinfo_error(err);
                         }
                         
-                        err=QInfo_topic_set(newlib->info,topic,&value);
-                        if (err!=QINFO_SUCCESS)
+                        err = QInfo_topic_set(newlib->info, topic, &value);
+                        if (err != QINFO_SUCCESS)
                         {
-                            if (line!=NULL) free(line);
+                            if (line != NULL) 
+		                free(line);
+
                             return qdmi_internal_translate_qinfo_error(err);
-                        }
+			}
                     }
-                    else
-                    {
-                        /* what is left, is a string */
-                        
-                        value.value_string=strdup(param);
-                        if (value.value_string==NULL)
+		    else if( isdigit(*valueString) )
+		    {
+			char *endptr;
+		        value.value_long = strtol(valueString, &endptr, 10);
+
+		        if (*endptr == '\0')
                         {
-                            if (line!=NULL) free(line);
+		    	    /* now we have a long */
+
+		            value.value_double = 0.0;
+		            value.value_string = NULL;
+
+                            err = QInfo_topic_add(newlib->info, param, QINFO_TYPE_LONG, &topic);
+                            if (err != QINFO_SUCCESS)
+                            {
+                                if (line != NULL) 
+				    free(line);
+
+                                return qdmi_internal_translate_qinfo_error(err);
+                            }
+                            
+                            err = QInfo_topic_set(newlib->info, topic, &value);
+                            if (err != QINFO_SUCCESS)
+                            {
+                                if (line != NULL) 
+				    free(line);
+
+                                return qdmi_internal_translate_qinfo_error(err);
+                            }
+	                }
+		    }
+		    else
+                    {
+		        /* now we have a string */
+		        
+		        value.value_double = 0.0;
+		        value.value_long = 0;
+		        value.value_string = strdup(valueString);
+
+                        if (value.value_string == NULL)
+                        {
+                            if (line!=NULL) 
+				free(line);
+
                             return QDMI_ERROR_OUTOFMEM;
                         }
 
-                        err=QInfo_topic_add(newlib->info,key,QINFO_TYPE_STRING,&topic);
-                        if (err!=QINFO_SUCCESS)
+                        err = QInfo_topic_add(newlib->info , param, QINFO_TYPE_STRING, &topic);
+                        if (err != QINFO_SUCCESS)
                         {
-                            if (line!=NULL) free(line);
+                            if (line != NULL) 
+				free(line);
+
                             free(value.value_string);
+
                             return qdmi_internal_translate_qinfo_error(err);
                         }
 
-                        err=QInfo_topic_set(newlib->info,topic,&value);
-                        if (err!=QINFO_SUCCESS)
+                        err = QInfo_topic_set(newlib->info, topic, &value);
+                        if (err != QINFO_SUCCESS)
                         {
-                            if (line!=NULL) free(line);
+                            if (line != NULL) 
+				free(line);
+
                             free(value.value_string);
+
                             return qdmi_internal_translate_qinfo_error(err);
                         }
-                   }
-                }
-                
+	            }
+		}
+
+		free(param);
                 free(line);
             }
         }
@@ -229,9 +253,11 @@ int QDMI_load_libraries(QInfo sesioninfo)
             }
             
             if (runlib==NULL)
+	    {
                 /* can't find the library anymore, this should never happen */
                 return QDMI_ERROR_FATAL;
-            
+	    }
+
             /* remove library from data structure */
             
             if (prevlib==NULL)

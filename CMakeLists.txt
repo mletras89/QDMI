@@ -12,6 +12,8 @@ include_directories("${CMAKE_INSTALL_PREFIX}/include")
 include(GNUInstallDirs)
 include(CTest)
 
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
+
 find_package(qinfo REQUIRED)
 
 add_compile_options("-g")

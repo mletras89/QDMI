@@ -93,6 +93,7 @@ typedef struct QDMI_Session_impl_d
     QInfo info;
     struct QDMI_Session_impl_d *next;
 } QDMI_Session_impl_t;
+typedef QDMI_Session_impl_t *QDMI_Session;
 
 typedef struct QDMI_Device_impl_d
 {
@@ -106,9 +107,9 @@ typedef struct QDMI_Device_impl_d
 /*----------------------------------------*/
 /* Anchors for global lists */
 
-QDMI_Session      qdmi_session_list = NULL;
-QDMI_Library      qdmi_library_list = NULL;
-QDMI_Devicelist_t *qdmi_device_list  = NULL;
+extern QDMI_Session      qdmi_session_list/* = NULL*/;
+extern QDMI_Library      qdmi_library_list/* = NULL*/;
+extern QDMI_Devicelist_t *qdmi_device_list/* = NULL*/;
 
 
 /*----------------------------------------*/
