@@ -10,7 +10,7 @@ int QDMI_session_init(QInfo info, QDMI_Session *session);
 int QDMI_session_finalize(QDMI_Session session);
 int QDMI_internal_shutdown(void);
 
-#define CHECK_ERR(a,b) { if (a!=QDMI_SUCCESS) { printf("\nError: %i at %s\n",a,b); return 1; }}
+#define CHECK_ERR(a,b) { if (a!=QDMI_SUCCESS) { printf("\n[Error]: %i at %s",a,b); return 1; }}
 
 int main(int argc, char** argv)
 {
