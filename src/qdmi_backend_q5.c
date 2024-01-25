@@ -27,3 +27,9 @@ int QDMI_backend_init(QInfo info)
 
     return 0;
 }
+
+int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInfo info, QDMI_Job *job)
+{
+    printf("\n[DEBUG]: Q5 Backend - QDMI_control_submit");
+    return 0;
+}

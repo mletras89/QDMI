@@ -324,7 +324,7 @@ int QDMI_load_libraries(QInfo sesioninfo)
         if (
             //(newlib->QDMI_control_pack_qasm2==NULL) ||
             //(newlib->QDMI_control_pack_qir==NULL) ||
-            //(newlib->QDMI_control_submit==NULL) ||
+            (newlib->QDMI_control_submit==NULL) ||
             //(newlib->QDMI_control_cancel==NULL) ||
             //(newlib->QDMI_control_pause==NULL) ||
             //(newlib->QDMI_control_test==NULL) ||

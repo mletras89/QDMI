@@ -80,5 +80,26 @@ char *trim_line(char *line)
     while (1);
 }
 
+/*.....................................*/
+/* Finds the right library in qdmi_library_list */
+/*  IN:  pointer to input string
+    RET: pointer to QDMI_Library
+*/
+
+QDMI_Library find_library_by_name(const char *libname)
+{
+    QDMI_Library lib = qdmi_library_list;
+
+    while (lib != NULL)
+    {
+        if (strcmp(lib->libname, libname) == 0)
+            return lib;
+
+        lib = lib->next;
+    }
+
+    return NULL;
+}
+
 /*----------------------------------------*/
 /* The End. */
