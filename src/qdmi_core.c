@@ -31,7 +31,7 @@ int QDMI_load_libraries(QInfo sesioninfo)
 
     /* Determine location of configfile */
     
-    getenv(QDMI_CONFIG_FILE);
+    configfilename = getenv(QDMI_CONFIG_FILE);
     if (configfilename==NULL)
         configfilename=strdup(QDMI_CONFIG_FILE_DEFAULT);
     
@@ -87,7 +87,17 @@ int QDMI_load_libraries(QInfo sesioninfo)
                     if (line!=NULL) free(line);
                     return qdmi_internal_translate_qinfo_error(err);
                 }
-                newlib->libname=line;
+
+		char *newline = strrchr(line, '\n');
+		if (newline != NULL)
+		{
+		    char *nullterminatedline = malloc(newline - line + 1);
+		    strncpy(nullterminatedline, line, newline - line);
+		    nullterminatedline[newline - line - 1] = '\0';
+                    newlib->libname = nullterminatedline;
+		}
+		else
+                    newlib->libname = line;
                 newlib->libhandle=NULL;
                 
                 /* add new library to list */
@@ -238,7 +248,7 @@ int QDMI_load_libraries(QInfo sesioninfo)
     {
         /* open library */
         
-        newlib->libhandle = dlopen(newlib->libname,RTLD_NOW);
+        newlib->libhandle = dlopen(newlib->libname, RTLD_NOW);
         if (newlib->libhandle==NULL)
         {
             /* opening failed, remove that */
@@ -272,9 +282,9 @@ int QDMI_load_libraries(QInfo sesioninfo)
             if (QINFO_IS_FATAL(err))
                 return qdmi_internal_translate_qinfo_error(err);
         }
+
+        /* eind all symbols */
         
-        /* Find all symbols */
-                
         newlib->QDMI_backend_init=dlsym(newlib->libhandle,"QDMI_backend_init");
 
         newlib->QDMI_control_pack_qasm2=dlsym(newlib->libhandle,"QDMI_control_pack_qasm2");
@@ -310,39 +320,40 @@ int QDMI_load_libraries(QInfo sesioninfo)
         newlib->QDMI_device_quality_limit=dlsym(newlib->libhandle,"QDMI_device_quality_limit");
         newlib->QDMI_device_quality_calibrate=dlsym(newlib->libhandle,"QDMI_device_quality_calibrate");
 
+	printf("\n[TODO]: (qdmi_core.c) QDMI_ERROR_BACKEND");
         if (
-            (newlib->QDMI_control_pack_qasm2==NULL) ||
-            (newlib->QDMI_control_pack_qir==NULL) ||
-            (newlib->QDMI_control_submit==NULL) ||
-            (newlib->QDMI_control_cancel==NULL) ||
-            (newlib->QDMI_control_pause==NULL) ||
-            (newlib->QDMI_control_test==NULL) ||
-            (newlib->QDMI_control_wait==NULL) ||
-            (newlib->QDMI_control_extract_state==NULL) ||
-            (newlib->QDMI_control_readout_size==NULL) ||
-            (newlib->QDMI_control_readout_hist_size==NULL) ||
-            (newlib->QDMI_control_readout_hist_top==NULL) ||
-            (newlib->QDMI_control_readout_raw_num==NULL) ||
-            (newlib->QDMI_control_readout_raw_sample==NULL) ||
-            (newlib->QDMI_query_device_property_exists==NULL) ||
-            (newlib->QDMI_query_device_property_i==NULL) ||
-            (newlib->QDMI_query_device_property_f==NULL) ||
-            (newlib->QDMI_query_device_property_d==NULL) ||
-            (newlib->QDMI_query_gateset_num==NULL) ||
-            (newlib->QDMI_query_one_gate==NULL) ||
-            (newlib->QDMI_query_all_gates==NULL) ||
-            (newlib->QDMI_query_byname==NULL) ||
-            (newlib->QDMI_query_gate_name==NULL) ||
-            (newlib->QDMI_query_gate_size==NULL) ||
-            (newlib->QDMI_query_gate_unitary==NULL) ||
-            (newlib->QDMI_query_gate_property_exists==NULL) ||
-            (newlib->QDMI_query_gate_property_i==NULL) ||
-            (newlib->QDMI_query_gate_property_f==NULL) ||
-            (newlib->QDMI_query_gate_property_d==NULL) ||
-            (newlib->QDMI_device_status==NULL) ||
-            (newlib->QDMI_device_quality_check==NULL) ||
-            (newlib->QDMI_device_quality_limit==NULL) ||
-            (newlib->QDMI_device_quality_calibrate==NULL)
+            //(newlib->QDMI_control_pack_qasm2==NULL) ||
+            //(newlib->QDMI_control_pack_qir==NULL) ||
+            //(newlib->QDMI_control_submit==NULL) ||
+            //(newlib->QDMI_control_cancel==NULL) ||
+            //(newlib->QDMI_control_pause==NULL) ||
+            //(newlib->QDMI_control_test==NULL) ||
+            //(newlib->QDMI_control_wait==NULL) ||
+            //(newlib->QDMI_control_extract_state==NULL) ||
+            //(newlib->QDMI_control_readout_size==NULL) ||
+            //(newlib->QDMI_control_readout_hist_size==NULL) ||
+            //(newlib->QDMI_control_readout_hist_top==NULL) ||
+            //(newlib->QDMI_control_readout_raw_num==NULL) ||
+            //(newlib->QDMI_control_readout_raw_sample==NULL) ||
+            //(newlib->QDMI_query_device_property_exists==NULL) ||
+            //(newlib->QDMI_query_device_property_i==NULL) ||
+            //(newlib->QDMI_query_device_property_f==NULL) ||
+            //(newlib->QDMI_query_device_property_d==NULL) ||
+            //(newlib->QDMI_query_gateset_num==NULL) ||
+            //(newlib->QDMI_query_one_gate==NULL) ||
+            //(newlib->QDMI_query_all_gates==NULL) ||
+            //(newlib->QDMI_query_byname==NULL) ||
+            //(newlib->QDMI_query_gate_name==NULL) ||
+            //(newlib->QDMI_query_gate_size==NULL) ||
+            //(newlib->QDMI_query_gate_unitary==NULL) ||
+            //(newlib->QDMI_query_gate_property_exists==NULL) ||
+            //(newlib->QDMI_query_gate_property_i==NULL) ||
+            //(newlib->QDMI_query_gate_property_f==NULL) ||
+            //(newlib->QDMI_query_gate_property_d==NULL) ||
+            (newlib->QDMI_device_status==NULL) //||
+            //(newlib->QDMI_device_quality_check==NULL) ||
+            //(newlib->QDMI_device_quality_limit==NULL) ||
+            //(newlib->QDMI_device_quality_calibrate==NULL)
            )
         {
             /* same function didn't load / bad backend, need to abort */
@@ -404,7 +415,9 @@ int QDMI_internal_startup(QInfo info)
     {
         err=QDMI_load_libraries(info);
         if (err!=QDMI_SUCCESS)
+	{
             return err;
+	}
     }
     return QDMI_SUCCESS;
 }
@@ -438,7 +451,8 @@ int QDMI_session_init(QInfo info, QDMI_Session *session)
     if (*session==NULL)
         return QDMI_ERROR_OUTOFMEM;
     
-    err=QInfo_duplicate(info,&((*session)->info));
+    // Copy `info` to `session->info`
+    err = QInfo_duplicate(info, &((*session)->info));
     if (err!=QINFO_SUCCESS)
     {
         free(*session);
@@ -450,17 +464,20 @@ int QDMI_session_init(QInfo info, QDMI_Session *session)
         /* First session */
         
         err=QDMI_internal_startup(info);
-        if (err==QDMI_SUCCESS)
+
+        printf("\n[TODO]: (qdmi_core.c) if (err !=/*==*/ QDMI_SUCCESS)");
+        if (err !=/*==*/ QDMI_SUCCESS)
         {
             QInfo_free((*session)->info);
             free(*session);
+
             return err;
         }
     }
-    
+
     (*session)->next=qdmi_session_list;
     qdmi_session_list=*session;
-    
+
     return QDMI_SUCCESS;
 }
 
@@ -477,7 +494,7 @@ int QDMI_session_finalize(QDMI_Session session)
     
     sess=qdmi_session_list;
     prev=NULL;
-    
+   
     while (sess!=NULL)
     {
         if (sess==session)
@@ -491,9 +508,7 @@ int QDMI_session_finalize(QDMI_Session session)
             free(session);
             
             if (qdmi_session_list==NULL)
-            {
                 return QDMI_internal_shutdown();
-            }
             
             return QDMI_SUCCESS;
         }
