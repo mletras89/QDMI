@@ -17,7 +17,7 @@ int QDMI_control_pack_qir(QDMI_Device dev, void *qirmod, QDMI_Fragment *frag)
     return dev->library.QDMI_control_pack_qir(dev, qirmod, frag);
 }
 
-int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInfo info, QDMI_Job *job)
+int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInfo info, QDMI_Job /***/job)
 {
     return dev->library.QDMI_control_submit(dev, frag, numshots, info, job);
 }

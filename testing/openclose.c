@@ -18,12 +18,15 @@ int main(int argc, char** argv)
     QDMI_Library lib;
     QDMI_Fragment *frag;
     QDMI_Device device;
-    QDMI_Job *job;
+    QDMI_Job job;
     int err, count = 0;
 
     device = malloc(sizeof(struct QDMI_Device_impl_d));
     if (device == NULL)
+    {
+	printf("\n[ERROR]: Device could not be created");
         exit(EXIT_FAILURE);
+    }
 
     err = QInfo_create(&info);
     CHECK_ERR(err, "QInfo_create");
@@ -32,13 +35,22 @@ int main(int argc, char** argv)
     err = QDMI_session_init(info, &session);
     CHECK_ERR(err, "QDMI_session_init");
 
+    job = malloc(sizeof(struct QDMI_Job_impl_d));
+    if (job == NULL)
+    {
+	printf("\n[ERROR]: The job could not be created");
+        exit(EXIT_FAILURE);
+    }
+    job->QIR_bitcode = strdup("QIR");
+
     lib = find_library_by_name("libbackend_q5.so");
     if(!lib)
     {
-	printf("\n[ERROR]: Library cannot be found");
-	return 1;
+	printf("\n[ERROR]: Library could not be found");
+        exit(EXIT_FAILURE);
     }
     device->library = *lib;
+
     err = QDMI_control_submit(device, frag, 10000, device->library.info, job);
     CHECK_ERR(err, "QDMI_control_submit");
 
@@ -49,6 +61,10 @@ int main(int argc, char** argv)
     err = QInfo_free(info);
     CHECK_ERR(err, "QInfo_free");
     
+    free(job->QIR_bitcode);
+    free(job);
+    free(device);
+
     printf("\n[DEBUG]: Test Finished\n\n");
 
     return 0;

@@ -93,7 +93,14 @@ typedef struct QDMI_Session_impl_d
     QInfo info;
     struct QDMI_Session_impl_d *next;
 } QDMI_Session_impl_t;
-typedef QDMI_Session_impl_t *QDMI_Session;
+//typedef QDMI_Session_impl_t *QDMI_Session;
+
+typedef struct QDMI_Job_impl_d
+{
+    QInfo info;
+    char *QIR_bitcode;
+} QDMI_Job_impl_t;
+//typedef QDMI_Job_impl_t *QDMI_Job;
 
 typedef struct QDMI_Device_impl_d
 {
@@ -102,6 +109,7 @@ typedef struct QDMI_Device_impl_d
     QDMI_Library_impl_t    library;
     void                   *device_state;
 } QDMI_Device_impl_t;
+//typedef QDMI_Device_impl_t *QDMI_Device;
 
 
 /*----------------------------------------*/

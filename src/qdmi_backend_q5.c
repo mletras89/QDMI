@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include <qdmi_backend.h>
+#include "qdmi_internal.h"
 
 #define CHECK_ERR(a,b) { if (a!=QDMI_SUCCESS) { printf("\n[Error]: %i at %s",a,b); return 1; }}
 
@@ -28,8 +29,9 @@ int QDMI_backend_init(QInfo info)
     return 0;
 }
 
-int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInfo info, QDMI_Job *job)
+int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInfo info, QDMI_Job job)
 {
     printf("\n[DEBUG]: Q5 Backend - QDMI_control_submit");
+    printf("\n[DEBUG]: Q5 Backend - job->QIR_bitcode: %s", job->QIR_bitcode);
     return 0;
 }
