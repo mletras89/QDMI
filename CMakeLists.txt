@@ -77,12 +77,6 @@ install(
 
 add_executable(QDMIOpenClose testing/openclose.c)
 target_link_libraries(QDMIOpenClose qdmi)
-#set_target_properties(QDMIOpenClose PROPERTIES
-#    VERSION ${PROJECT_VERSION}
-#    SOVERSION ${PROJECT_VERSION_MAJOR}
-#    PUBLIC_HEADER include/qdmi.h
-#    PUBLIC_HEADER src/qdmi_internal.h
-#    )
 add_test(QDMIOpenClose QDMIOpenClose)
 
  
