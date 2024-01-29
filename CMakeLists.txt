@@ -35,7 +35,6 @@ add_library(qdmi SHARED
     src/qdmi_core.c 
     src/qdmi_internal.c 
     src/qdmi_stubs.c 
-    src/qdmi_allocation.c
 )
 
 target_link_libraries(qdmi qinfo backend_q5)
