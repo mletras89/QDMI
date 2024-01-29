@@ -92,6 +92,8 @@ QDMI_Library find_library_by_name(const char *libname)
 
     while (lib != NULL)
     {
+        printf("\nlib->libname: %s =? libname: %s", lib->libname, libname);
+
         if (strcmp(lib->libname, libname) == 0)
             return lib;
 

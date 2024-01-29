@@ -75,8 +75,6 @@ export(
     FILE "${CMAKE_CURRENT_BINARY_DIR}/qdmiConfig.cmake"
 )
 
-message(STATUS "CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}")
-
 install(
     EXPORT qdmiConfig
     FILE qdmiConfig.cmake
