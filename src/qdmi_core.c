@@ -99,7 +99,8 @@ int QDMI_load_libraries(QInfo sesioninfo)
 		else
                     newlib->libname = line;
                 newlib->libhandle=NULL;
-                
+                printf("\n[DEBUG]: newlib->libname: %s", newlib->libname);
+            
                 /* add new library to list */
                 
                 newlib->next=qdmi_library_list;
