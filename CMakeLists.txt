@@ -39,10 +39,17 @@ add_library(qdmi SHARED
 
 target_link_libraries(qdmi qinfo backend_q5)
 
+set(PUBLIC_QDMI_HEADERS
+    "include/qdmi.h"
+    "include/qdmi_backend.h"
+    "src/qdmi_internal.h"
+)
+
 set_target_properties(qdmi PROPERTIES
     VERSION ${PROJECT_VERSION}
     SOVERSION ${PROJECT_VERSION_MAJOR}
-    PUBLIC_HEADER "include/qdmi.h;include/qdmi_backend.h;src/qdmi_internal.h")
+    PUBLIC_HEADER "${PUBLIC_QDMI_HEADERS}"
+)
 
 # configure_file(qinfo.pc.in qinfo.pc @ONLY)
 
