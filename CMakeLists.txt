@@ -24,24 +24,26 @@ target_link_libraries(backend_q5 qinfo)
 set_target_properties(backend_q5 PROPERTIES
     VERSION ${PROJECT_VERSION}
     SOVERSION ${PROJECT_VERSION_MAJOR}
-    PUBLIC_HEADER include/qdmi.h
-    PUBLIC_HEADER include/qdmi_backend.h
-    )
+    PUBLIC_HEADER include/qdmi.h include/qdmi_backend.h)
 
 target_include_directories(backend_q5 PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
 
-add_library(qdmi SHARED src/qdmi_core.c src/qdmi_internal.c src/qdmi_stubs.c)
+add_library(qdmi SHARED 
+    src/qdmi_core.c 
+    src/qdmi_internal.c 
+    src/qdmi_stubs.c 
+    src/qdmi_allocation.c
+)
+
 target_link_libraries(qdmi qinfo backend_q5)
 
 set_target_properties(qdmi PROPERTIES
     VERSION ${PROJECT_VERSION}
     SOVERSION ${PROJECT_VERSION_MAJOR}
-    PUBLIC_HEADER include/qdmi.h
-    PUBLIC_HEADER include/qdmi_backend.h
-    )
+    PUBLIC_HEADER include/qdmi.h include/qdmi_backend.h)
 
 # configure_file(qinfo.pc.in qinfo.pc @ONLY)
 

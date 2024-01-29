@@ -98,6 +98,11 @@ extern "C" {
 #endif
 
 
+/* Memory allocation routines */
+
+QDMI_Device QDMI_allocate_device();
+QDMI_Job QDMI_allocate_job();
+
 /* Core Session, basic start/close routines */
 
 int QDMI_session_init(QInfo info, QDMI_Session *session);
