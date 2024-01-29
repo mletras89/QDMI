@@ -22,10 +22,17 @@ add_compile_options("-g")
 add_library(backend_q5 SHARED src/qdmi_backend_q5.c)
 target_link_libraries(backend_q5 qinfo)
 
+set(PUBLIC_QDMI_HEADERS
+    "include/qdmi.h"
+    "include/qdmi_backend.h"
+    "src/qdmi_internal.h"
+)
+
 set_target_properties(backend_q5 PROPERTIES
     VERSION ${PROJECT_VERSION}
     SOVERSION ${PROJECT_VERSION_MAJOR}
-    PUBLIC_HEADER "include/qdmi.h;include/qdmi_backend.h")
+    PUBLIC_HEADER "${PUBLIC_QDMI_HEADERS}"
+    #PUBLIC_HEADER "include/qdmi.h;include/qdmi_backend.h")
 
 target_include_directories(backend_q5 PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -39,12 +46,6 @@ add_library(qdmi SHARED
 )
 
 target_link_libraries(qdmi qinfo backend_q5)
-
-set(PUBLIC_QDMI_HEADERS
-    "include/qdmi.h"
-    "include/qdmi_backend.h"
-    "src/qdmi_internal.h"
-)
 
 set_target_properties(qdmi PROPERTIES
     VERSION ${PROJECT_VERSION}
