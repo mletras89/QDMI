@@ -16,7 +16,7 @@ int main(int argc, char** argv)
     QInfo info;
     QDMI_Session session = NULL;
     QDMI_Library lib;
-    QDMI_Fragment *frag;
+    QDMI_Fragment frag;
     QDMI_Device device;
     QDMI_Job job;
     int err, count = 0;
@@ -35,13 +35,15 @@ int main(int argc, char** argv)
     err = QDMI_session_init(info, &session);
     CHECK_ERR(err, "QDMI_session_init");
 
-    job = malloc(sizeof(struct QDMI_Job_impl_d));
-    if (job == NULL)
+    frag = (QDMI_Fragment)malloc(sizeof(struct QDMI_Fragment_d));
+    if (frag == NULL)
     {
-	printf("\n[ERROR]: The job could not be created");
+        QDMI_session_finalize(session);
+
+        printf("\n[ERROR]: The fragment could not be created");
         exit(EXIT_FAILURE);
     }
-    job->QIR_bitcode = strdup("QIR");
+    frag->QIR_bitcode = strdup("QIR");
 
     lib = find_library_by_name("libbackend_q5.so");
     if(!lib)
@@ -51,7 +53,7 @@ int main(int argc, char** argv)
     }
     device->library = *lib;
 
-    err = QDMI_control_submit(device, frag, 10000, device->library.info, job);
+    err = QDMI_control_submit(device, &frag, 10000, device->library.info, &job);
     CHECK_ERR(err, "QDMI_control_submit");
 
     // QDMI_session_finalize(session) -> QDMI_internal_shutdown()
@@ -61,13 +63,12 @@ int main(int argc, char** argv)
     err = QInfo_free(info);
     CHECK_ERR(err, "QInfo_free");
     
-    free(job->QIR_bitcode);
-    free(job);
+    free(frag->QIR_bitcode);
+    free(frag);
     free(device);
 
     printf("\n[DEBUG]: Test Finished\n\n");
 
     return 0;
 }
-
 

@@ -24,14 +24,15 @@ int QDMI_backend_init(QInfo info)
     int err;
 
     err = QDMI_core_register_belib(uri, regpointer);
-    CHECK_ERR(err, "QDMI_core_register_belib");
+    //CHECK_ERR(err, "QDMI_core_register_belib");
 
     return 0;
 }
 
-int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInfo info, QDMI_Job job)
+int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInfo info, QDMI_Job *job)
 {
     printf("\n[DEBUG]: Q5 Backend - QDMI_control_submit");
-    printf("\n[DEBUG]: Q5 Backend - job->QIR_bitcode: %s", job->QIR_bitcode);
+    printf("\n[DEBUG]: Q5 Backend - (*frag)->QIR_bitcode: ");
+    printf("%s", (*frag)->QIR_bitcode);
     return 0;
 }

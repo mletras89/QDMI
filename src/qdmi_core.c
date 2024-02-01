@@ -3,6 +3,7 @@
 #include <ctype.h>
 #include <dlfcn.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "qdmi_internal.h"
 
@@ -36,20 +37,20 @@ int QDMI_load_libraries(QInfo sesioninfo)
         configfilename=strdup(QDMI_CONFIG_FILE_DEFAULT);
     
     /* Read configuration file */
-    
+   
     configfile=fopen(configfilename,"r");
     if (configfile==NULL)
-    {
         return QDMI_ERROR_NOCFGFILE;
-    }
-    
+
     do 
     {
         line=NULL;
         readlen=getline(&line,&length,configfile);
         if (readlen<0)
         {
-            if (line!=NULL) free(line);
+            if (line!=NULL) 
+                free(line);
+
             if (feof(configfile))
                 break;
             else
@@ -88,24 +89,24 @@ int QDMI_load_libraries(QInfo sesioninfo)
                     return qdmi_internal_translate_qinfo_error(err);
                 }
 
-		char *newline = strrchr(line, '\n');
-		if (newline != NULL)
-		{
-		    char *nullterminatedline = malloc(newline - line + 1);
-		    strncpy(nullterminatedline, line, newline - line);
-		    nullterminatedline[newline - line - 1] = '\0';
+                char *newline = strrchr(line, '\n');
+                if (newline != NULL)
+                {
+                    char *nullterminatedline = malloc(newline - line + 1);
+                    strncpy(nullterminatedline, line, newline - line);
+                    nullterminatedline[newline - line /*- 1*/] = '\0';
                     newlib->libname = nullterminatedline;
-		}
-		else
+                }
+                else
                     newlib->libname = line;
+
                 newlib->libhandle=NULL;
-                printf("\n[DEBUG]: newlib->libname: %s", newlib->libname);
             
                 /* add new library to list */
                 
                 newlib->next=qdmi_library_list;
                 qdmi_library_list=newlib;
-             }
+            }
             else
             {
                 int err;
@@ -116,39 +117,39 @@ int QDMI_load_libraries(QInfo sesioninfo)
                 {
                     /* no library started */
                     if (line != NULL) 
-			free(line);
+			            free(line);
 
                     return QDMI_ERROR_CFGFILE;
                 }
                 
                 /* get the strings from the file */
                 
-		size_t paramLength = separator - line;
+		        size_t paramLength = separator - line;
                 char *param = (char *)malloc(paramLength + 1);
 
-	        strncpy(param, line, paramLength);
-	        param[paramLength] = '\0';
+                strncpy(param, line, paramLength);
+                param[paramLength] = '\0';
 
                 /* check type */
                 
-		if (param != NULL)
-        	{
-		    const char *valueString = separator + 1;
+		        if (param != NULL)
+                {
+                    const char *valueString = separator + 1;
 
-		    if (strchr(valueString, '.') != NULL)
-            	    {
-	        	value.value_double = strtod(valueString, NULL);
-    
+                    if (strchr(valueString, '.') != NULL)
+                    {
+                        value.value_double = strtod(valueString, NULL);
+            
                         /* we have a double */
-    
-		        value.value_long = 0;
-		        value.value_string = NULL;
-		
-		        err = QInfo_topic_add(newlib->info, param, QINFO_TYPE_DOUBLE, &topic);
+            
+                        value.value_long = 0;
+                        value.value_string = NULL;
+                
+                        err = QInfo_topic_add(newlib->info, param, QINFO_TYPE_DOUBLE, &topic);
                         if (err != QINFO_SUCCESS)
                         {
                             if (line != NULL)
-		                free(line);
+                                free(line);
 
                             return qdmi_internal_translate_qinfo_error(err);
                         }
@@ -157,28 +158,28 @@ int QDMI_load_libraries(QInfo sesioninfo)
                         if (err != QINFO_SUCCESS)
                         {
                             if (line != NULL) 
-		                free(line);
+                                free(line);
 
                             return qdmi_internal_translate_qinfo_error(err);
-			}
+                        }
                     }
-		    else if( isdigit(*valueString) )
-		    {
-			char *endptr;
-		        value.value_long = strtol(valueString, &endptr, 10);
+                    else if( isdigit(*valueString) )
+                    {
+                        char *endptr;
+                        value.value_long = strtol(valueString, &endptr, 10);
 
-		        if (*endptr == '\0')
+                        if (*endptr == '\0')
                         {
-		    	    /* now we have a long */
+                            /* now we have a long */
 
-		            value.value_double = 0.0;
-		            value.value_string = NULL;
+                            value.value_double = 0.0;
+                            value.value_string = NULL;
 
                             err = QInfo_topic_add(newlib->info, param, QINFO_TYPE_LONG, &topic);
                             if (err != QINFO_SUCCESS)
                             {
                                 if (line != NULL) 
-				    free(line);
+                                free(line);
 
                                 return qdmi_internal_translate_qinfo_error(err);
                             }
@@ -187,24 +188,24 @@ int QDMI_load_libraries(QInfo sesioninfo)
                             if (err != QINFO_SUCCESS)
                             {
                                 if (line != NULL) 
-				    free(line);
+                                    free(line);
 
                                 return qdmi_internal_translate_qinfo_error(err);
                             }
-	                }
-		    }
-		    else
+                        }
+                    }
+                    else
                     {
-		        /* now we have a string */
-		        
-		        value.value_double = 0.0;
-		        value.value_long = 0;
-		        value.value_string = strdup(valueString);
+                        /* now we have a string */
+                        
+                        value.value_double = 0.0;
+                        value.value_long = 0;
+                        value.value_string = strdup(valueString);
 
                         if (value.value_string == NULL)
                         {
                             if (line!=NULL) 
-				free(line);
+                                free(line);
 
                             return QDMI_ERROR_OUTOFMEM;
                         }
@@ -213,7 +214,7 @@ int QDMI_load_libraries(QInfo sesioninfo)
                         if (err != QINFO_SUCCESS)
                         {
                             if (line != NULL) 
-				free(line);
+                                free(line);
 
                             free(value.value_string);
 
@@ -224,16 +225,16 @@ int QDMI_load_libraries(QInfo sesioninfo)
                         if (err != QINFO_SUCCESS)
                         {
                             if (line != NULL) 
-				free(line);
+                                free(line);
 
                             free(value.value_string);
 
                             return qdmi_internal_translate_qinfo_error(err);
                         }
-	            }
-		}
+                    }
+                }
 
-		free(param);
+                free(param);
                 free(line);
             }
         }
@@ -241,7 +242,15 @@ int QDMI_load_libraries(QInfo sesioninfo)
     
     /* the entire file is read and parsed into library list */
     /* now load all backend libraries and grab fct pointers */
-    
+   
+    printf("\n[QDMI_load_libraries]: Printing qdmi_library_list");
+    QDMI_Library deletemelib = qdmi_library_list;
+    while (deletemelib != NULL)
+    {
+        printf("\n[QDMI_load_libraries]: deletemelib->libname: %s", deletemelib->libname);
+        deletemelib = deletemelib->next;
+    }
+
     newlib=qdmi_library_list;
     retval=QDMI_SUCCESS;
     
@@ -249,9 +258,13 @@ int QDMI_load_libraries(QInfo sesioninfo)
     {
         /* open library */
         
+        printf("\n[QDMI_load_libraries]: newlib->libname: %s", newlib->libname);
+    
         newlib->libhandle = dlopen(newlib->libname, RTLD_NOW);
         if (newlib->libhandle==NULL)
         {
+            printf("\n[QDMI_load_libraries]: opening failed, remove that");
+    
             /* opening failed, remove that */
             
             runlib=qdmi_library_list;
@@ -264,10 +277,10 @@ int QDMI_load_libraries(QInfo sesioninfo)
             }
             
             if (runlib==NULL)
-	    {
+            {
                 /* can't find the library anymore, this should never happen */
                 return QDMI_ERROR_FATAL;
-	    }
+            }
 
             /* remove library from data structure */
             
@@ -416,10 +429,9 @@ int QDMI_internal_startup(QInfo info)
     {
         err=QDMI_load_libraries(info);
         if (err!=QDMI_SUCCESS)
-	{
             return err;
-	}
     }
+
     return QDMI_SUCCESS;
 }
 
@@ -467,6 +479,7 @@ int QDMI_session_init(QInfo info, QDMI_Session *session)
         err=QDMI_internal_startup(info);
 
         printf("\n[TODO]: (qdmi_core.c) if (err !=/*==*/ QDMI_SUCCESS)");
+
         if (err !=/*==*/ QDMI_SUCCESS)
         {
             QInfo_free((*session)->info);

@@ -133,8 +133,8 @@ typedef int (*QDMI_control_pack_qir_t)(QDMI_Device dev, void *qirmod, QDMI_Fragm
 
 /* QC job control routines */
 
-int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInfo info, QDMI_Job /***/job);
-typedef int (*QDMI_control_submit_t)(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInfo info, QDMI_Job /***/job);
+int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInfo info, QDMI_Job *job);
+typedef int (*QDMI_control_submit_t)(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInfo info, QDMI_Job *job);
 
 int QDMI_control_cancel(QDMI_Device dev, QDMI_Job *job, QInfo info);
 typedef int (*QDMI_control_cancel_t)(QDMI_Device dev, QDMI_Job *job, QInfo info);
