@@ -243,14 +243,6 @@ int QDMI_load_libraries(QInfo sesioninfo)
     /* the entire file is read and parsed into library list */
     /* now load all backend libraries and grab fct pointers */
    
-    printf("\n[QDMI_load_libraries]: Printing qdmi_library_list");
-    QDMI_Library deletemelib = qdmi_library_list;
-    while (deletemelib != NULL)
-    {
-        printf("\n[QDMI_load_libraries]: deletemelib->libname: %s", deletemelib->libname);
-        deletemelib = deletemelib->next;
-    }
-
     newlib=qdmi_library_list;
     retval=QDMI_SUCCESS;
     
@@ -258,13 +250,9 @@ int QDMI_load_libraries(QInfo sesioninfo)
     {
         /* open library */
         
-        printf("\n[QDMI_load_libraries]: newlib->libname: %s", newlib->libname);
-    
         newlib->libhandle = dlopen(newlib->libname, RTLD_NOW);
         if (newlib->libhandle==NULL)
         {
-            printf("\n[QDMI_load_libraries]: opening failed, remove that");
-    
             /* opening failed, remove that */
             
             runlib=qdmi_library_list;
@@ -334,7 +322,7 @@ int QDMI_load_libraries(QInfo sesioninfo)
         newlib->QDMI_device_quality_limit=dlsym(newlib->libhandle,"QDMI_device_quality_limit");
         newlib->QDMI_device_quality_calibrate=dlsym(newlib->libhandle,"QDMI_device_quality_calibrate");
 
-	printf("\n[TODO]: (qdmi_core.c) QDMI_ERROR_BACKEND");
+	//printf("\n[TODO]: (qdmi_core.c) QDMI_ERROR_BACKEND");
         if (
             //(newlib->QDMI_control_pack_qasm2==NULL) ||
             //(newlib->QDMI_control_pack_qir==NULL) ||
@@ -478,7 +466,7 @@ int QDMI_session_init(QInfo info, QDMI_Session *session)
         
         err=QDMI_internal_startup(info);
 
-        printf("\n[TODO]: (qdmi_core.c) if (err !=/*==*/ QDMI_SUCCESS)");
+        //printf("\n[TODO]: (qdmi_core.c) if (err !=/*==*/ QDMI_SUCCESS)");
 
         if (err !=/*==*/ QDMI_SUCCESS)
         {

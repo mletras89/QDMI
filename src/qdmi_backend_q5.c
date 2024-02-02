@@ -17,7 +17,7 @@ int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
 
 int QDMI_backend_init(QInfo info)
 {
-    printf("\n[DEBUG]: Q5 Backend - QDMI_backend_init");
+    printf("   [Backend].............QDMI_backend_init\n");
 
     char *uri = NULL;
     void *regpointer = NULL;
@@ -31,8 +31,7 @@ int QDMI_backend_init(QInfo info)
 
 int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInfo info, QDMI_Job *job)
 {
-    printf("\n[DEBUG]: Q5 Backend - QDMI_control_submit");
-    printf("\n[DEBUG]: Q5 Backend - (*frag)->QIR_bitcode: ");
-    printf("%s", (*frag)->QIR_bitcode);
+    printf("   [Backend].............QDMI_control_submit\n");
+    //printf("   [Backend].............(*frag)->QIR_bitcode: %s\n", (*frag)->QIR_bitcode);
     return 0;
 }
