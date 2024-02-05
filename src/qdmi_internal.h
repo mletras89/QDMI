@@ -97,8 +97,14 @@ typedef struct QDMI_Session_impl_d
 typedef struct QDMI_Job_impl_d
 {
     QInfo info;
-    
 } QDMI_Job_impl_t;
+
+typedef struct QDMI_Gate_impl_d
+{
+    const char *name;
+    char *unitary;
+    float fidelity;
+} QDMI_Gate_impl_t;
 
 typedef struct QDMI_Fragment_d
 {

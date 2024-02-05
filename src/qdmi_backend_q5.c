@@ -4,20 +4,45 @@
 #include <dlfcn.h>
 #include <string.h>
 
-#include <qdmi_backend.h>
-#include "qdmi_internal.h"
+#include "qdmi_backend_q5.h"
 
 #define CHECK_ERR(a,b) { if (a!=QDMI_SUCCESS) { printf("\n[Error]: %i at %s",a,b); return 1; }}
 
+int QDMI_query_gateset_num(QDMI_Device dev, int *num_gates)
+{
+    *num_gates = sizeof(gate_set);
+    return 0;
+}
+
+void QDMI_get_gate_info(QDMI_Device dev, int gate_index, QDMI_Gate gate)
+{
+    gate->name     = gate_set[gate_index];
+    gate->unitary  = "Unitary_Matrix";
+    gate->fidelity = 1.0;
+}
+
+int QDMI_query_all_gates(QDMI_Device dev, QDMI_Gate *gates)
+{
+    int i, num_gates = 0;
+    QDMI_query_gateset_num(dev, &num_gates);
+
+    *gates = (QDMI_Gate)malloc(num_gates * sizeof(QDMI_Gate_impl_t));
+
+    for (i = 0; i < num_gates; i++)
+        QDMI_get_gate_info(dev, i, (*gates) + i);
+
+    return 0;
+}
+
 int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
 {
-    printf("\n[DEBUG]: Q5 Backend - QDMI_device_status");
+    *status = 1;
     return 0;
 }
 
 int QDMI_backend_init(QInfo info)
 {
-    printf("   [Backend].............QDMI_backend_init\n");
+    printf("   [Backend].............Initializing Q5 via QDMI\n");
 
     char *uri = NULL;
     void *regpointer = NULL;

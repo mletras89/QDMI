@@ -343,7 +343,7 @@ int QDMI_load_libraries(QInfo sesioninfo)
             //(newlib->QDMI_query_device_property_d==NULL) ||
             //(newlib->QDMI_query_gateset_num==NULL) ||
             //(newlib->QDMI_query_one_gate==NULL) ||
-            //(newlib->QDMI_query_all_gates==NULL) ||
+            (newlib->QDMI_query_all_gates==NULL) ||
             //(newlib->QDMI_query_byname==NULL) ||
             //(newlib->QDMI_query_gate_name==NULL) ||
             //(newlib->QDMI_query_gate_size==NULL) ||
