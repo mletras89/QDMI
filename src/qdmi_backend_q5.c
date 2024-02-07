@@ -10,7 +10,11 @@
 
 int QDMI_query_gateset_num(QDMI_Device dev, int *num_gates)
 {
-    *num_gates = sizeof(gate_set);
+    if (sizeof(gate_set) > 0)
+        *num_gates = sizeof(gate_set) / sizeof(gate_set[0]);
+    else
+        *num_gates = 0;
+
     return 0;
 }
 
