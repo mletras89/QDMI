@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include <qdmi.h>
-#include "../src/qdmi_internal.h"
+#include "../include/qdmi_internal.h"
 
 int QDMI_session_init(QInfo info, QDMI_Session *session);
 int QDMI_session_finalize(QDMI_Session session);
