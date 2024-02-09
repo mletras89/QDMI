@@ -141,6 +141,7 @@ extern "C" {
 int qdmi_internal_translate_qinfo_error(int err);
 char *trim_line(char *line);
 QDMI_Library find_library_by_name(const char *libname);
+char** get_qdmi_library_list_names(void);
   
 #ifdef __cplusplus
 } // extern "C"
