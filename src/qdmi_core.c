@@ -332,10 +332,10 @@ int QDMI_load_libraries(QInfo sesioninfo)
             //(newlib->QDMI_control_test==NULL) ||
             //(newlib->QDMI_control_wait==NULL) ||
             //(newlib->QDMI_control_extract_state==NULL) ||
-            //(newlib->QDMI_control_readout_size==NULL) ||
+            (newlib->QDMI_control_readout_size==NULL) ||
             //(newlib->QDMI_control_readout_hist_size==NULL) ||
             //(newlib->QDMI_control_readout_hist_top==NULL) ||
-            //(newlib->QDMI_control_readout_raw_num==NULL) ||
+            (newlib->QDMI_control_readout_raw_num==NULL) ||
             //(newlib->QDMI_control_readout_raw_sample==NULL) ||
             //(newlib->QDMI_query_device_property_exists==NULL) ||
             //(newlib->QDMI_query_device_property_i==NULL) ||

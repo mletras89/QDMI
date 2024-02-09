@@ -15,7 +15,7 @@ int QDMI_query_gateset_num(QDMI_Device dev, int *num_gates)
     else
         *num_gates = 0;
 
-    return 0;
+    return QDMI_SUCCESS;
 }
 
 void QDMI_get_gate_info(QDMI_Device dev, int gate_index, QDMI_Gate gate)
@@ -35,13 +35,13 @@ int QDMI_query_all_gates(QDMI_Device dev, QDMI_Gate *gates)
     for (i = 0; i < num_gates; i++)
         QDMI_get_gate_info(dev, i, (*gates) + i);
 
-    return 0;
+    return QDMI_SUCCESS;
 }
 
 int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
 {
     *status = 1;
-    return 0;
+    return QDMI_SUCCESS;
 }
 
 int QDMI_backend_init(QInfo info)
@@ -55,12 +55,37 @@ int QDMI_backend_init(QInfo info)
     err = QDMI_core_register_belib(uri, regpointer);
     //CHECK_ERR(err, "QDMI_core_register_belib");
 
-    return 0;
+    return QDMI_SUCCESS;
+}
+
+int QDMI_control_readout_size(QDMI_Device dev, QDMI_Status *status, int *numbits)
+{
+    printf("   [Backend].............Returning size\n");
+    
+    *numbits = 5;
+    return QDMI_SUCCESS;
+}
+
+int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int *num)
+{
+    printf("   [Backend].............Returning raw numbers\n");
+
+    int err = 0, numbits = 0;
+    long i;
+
+    err = QDMI_control_readout_size(dev, status, &numbits);
+    CHECK_ERR(err, "QDMI_control_readout_raw_num");
+
+    for (i = 0; i < ((long)1 << numbits); i++)
+        num[i] = rand();
+
+    return QDMI_SUCCESS;
 }
 
 int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInfo info, QDMI_Job *job)
 {
     printf("   [Backend].............QDMI_control_submit\n");
     //printf("   [Backend].............(*frag)->QIR_bitcode: %s\n", (*frag)->QIR_bitcode);
-    return 0;
+
+    return QDMI_SUCCESS;
 }

@@ -58,6 +58,26 @@ int QDMI_backend_init(QInfo info)
     return 0;
 }
 
+int QDMI_control_readout_size(QDMI_Device dev, QDMI_Status *status, int *numbits)
+{
+    *numbits = 20;
+    return QDMI_SUCCESS;
+}
+
+int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int *num)
+{
+    int err = 0, numbits = 0;
+    long i;
+
+    err = QDMI_control_readout_size(dev, status, &numbits);
+    CHECK_ERR(err, "QDMI_control_readout_raw_num");
+
+    for (i = 0; i < ((long)1 << numbits); i++)
+        num[i] = rand();
+
+    return QDMI_SUCCESS;
+}
+
 int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInfo info, QDMI_Job *job)
 {
     printf("   [Backend].............QDMI_control_submit\n");
