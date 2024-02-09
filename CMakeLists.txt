@@ -22,6 +22,9 @@ add_compile_options("-g")
 add_library(backend_q5 SHARED src/qdmi_backend_q5.c)
 target_link_libraries(backend_q5 qinfo)
 
+add_library(backend_q20 SHARED src/qdmi_backend_q20.c)
+target_link_libraries(backend_q20 qinfo)
+
 set(PUBLIC_QDMI_HEADERS
     "include/qdmi.h"
     "include/qdmi_backend.h"
@@ -39,13 +42,24 @@ target_include_directories(backend_q5 PUBLIC
     $<INSTALL_INTERFACE:include>
 )
 
+set_target_properties(backend_q20 PROPERTIES
+    VERSION ${PROJECT_VERSION}
+    SOVERSION ${PROJECT_VERSION_MAJOR}
+    PUBLIC_HEADER "${PUBLIC_QDMI_HEADERS}"
+)
+
+target_include_directories(backend_q20 PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
+
 add_library(qdmi SHARED 
     src/qdmi_core.c 
     src/qdmi_internal.c 
     src/qdmi_stubs.c 
 )
 
-target_link_libraries(qdmi qinfo backend_q5)
+target_link_libraries(qdmi qinfo backend_q5 backend_q20)
 
 set_target_properties(qdmi PROPERTIES
     VERSION ${PROJECT_VERSION}
@@ -61,7 +75,7 @@ target_include_directories(qdmi PUBLIC
 )
 
 install(
-    TARGETS qdmi backend_q5
+    TARGETS qdmi backend_q5 backend_q20
     EXPORT qdmiConfig
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -69,7 +83,7 @@ install(
 )
 
 export(
-    TARGETS qdmi backend_q5
+    TARGETS qdmi backend_q5 backend_q20
     NAMESPACE qdmi::
     FILE "${CMAKE_CURRENT_BINARY_DIR}/qdmiConfig.cmake"
 )

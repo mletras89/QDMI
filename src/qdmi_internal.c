@@ -101,5 +101,52 @@ QDMI_Library find_library_by_name(const char *libname)
     return NULL;
 }
 
+/*.....................................*/
+/* Returns the names of the backends 
+   registered qdmi_library_list */
+/*  IN:  void
+    RET: null-terminated array of 
+         lib->libnames
+*/
+
+char** get_qdmi_library_list_names(void)
+{
+    QDMI_Library lib = qdmi_library_list;
+    int count = 0;
+    
+    while (lib != NULL)
+    {
+        count++;
+        lib = lib->next;
+    }
+
+    char **libnames = (char**)malloc((count + 1) * sizeof(char*));
+    if (libnames == NULL) 
+        return NULL;
+
+    lib = qdmi_library_list;
+    int i = 0;
+
+    while (lib != NULL)
+    {
+        libnames[i] = strdup(lib->libname);
+        if (libnames[i] == NULL)
+        {
+            int j;
+            for (j = 0; j < i; j++)
+                free(libnames[j]);
+            
+            free(libnames);
+            return NULL;
+        }
+        i++;
+        lib = lib->next;
+    }
+
+    libnames[count] = NULL;
+
+    return libnames;
+}
+
 /*----------------------------------------*/
 /* The End. */
