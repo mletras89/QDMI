@@ -40,7 +40,7 @@ int QDMI_query_all_gates(QDMI_Device dev, QDMI_Gate *gates)
 
 int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
 {
-    *status = 0;
+    *status = 1;
     return 0;
 }
 
