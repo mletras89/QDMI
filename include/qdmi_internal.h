@@ -67,7 +67,7 @@ typedef struct QDMI_Library_impl_d
     QDMI_query_device_property_f_t      QDMI_query_device_property_f;
     QDMI_query_device_property_d_t      QDMI_query_device_property_d;
     QDMI_query_gateset_num_t            QDMI_query_gateset_num;
-    QDMI_query_one_gate_t               QDMI_query_one_gate;
+    QDMI_query_qubits_num_t             QDMI_query_qubits_num;
     QDMI_query_all_gates_t              QDMI_query_all_gates;
     QDMI_query_byname_t                 QDMI_query_byname;
     QDMI_query_gate_name_t              QDMI_query_gate_name;
@@ -77,6 +77,8 @@ typedef struct QDMI_Library_impl_d
     QDMI_query_gate_property_i_t        QDMI_query_gate_property_i;
     QDMI_query_gate_property_f_t        QDMI_query_gate_property_f;
     QDMI_query_gate_property_d_t        QDMI_query_gate_property_d;
+    QDMI_query_all_qubits_t             QDMI_query_all_qubits;
+    QDMI_query_qubit_property_t         QDMI_query_qubit_property;
     QDMI_device_status_t                QDMI_device_status;
     QDMI_device_quality_check_t         QDMI_device_quality_check;
     QDMI_device_quality_limit_t         QDMI_device_quality_limit;
@@ -105,6 +107,13 @@ typedef struct QDMI_Gate_impl_d
     char *unitary;
     float fidelity;
 } QDMI_Gate_impl_t;
+
+typedef struct QDMI_Qubit_impl_d
+{
+    QDMI_qubit_index index;
+    QDMI_qubit_index* coupling_mapping;
+    int size_coupling_mapping;
+} QDMI_Qubit_impl_t;
 
 typedef struct QDMI_Fragment_d
 {

@@ -1,4 +1,8 @@
-libbackend_q5.so 
+libbackend_q7.so 
 param1=01234
 param2=0.0
-param3=zero
+libbackend_q20.so 
+param1=4321
+param2=1.0
+param3=one
+param3=one

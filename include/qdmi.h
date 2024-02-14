@@ -84,8 +84,10 @@ typedef int QDMI_Status;
 typedef int QDMI_qubit_index;
 typedef int QDMI_Device_property;
 typedef int QDMI_Gate_property;
+typedef int QDMI_Qubit_property;
 
 typedef struct QDMI_Gate_impl_d     *QDMI_Gate;
+typedef struct QDMI_Qubit_impl_d    *QDMI_Qubit;
 typedef struct QDMI_Unitary_impl_d  *QDMI_Unitary;
 
 
@@ -186,8 +188,8 @@ typedef int (*QDMI_query_device_property_d_t)(QDMI_Device dev, QDMI_Device_prope
 // routines to query gate set
 int QDMI_query_gateset_num(QDMI_Device dev, int *num_gates);
 typedef int (*QDMI_query_gateset_num_t)(QDMI_Device dev, int *num_gates);
-int QDMI_query_one_gate(QDMI_Device dev, QDMI_Gate *gate);
-typedef int (*QDMI_query_one_gate_t)(QDMI_Device dev, QDMI_Gate *gate);
+int QDMI_query_qubits_num(QDMI_Device dev, int *num_qubits);
+typedef int (*QDMI_query_qubits_num_t)(QDMI_Device dev, int *num_qubits);
 int QDMI_query_all_gates(QDMI_Device dev, QDMI_Gate *gates);
 typedef int (*QDMI_query_all_gates_t)(QDMI_Device dev, QDMI_Gate *gates);
 int QDMI_query_byname(QDMI_Device dev, char *name, QDMI_Gate *gate);
@@ -210,6 +212,10 @@ int QDMI_query_gate_property_f(QDMI_Device dev, QDMI_Gate_property prop, QDMI_Ga
 typedef int (*QDMI_query_gate_property_f_t)(QDMI_Device dev, QDMI_Gate_property prop, QDMI_Gate gate, int *coor, float* value);
 int QDMI_query_gate_property_d(QDMI_Device dev, QDMI_Gate_property prop, QDMI_Gate gate, int *coor, double* value);
 typedef int (*QDMI_query_gate_property_d_t)(QDMI_Device dev, QDMI_Gate_property prop, QDMI_Gate gate, int *coor, double* value);
+int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits);
+typedef int (*QDMI_query_all_qubits_t)(QDMI_Device dev, QDMI_Qubit *qubits);
+int QDMI_query_qubit_property(QDMI_Device dev, QDMI_Qubit_property prop, QDMI_Qubit qubit, int* coupling_map);
+typedef int (*QDMI_query_qubit_property_t)(QDMI_Device dev, QDMI_Qubit_property prop, QDMI_Qubit qubit, int* coupling_map);
 
 
 /* Device Interface */

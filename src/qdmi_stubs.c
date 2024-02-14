@@ -101,9 +101,9 @@ int QDMI_query_gateset_num(QDMI_Device dev, int *num_gates)
     return dev->library.QDMI_query_gateset_num(dev, num_gates);
 }
 
-int QDMI_query_one_gate(QDMI_Device dev, QDMI_Gate *gate)
+int QDMI_query_qubits_num(QDMI_Device dev, int *num_qubits)
 {
-    return dev->library.QDMI_query_one_gate(dev, gate);
+    return dev->library.QDMI_query_qubits_num(dev, num_qubits);
 }
 
 int QDMI_query_all_gates(QDMI_Device dev, QDMI_Gate *gates)
@@ -151,6 +151,15 @@ int QDMI_query_gate_property_d(QDMI_Device dev, QDMI_Gate_property prop, QDMI_Ga
     return dev->library.QDMI_query_gate_property_d(dev, prop, gate, coor, value);
 }
 
+int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits)
+{
+    return dev->library.QDMI_query_all_qubits(dev, qubits);
+}
+
+int QDMI_query_qubit_property(QDMI_Device dev, QDMI_Qubit_property prop, QDMI_Qubit qubit, int* coupling_map)
+{
+    return dev->library.QDMI_query_qubit_property(dev, prop, qubit, coupling_map);
+}
 
 /*----------------------------------------*/
 /* Stub routines for device API */

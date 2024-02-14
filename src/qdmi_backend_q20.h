@@ -1,5 +1,5 @@
-#ifndef QDMIBACKENDQ5_H
-#define QDMIBACKENDQ5_H
+#ifndef QDMIBACKENDQ20_H
+#define QDMIBACKENDQ20_H
 
 #include <qdmi_backend.h>
 #include "qdmi_internal.h"
@@ -18,4 +18,4 @@ const char *gate_set[] =
     "__quantum__qis__z__body",       "__quantum__qis__if_result__body",
 };
 
-#endif // QDMIBACKENDQ5_H
+#endif // QDMIBACKENDQ20_H

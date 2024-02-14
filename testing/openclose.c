@@ -45,7 +45,7 @@ int main(int argc, char** argv)
     }
     frag->QIR_bitcode = strdup("QIR");
 
-    lib = find_library_by_name("libbackend_q5.so");
+    lib = find_library_by_name("libbackend_q7.so");
     if(!lib)
     {
 	printf("\n[ERROR]: Library could not be found");
