@@ -212,10 +212,8 @@ int QDMI_query_gate_property_f(QDMI_Device dev, QDMI_Gate_property prop, QDMI_Ga
 typedef int (*QDMI_query_gate_property_f_t)(QDMI_Device dev, QDMI_Gate_property prop, QDMI_Gate gate, int *coor, float* value);
 int QDMI_query_gate_property_d(QDMI_Device dev, QDMI_Gate_property prop, QDMI_Gate gate, int *coor, double* value);
 typedef int (*QDMI_query_gate_property_d_t)(QDMI_Device dev, QDMI_Gate_property prop, QDMI_Gate gate, int *coor, double* value);
-void DELETE_ME(QDMI_Device dev/*, QDMI_Qubit *qubits*/);
-typedef void (*DELETE_ME_t)(QDMI_Device dev/*, QDMI_Qubit *qubits*/);
-void QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits);
-typedef void (*QDMI_query_all_qubits_t)(QDMI_Device dev, QDMI_Qubit *qubits);
+int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits);
+typedef int (*QDMI_query_all_qubits_t)(QDMI_Device dev, QDMI_Qubit *qubits);
 int QDMI_query_qubit_property(QDMI_Device dev, QDMI_Qubit_property prop, QDMI_Qubit qubit, int* coupling_map);
 typedef int (*QDMI_query_qubit_property_t)(QDMI_Device dev, QDMI_Qubit_property prop, QDMI_Qubit qubit, int* coupling_map);
 
