@@ -60,15 +60,15 @@ int QDMI_backend_init(QInfo info)
 
 int QDMI_control_readout_size(QDMI_Device dev, QDMI_Status *status, int *numbits)
 {
-    printf("   [QDMI]...............Returning size\n");
+    //printf("   [QDMI]................Returning size\n");
     
-    *numbits = 5;
+    *numbits = 7;
     return QDMI_SUCCESS;
 }
 
 int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int *num)
 {
-    printf("   [QDMI]...............Returning raw numbers\n");
+    //printf("   [QDMI]................Returning raw numbers\n");
 
     int err = 0, numbits = 0;
     long i;
@@ -170,7 +170,7 @@ int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits)
 int QDMI_query_qubits_num(QDMI_Device dev, int *num_qubits)
 {
     *num_qubits = 7;
-    printf("   [QDMI]...............QDMI_query_qubits_num\n");
+    //printf("   [QDMI]................QDMI_query_qubits_num\n");
     return QDMI_SUCCESS;
 }
 
