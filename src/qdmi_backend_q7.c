@@ -87,46 +87,46 @@ void QDMI_set_coupling_mapping(QDMI_Device dev, int qubit_index, QDMI_Qubit qubi
     qubit->index = qubit_index;
 
     switch (qubit_index) {
-        case 1:
+        case 0:
             qubit->coupling_mapping = (QDMI_qubit_index*)malloc(2 * sizeof(QDMI_qubit_index));
             qubit->coupling_mapping[0] = 3;
             qubit->coupling_mapping[1] = 5;
             qubit->size_coupling_mapping = 2;
             break;
-        case 2:
+        case 1:
             qubit->coupling_mapping = (QDMI_qubit_index*)malloc(2 * sizeof(QDMI_qubit_index));
             qubit->coupling_mapping[0] = 3;
             qubit->coupling_mapping[1] = 6;
             qubit->size_coupling_mapping = 2;
             break;
-        case 3:
+        case 2:
             qubit->coupling_mapping = (QDMI_qubit_index*)malloc(3 * sizeof(QDMI_qubit_index));
             qubit->coupling_mapping[0] = 1;
             qubit->coupling_mapping[1] = 2;
             qubit->coupling_mapping[2] = 7;
             qubit->size_coupling_mapping = 3;
             break;
-        case 4:
+        case 3:
             qubit->coupling_mapping = (QDMI_qubit_index*)malloc(2 * sizeof(QDMI_qubit_index));
             qubit->coupling_mapping[0] = 5;
             qubit->coupling_mapping[1] = 6;
             qubit->size_coupling_mapping = 2;
             break;
-        case 5:
+        case 4:
             qubit->coupling_mapping = (QDMI_qubit_index*)malloc(3 * sizeof(QDMI_qubit_index));
             qubit->coupling_mapping[0] = 1;
             qubit->coupling_mapping[1] = 4;
             qubit->coupling_mapping[2] = 7;
             qubit->size_coupling_mapping = 3;
             break;
-        case 6:
+        case 5:
             qubit->coupling_mapping = (QDMI_qubit_index*)malloc(3 * sizeof(QDMI_qubit_index));
             qubit->coupling_mapping[0] = 2;
             qubit->coupling_mapping[1] = 4;
             qubit->coupling_mapping[2] = 7;
             qubit->size_coupling_mapping = 3;
             break;
-        case 7:
+        case 6:
             qubit->coupling_mapping = (QDMI_qubit_index*)malloc(3 * sizeof(QDMI_qubit_index));
             qubit->coupling_mapping[0] = 3;
             qubit->coupling_mapping[1] = 5;
