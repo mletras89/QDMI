@@ -115,21 +115,21 @@ int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits)
     // TODO Handle err
     err = QDMI_query_qubits_num(dev, &num_qubits);
 
+    printf("   [QDMI]................before malloc\n");
     *qubits = (QDMI_Qubit)malloc(num_qubits * sizeof(QDMI_Qubit_impl_t));
+    printf("   [QDMI]................after malloc\n");
 
     if (*qubits == NULL)
     {
-        printf("   [Backend].............Couldn't allocate memory for the qubit array\n");
+        printf("   [QDMI]................Couldn't allocate memory for the qubit array\n");
         return QDMI_WARN_GENERAL;
     }
 
     int i;
     for (i = 0; i < num_qubits; i++)
-    {
         QDMI_set_coupling_mapping(dev, i, (*qubits) + i);
-    }
 
-    printf("   [Backend].............Returning available qubits\n");
+    printf("   [QDMI]................Returning available qubits\n");
     return QDMI_SUCCESS;
 }
 

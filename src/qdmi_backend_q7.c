@@ -46,7 +46,7 @@ int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
 
 int QDMI_backend_init(QInfo info)
 {
-    printf("   [Backend].............Initializing Q5 via QDMI\n");
+    printf("   [QDMI]...............Initializing Q5 via QDMI\n");
 
     char *uri = NULL;
     void *regpointer = NULL;
@@ -60,7 +60,7 @@ int QDMI_backend_init(QInfo info)
 
 int QDMI_control_readout_size(QDMI_Device dev, QDMI_Status *status, int *numbits)
 {
-    printf("   [Backend].............Returning size\n");
+    printf("   [QDMI]...............Returning size\n");
     
     *numbits = 5;
     return QDMI_SUCCESS;
@@ -68,7 +68,7 @@ int QDMI_control_readout_size(QDMI_Device dev, QDMI_Status *status, int *numbits
 
 int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int *num)
 {
-    printf("   [Backend].............Returning raw numbers\n");
+    printf("   [QDMI]...............Returning raw numbers\n");
 
     int err = 0, numbits = 0;
     long i;
@@ -136,38 +136,41 @@ int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits)
 {
     int err, num_qubits;
 
-    // TODO Handle err
     err = QDMI_query_qubits_num(dev, &num_qubits);
+
+    if (err != QDMI_SUCCESS)
+    {
+        printf("   [QDMI]................QDMI failed to return number of qubits\n");
+        return QDMI_WARN_GENERAL;
+    }
 
     *qubits = (QDMI_Qubit)malloc(num_qubits * sizeof(QDMI_Qubit_impl_t));
 
     if (*qubits == NULL)
     {
-        printf("   [Backend].............Couldn't allocate memory for the qubit array\n");
+        printf("   [QDMI]................Couldn't allocate memory for the qubit array\n");
         return QDMI_WARN_GENERAL;
     }
 
     int i;
     for (i = 0; i < num_qubits; i++)
-    {
         QDMI_set_coupling_mapping(dev, i, (*qubits) + i);
-    }
 
-    printf("   [Backend].............Returning available qubits\n");
+    printf("   [QDMI]................Returning available qubits\n");
     return QDMI_SUCCESS;
 }
 
 int QDMI_query_qubits_num(QDMI_Device dev, int *num_qubits)
 {
     *num_qubits = 7;
-    printf("   [Backend].............QDMI_query_qubits_num\n");
+    printf("   [QDMI]...............QDMI_query_qubits_num\n");
     return QDMI_SUCCESS;
 }
 
 int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInfo info, QDMI_Job *job)
 {
-    printf("   [Backend].............QDMI_control_submit\n");
-    //printf("   [Backend].............(*frag)->QIR_bitcode: %s\n", (*frag)->QIR_bitcode);
+    printf("   [QDMI]...............QDMI_control_submit\n");
+    //printf("   [QDMI]...............(*frag)->QIR_bitcode: %s\n", (*frag)->QIR_bitcode);
 
     return QDMI_SUCCESS;
 }
