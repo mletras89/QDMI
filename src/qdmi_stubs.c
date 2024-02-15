@@ -151,7 +151,12 @@ int QDMI_query_gate_property_d(QDMI_Device dev, QDMI_Gate_property prop, QDMI_Ga
     return dev->library.QDMI_query_gate_property_d(dev, prop, gate, coor, value);
 }
 
-int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits)
+void DELETE_ME(QDMI_Device dev/*, QDMI_Qubit *qubits*/)
+{
+    return dev->library.DELETE_ME(dev/*, qubits*/);
+}
+
+void QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits)
 {
     return dev->library.QDMI_query_all_qubits(dev, qubits);
 }

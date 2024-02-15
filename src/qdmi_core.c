@@ -317,6 +317,7 @@ int QDMI_load_libraries(QInfo sesioninfo)
         newlib->QDMI_query_gate_property_i=dlsym(newlib->libhandle,"QDMI_query_gate_property_i");
         newlib->QDMI_query_gate_property_f=dlsym(newlib->libhandle,"QDMI_query_gate_property_f");
         newlib->QDMI_query_gate_property_d=dlsym(newlib->libhandle,"QDMI_query_gate_property_d");
+        newlib->DELETE_ME=dlsym(newlib->libhandle,"DELETE_ME");
         newlib->QDMI_query_all_qubits=dlsym(newlib->libhandle,"QDMI_query_all_qubits");
         newlib->QDMI_query_qubit_property=dlsym(newlib->libhandle,"QDMI_query_qubit_property");
         newlib->QDMI_device_status=dlsym(newlib->libhandle,"QDMI_device_status");
@@ -354,8 +355,9 @@ int QDMI_load_libraries(QInfo sesioninfo)
             //(newlib->QDMI_query_gate_property_i==NULL) ||
             //(newlib->QDMI_query_gate_property_f==NULL) ||
             //(newlib->QDMI_query_gate_property_d==NULL) ||
-            (newlib->QDMI_query_all_qubits=NULL) ||
-            (newlib->QDMI_query_qubit_property=NULL) ||
+            (newlib->DELETE_ME==NULL) ||
+            (newlib->QDMI_query_all_qubits==NULL) ||
+            (newlib->QDMI_query_qubit_property==NULL) ||
             (newlib->QDMI_device_status==NULL) //||
             //(newlib->QDMI_device_quality_check==NULL) ||
             //(newlib->QDMI_device_quality_limit==NULL) ||

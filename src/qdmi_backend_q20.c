@@ -46,7 +46,7 @@ int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
 
 int QDMI_backend_init(QInfo info)
 {
-    printf("   [Backend].............Initializing Q20 via QDMI\n");
+    printf("   [QDMI]...............Initializing Q5 via QDMI\n");
 
     char *uri = NULL;
     void *regpointer = NULL;
@@ -60,15 +60,15 @@ int QDMI_backend_init(QInfo info)
 
 int QDMI_control_readout_size(QDMI_Device dev, QDMI_Status *status, int *numbits)
 {
-    printf("   [Backend].............Returning size\n");
+    printf("   [QDMI]...............Returning size\n");
     
-    *numbits = 20;
+    *numbits = 5;
     return QDMI_SUCCESS;
 }
 
 int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int *num)
 {
-    printf("   [Backend].............Returning raw numbers\n");
+    printf("   [QDMI]...............Returning raw numbers\n");
 
     int err = 0, numbits = 0;
     long i;
@@ -86,43 +86,77 @@ void QDMI_set_coupling_mapping(QDMI_Device dev, int qubit_index, QDMI_Qubit qubi
 {
     qubit->index = qubit_index;
 
-    qubit->coupling_mapping = (QDMI_qubit_index*)malloc(2 * sizeof(QDMI_qubit_index));
-
-    if (qubit_index == 0)
-    {
-        qubit->coupling_mapping[0] = 1;
-        qubit->coupling_mapping[1] = 2;
-    }
-    else
-    {
-        if (qubit_index == 19)
-        {
-            qubit->coupling_mapping[0] = 17;
-            qubit->coupling_mapping[1] = 18;
-        }
-        else
-        {
-            qubit->coupling_mapping[0] = qubit_index - 1;
-            qubit->coupling_mapping[1] = qubit_index + 1;
-        }
+    switch (qubit_index) {
+        case 1:
+            qubit->coupling_mapping = (QDMI_qubit_index*)malloc(2 * sizeof(QDMI_qubit_index));
+            qubit->coupling_mapping[0] = 3;
+            qubit->coupling_mapping[1] = 5;
+            break;
+        case 2:
+            qubit->coupling_mapping = (QDMI_qubit_index*)malloc(2 * sizeof(QDMI_qubit_index));
+            qubit->coupling_mapping[0] = 3;
+            qubit->coupling_mapping[1] = 6;
+            break;
+        case 3:
+            qubit->coupling_mapping = (QDMI_qubit_index*)malloc(3 * sizeof(QDMI_qubit_index));
+            qubit->coupling_mapping[0] = 1;
+            qubit->coupling_mapping[1] = 2;
+            qubit->coupling_mapping[2] = 7;
+            break;
+        case 4:
+            qubit->coupling_mapping = (QDMI_qubit_index*)malloc(2 * sizeof(QDMI_qubit_index));
+            qubit->coupling_mapping[0] = 5;
+            qubit->coupling_mapping[1] = 6;
+            break;
+        case 5:
+            qubit->coupling_mapping = (QDMI_qubit_index*)malloc(3 * sizeof(QDMI_qubit_index));
+            qubit->coupling_mapping[0] = 1;
+            qubit->coupling_mapping[1] = 4;
+            qubit->coupling_mapping[2] = 7;
+            break;
+        case 6:
+            qubit->coupling_mapping = (QDMI_qubit_index*)malloc(3 * sizeof(QDMI_qubit_index));
+            qubit->coupling_mapping[0] = 2;
+            qubit->coupling_mapping[1] = 4;
+            qubit->coupling_mapping[2] = 7;
+            break;
+        case 7:
+            qubit->coupling_mapping = (QDMI_qubit_index*)malloc(3 * sizeof(QDMI_qubit_index));
+            qubit->coupling_mapping[0] = 3;
+            qubit->coupling_mapping[1] = 5;
+            qubit->coupling_mapping[2] = 6;
+            break;
+        default:
+            qubit->coupling_mapping = NULL;
+            break; 
     }
 }
 
-int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits)
+void DELETE_ME(QDMI_Device dev/*, QDMI_Qubit *qubits*/)
+{
+    printf("   [QDMI]................DELETE_ME()\n");
+}
+
+void QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits)
 {
     int err, num_qubits;
 
-    // TODO Handle err
+    printf("   [QDMI]................Before QDMI_query_qubits_num()\n");
     err = QDMI_query_qubits_num(dev, &num_qubits);
+    printf("   [QDMI]................After QDMI_query_qubits_num()\n");
 
-    printf("   [QDMI]................before malloc\n");
+    if (err != QDMI_SUCCESS)
+    {
+        printf("   [QDMI]................QDMI failed to return number of qubits\n");
+        return /*QDMI_WARN_GENERAL*/;
+    }
+
     *qubits = (QDMI_Qubit)malloc(num_qubits * sizeof(QDMI_Qubit_impl_t));
-    printf("   [QDMI]................after malloc\n");
 
     if (*qubits == NULL)
     {
         printf("   [QDMI]................Couldn't allocate memory for the qubit array\n");
-        return QDMI_WARN_GENERAL;
+        return /*QDMI_WARN_GENERAL*/;
     }
 
     int i;
@@ -130,20 +164,20 @@ int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits)
         QDMI_set_coupling_mapping(dev, i, (*qubits) + i);
 
     printf("   [QDMI]................Returning available qubits\n");
-    return QDMI_SUCCESS;
+    //return QDMI_SUCCESS;
 }
 
 int QDMI_query_qubits_num(QDMI_Device dev, int *num_qubits)
 {
     *num_qubits = 7;
-    printf("   [Backend].............QDMI_query_qubits_num\n");
+    printf("   [QDMI]...............QDMI_query_qubits_num\n");
     return QDMI_SUCCESS;
 }
 
 int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInfo info, QDMI_Job *job)
 {
-    printf("   [Backend].............QDMI_control_submit\n");
-    //printf("   [Backend].............(*frag)->QIR_bitcode: %s\n", (*frag)->QIR_bitcode);
+    printf("   [QDMI]...............QDMI_control_submit\n");
+    //printf("   [QDMI]...............(*frag)->QIR_bitcode: %s\n", (*frag)->QIR_bitcode);
 
     return QDMI_SUCCESS;
 }
