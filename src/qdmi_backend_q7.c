@@ -46,7 +46,7 @@ int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
 
 int QDMI_backend_init(QInfo info)
 {
-    printf("\n\n\n   [QDMI]................Initializing Q7 via QDMI\n\n\n");
+    printf("   [QDMI]................Initializing Q7 via QDMI");
 
     char *uri = NULL;
     void *regpointer = NULL;
