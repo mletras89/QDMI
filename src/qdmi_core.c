@@ -99,7 +99,7 @@ int QDMI_load_libraries(QInfo sesioninfo)
                 }
                 else
                     newlib->libname = line;
-
+                    
                 newlib->libhandle=NULL;
             
                 /* add new library to list */
@@ -249,8 +249,8 @@ int QDMI_load_libraries(QInfo sesioninfo)
     while (newlib!=NULL)
     {
         /* open library */
-        
-        newlib->libhandle = dlopen(newlib->libname, RTLD_NOW);
+
+        newlib->libhandle = dlopen(newlib->libname, RTLD_LAZY);
         if (newlib->libhandle==NULL)
         {
             /* opening failed, remove that */
@@ -364,7 +364,7 @@ int QDMI_load_libraries(QInfo sesioninfo)
             /* same function didn't load / bad backend, need to abort */
             retval=QDMI_ERROR_BACKEND;
         }
-        
+
         newlib=newlib->next;
     }
     

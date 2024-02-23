@@ -1,8 +1,12 @@
+libbackend_wmi.so 
+param1=01234
+param2=0.0
+param3=one
 libbackend_q7.so 
 param1=01234
 param2=0.0
-libbackend_q20.so 
-param1=4321
-param2=1.0
 param3=one
+libbackend_q20.so 
+param1=01234
+param2=0.0
 param3=one
