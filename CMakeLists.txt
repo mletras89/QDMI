@@ -15,12 +15,14 @@ include(GNUInstallDirs)
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
+find_package(CURL REQUIRED)
+
 find_package(qinfo REQUIRED)
 
 add_compile_options("-g")
 
 add_library(backend_wmi SHARED src/qdmi_backend_wmi.c)
-target_link_libraries(backend_wmi qinfo)
+target_link_libraries(backend_wmi PRIVATE qinfo CURL::libcurl)
 
 add_library(backend_q7 SHARED src/qdmi_backend_q7.c)
 target_link_libraries(backend_q7 qinfo)
