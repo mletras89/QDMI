@@ -24,13 +24,13 @@ find_package(jansson REQUIRED)
 add_compile_options("-g")
 
 add_library(backend_ibm SHARED src/qdmi_backend_ibm.c)
-target_link_libraries(backend_ibm qinfo jansson)
+target_link_libraries(backend_ibm PRIVATE qinfo jansson)
 
 add_library(backend_wmi SHARED src/qdmi_backend_wmi.c)
 target_link_libraries(backend_wmi PRIVATE qinfo CURL::libcurl)
 
 add_library(backend_q7 SHARED src/qdmi_backend_q7.c)
-target_link_libraries(backend_q7 qinfo)
+target_link_libraries(backend_q7 PRIVATE qinfo)
 
 set(PUBLIC_QDMI_HEADERS
     "include/qdmi.h"
@@ -77,7 +77,8 @@ add_library(qdmi SHARED
     src/qdmi_stubs.c 
 )
 
-target_link_libraries(qdmi qinfo backend_ibm backend_wmi backend_q7)
+#target_link_libraries(qdmi qinfo backend_ibm backend_wmi backend_q7)
+target_link_libraries(qdmi qinfo)
 
 set_target_properties(qdmi PROPERTIES
     VERSION ${PROJECT_VERSION}
@@ -93,7 +94,7 @@ target_include_directories(qdmi PUBLIC
 )
 
 install(
-    TARGETS qdmi  backend_ibm backend_wmi backend_q7
+    TARGETS qdmi backend_ibm backend_wmi backend_q7
     EXPORT qdmiConfig
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
