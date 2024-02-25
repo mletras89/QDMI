@@ -43,12 +43,12 @@ int main(int argc, char** argv)
         printf("\n[ERROR]: The fragment could not be created");
         exit(EXIT_FAILURE);
     }
-    frag->QIR_bitcode = strdup("QIR");
+    frag->qirmod = strdup("QIR");
 
-    lib = find_library_by_name("/home/ubuntu/bin/lib/libbackend_wmi.so");
+    lib = find_library_by_name("/home/ubuntu/bin/lib/libbackend_ibm.so");
     if(!lib)
     {
-	printf("\n[ERROR]: Library could not be found");
+	    printf("\n[ERROR]: Library could not be found");
         exit(EXIT_FAILURE);
     }
     device->library = *lib;
@@ -63,7 +63,7 @@ int main(int argc, char** argv)
     err = QInfo_free(info);
     CHECK_ERR(err, "QInfo_free");
     
-    free(frag->QIR_bitcode);
+    free(frag->qirmod);
     free(frag);
     free(device);
 

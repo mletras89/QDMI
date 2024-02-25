@@ -21,6 +21,16 @@
 #define QDMI_PROPERTY_STATIC   1
 #define QDMI_PROPERTY_DYNAMIC  2
 
+/* Type of QDMI properties*/
+#define QDMI_INT     0
+#define QDMI_FLOAT   1
+#define QDMI_DOUBLE  2
+#define QDMI_CHARS   3
+#define QDMI_BOOLEAN 4
+#define QDMI_ARRAY   5
+#define QDMI_OBJECT  6
+#define QDMI_NULL    7
+
 /* Status values to be used per job */
 #define QDMI_COMPLETE  0
 #define QDMI_EXECUTING 1
@@ -28,17 +38,17 @@
 #define QDMI_HALTED    3
 
 /* Error classes, i.e., status returned by API */
-#define QDMI_WARN_NOBACKEND    2
-#define QDMI_WARN_GENERAL      1
-#define QDMI_SUCCESS           0
-#define QDMI_ERROR_FATAL      -1
-#define QDMI_ERROR_OUTOFMEM   -2
-#define QDMI_ERROR_NOSESSION  -3
-#define QDMI_ERROR_NOCFGFILE  -4
-#define QDMI_ERROR_CONFIG     -5
-#define QDMI_ERROR_CFGFILE    -6
-#define QDMI_ERROR_BACKEND    -7
-#define QDMI_ERROR_NOTIMPL    -8
+#define QDMI_WARN_NOBACKEND   2
+#define QDMI_WARN_GENERAL     1
+#define QDMI_SUCCESS          0
+#define QDMI_ERROR_FATAL     -1
+#define QDMI_ERROR_OUTOFMEM  -2
+#define QDMI_ERROR_NOSESSION -3
+#define QDMI_ERROR_NOCFGFILE -4
+#define QDMI_ERROR_CONFIG    -5
+#define QDMI_ERROR_CFGFILE   -6
+#define QDMI_ERROR_BACKEND   -7
+#define QDMI_ERROR_NOTIMPL   -8
 
 #define QDMI_IS_SUCCESS(err) (err==QDMI_SUCCESS)
 #define QDMI_IS_WARNING(err) (err>QDMI_SUCCESS)
@@ -49,6 +59,14 @@
 
 /*----------------------------------------*/
 /* QDMI Constants to represent platform items*/
+
+/*  Properties of the backend*/
+#define BACKEND_NAME 0
+#define BACKEND_VERSION 1
+#define NUM_QUBITS 2
+#define BASIS_GATES 3
+#define GATES_INFO 4
+#define COUPLING_MAP 5
 
 /* Query interface: Global device properties */
 #define QDMI_QUBIT_COUNT       0
@@ -73,22 +91,23 @@
 /*----------------------------------------*/
 /* QDMI Type defintions */
 
-typedef struct QDMI_Session_impl_d      *QDMI_Session;
-typedef struct QDMI_Device_impl_d       *QDMI_Device;
+typedef struct QDMI_Session_impl_d *QDMI_Session;
+typedef struct QDMI_Device_impl_d  *QDMI_Device;
 
-typedef struct QDMI_Job_impl_d  *QDMI_Job;
-typedef struct QDMI_Fragment_d  *QDMI_Fragment;
+typedef struct QDMI_Job_impl_d *QDMI_Job;
+typedef struct QDMI_Fragment_d *QDMI_Fragment;
 
 typedef int QDMI_Status;
 
 typedef int QDMI_qubit_index;
-typedef int QDMI_Device_property;
 typedef int QDMI_Gate_property;
 typedef int QDMI_Qubit_property;
 
-typedef struct QDMI_Gate_impl_d     *QDMI_Gate;
-typedef struct QDMI_Qubit_impl_d    *QDMI_Qubit;
-typedef struct QDMI_Unitary_impl_d  *QDMI_Unitary;
+//typedef int QDMI_Device_property;
+typedef struct QDMI_Device_property_impl_d *QDMI_Device_property;
+typedef struct QDMI_Gate_impl_d            *QDMI_Gate;
+typedef struct QDMI_Unitary_impl_d         *QDMI_Unitary;
+typedef struct QDMI_Qubit_impl_d           *QDMI_Qubit;
 
 
 

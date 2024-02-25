@@ -90,20 +90,42 @@ typedef struct QDMI_Library_impl_d
 } QDMI_Library_impl_t;
 typedef QDMI_Library_impl_t *QDMI_Library;
 
+typedef struct QDMI_Job_impl_d
+{
+    QInfo info;
+} QDMI_Job_impl_t;
+
+typedef struct QDMI_Fragment_d
+{
+    QInfo info;
+    char *qasmstr;
+    void *qirmod;
+} QDMI_Fragment_t;
+
 typedef struct QDMI_Session_impl_d
 {
     QInfo info;
     struct QDMI_Session_impl_d *next;
 } QDMI_Session_impl_t;
 
-typedef struct QDMI_Job_impl_d
+typedef struct QDMI_Device_impl_d
 {
-    QInfo info;
-} QDMI_Job_impl_t;
+    QInfo                  libinfo;
+    QInfo                  sessioninfo;
+    QDMI_Library_impl_t    library;
+    void                   *device_state;
+} QDMI_Device_impl_t;
+
+typedef struct QDMI_Device_property_impl_d
+{
+    int name;  // for e.g. 15 for backend_name
+    int type;  //INT_PROPERTY, etc,
+} QDMI_Device_property_impl_t;
 
 typedef struct QDMI_Gate_impl_d
 {
     const char *name;
+    QDMI_Gate_property** coupling_mapping;
     char *unitary;
     float fidelity;
 } QDMI_Gate_impl_t;
@@ -114,21 +136,6 @@ typedef struct QDMI_Qubit_impl_d
     QDMI_qubit_index* coupling_mapping;
     int size_coupling_mapping;
 } QDMI_Qubit_impl_t;
-
-typedef struct QDMI_Fragment_d
-{
-    QInfo info;
-    char *QIR_bitcode;
-} QDMI_Fragment_t;
-
-typedef struct QDMI_Device_impl_d
-{
-    QInfo                  libinfo;
-    QInfo                  sessioninfo;
-    QDMI_Library_impl_t    library;
-    void                   *device_state;
-} QDMI_Device_impl_t;
-
 
 /*----------------------------------------*/
 /* Anchors for global lists */

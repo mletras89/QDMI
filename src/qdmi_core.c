@@ -99,7 +99,7 @@ int QDMI_load_libraries(QInfo sesioninfo)
                 }
                 else
                     newlib->libname = line;
-                    
+
                 newlib->libhandle=NULL;
             
                 /* add new library to list */

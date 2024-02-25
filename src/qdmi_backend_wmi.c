@@ -143,7 +143,7 @@ int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
 // init not needed for wmi backend
 int QDMI_backend_init(QInfo info)
 {
-    printf("   [Backend].............WMI doesn't need initialization via QDMI\n");
+    printf("   [QDMI]...............Initializing WMI via QDMI\n");
 
     char *uri = NULL;
     void *regpointer = NULL;
