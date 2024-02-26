@@ -37,6 +37,8 @@ find_package(jansson REQUIRED)
 
 find_package(LLVM REQUIRED CONFIG)
 
+find_package(cJSON REQUIRED)
+
 add_compile_options("-g")
 
 add_library(backend_qlm SHARED src/qdmi_backend_qlm.c)
