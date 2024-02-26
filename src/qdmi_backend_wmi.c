@@ -18,13 +18,31 @@ struct ResponseStruct {
     size_t size;
 };
 
+char *backend_configuration(){
+
+    char *configuration = "{ \"backend_name\": \"dedicated\", \
+    \"backend_version\": \"1.0.0\", \
+    \"n_qubits\": 3, \
+    \"basis_gates\": [\"id\", \"x\", \"y\", \"sx\", \"rz\"], \
+    \"coupling_map\": null, \
+    \"simulator\": false, \
+    \"local\": false, \
+    \"conditional\": false, \
+    \"open_pulse\": false, \
+    \"memory\": true, \
+    \"max_shots\": 65536, \
+    \"gates\": []}";
+
+    return configuration;
+}
+
 // directly parsing response to json
 size_t parse_json(void *contents, size_t size, size_t nmemb, struct ResponseStruct *response){
     
     size_t realsize = size * nmemb;
     
     struct ResponseStruct *mem = (struct ResponseStruct *)response;
-    
+    //printf("")
     cJSON *ptr = cJSON_ParseWithLength(contents, realsize);
   
     if(!ptr) {
@@ -42,7 +60,7 @@ size_t parse_json(void *contents, size_t size, size_t nmemb, struct ResponseStru
 // import api token from folder
 char *get_token(){ 
     char token[BUZZ_SIZE];
-    FILE *f = fopen("token.txt", "r");
+    FILE *f = fopen("../inputs/token.txt", "r");
     fgets(token, BUZZ_SIZE, f);
     fclose(f);
 
@@ -247,7 +265,75 @@ int QDMI_query_qubits_num(QDMI_Device dev, int *num_qubits)
 int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInfo info, QDMI_Job *job)
 {
     printf("   [Backend].............QDMI_control_submit\n");
-    //printf("   [Backend].............(*frag)->QIR_bitcode: %s\n", (*frag)->QIR_bitcode);
+    
+    CURL *curl = curl_easy_init();
+    
+    if (!curl) {
+        fprintf(stderr, "Init failed\n");
+        return EXIT_FAILURE;
+    }
+    
+    //token
+    char *token_header = get_token();
+    
+    //init variables
+    struct curl_slist* headers = NULL;
+    curl_mime *form = NULL;
+    curl_mimepart *field = NULL;
+    struct ResponseStruct response;
+    response.json = NULL;
+    response.size = 0; 
+
+    form = curl_mime_init(curl);
+    
+    // set general options
+    curl_easy_setopt(curl, CURLOPT_URL, "https://wmiqc-api.wmi.badw.de/1/qiskitSimulator/qir");
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, parse_json);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+
+    // set headers
+    headers = curl_slist_append(headers, token_header);
+    headers = curl_slist_append(headers, "Content-Type: multipart/form-data");
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
+    // payload
+    
+    char *configuration = backend_configuration();
+
+    field = curl_mime_addpart(form);
+    curl_mime_name(field, "qir");
+    curl_mime_type(field, "application/x-www-form-urlencoded");
+    curl_mime_data(field, (*frag)->qirmod, CURL_ZERO_TERMINATED);    
+
+    field = curl_mime_addpart(form);
+    curl_mime_name(field, "configuration");
+    curl_mime_type(field, "application/json");
+    curl_mime_data(field, configuration, CURL_ZERO_TERMINATED);
+
+    field = curl_mime_addpart(form);
+    curl_mime_name(field, "options");
+    curl_mime_type(field, "application/json");
+    curl_mime_data(field, "{\"shots\": 1024}", CURL_ZERO_TERMINATED);
+
+    curl_easy_setopt(curl, CURLOPT_MIMEPOST, form);
+    curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
+
+    // send request
+    CURLcode result = curl_easy_perform(curl);
+    if (result  != CURLE_OK){
+        fprintf(stderr, "Request problem: %s\n", curl_easy_strerror(result));
+    } 
+    
+    printf("\n hi there!\n");
+    char *string = cJSON_Print(response.json);
+    printf("%s\n", string);
+
+    free(string);
+    free(response.json);
+
+    curl_mime_free(form);
+    curl_slist_free_all(headers); 
+    curl_easy_cleanup(curl);
 
     return QDMI_SUCCESS;
 }
