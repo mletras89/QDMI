@@ -8,7 +8,6 @@
 
 #define CHECK_ERR(a,b) { if (a!=QDMI_SUCCESS) { printf("\n[Error]: %i at %s",a,b); return 1; }}
 
-json_error_t error;
 json_t *root;
 char **gate_set;
 
@@ -50,8 +49,8 @@ int fetch_backend_configuration()
         fprintf(stderr, "[QDMI]...............Error: Failed to open configuration JSON file.\n");
         return QDMI_ERROR_CONFIG;
     }
-
-    root = json_load_file(/*fp*/path, 0, &error);
+    json_error_t error;
+    root = json_loadf(fp, 0, &error);
 
     fclose(fp);
     if (!root)
