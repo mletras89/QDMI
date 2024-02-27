@@ -458,7 +458,7 @@ int QDMI_query_qubits_num(QDMI_Device dev, int *num_qubits)
 {
     json_t *property = json_object_get(root, backend_properties[2]);
     if (property && json_is_integer(property)) {
-        num_qubits = json_integer_value(property);
+        *num_qubits = json_integer_value(property);
         return QDMI_SUCCESS;
     } else {
         printf("Queried property either doesn't exists or it isn't an integer: Device property - num_qubits\n");
