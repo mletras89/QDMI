@@ -42,7 +42,7 @@ int fetch_backend_configuration()
         return QDMI_ERROR_CONFIG;
     }
 
-    FILE *fp = fopen("/home/diogenes/qdmi.git/inputs/conf.json", "r");
+    FILE *fp = fopen(conf_ibm, "r");
     if (!fp)
     {
         fprintf(stderr, "Failed to open configuration JSON file.\n");
