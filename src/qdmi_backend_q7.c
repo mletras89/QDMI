@@ -82,7 +82,7 @@ int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int *num)
     return QDMI_SUCCESS;
 }
 
-void QDMI_set_coupling_mapping(QDMI_Device dev, int qubit_index, QDMI_Qubit qubit)
+int QDMI_set_coupling_mapping(QDMI_Device dev, int qubit_index, QDMI_Qubit qubit)
 {
     qubit->index = qubit_index;
 

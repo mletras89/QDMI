@@ -366,7 +366,7 @@ int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int *num)
 * The space and time complexity of this method can be further improved and 
     this version is just a prototype.
 */
-void QDMI_set_coupling_mapping(QDMI_Device dev, int qubit_index, QDMI_Qubit qubit)
+int QDMI_set_coupling_mapping(QDMI_Device dev, int qubit_index, QDMI_Qubit qubit)
 {
     qubit->index = qubit_index;
 

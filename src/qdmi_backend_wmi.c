@@ -214,7 +214,7 @@ int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int *num)
 }
 
 // hardcoded coupling map as for each qubit, what are the two neighbours. Are QDMI qubits 1 indexed? Assuming yes and full connectivity for chip.
-void QDMI_set_coupling_mapping(QDMI_Device dev, int qubit_index, QDMI_Qubit qubit)
+int QDMI_set_coupling_mapping(QDMI_Device dev, int qubit_index, QDMI_Qubit qubit)
 {
     qubit->index = qubit_index;
 
@@ -275,7 +275,7 @@ int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits)
 int QDMI_query_qubits_num(QDMI_Device dev, int *num_qubits)
 {
     *num_qubits = 3;
-    printf("   [Backend].............QDMI_query_qubits_num\n");
+    //printf("   [Backend].............QDMI_query_qubits_num\n");
     return QDMI_SUCCESS;
 }
 
