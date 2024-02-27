@@ -4,6 +4,7 @@
 #include <qdmi_backend.h>
 #include "qdmi_internal.h"
 
+extern json_error_t error;
 extern json_t *root;
 extern char **gate_set;
 

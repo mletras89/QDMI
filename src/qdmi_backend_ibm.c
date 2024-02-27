@@ -8,6 +8,7 @@
 
 #define CHECK_ERR(a,b) { if (a!=QDMI_SUCCESS) { printf("\n[Error]: %i at %s",a,b); return 1; }}
 
+json_error_t error;
 json_t *root;
 char **gate_set;
 
@@ -34,36 +35,23 @@ int QDMI_control_pack_qir(QDMI_Device dev, void *qirmod, QDMI_Fragment *frag)
 
 int fetch_backend_configuration()
 {
-    char *home = getenv("HOME");
-    if (home == NULL)
-    {
-        fprintf(stderr, "[QDMI]...............Error: HOME environment variable not set.\n");
+    FILE *fp = fopen("/home/diogenes/qdmi.git/inputs/conf.json", "r");
+    if (!fp) {
+        fprintf(stderr, "Failed to open configuration JSON file.\n");
         return QDMI_ERROR_CONFIG;
     }
 
-    char path[256];
-    snprintf(path, sizeof(path), "%s/qdmi.git/inputs/conf.json", home);
-    FILE *fp = fopen(path, "r");
-    if (!fp)
-    {
-        fprintf(stderr, "[QDMI]...............Error: Failed to open configuration JSON file.\n");
-        return QDMI_ERROR_CONFIG;
-    }
-    json_error_t error;
     root = json_loadf(fp, 0, &error);
-
     fclose(fp);
-    if (!root)
-    {
-        fprintf(stderr, "[QDMI]...............Error: Parsing JSON: %s\n", error.text);
-       return QDMI_ERROR_CONFIG;
-    }
-    if (!json_is_object(root))
-    {
-        fprintf(stderr, "[QDMI]...............Error: Root element is not an object.\n");
+    if (!root) {
+        fprintf(stderr, "Error parsing JSON: %s\n", error.text);
         return QDMI_ERROR_CONFIG;
     }
-
+    if (!json_is_object(root)) {
+        fprintf(stderr, "Root element is not an object.\n");
+        return QDMI_ERROR_CONFIG;
+    }
+    
     return QDMI_SUCCESS;
 }
 
@@ -75,7 +63,7 @@ int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
 
 int QDMI_backend_init(QInfo info)
 {
-    printf("   [QDMI]...............Initializing IBM via QDMI\n");
+    printf("   [Backend].............Initializing IBM via QDMI\n");
 
     char *uri = NULL;
     void *regpointer = NULL;
@@ -84,11 +72,7 @@ int QDMI_backend_init(QInfo info)
     err = QDMI_core_register_belib(uri, regpointer);
     //CHECK_ERR(err, "QDMI_core_register_belib");
 
-    int status = fetch_backend_configuration();
-    
-    printf("\n\tstatus: %d", status);
-
-    return 0;
+    return fetch_backend_configuration();
 }
 /*
 * This allows the QDMI to check if a property exists before querying it by just comparing the string
@@ -372,7 +356,7 @@ int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int *num)
 * The space and time complexity of this method can be further improved and 
     this version is just a prototype.
 */
-int QDMI_set_coupling_mapping(QDMI_Device dev, int qubit_index, QDMI_Qubit qubit)
+void QDMI_set_coupling_mapping(QDMI_Device dev, int qubit_index, QDMI_Qubit qubit)
 {
     qubit->index = qubit_index;
 
@@ -416,9 +400,7 @@ int QDMI_set_coupling_mapping(QDMI_Device dev, int qubit_index, QDMI_Qubit qubit
                 return QDMI_ERROR_CONFIG;
             }
         } else {
-            //TODO What index?
-            //fprintf(stderr, "Invalid format for pair at index %zu for qubit #.\n"); 
-            fprintf(stderr, "Invalid format.\n"); 
+            fprintf(stderr, "Invalid format for pair at index %zu for qubit #.\n");
             return QDMI_ERROR_CONFIG;
         }
     }
@@ -463,7 +445,7 @@ int QDMI_query_qubits_num(QDMI_Device dev, int *num_qubits)
 {
     json_t *property = json_object_get(root, backend_properties[2]);
     if (property && json_is_integer(property)) {
-        *num_qubits = json_integer_value(property);
+        num_qubits = json_integer_value(property);
         return QDMI_SUCCESS;
     } else {
         printf("Queried property either doesn't exists or it isn't an integer: Device property - num_qubits\n");
