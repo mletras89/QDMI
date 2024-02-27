@@ -52,7 +52,6 @@ int fetch_backend_configuration()
 
     json_error_t error;
     root = json_loadf(fp, 0, &error);
-    //root = json_load_file(conf_ibm, 0, &error);
     printf("   [QDMI]................Will load the file\n");
     fclose(fp);
     if (!root) 
