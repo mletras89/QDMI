@@ -190,7 +190,7 @@ int QDMI_backend_init(QInfo info)
 // num classical bits in measurement, same as qubits. Why status needed?
 int QDMI_control_readout_size(QDMI_Device dev, QDMI_Status *status, int *numbits)
 {
-    printf("   [Backend].............Returning size\n");
+    //printf("   [Backend].............Returning size\n");
     
     *numbits = 3;
     return QDMI_SUCCESS;
@@ -199,7 +199,7 @@ int QDMI_control_readout_size(QDMI_Device dev, QDMI_Status *status, int *numbits
 // looks like this returns the number of measured bitstrings for each outcome
 int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int *num)
 {
-    printf("   [Backend].............Returning raw numbers\n");
+    printf("   [Backend].............Returning results\n");
 
     int err = 0, numbits = 0;
     long i;
