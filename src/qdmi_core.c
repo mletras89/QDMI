@@ -39,8 +39,11 @@ int QDMI_load_libraries(QInfo sesioninfo)
     /* Read configuration file */
    
     configfile=fopen(configfilename,"r");
+        printf("\n\t line: %s\n", configfilename);
     if (configfile==NULL)
+    {
         return QDMI_ERROR_NOCFGFILE;
+    }
 
     do 
     {
