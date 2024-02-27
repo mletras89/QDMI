@@ -35,19 +35,29 @@ int QDMI_control_pack_qir(QDMI_Device dev, void *qirmod, QDMI_Fragment *frag)
 
 int fetch_backend_configuration()
 {
+    char *conf_ibm = getenv("CONF_IBM");
+    if (conf_ibm == NULL)
+    {
+        printf("   [QDMI]...............Couldn't open IBM's config file\n");
+        return QDMI_ERROR_CONFIG;
+    }
+
     FILE *fp = fopen("/home/diogenes/qdmi.git/inputs/conf.json", "r");
-    if (!fp) {
+    if (!fp)
+    {
         fprintf(stderr, "Failed to open configuration JSON file.\n");
         return QDMI_ERROR_CONFIG;
     }
 
     root = json_loadf(fp, 0, &error);
     fclose(fp);
-    if (!root) {
+    if (!root) 
+    {
         fprintf(stderr, "Error parsing JSON: %s\n", error.text);
         return QDMI_ERROR_CONFIG;
     }
-    if (!json_is_object(root)) {
+    if (!json_is_object(root)) 
+    {
         fprintf(stderr, "Root element is not an object.\n");
         return QDMI_ERROR_CONFIG;
     }
