@@ -232,7 +232,7 @@ int QDMI_set_coupling_mapping(QDMI_Device dev, int qubit_index, QDMI_Qubit qubit
             qubit->size_coupling_mapping = 2;
             break;
         case 2:
-            qubit->coupling_mapping = (QDMI_qubit_index*)malloc(3 * sizeof(QDMI_qubit_index));
+            qubit->coupling_mapping = (QDMI_qubit_index*)malloc(2 * sizeof(QDMI_qubit_index));
             qubit->coupling_mapping[0] = 0;
             qubit->coupling_mapping[1] = 1;
             qubit->size_coupling_mapping = 2;
