@@ -8,27 +8,26 @@
 
 #define CHECK_ERR(a,b) { if (a!=QDMI_SUCCESS) { printf("\n[Error]: %i at %s",a,b); return 1; }}
 
-json_error_t error;
 json_t *root;
 char **gate_set;
 
 int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInfo info, QDMI_Job *job)
 {
-    printf("   [QDMI]...............QDMI_control_submit\n");
+    printf("   [QDMI]................QDMI_control_submit\n");
 
     return QDMI_SUCCESS;
 }
 
 int QDMI_control_pack_qasm2(QDMI_Device dev, char *qasmstr, QDMI_Fragment *frag)
 {
-    printf("   [QDMI]...............QDMI_control_pack_qasm2\n");
+    printf("   [QDMI]................QDMI_control_pack_qasm2\n");
 
     return QDMI_SUCCESS;
 }
 
 int QDMI_control_pack_qir(QDMI_Device dev, void *qirmod, QDMI_Fragment *frag)
 {
-    printf("   [QDMI]...............QDMI_control_pack_qir\n");
+    printf("   [QDMI]................QDMI_control_pack_qir\n");
 
     return QDMI_SUCCESS;
 }
@@ -38,7 +37,7 @@ int fetch_backend_configuration()
     char *conf_ibm = getenv("CONF_IBM");
     if (conf_ibm == NULL)
     {
-        printf("   [QDMI]...............Couldn't open IBM's config file\n");
+        printf("   [QDMI]................Couldn't open IBM's config file\n");
         return QDMI_ERROR_CONFIG;
     }
 
@@ -49,7 +48,12 @@ int fetch_backend_configuration()
         return QDMI_ERROR_CONFIG;
     }
 
+    printf("   [QDMI]................Found the config file %s\n", conf_ibm);
+
+    json_error_t error;
     root = json_loadf(fp, 0, &error);
+    //root = json_load_file(conf_ibm, 0, &error);
+    printf("   [QDMI]................Will load the file\n");
     fclose(fp);
     if (!root) 
     {
@@ -327,14 +331,14 @@ int QDMI_query_gate_name(QDMI_Device dev, QDMI_Gate gate, char* name, int* len)
 
 int QDMI_control_readout_size(QDMI_Device dev, QDMI_Status *status, int *numbits)
 {
-    //printf("   [QDMI]................Returning size\n");
+    //printf("   [QDMI].................Returning size\n");
     *numbits = 5;//QDMI_query_qubits_num(dev, *numbits);
     return QDMI_SUCCESS;
 }
 
 int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int *num)
 {
-    //printf("   [QDMI]................Returning raw numbers\n");
+    //printf("   [QDMI].................Returning raw numbers\n");
 
     int err = 0, numbits = 0;
     long i;
@@ -431,7 +435,7 @@ int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits)
 
     if (err != QDMI_SUCCESS)
     {
-        printf("   [QDMI]................QDMI failed to return number of qubits\n");
+        printf("   [QDMI].................QDMI failed to return number of qubits\n");
         return QDMI_WARN_GENERAL;
     }
 
@@ -439,7 +443,7 @@ int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits)
 
     if (*qubits == NULL)
     {
-        printf("   [QDMI]................Couldn't allocate memory for the qubit array\n");
+        printf("   [QDMI].................Couldn't allocate memory for the qubit array\n");
         return QDMI_WARN_GENERAL;
     }
 
@@ -447,7 +451,7 @@ int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits)
     for (i = 0; i < num_qubits; i++)
         QDMI_set_coupling_mapping(dev, i, (*qubits) + i);
 
-    printf("   [QDMI]................Returning available qubits\n");
+    printf("   [QDMI].................Returning available qubits\n");
     return QDMI_SUCCESS;
 }
 
