@@ -251,7 +251,7 @@ void QDMI_get_gate_info(QDMI_Device dev, int gate_index, QDMI_Gate gate)
     }
     json_t *coupling_map_array = json_object_get(gate_obj, "coupling_map");
     if (!json_is_array(coupling_map_array)) {
-        fprintf(stderr, "Error: 'coupling_map' is not an array.\n");
+        //fprintf(stderr, "Error: 'coupling_map' is not an array.\n");
     }
     size_t num_coupling_maps = json_array_size(coupling_map_array);
     // Allocate memory for coupling maps
