@@ -238,7 +238,7 @@ int QDMI_set_coupling_mapping(QDMI_Device dev, int qubit_index, QDMI_Qubit qubit
             qubit->size_coupling_mapping = 2;
             break;
         // don't know what default does 
-        //JE: It handles cases greater than 3
+        //JE: It handles cases greater than 2
         default:
             qubit->coupling_mapping = NULL;
             break; 
