@@ -48,11 +48,8 @@ int fetch_backend_configuration()
         return QDMI_ERROR_CONFIG;
     }
 
-    printf("   [Backend].............Found the config file %s\n", conf_ibm);
-
     json_error_t error;
     root = json_loadf(fp, 0, &error);
-    printf("   [Backend].............Will load the file\n");
     fclose(fp);
     if (!root) 
     {
