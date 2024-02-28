@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include <qdmi.h>
-#include "../include/qdmi_internal.h"
+#include "qdmi_internal.h"
 
 int QDMI_session_init(QInfo info, QDMI_Session *session);
 int QDMI_session_finalize(QDMI_Session session);
@@ -43,9 +43,20 @@ int main(int argc, char** argv)
         printf("\n[ERROR]: The fragment could not be created");
         exit(EXIT_FAILURE);
     }
-    frag->qirmod = strdup("QIR");
+    
+    char * buffer = 0;
+    long length;
+    FILE * f = fopen ("../inputs/basic_circuit.ll", "rb");
+    fseek (f, 0, SEEK_END);
+    length = ftell (f);
+    fseek (f, 0, SEEK_SET);
+    frag->qirmod = malloc (length);
+    fread (frag->qirmod, 1, length, f);
+    fclose (f);
 
-    lib = find_library_by_name("/home/ubuntu/bin/lib/libbackend_ibm.so");
+    //frag->qirmod = buffer;
+    
+    lib = find_library_by_name("/home/martin/bin/lib/libbackend_wmi.so");
     if(!lib)
     {
 	    printf("\n[ERROR]: Library could not be found");
