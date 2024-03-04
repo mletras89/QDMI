@@ -332,7 +332,7 @@ int QDMI_control_readout_size(QDMI_Device dev, QDMI_Status *status, int *numbits
     return QDMI_SUCCESS;
 }
 
-int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int *num)
+int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int task_id, int *num)
 {
     //printf("   [Backend]..............Returning raw numbers\n");
 
@@ -410,7 +410,9 @@ int QDMI_set_coupling_mapping(QDMI_Device dev, int qubit_index, QDMI_Qubit qubit
                 return QDMI_ERROR_CONFIG;
             }
         } else {
-            fprintf(stderr, "Invalid format for pair at index %zu for qubit #.\n");
+            // TODO
+            //fprintf(stderr, "Invalid format for pair at index %zu for qubit #.\n");
+            fprintf(stderr, "Invalid format.\n");
             return QDMI_ERROR_CONFIG;
         }
     }

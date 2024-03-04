@@ -66,7 +66,7 @@ int QDMI_control_readout_size(QDMI_Device dev, QDMI_Status *status, int *numbits
     return QDMI_SUCCESS;
 }
 
-int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int *num)
+int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int task_id, int *num)
 {
     //printf("   [Backend]..............Returning raw numbers\n");
 
