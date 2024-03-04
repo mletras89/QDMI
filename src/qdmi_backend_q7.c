@@ -198,7 +198,7 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
     if (LLVMParseBitcode2(mem_buffer, &module) != 0) {
         fprintf(stderr, "   [Backend].............Error - Failed to parse bitcode: %s\n", error);
         LLVMDisposeMemoryBuffer(mem_buffer);
-        return -1;
+        return QDMI_WARN_GENERAL;
     }
 
     LLVMDisposeMemoryBuffer(mem_buffer);
