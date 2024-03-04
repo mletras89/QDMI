@@ -4,9 +4,19 @@
 #include <dlfcn.h>
 #include <string.h>
 
+#include <llvm-c/Core.h>
+#include <llvm-c/BitReader.h>
+
 #include "qdmi_backend_q7.h"
 
 #define CHECK_ERR(a,b) { if (a!=QDMI_SUCCESS) { printf("\n[Error]: %i at %s",a,b); return 1; }}
+
+int QDMI_control_pack_qir(QDMI_Device dev, void *qirmod, QDMI_Fragment *frag)
+{
+    (*frag)->qirmod = qirmod;
+
+    return QDMI_SUCCESS;
+}
 
 int QDMI_query_gateset_num(QDMI_Device dev, int *num_gates)
 {
@@ -170,14 +180,36 @@ int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits)
 int QDMI_query_qubits_num(QDMI_Device dev, int *num_qubits)
 {
     *num_qubits = 7;
-    //printf("   [Backend]..............QDMI_query_qubits_num\n");
     return QDMI_SUCCESS;
 }
 
 int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInfo info, QDMI_Job *job)
 {
-    printf("   [Backend].............QDMI_control_submit\n");
-    //printf("   [Backend].............(*frag)->QIR_bitcode: %s\n", (*frag)->QIR_bitcode);
+    printf("   [Backend].............QIR received");
+    LLVMModuleRef module = NULL;
+    LLVMMemoryBufferRef mem_buffer = LLVMCreateMemoryBufferWithMemoryRange(
+        (const char *)(*frag)->qirmod, 
+        (*frag)->sizebuffer, 
+        "QIR_module", 
+        0
+    );
+
+    char *error = NULL;
+    if (LLVMParseBitcode2(mem_buffer, &module) != 0) {
+        fprintf(stderr, "   [Backend].............Error - Failed to parse bitcode: %s\n", error);
+        LLVMDisposeMemoryBuffer(mem_buffer);
+        return -1;
+    }
+
+    LLVMDisposeMemoryBuffer(mem_buffer);
+
+    // You can print the QIR like this:
+    //char *qir_string = LLVMPrintModuleToString(module);
+    //printf(":\n%s", qir_string);
+    printf("\n");
+
+    LLVMDisposeMessage(qir_string);
+    LLVMDisposeModule(module);
 
     return QDMI_SUCCESS;
 }
