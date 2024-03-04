@@ -206,10 +206,11 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
     // You can print the QIR like this:
     //char *qir_string = LLVMPrintModuleToString(module);
     //printf(":\n%s", qir_string);
-    printf("\n");
 
-    LLVMDisposeMessage(qir_string);
+    //LLVMDisposeMessage(qir_string);
     LLVMDisposeModule(module);
+
+    printf("\n");
 
     return QDMI_SUCCESS;
 }
