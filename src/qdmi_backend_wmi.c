@@ -300,6 +300,14 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
     response.json = NULL;
     response.size = 0; 
 
+    // task_id as string
+    int job_id = job->task_id;
+    char *job_id_json;
+    size_t sz;
+    sz = snprintf(NULL, 0, "\"%i\"", job->task_id);
+    job_id_json = (char *)malloc(sz + 1); 
+    snprintf(job_id_json, sz+1, "\"%i\"", job_id);
+
     form = curl_mime_init(curl);
     
     // set general options
@@ -332,6 +340,11 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
     curl_mime_name(field, "options");
     curl_mime_type(field, "application/json");
     curl_mime_data(field, options_string, CURL_ZERO_TERMINATED);
+
+    field = curl_mime_addpart(form);
+    curl_mime_name(field, "job_id");
+    curl_mime_type(field, "application/json");
+    curl_mime_data(field, job_id_json, CURL_ZERO_TERMINATED);
 
     curl_easy_setopt(curl, CURLOPT_MIMEPOST, form);
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
