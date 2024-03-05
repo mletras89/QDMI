@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include <qdmi.h>
 #include "qdmi_internal.h"
@@ -85,8 +86,17 @@ int main(int argc, char** argv)
     job->task_id = task_id;
     err = QDMI_control_submit(device, &frag, 10000, device->library.info, &job);
     CHECK_ERR(err, "QDMI_control_submit");
+    
+    // init results array
+    int state_space = 1;
+    for(int i; i<num_qubits; i++){
+        state_space *= 2;
+    }    
+    int num[state_space];
+    for (int i=0; i<state_space; i++){
+        num[i] = 0;
+    }
 
-    int num[num_qubits];
     err = QDMI_control_readout_raw_num(device, &status, job->task_id, &num);
     CHECK_ERR(err, "QDMI_control_readout_raw_num");
 
@@ -101,7 +111,7 @@ int main(int argc, char** argv)
     free(frag);
     free(device);
     free(job);
-    
+
     printf("\n[DEBUG]: Test Finished\n\n");
 
     return 0;

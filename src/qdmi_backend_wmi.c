@@ -107,7 +107,7 @@ int QDMI_backend_init(QInfo info)
 // num classical bits in measurement, same as qubits. Why status needed?
 int QDMI_control_readout_size(QDMI_Device dev, QDMI_Status *status, int *numbits)
 {
-    //printf("   [Backend].............Returning size\n");
+    printf("   [Backend].............Returning size\n");
     
     *numbits = 2;
     return QDMI_SUCCESS;
@@ -333,7 +333,7 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
     form = curl_mime_init(curl);
 
     // set general options
-    curl_easy_setopt(curl, CURLOPT_URL, "https://wmiqc-api.wmi.badw.de/1/qiskitSimulator/qir");
+    curl_easy_setopt(curl, CURLOPT_URL, "http://localhost:5000/1/qiskitSimulator/qir"); //"https://wmiqc-api.wmi.badw.de/1/qiskitSimulator/qir");
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, parse_json);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
 
@@ -347,7 +347,7 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
     char *configuration_string = cJSON_PrintUnformatted(configuration);
     cJSON *options = backend_options(numshots);
     char *options_string = cJSON_PrintUnformatted(options);
-
+    
     field = curl_mime_addpart(form);
     curl_mime_name(field, "qir");
     curl_mime_type(field, "application/form-data");
@@ -363,7 +363,7 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
     curl_mime_name(field, "options");
     curl_mime_type(field, "application/json");
     curl_mime_data(field, options_string, CURL_ZERO_TERMINATED);
-
+    
     field = curl_mime_addpart(form);
     curl_mime_name(field, "job_id");
     curl_mime_type(field, "application/json");
