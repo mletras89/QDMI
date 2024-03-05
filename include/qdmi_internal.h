@@ -100,6 +100,7 @@ typedef struct QDMI_Fragment_d
     QInfo info;
     char *qasmstr;
     void *qirmod;
+    size_t sizebuffer;
 } QDMI_Fragment_t;
 
 typedef struct QDMI_Session_impl_d

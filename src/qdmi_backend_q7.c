@@ -4,9 +4,19 @@
 #include <dlfcn.h>
 #include <string.h>
 
+#include <llvm-c/Core.h>
+#include <llvm-c/BitReader.h>
+
 #include "qdmi_backend_q7.h"
 
 #define CHECK_ERR(a,b) { if (a!=QDMI_SUCCESS) { printf("\n[Error]: %i at %s",a,b); return 1; }}
+
+int QDMI_control_pack_qir(QDMI_Device dev, void *qirmod, QDMI_Fragment *frag)
+{
+    (*frag)->qirmod = qirmod;
+
+    return QDMI_SUCCESS;
+}
 
 int QDMI_query_gateset_num(QDMI_Device dev, int *num_gates)
 {
@@ -46,7 +56,7 @@ int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
 
 int QDMI_backend_init(QInfo info)
 {
-    printf("   [QDMI]...............Initializing Q7 via QDMI\n");
+    printf("   [Backend].............Initializing Q7 via QDMI\n");
 
     char *uri = NULL;
     void *regpointer = NULL;
@@ -60,15 +70,15 @@ int QDMI_backend_init(QInfo info)
 
 int QDMI_control_readout_size(QDMI_Device dev, QDMI_Status *status, int *numbits)
 {
-    //printf("   [QDMI]................Returning size\n");
+    //printf("   [Backend]..............Returning size\n");
     
     *numbits = 7;
     return QDMI_SUCCESS;
 }
 
-int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int *num)
+int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int task_id, int *num)
 {
-    //printf("   [QDMI]................Returning raw numbers\n");
+    //printf("   [Backend]..............Returning raw numbers\n");
 
     int err = 0, numbits = 0;
     long i;
@@ -82,7 +92,7 @@ int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int *num)
     return QDMI_SUCCESS;
 }
 
-void QDMI_set_coupling_mapping(QDMI_Device dev, int qubit_index, QDMI_Qubit qubit)
+int QDMI_set_coupling_mapping(QDMI_Device dev, int qubit_index, QDMI_Qubit qubit)
 {
     qubit->index = qubit_index;
 
@@ -147,7 +157,7 @@ int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits)
 
     if (err != QDMI_SUCCESS)
     {
-        printf("   [QDMI]................QDMI failed to return number of qubits\n");
+        printf("   [Backend]..............QDMI failed to return number of qubits\n");
         return QDMI_WARN_GENERAL;
     }
 
@@ -155,7 +165,7 @@ int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits)
 
     if (*qubits == NULL)
     {
-        printf("   [QDMI]................Couldn't allocate memory for the qubit array\n");
+        printf("   [Backend]..............Couldn't allocate memory for the qubit array\n");
         return QDMI_WARN_GENERAL;
     }
 
@@ -163,21 +173,44 @@ int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits)
     for (i = 0; i < num_qubits; i++)
         QDMI_set_coupling_mapping(dev, i, (*qubits) + i);
 
-    printf("   [QDMI]................Returning available qubits\n");
+    printf("   [Backend]..............Returning available qubits\n");
     return QDMI_SUCCESS;
 }
 
 int QDMI_query_qubits_num(QDMI_Device dev, int *num_qubits)
 {
     *num_qubits = 7;
-    //printf("   [QDMI]................QDMI_query_qubits_num\n");
     return QDMI_SUCCESS;
 }
 
 int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInfo info, QDMI_Job *job)
 {
-    printf("   [QDMI]...............QDMI_control_submit\n");
-    //printf("   [QDMI]...............(*frag)->QIR_bitcode: %s\n", (*frag)->QIR_bitcode);
+    printf("   [Backend].............QIR received");
+    LLVMModuleRef module = NULL;
+    LLVMMemoryBufferRef mem_buffer = LLVMCreateMemoryBufferWithMemoryRange(
+        (const char *)(*frag)->qirmod, 
+        (*frag)->sizebuffer, 
+        "QIR_module", 
+        0
+    );
+
+    char *error = NULL;
+    if (LLVMParseBitcode2(mem_buffer, &module) != 0) {
+        fprintf(stderr, "   [Backend].............Error - Failed to parse bitcode: %s\n", error);
+        LLVMDisposeMemoryBuffer(mem_buffer);
+        return QDMI_WARN_GENERAL;
+    }
+
+    LLVMDisposeMemoryBuffer(mem_buffer);
+
+    // You can print the QIR like this:
+    //char *qir_string = LLVMPrintModuleToString(module);
+    //printf(":\n%s", qir_string);
+
+    //LLVMDisposeMessage(qir_string);
+    LLVMDisposeModule(module);
+
+    printf("\n");
 
     return QDMI_SUCCESS;
 }

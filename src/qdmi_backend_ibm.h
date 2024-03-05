@@ -1,8 +1,10 @@
 #ifndef QDMIBACKENDIBM_H
 #define QDMIBACKENDIBM_H
-#include <jansson.h>
 #include <qdmi_backend.h>
 #include "qdmi_internal.h"
+
+#include <jansson.h>
+#include <stdlib.h>
 
 extern json_error_t error;
 extern json_t *root;

@@ -184,8 +184,8 @@ int QDMI_control_readout_hist_top(QDMI_Device dev, QDMI_Status *status, int numh
 typedef int (*QDMI_control_readout_hist_top_t)(QDMI_Device dev, QDMI_Status *status, int numhist, QInfo info, long *hist);
 
 /* Full data */
-int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int *num);
-typedef int (*QDMI_control_readout_raw_num_t)(QDMI_Device dev, QDMI_Status *status, int *num);
+int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int task_id, int *num);
+typedef int (*QDMI_control_readout_raw_num_t)(QDMI_Device dev, QDMI_Status *status, int task_id, int *num);
 int QDMI_control_readout_raw_sample(QDMI_Device dev, QDMI_Status *status, int numraw, QInfo info, long *hist);
 typedef int (*QDMI_control_readout_raw_sample_t)(QDMI_Device dev, QDMI_Status *status, int numraw, QInfo info, long *hist);
 

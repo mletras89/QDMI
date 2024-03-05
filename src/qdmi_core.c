@@ -40,7 +40,9 @@ int QDMI_load_libraries(QInfo sesioninfo)
    
     configfile=fopen(configfilename,"r");
     if (configfile==NULL)
+    {
         return QDMI_ERROR_NOCFGFILE;
+    }
 
     do 
     {

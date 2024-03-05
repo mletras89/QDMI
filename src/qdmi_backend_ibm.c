@@ -8,63 +8,60 @@
 
 #define CHECK_ERR(a,b) { if (a!=QDMI_SUCCESS) { printf("\n[Error]: %i at %s",a,b); return 1; }}
 
-json_error_t error;
 json_t *root;
 char **gate_set;
 
 int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInfo info, QDMI_Job *job)
 {
-    printf("   [QDMI]...............QDMI_control_submit\n");
+    printf("   [Backend].............QDMI_control_submit\n");
 
     return QDMI_SUCCESS;
 }
 
 int QDMI_control_pack_qasm2(QDMI_Device dev, char *qasmstr, QDMI_Fragment *frag)
 {
-    printf("   [QDMI]...............QDMI_control_pack_qasm2\n");
+    printf("   [Backend].............QDMI_control_pack_qasm2\n");
 
     return QDMI_SUCCESS;
 }
 
 int QDMI_control_pack_qir(QDMI_Device dev, void *qirmod, QDMI_Fragment *frag)
 {
-    printf("   [QDMI]...............QDMI_control_pack_qir\n");
+    printf("   [Backend].............QDMI_control_pack_qir\n");
 
     return QDMI_SUCCESS;
 }
 
 int fetch_backend_configuration()
 {
-    char *home = getenv("HOME");
-    if (home == NULL)
+    char *conf_ibm = getenv("CONF_IBM");
+    if (conf_ibm == NULL)
     {
-        fprintf(stderr, "[QDMI]...............Error: HOME environment variable not set.\n");
+        printf("   [Backend].............Couldn't open IBM's config file\n");
         return QDMI_ERROR_CONFIG;
     }
 
-    char path[256];
-    snprintf(path, sizeof(path), "%s/qdmi.git/inputs/conf.json", home);
-    FILE *fp = fopen(path, "r");
+    FILE *fp = fopen(conf_ibm, "r");
     if (!fp)
     {
-        fprintf(stderr, "[QDMI]...............Error: Failed to open configuration JSON file.\n");
+        printf("   [Backend].............Failed to open configuration JSON file\n");
         return QDMI_ERROR_CONFIG;
     }
 
-    root = json_load_file(/*fp*/path, 0, &error);
-
+    json_error_t error;
+    root = json_loadf(fp, 0, &error);
     fclose(fp);
-    if (!root)
+    if (!root) 
     {
-        fprintf(stderr, "[QDMI]...............Error: Parsing JSON: %s\n", error.text);
-       return QDMI_ERROR_CONFIG;
-    }
-    if (!json_is_object(root))
-    {
-        fprintf(stderr, "[QDMI]...............Error: Root element is not an object.\n");
+        fprintf(stderr, "Error parsing JSON: %s\n", error.text);
         return QDMI_ERROR_CONFIG;
     }
-
+    if (!json_is_object(root)) 
+    {
+        fprintf(stderr, "Root element is not an object.\n");
+        return QDMI_ERROR_CONFIG;
+    }
+    
     return QDMI_SUCCESS;
 }
 
@@ -76,7 +73,7 @@ int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
 
 int QDMI_backend_init(QInfo info)
 {
-    printf("   [QDMI]...............Initializing IBM via QDMI\n");
+    printf("   [Backend].............Initializing IBM via QDMI\n");
 
     char *uri = NULL;
     void *regpointer = NULL;
@@ -85,11 +82,7 @@ int QDMI_backend_init(QInfo info)
     err = QDMI_core_register_belib(uri, regpointer);
     //CHECK_ERR(err, "QDMI_core_register_belib");
 
-    int status = fetch_backend_configuration();
-    
-    printf("\n\tstatus: %d", status);
-
-    return 0;
+    return fetch_backend_configuration();
 }
 /*
 * This allows the QDMI to check if a property exists before querying it by just comparing the string
@@ -255,7 +248,7 @@ void QDMI_get_gate_info(QDMI_Device dev, int gate_index, QDMI_Gate gate)
     }
     json_t *coupling_map_array = json_object_get(gate_obj, "coupling_map");
     if (!json_is_array(coupling_map_array)) {
-        fprintf(stderr, "Error: 'coupling_map' is not an array.\n");
+        //fprintf(stderr, "Error: 'coupling_map' is not an array.\n");
     }
     size_t num_coupling_maps = json_array_size(coupling_map_array);
     // Allocate memory for coupling maps
@@ -334,14 +327,14 @@ int QDMI_query_gate_name(QDMI_Device dev, QDMI_Gate gate, char* name, int* len)
 
 int QDMI_control_readout_size(QDMI_Device dev, QDMI_Status *status, int *numbits)
 {
-    //printf("   [QDMI]................Returning size\n");
+    //printf("   [Backend]..............Returning size\n");
     *numbits = 5;//QDMI_query_qubits_num(dev, *numbits);
     return QDMI_SUCCESS;
 }
 
-int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int *num)
+int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int task_id, int *num)
 {
-    //printf("   [QDMI]................Returning raw numbers\n");
+    //printf("   [Backend]..............Returning raw numbers\n");
 
     int err = 0, numbits = 0;
     long i;
@@ -417,9 +410,9 @@ int QDMI_set_coupling_mapping(QDMI_Device dev, int qubit_index, QDMI_Qubit qubit
                 return QDMI_ERROR_CONFIG;
             }
         } else {
-            //TODO What index?
-            //fprintf(stderr, "Invalid format for pair at index %zu for qubit #.\n"); 
-            fprintf(stderr, "Invalid format.\n"); 
+            // TODO
+            //fprintf(stderr, "Invalid format for pair at index %zu for qubit #.\n");
+            fprintf(stderr, "Invalid format.\n");
             return QDMI_ERROR_CONFIG;
         }
     }
@@ -440,7 +433,7 @@ int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits)
 
     if (err != QDMI_SUCCESS)
     {
-        printf("   [QDMI]................QDMI failed to return number of qubits\n");
+        printf("   [Backend]..............QDMI failed to return number of qubits\n");
         return QDMI_WARN_GENERAL;
     }
 
@@ -448,7 +441,7 @@ int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits)
 
     if (*qubits == NULL)
     {
-        printf("   [QDMI]................Couldn't allocate memory for the qubit array\n");
+        printf("   [Backend]..............Couldn't allocate memory for the qubit array\n");
         return QDMI_WARN_GENERAL;
     }
 
@@ -456,7 +449,7 @@ int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits)
     for (i = 0; i < num_qubits; i++)
         QDMI_set_coupling_mapping(dev, i, (*qubits) + i);
 
-    printf("   [QDMI]................Returning available qubits\n");
+    printf("   [Backend]..............Returning available qubits\n");
     return QDMI_SUCCESS;
 }
 

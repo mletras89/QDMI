@@ -62,9 +62,9 @@ int QDMI_control_readout_hist_top(QDMI_Device dev, QDMI_Status *status, int numh
     return dev->library.QDMI_control_readout_hist_top(dev, status, numhist, info, hist);
 }
 
-int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int *num)
+int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int task_id, int *num)
 {
-    return dev->library.QDMI_control_readout_raw_num(dev, status, num);
+    return dev->library.QDMI_control_readout_raw_num(dev, status, task_id, num);
 }
 
 int QDMI_control_readout_raw_sample(QDMI_Device dev, QDMI_Status *status, int numraw, QInfo info, long *hist)

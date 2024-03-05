@@ -64,6 +64,14 @@ int main(int argc, char** argv)
     }
     device->library = *lib;
 
+    int num_qubits;
+    err = QDMI_query_qubits_num(device, &num_qubits);
+    CHECK_ERR(err, "QDMI_query_qubits_num");
+
+    int status = 0;
+    err = QDMI_device_status(device, device->library.info, &status);
+    CHECK_ERR(err, "QDMI_device_status");
+
     err = QDMI_control_submit(device, &frag, 10000, device->library.info, &job);
     CHECK_ERR(err, "QDMI_control_submit");
 

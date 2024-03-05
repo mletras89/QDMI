@@ -59,6 +59,7 @@ size_t parse_json(void *contents, size_t size, size_t nmemb, struct ResponseStru
     
     struct ResponseStruct *mem = (struct ResponseStruct *)response;
     //printf("")
+    //printf("")
     cJSON *ptr = cJSON_ParseWithLength(contents, realsize);
   
     if(!ptr) {
@@ -76,7 +77,21 @@ size_t parse_json(void *contents, size_t size, size_t nmemb, struct ResponseStru
 // import api token from folder
 char *get_token(){ 
     char token[BUZZ_SIZE];
-    FILE *f = fopen("../inputs/token.txt", "r");
+    char *token_wmi = getenv("TOKEN_WMI");
+
+    if (token_wmi == NULL)
+    {
+        printf("   [Backend].............Couldn't open IBM's config file\n");
+        return NULL;
+    }
+
+    FILE *f = fopen(token_wmi, "r");
+    if (!f)
+    {
+        printf("   [Backend].............Failed to open token file\n");
+        return NULL;
+    }
+
     fgets(token, BUZZ_SIZE, f);
     fclose(f);
 
@@ -177,7 +192,7 @@ int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
 // init not needed for wmi backend
 int QDMI_backend_init(QInfo info)
 {
-    printf("   [QDMI]...............Initializing WMI via QDMI\n");
+    printf("   [Backend].............Initializing WMI via QDMI\n");
 
     char *uri = NULL;
     void *regpointer = NULL;
@@ -192,16 +207,16 @@ int QDMI_backend_init(QInfo info)
 // num classical bits in measurement, same as qubits. Why status needed?
 int QDMI_control_readout_size(QDMI_Device dev, QDMI_Status *status, int *numbits)
 {
-    printf("   [Backend].............Returning size\n");
+    //printf("   [Backend].............Returning size\n");
     
     *numbits = 3;
     return QDMI_SUCCESS;
 }
 
 // looks like this returns the number of measured bitstrings for each outcome
-int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int *num)
+int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int task_id, int *num)
 {
-    printf("   [Backend].............Returning raw numbers\n");
+    printf("   [Backend].............Returning results\n");
 
     int err = 0, numbits = 0;
     long i;
@@ -216,27 +231,31 @@ int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int *num)
 }
 
 // hardcoded coupling map as for each qubit, what are the two neighbours. Are QDMI qubits 1 indexed? Assuming yes and full connectivity for chip.
-void QDMI_set_coupling_mapping(QDMI_Device dev, int qubit_index, QDMI_Qubit qubit)
+int QDMI_set_coupling_mapping(QDMI_Device dev, int qubit_index, QDMI_Qubit qubit)
 {
     qubit->index = qubit_index;
 
     switch (qubit_index) {
-        case 1:
+        case 0:
             qubit->coupling_mapping = (QDMI_qubit_index*)malloc(2 * sizeof(QDMI_qubit_index));
             qubit->coupling_mapping[0] = 1;
             qubit->coupling_mapping[1] = 2;
+            qubit->size_coupling_mapping = 2;
+            break;
+        case 1:
+            qubit->coupling_mapping = (QDMI_qubit_index*)malloc(2 * sizeof(QDMI_qubit_index));
+            qubit->coupling_mapping[0] = 0;
+            qubit->coupling_mapping[1] = 2;
+            qubit->size_coupling_mapping = 2;
             break;
         case 2:
             qubit->coupling_mapping = (QDMI_qubit_index*)malloc(2 * sizeof(QDMI_qubit_index));
             qubit->coupling_mapping[0] = 0;
-            qubit->coupling_mapping[1] = 2;
-            break;
-        case 3:
-            qubit->coupling_mapping = (QDMI_qubit_index*)malloc(3 * sizeof(QDMI_qubit_index));
-            qubit->coupling_mapping[0] = 0;
             qubit->coupling_mapping[1] = 1;
+            qubit->size_coupling_mapping = 2;
             break;
-        // don't know what default does
+        // don't know what default does 
+        //JE: It handles case 3, case 4, and so on
         default:
             qubit->coupling_mapping = NULL;
             break; 
@@ -273,7 +292,7 @@ int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits)
 int QDMI_query_qubits_num(QDMI_Device dev, int *num_qubits)
 {
     *num_qubits = 3;
-    printf("   [Backend].............QDMI_query_qubits_num\n");
+    //printf("   [Backend].............QDMI_query_qubits_num\n");
     return QDMI_SUCCESS;
 }
 
