@@ -18,9 +18,10 @@ struct ResponseStruct {
     size_t size;
 };
 
-char *backend_configuration(){
+cJSON *backend_configuration(){
 
-    char *configuration = "{ \"backend_name\": \"dedicated\", \
+    char *configuration_string = "{ \
+    \"backend_name\": \"dedicated\", \
     \"backend_version\": \"1.0.0\", \
     \"n_qubits\": 3, \
     \"basis_gates\": [\"id\", \"x\", \"y\", \"sx\", \"rz\"], \
@@ -33,7 +34,22 @@ char *backend_configuration(){
     \"max_shots\": 65536, \
     \"gates\": []}";
 
+    size_t len = strlen(configuration_string);
+
+    cJSON *configuration = cJSON_ParseWithLength(configuration_string, len);
+
     return configuration;
+}
+
+cJSON *backend_options(){
+
+    char *option_string = "{ \"shots\": 1024}";
+
+    size_t len = strlen(option_string);
+
+    cJSON *options = cJSON_ParseWithLength(option_string, len);
+
+    return options;
 }
 
 // directly parsing response to json
@@ -297,8 +313,10 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
     // payload
-    
-    char *configuration = backend_configuration();
+    cJSON *configuration = backend_configuration();
+    char *configuration_string = cJSON_PrintUnformatted(configuration);
+    cJSON *options = backend_options();
+    char *options_string = cJSON_PrintUnformatted(options);
 
     field = curl_mime_addpart(form);
     curl_mime_name(field, "qir");
@@ -308,12 +326,12 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
     field = curl_mime_addpart(form);
     curl_mime_name(field, "configuration");
     curl_mime_type(field, "application/json");
-    curl_mime_data(field, configuration, CURL_ZERO_TERMINATED);
+    curl_mime_data(field, configuration_string, CURL_ZERO_TERMINATED);
 
     field = curl_mime_addpart(form);
     curl_mime_name(field, "options");
     curl_mime_type(field, "application/json");
-    curl_mime_data(field, "{\"shots\": 1024}", CURL_ZERO_TERMINATED);
+    curl_mime_data(field, options_string, CURL_ZERO_TERMINATED);
 
     curl_easy_setopt(curl, CURLOPT_MIMEPOST, form);
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
