@@ -13,6 +13,7 @@ QDMI_Library find_library_by_name(const char *libname);
 
 int main(int argc, char** argv)
 {
+    putenv("TOKEN_WMI=../inputs/token.txt");
     QInfo info;
     QDMI_Session session = NULL;
     QDMI_Library lib;
