@@ -74,18 +74,19 @@ size_t parse_json(void *contents, size_t size, size_t nmemb, struct ResponseStru
     return realsize;
 }
 
-// import api token from folder
+// import api token
 char *get_token(){ 
-    char token[BUZZ_SIZE];
-    char *token_wmi = getenv("TOKEN_WMI");
 
-    if (token_wmi == NULL)
+    char token[BUZZ_SIZE];
+    char *token_wmi_path = getenv("TOKEN_WMI");
+
+    if (token_wmi_path == NULL)
     {
-        printf("   [Backend].............Couldn't open IBM's config file\n");
+        printf("   [Backend].............WMI token path not set in environment.\n");
         return NULL;
     }
 
-    FILE *f = fopen(token_wmi, "r");
+    FILE *f = fopen(token_wmi_path, "r");
     if (!f)
     {
         printf("   [Backend].............Failed to open token file\n");
