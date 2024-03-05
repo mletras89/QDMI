@@ -152,7 +152,7 @@ int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
     response.size = 0;
 
     // set options
-    curl_easy_setopt(curl, CURLOPT_URL, "https://wmiqc-api.wmi.badw.de/1/wmiqc/qobj");
+    curl_easy_setopt(curl, CURLOPT_URL, "http://localhost:5000/1/wmiqc/qobj"); // "https://wmiqc-api.wmi.badw.de/1/wmiqc/qobj");
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, parse_json);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
 
@@ -208,7 +208,7 @@ int QDMI_backend_init(QInfo info)
 // num classical bits in measurement, same as qubits. Why status needed?
 int QDMI_control_readout_size(QDMI_Device dev, QDMI_Status *status, int *numbits)
 {
-    //printf("   [Backend].............Returning size\n");
+    printf("   [Backend].............Returning size\n");
     
     *numbits = 3;
     return QDMI_SUCCESS;
@@ -219,14 +219,81 @@ int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int task_
 {
     printf("   [Backend].............Returning results\n");
 
+    CURL *curl = curl_easy_init();
+
+    if (!curl) {
+        fprintf(stderr, "Init failed\n");
+        return EXIT_FAILURE;
+    }
+
     int err = 0, numbits = 0;
-    long i;
 
     err = QDMI_control_readout_size(dev, status, &numbits);
     CHECK_ERR(err, "QDMI_control_readout_raw_num");
 
-    for (i = 0; i < ((long)1 << numbits); i++)
-        num[i] = rand();
+    // make sure results are an array of zeros
+    int state_space = 1;
+    for(int i; i<numbits; i++){
+        state_space *= 2;
+    }
+    for (int i=0; i<state_space; i++){
+        num[i] = 0;
+    }
+
+    char *token_header = get_token();
+
+    char *job_id_json;
+    size_t sz;
+    sz = snprintf(NULL, 0, "{\"job_id\": \"%i\"}", task_id);
+    job_id_json = (char *)malloc(sz + 1); 
+    snprintf(job_id_json, sz+1, "{\"job_id\": \"%i\"}", task_id);
+    
+    struct ResponseStruct response;
+    response.json = NULL;
+    response.size = 0;
+
+    // set options
+    curl_easy_setopt(curl, CURLOPT_URL, "http://localhost:5000/1/qiskitSimulator/qobj");//"https://wmiqc-api.wmi.badw.de/1/qiskitSimulator/qobj");
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, parse_json);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+
+    // headers
+    struct curl_slist* headers = NULL;
+    headers = curl_slist_append(headers, "Content-Type: application/json");
+    headers = curl_slist_append(headers, token_header);
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
+    // payload
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, job_id_json);
+    curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "POST");
+
+    // send request
+    CURLcode result = curl_easy_perform(curl);
+    if (result  != CURLE_OK){
+        fprintf(stderr, "Request problem: %s\n", curl_easy_strerror(result));
+    }
+
+    long bitstring_idx; 
+    char *bitstring_string;
+
+    const cJSON *count_object = NULL;
+    cJSON *counts_array = cJSON_GetObjectItemCaseSensitive(response.json, "counts");
+    cJSON_ArrayForEach(count_object, counts_array) {
+        cJSON *count;
+        cJSON_ArrayForEach(count, count_object) {
+            bitstring_string = count->string;
+            bitstring_idx = strtol(bitstring_string, (char**)0, 0);
+            int amount = count->valueint;
+            num[bitstring_idx] = amount;
+        }
+    
+    }
+    
+    free(response.json);
+    free(job_id_json);
+
+    curl_slist_free_all(headers); 
+    curl_easy_cleanup(curl);
 
     return QDMI_SUCCESS;
 }
@@ -319,7 +386,7 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
     struct ResponseStruct response;
     response.json = NULL;
     response.size = 0; 
-
+    
     // task_id as string
     int job_id = (*job)->task_id;
     char *job_id_json;
@@ -330,7 +397,7 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
     form = curl_mime_init(curl);
     
     // set general options
-    curl_easy_setopt(curl, CURLOPT_URL, "https://wmiqc-api.wmi.badw.de/1/qiskitSimulator/qir");
+    curl_easy_setopt(curl, CURLOPT_URL, "http://localhost:5000/1/qiskitSimulator/qir"); //"https://wmiqc-api.wmi.badw.de/1/qiskitSimulator/qir");
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, parse_json);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
 
@@ -344,7 +411,7 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
     char *configuration_string = cJSON_PrintUnformatted(configuration);
     cJSON *options = backend_options();
     char *options_string = cJSON_PrintUnformatted(options);
-
+    
     field = curl_mime_addpart(form);
     curl_mime_name(field, "qir");
     curl_mime_type(field, "application/x-www-form-urlencoded");
@@ -359,7 +426,7 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
     curl_mime_name(field, "options");
     curl_mime_type(field, "application/json");
     curl_mime_data(field, options_string, CURL_ZERO_TERMINATED);
-
+    
     field = curl_mime_addpart(form);
     curl_mime_name(field, "job_id");
     curl_mime_type(field, "application/json");
@@ -378,6 +445,7 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
 
     free(string);
     free(response.json);
+    free(job_id_json);
 
     curl_mime_free(form);
     curl_slist_free_all(headers); 
