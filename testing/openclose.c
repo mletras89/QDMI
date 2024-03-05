@@ -22,6 +22,13 @@ int main(int argc, char** argv)
     QDMI_Job job;
     int err, count = 0;
 
+    job = malloc(sizeof(struct QDMI_Job_impl_d));
+    if (device == NULL)
+    {
+	printf("\n[ERROR]: Job could not be created");
+        exit(EXIT_FAILURE);
+    }
+
     device = malloc(sizeof(struct QDMI_Device_impl_d));
     if (device == NULL)
     {
@@ -45,6 +52,7 @@ int main(int argc, char** argv)
         exit(EXIT_FAILURE);
     }
     
+    // put readable qir in qirmod.
     char * buffer = 0;
     long length;
     FILE * f = fopen ("../inputs/basic_circuit.ll", "rb");
@@ -54,7 +62,6 @@ int main(int argc, char** argv)
     frag->qirmod = malloc (length);
     fread (frag->qirmod, 1, length, f);
     fclose (f);
-
     
     lib = find_library_by_name("/home/martin/bin/lib/libbackend_wmi.so");
     if(!lib)
@@ -72,8 +79,16 @@ int main(int argc, char** argv)
     err = QDMI_device_status(device, device->library.info, &status);
     CHECK_ERR(err, "QDMI_device_status");
 
+    // job_id as random int
+    srand(time(NULL));
+    int task_id = rand();
+    job->task_id = task_id;
     err = QDMI_control_submit(device, &frag, 10000, device->library.info, &job);
     CHECK_ERR(err, "QDMI_control_submit");
+
+    int num[num_qubits];
+    err = QDMI_control_readout_raw_num(device, &status, job->task_id, &num);
+    CHECK_ERR(err, "QDMI_control_readout_raw_num");
 
     // QDMI_session_finalize(session) -> QDMI_internal_shutdown()
     err = QDMI_session_finalize(session);
@@ -85,7 +100,8 @@ int main(int argc, char** argv)
     free(frag->qirmod);
     free(frag);
     free(device);
-
+    free(job);
+    
     printf("\n[DEBUG]: Test Finished\n\n");
 
     return 0;
