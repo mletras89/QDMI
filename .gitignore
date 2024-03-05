@@ -1,2 +1,4 @@
 *.swp
 build
+inputs/token.txt
+.qdmi-config
