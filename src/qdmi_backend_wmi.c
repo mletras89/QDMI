@@ -321,11 +321,12 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
     response.size = 0; 
 
     // task_id as string
+    int job_id = (*job)->task_id;
     char *job_id_json;
     size_t sz;
-    sz = snprintf(NULL, 0, "\"%i\"", (*job)->task_id);
+    sz = snprintf(NULL, 0, "\"%i\"", job_id);
     job_id_json = (char *)malloc(sz + 1); 
-    snprintf(job_id_json, sz+1, "\"%i\"", (*job)->task_id);
+    snprintf(job_id_json, sz+1, "\"%i\"", job_id);
     form = curl_mime_init(curl);
     
     // set general options
