@@ -70,8 +70,6 @@ int QDMI_backend_init(QInfo info)
 
 int QDMI_control_readout_size(QDMI_Device dev, QDMI_Status *status, int *numbits)
 {
-    //printf("   [Backend]..............Returning size\n");
-    
     *numbits = 7;
     return QDMI_SUCCESS;
 }
@@ -195,10 +193,11 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
     );
 
     char *error = NULL;
-    if (LLVMParseBitcode2(mem_buffer, &module) != 0) {
+    if (LLVMParseBitcode2(mem_buffer, &module) != 0)
+    {
         fprintf(stderr, "   [Backend].............Error - Failed to parse bitcode: %s\n", error);
         LLVMDisposeMemoryBuffer(mem_buffer);
-        return QDMI_WARN_GENERAL;
+        return QDMI_ERROR_FATAL;
     }
 
     LLVMDisposeMemoryBuffer(mem_buffer);
