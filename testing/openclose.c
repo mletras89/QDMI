@@ -56,12 +56,12 @@ int main(int argc, char** argv)
     // put readable qir in qirmod.
     char * buffer = 0;
     long length;
-    FILE * f = fopen ("../inputs/basic_circuit.ll", "rb");
+    FILE * f = fopen ("../inputs/basic_circuit.bc", "rb");
     fseek (f, 0, SEEK_END);
-    length = ftell (f);
+    frag->sizebuffer = ftell (f);
     fseek (f, 0, SEEK_SET);
-    frag->qirmod = malloc (length);
-    fread (frag->qirmod, 1, length, f);
+    frag->qirmod = malloc (frag->sizebuffer);
+    fread (frag->qirmod, 1, frag->sizebuffer, f);
     fclose (f);
     
     lib = find_library_by_name("/home/martin/bin/lib/libbackend_wmi.so");

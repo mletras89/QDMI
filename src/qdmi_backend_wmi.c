@@ -415,7 +415,7 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
     field = curl_mime_addpart(form);
     curl_mime_name(field, "qir");
     curl_mime_type(field, "application/x-www-form-urlencoded");
-    curl_mime_data(field, (*frag)->qirmod, CURL_ZERO_TERMINATED);    
+    curl_mime_filename(field,"bitcode.bc"); // for the backend to see this as a file and not convert it to string. 
 
     field = curl_mime_addpart(form);
     curl_mime_name(field, "configuration");
