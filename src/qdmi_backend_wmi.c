@@ -64,7 +64,7 @@ char *get_token(){
 
     if (token_wmi == NULL)
     {
-        printf("   [Backend].............Couldn't open IBM's config file\n");
+        printf("   [Backend].............WMI token not found. Please set the correct path to TOKEN_WMI.\n");
         return NULL;
     }
 
