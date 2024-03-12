@@ -13,7 +13,14 @@
 #include "qdmi_backend_wmi.h"
 
 #define BUZZ_SIZE 65
-#define CHECK_ERR(a,b) { if (a!=QDMI_SUCCESS) { printf("\n[Error]: %i at %s",a,b); return 1; }}
+#define CHECK_ERR(a, b)                          \
+    {                                            \
+        if (a != QDMI_SUCCESS)                   \
+        {                                        \
+            printf("\n[Error]: %i at %s", a, b); \
+            return 1;                            \
+        }                                        \
+    }
 
 struct ResponseStruct
 {
@@ -99,7 +106,7 @@ int QDMI_backend_init(QInfo info)
     int err;
 
     err = QDMI_core_register_belib(uri, regpointer);
-    //CHECK_ERR(err, "QDMI_core_register_belib");
+    // CHECK_ERR(err, "QDMI_core_register_belib");
 
     return QDMI_SUCCESS;
 }
@@ -169,7 +176,7 @@ int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits)
     return QDMI_SUCCESS;
 }
 
-// number of qubits 
+// number of qubits
 int QDMI_query_qubits_num(QDMI_Device dev, int *num_qubits)
 {
     *num_qubits = 3;
@@ -347,7 +354,7 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
     char *configuration_string = cJSON_PrintUnformatted(configuration);
     cJSON *options = backend_options(numshots);
     char *options_string = cJSON_PrintUnformatted(options);
-    
+
     field = curl_mime_addpart(form);
     curl_mime_name(field, "qir");
     curl_mime_type(field, "application/form-data");
@@ -363,7 +370,7 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
     curl_mime_name(field, "options");
     curl_mime_type(field, "application/json");
     curl_mime_data(field, options_string, CURL_ZERO_TERMINATED);
-    
+
     field = curl_mime_addpart(form);
     curl_mime_name(field, "job_id");
     curl_mime_type(field, "application/json");
