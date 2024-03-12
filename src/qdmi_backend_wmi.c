@@ -139,6 +139,9 @@ int QDMI_query_all_gates(QDMI_Device dev, QDMI_Gate *gates)
 // get status of device. 
 int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
 {   
+
+    printf("   [Backend].............WMI query device status.\n");
+
     CURL *curl = curl_easy_init();
 
     if (!curl) {
