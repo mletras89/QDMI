@@ -87,6 +87,9 @@ int main(int argc, char** argv)
     err = QDMI_control_submit(device, &frag, 10000, device->library.info, &job);
     CHECK_ERR(err, "QDMI_control_submit");
     
+
+    int wait_status = QDMI_control_wait(device, &job, &status); 
+    
     // init results array
     int state_space = 1;
     for(int i; i<num_qubits; i++){
