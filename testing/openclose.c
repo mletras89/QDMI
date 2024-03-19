@@ -10,9 +10,16 @@ int QDMI_session_init(QInfo info, QDMI_Session *session);
 int QDMI_session_finalize(QDMI_Session session);
 QDMI_Library find_library_by_name(const char *libname);
 
-#define CHECK_ERR(a,b) { if (a!=QDMI_SUCCESS) { printf("\n[Error]: %i at %s",a,b); return 1; }}
+#define CHECK_ERR(a, b)                          \
+    {                                            \
+        if (a != QDMI_SUCCESS)                   \
+        {                                        \
+            printf("\n[Error]: %i at %s", a, b); \
+            return 1;                            \
+        }                                        \
+    }
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
     putenv("TOKEN_WMI=../inputs/token.txt");
     QInfo info;
@@ -26,14 +33,14 @@ int main(int argc, char** argv)
     job = malloc(sizeof(struct QDMI_Job_impl_d));
     if (device == NULL)
     {
-	printf("\n[ERROR]: Job could not be created");
+        printf("\n[ERROR]: Job could not be created");
         exit(EXIT_FAILURE);
     }
 
     device = malloc(sizeof(struct QDMI_Device_impl_d));
     if (device == NULL)
     {
-	printf("\n[ERROR]: Device could not be created");
+        printf("\n[ERROR]: Device could not be created");
         exit(EXIT_FAILURE);
     }
 
@@ -52,22 +59,22 @@ int main(int argc, char** argv)
         printf("\n[ERROR]: The fragment could not be created");
         exit(EXIT_FAILURE);
     }
-    
+
     // put readable qir in qirmod.
-    char * buffer = 0;
+    char *buffer = 0;
     long length;
-    FILE * f = fopen ("../inputs/basic_circuit.bc", "rb");
-    fseek (f, 0, SEEK_END);
-    frag->sizebuffer = ftell (f);
-    fseek (f, 0, SEEK_SET);
-    frag->qirmod = malloc (frag->sizebuffer);
-    fread (frag->qirmod, 1, frag->sizebuffer, f);
-    fclose (f);
-    
+    FILE *f = fopen("../inputs/basic_circuit.bc", "rb");
+    fseek(f, 0, SEEK_END);
+    frag->sizebuffer = ftell(f);
+    fseek(f, 0, SEEK_SET);
+    frag->qirmod = malloc(frag->sizebuffer);
+    fread(frag->qirmod, 1, frag->sizebuffer, f);
+    fclose(f);
+
     lib = find_library_by_name("/home/martin/bin/lib/libbackend_wmi.so");
-    if(!lib)
+    if (!lib)
     {
-	    printf("\n[ERROR]: Library could not be found");
+        printf("\n[ERROR]: Library could not be found");
         exit(EXIT_FAILURE);
     }
     device->library = *lib;
@@ -86,17 +93,18 @@ int main(int argc, char** argv)
     job->task_id = task_id;
     err = QDMI_control_submit(device, &frag, 10000, device->library.info, &job);
     CHECK_ERR(err, "QDMI_control_submit");
-    
 
-    int wait_status = QDMI_control_wait(device, &job, &status); 
-    
+    int wait_status = QDMI_control_wait(device, &job, &status);
+
     // init results array
     int state_space = 1;
-    for(int i; i<num_qubits; i++){
+    for (int i; i < num_qubits; i++)
+    {
         state_space *= 2;
-    }    
+    }
     int num[state_space];
-    for (int i=0; i<state_space; i++){
+    for (int i = 0; i < state_space; i++)
+    {
         num[i] = 0;
     }
 
@@ -109,7 +117,7 @@ int main(int argc, char** argv)
 
     err = QInfo_free(info);
     CHECK_ERR(err, "QInfo_free");
-    
+
     free(frag->qirmod);
     free(frag);
     free(device);
@@ -119,4 +127,3 @@ int main(int argc, char** argv)
 
     return 0;
 }
-
