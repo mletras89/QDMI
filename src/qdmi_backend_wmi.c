@@ -306,6 +306,119 @@ int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
     return QDMI_SUCCESS;
 }
 
+// import api token
+char *get_token()
+{
+
+    char token[BUZZ_SIZE];
+    char *token_wmi_path = getenv("TOKEN_WMI");
+
+    if (token_wmi_path == NULL)
+    {
+        printf("   [Backend].............WMI token path not set in environment.\n");
+        return NULL;
+    }
+
+    FILE *f = fopen(token_wmi_path, "r");
+    if (!f)
+    {
+        printf("   [Backend].............Failed to open token file\n");
+        return NULL;
+    }
+
+    fgets(token, BUZZ_SIZE, f);
+    fclose(f);
+
+    char *token_header = NULL;
+    asprintf(&token_header, "access-token: %s", token);
+
+    return (token_header);
+}
+
+// directly parsing response to json
+size_t parse_json(void *contents, size_t size, size_t nmemb, struct ResponseStruct *response)
+{
+
+    size_t realsize = size * nmemb;
+
+    struct ResponseStruct *mem = (struct ResponseStruct *)response;
+
+    cJSON *ptr = cJSON_ParseWithLength(contents, realsize);
+
+    if (!ptr)
+    {
+        /* out of memory! */
+        printf("not enough memory (realloc returned NULL)\n");
+        return 0;
+    }
+
+    mem->json = ptr;
+    mem->size += realsize;
+
+    return realsize;
+}
+
+// get status of device.
+int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
+{
+
+    printf("   [Backend].............WMI query device status.\n");
+
+    CURL *curl = curl_easy_init();
+
+    if (!curl)
+    {
+        fprintf(stderr, "Init failed\n");
+        return EXIT_FAILURE;
+    }
+    char *token_header = get_token();
+
+    struct ResponseStruct response;
+    response.json = NULL;
+    response.size = 0;
+
+    // set options
+    curl_easy_setopt(curl, CURLOPT_URL, "https://wmiqc-api.wmi.badw.de/1/wmiqc/qobj");
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, parse_json);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+
+    // headers
+    struct curl_slist *headers = NULL;
+    headers = curl_slist_append(headers, "Content-Type: application/json");
+    headers = curl_slist_append(headers, token_header);
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
+    // payload
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, "{\"qobj\": {\"header\": {\"backend_name\": \"dedicated\"}}}");
+    curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "GET");
+
+    // send request
+    CURLcode result = curl_easy_perform(curl);
+    if (result != CURLE_OK)
+    {
+        fprintf(stderr, "Request problem: %s\n", curl_easy_strerror(result));
+    }
+
+    // obtain result
+    char *backend_status = response.json->child->valuestring;
+
+    // I set status = 0 for offline, status = 1 for online
+    if (strcmp(backend_status, "online") == 0)
+    {
+        *status = 1;
+    }
+    else if (strcmp(backend_status, "offline") == 0)
+    {
+        *status = 0;
+    }
+
+    free(response.json);
+    curl_slist_free_all(headers);
+    curl_easy_cleanup(curl);
+
+    return QDMI_SUCCESS;
+}
+
 // submit function. Need to know what the different structs are for
 int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInfo info, QDMI_Job *job)
 {
@@ -340,7 +453,7 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
     form = curl_mime_init(curl);
 
     // set general options
-    curl_easy_setopt(curl, CURLOPT_URL, "http://localhost:5000/1/qiskitSimulator/qir"); //"https://wmiqc-api.wmi.badw.de/1/qiskitSimulator/qir");
+    curl_easy_setopt(curl, CURLOPT_URL, "https://wmiqc-api.wmi.badw.de/1/qiskitSimulator/qir");
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, parse_json);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
 
@@ -633,4 +746,3 @@ int QDMI_control_pack_qir(QDMI_Device dev, void *qirmod, QDMI_Fragment *frag)
 
     return QDMI_SUCCESS;
 }
-
