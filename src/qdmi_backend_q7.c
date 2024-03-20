@@ -11,13 +11,6 @@
 
 #define CHECK_ERR(a,b) { if (a!=QDMI_SUCCESS) { printf("\n[Error]: %i at %s",a,b); return 1; }}
 
-int QDMI_control_pack_qir(QDMI_Device dev, void *qirmod, QDMI_Fragment *frag)
-{
-    (*frag)->qirmod = qirmod;
-
-    return QDMI_SUCCESS;
-}
-
 int QDMI_query_gateset_num(QDMI_Device dev, int *num_gates)
 {
     if (sizeof(gate_set) > 0)
@@ -213,3 +206,16 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
 
     return QDMI_SUCCESS;
 }
+
+int QDMI_control_wait(QDMI_Device dev, QDMI_Job *job, QDMI_Status *status)
+{
+    return QDMI_SUCCESS
+}
+
+int QDMI_control_pack_qir(QDMI_Device dev, void *qirmod, QDMI_Fragment *frag)
+{
+    (*frag)->qirmod = qirmod;
+
+    return QDMI_SUCCESS;
+}
+
