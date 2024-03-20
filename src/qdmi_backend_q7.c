@@ -209,7 +209,7 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
 
 int QDMI_control_wait(QDMI_Device dev, QDMI_Job *job, QDMI_Status *status)
 {
-    return QDMI_SUCCESS
+    return QDMI_SUCCESS;
 }
 
 int QDMI_control_pack_qir(QDMI_Device dev, void *qirmod, QDMI_Fragment *frag)
