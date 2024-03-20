@@ -13,6 +13,8 @@
 #include "qdmi_backend_wmi.h"
 
 #define BUZZ_SIZE 65
+#define base_url "https://wmiqc-api.wmi.badw.de"
+
 #define CHECK_ERR(a, b)                          \
     {                                            \
         if (a != QDMI_SUCCESS)                   \
@@ -261,7 +263,10 @@ int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
     response.size = 0;
 
     // set options
-    curl_easy_setopt(curl, CURLOPT_URL, "https://wmiqc-api.wmi.badw.de/1/wmiqc/qobj");
+    char url[256];
+    snprintf(url, sizeof(url), "%s%s", base_url,"/1/wmiqc/qobj");
+
+    curl_easy_setopt(curl, CURLOPT_URL, url);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, parse_json);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
 
@@ -336,7 +341,10 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
     form = curl_mime_init(curl);
 
     // set general options
-    curl_easy_setopt(curl, CURLOPT_URL, "https://wmiqc-api.wmi.badw.de/1/qiskitSimulator/qir");
+    char url[256];
+    snprintf(url, sizeof(url), "%s%s", base_url,"/1/qiskitSimulator/qir");
+
+    curl_easy_setopt(curl, CURLOPT_URL, url);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, parse_json);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
 
@@ -437,7 +445,10 @@ int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int task_
     response.size = 0;
 
     // set options
-    curl_easy_setopt(curl, CURLOPT_URL, "https://wmiqc-api.wmi.badw.de/1/qiskitSimulator/qobj");
+    char url[256];
+    snprintf(url, sizeof(url), "%s%s", base_url,"/1/qiskitSimulator/qobj");
+
+    curl_easy_setopt(curl, CURLOPT_URL, url);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, parse_json);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
 
@@ -532,7 +543,10 @@ int QDMI_control_test(QDMI_Device dev, QDMI_Job *job, int *flag, QDMI_Status *st
     response.size = 0;
 
     // set options
-    curl_easy_setopt(curl, CURLOPT_URL, "https://wmiqc-api.wmi.badw.de/1/qiskitSimulator/qobj");
+    char url[256];
+    snprintf(url, sizeof(url), "%s%s", base_url,"/1/qiskitSimulator/qobj");
+
+    curl_easy_setopt(curl, CURLOPT_URL, url);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, parse_json);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
 
