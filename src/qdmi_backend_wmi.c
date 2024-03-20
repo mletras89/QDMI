@@ -229,7 +229,7 @@ size_t parse_json(void *contents, size_t size, size_t nmemb, struct ResponseStru
 // get status of device.
 int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
 {
-    printf("   [Backend].............WMI query device status.\n");
+    printf("   [Backend].............WMI query device status\n");
 
     CURL *curl = curl_easy_init();
 
