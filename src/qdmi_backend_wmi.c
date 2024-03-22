@@ -479,7 +479,6 @@ int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int task_
 
         char *string = cJSON_Print(response.json);
 
-        int num[3];
         long bitstring_idx;
         char *bitstring_string;
 
@@ -498,6 +497,7 @@ int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int task_
         }
         free(bitstring_string);
         free(string);
+
     }
     else
     {
