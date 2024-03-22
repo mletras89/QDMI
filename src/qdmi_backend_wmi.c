@@ -622,6 +622,7 @@ int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int task_
         }
         free(bitstring_string);
         free(string);
+
     }
     else
     {
