@@ -63,7 +63,7 @@ int main(int argc, char **argv)
     // put readable qir in qirmod.
     char *buffer = 0;
     long length;
-    FILE *f = fopen("../inputs/basic_circuit.bc", "rb");
+    FILE *f = fopen("../inputs/Bell_circuit.bc", "rb");
     fseek(f, 0, SEEK_END);
     frag->sizebuffer = ftell(f);
     fseek(f, 0, SEEK_SET);
@@ -110,6 +110,12 @@ int main(int argc, char **argv)
 
     err = QDMI_control_readout_raw_num(device, &status, job->task_id, &num);
     CHECK_ERR(err, "QDMI_control_readout_raw_num");
+
+    for (int i = 0; i < state_space; i++)
+    {
+        printf("Measurement: %i counts:: %i\n", i, num[i]);
+    }
+    
 
     // QDMI_session_finalize(session) -> QDMI_internal_shutdown()
     err = QDMI_session_finalize(session);
