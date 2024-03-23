@@ -161,8 +161,10 @@ void connectToTheRabbitMQ(amqp_connection_state_t *Connection,
 
     *Socket = amqp_tcp_socket_new(*Connection);
     assert(Socket != NULL);
+    printf("   [Backend].............R4\n");
     
     int status = amqp_socket_open(*Socket, HOST_NAME, PORT);
+    printf("   [Backend].............Status: %d\n", status);
     assert(status == AMQP_STATUS_OK);
     
     amqp_rpc_reply_t reply = amqp_login(*Connection, "/", 0, 131072, 0, AMQP_SASL_METHOD_PLAIN, "guest", "guest");
@@ -258,6 +260,8 @@ char *startConsume(amqp_connection_state_t *Connection, char *Queue)
 
         TheResponse = (char *)envelope.message.body.bytes;
         json_t *root = json_loads(TheResponse, 0, &theError);
+
+        printf("   [Backend].............The Response: %s\n", TheResponse);
 
         if (!root)
         {
@@ -372,9 +376,11 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
     publishTheString(
 		&SendConnection, 
 		TheRequest, 
-		"qd_qrequest_reception_queue_274973451958055"
+		//"qd_qrequest_reception_queue_274973451958055"
+        "qs_qlm_274973448280338"
 	);
 
+    printf("   [Backend].............0\n");
     return QDMI_SUCCESS;
 }
 
@@ -464,8 +470,11 @@ int QDMI_query_qubits_num(QDMI_Device dev, int *num_qubits)
 
 int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int task_id, int *num)
 {
+    printf("   [Backend].............1\n");
     connectToTheRabbitMQ(&ListenConnection, &Listensocket);
+    printf("   [Backend].............2\n");
     char *TheResponse = startConsume(&ListenConnection, "qlm_test_dest");
+    printf("   [Backend].............3\n");
     closeConnections(&ListenConnection);
 
     json_error_t error;
@@ -501,5 +510,10 @@ int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int task_
         iter = json_object_iter_next(results, iter);
     }
     
+    return QDMI_SUCCESS;
+}
+
+int QDMI_control_wait(QDMI_Device dev, QDMI_Job *job, QDMI_Status *status)
+{
     return QDMI_SUCCESS;
 }

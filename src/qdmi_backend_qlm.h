@@ -11,7 +11,7 @@
 #define N_GATE 19
 #define N_R_GATE 3
 
-#define HOST_NAME "localhost"
+#define HOST_NAME "10.195.1.175"
 #define PORT 5672
 
 amqp_connection_state_t SendConnection, ListenConnection;
