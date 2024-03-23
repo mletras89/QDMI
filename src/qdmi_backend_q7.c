@@ -11,13 +11,6 @@
 
 #define CHECK_ERR(a,b) { if (a!=QDMI_SUCCESS) { printf("\n[Error]: %i at %s",a,b); return 1; }}
 
-int QDMI_control_pack_qir(QDMI_Device dev, void *qirmod, QDMI_Fragment *frag)
-{
-    (*frag)->qirmod = qirmod;
-
-    return QDMI_SUCCESS;
-}
-
 int QDMI_query_gateset_num(QDMI_Device dev, int *num_gates)
 {
     if (sizeof(gate_set) > 0)
@@ -50,6 +43,8 @@ int QDMI_query_all_gates(QDMI_Device dev, QDMI_Gate *gates)
 
 int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
 {
+    printf("   [Backend].............Q7 query device status\n");
+
     *status = 1;
     return QDMI_SUCCESS;
 }
@@ -171,7 +166,7 @@ int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits)
     for (i = 0; i < num_qubits; i++)
         QDMI_set_coupling_mapping(dev, i, (*qubits) + i);
 
-    printf("   [Backend]..............Returning available qubits\n");
+    printf("   [Backend].............Returning available qubits\n");
     return QDMI_SUCCESS;
 }
 
@@ -213,3 +208,16 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
 
     return QDMI_SUCCESS;
 }
+
+int QDMI_control_wait(QDMI_Device dev, QDMI_Job *job, QDMI_Status *status)
+{
+    return QDMI_SUCCESS;
+}
+
+int QDMI_control_pack_qir(QDMI_Device dev, void *qirmod, QDMI_Fragment *frag)
+{
+    (*frag)->qirmod = qirmod;
+
+    return QDMI_SUCCESS;
+}
+

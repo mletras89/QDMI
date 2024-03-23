@@ -293,6 +293,8 @@ int QDMI_control_readout_size(QDMI_Device dev, QDMI_Status *status, int *numbits
 
 int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
 {
+    printf("   [Backend].............QLM query device status\n");
+
     *status = 1;
     return QDMI_SUCCESS;
 }

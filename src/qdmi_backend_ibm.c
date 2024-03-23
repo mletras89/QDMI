@@ -67,6 +67,7 @@ int fetch_backend_configuration()
 
 int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
 {
+    printf("   [Backend].............IBM query device status\n");
     *status = 1;
     return QDMI_SUCCESS;
 }
