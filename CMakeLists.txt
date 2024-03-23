@@ -35,10 +35,12 @@ find_package(qinfo REQUIRED)
 
 find_package(jansson REQUIRED)
 
+find_package(LLVM REQUIRED CONFIG)
+
 add_compile_options("-g")
 
 add_library(backend_qlm SHARED src/qdmi_backend_qlm.c)
-target_link_libraries(backend_qlm PRIVATE qinfo jansson ${RABBITMQ_LIBRARY})
+target_link_libraries(backend_qlm PRIVATE qinfo jansson ${RABBITMQ_LIBRARY} LLVM)
 target_compile_definitions(backend_qlm PRIVATE _GNU_SOURCE)
 
 add_library(backend_ibm SHARED src/qdmi_backend_ibm.c)
@@ -48,7 +50,7 @@ add_library(backend_wmi SHARED src/qdmi_backend_wmi.c)
 target_link_libraries(backend_wmi PRIVATE qinfo CURL::libcurl cjson)
 
 add_library(backend_q7 SHARED src/qdmi_backend_q7.c)
-target_link_libraries(backend_q7 PRIVATE qinfo)
+target_link_libraries(backend_q7 PRIVATE qinfo LLVM) 
 
 set(PUBLIC_QDMI_HEADERS
     "include/qdmi.h"
@@ -64,7 +66,7 @@ set_target_properties(backend_qlm PROPERTIES
 
 target_include_directories(backend_qlm PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>
+    $<INSTALL_INTERFACE:include> ${LLVM_INCLUDE_DIRS}
 )
 
 set_target_properties(backend_ibm PROPERTIES
@@ -97,7 +99,7 @@ set_target_properties(backend_q7 PROPERTIES
 
 target_include_directories(backend_q7 PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>
+    $<INSTALL_INTERFACE:include> ${LLVM_INCLUDE_DIRS}
 )
 
 add_library(qdmi SHARED 
