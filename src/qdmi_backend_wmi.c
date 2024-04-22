@@ -254,7 +254,7 @@ int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
     if (!curl)
     {
         fprintf(stderr, "Init failed\n");
-        return EXIT_FAILURE;
+        return QDMI_ERROR_OUTOFMEM;
     }
     char *token_header = get_token();
 
@@ -285,7 +285,9 @@ int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
     CURLcode result = curl_easy_perform(curl);
     if (result != CURLE_OK)
     {
-        fprintf(stderr, "Request problem: %s\n", curl_easy_strerror(result));
+        fprintf(stderr, "[Backend].............Request problem: %s\n", curl_easy_strerror(result));
+
+        return QDMI_ERROR_BACKEND;
     }
 
     // obtain result
@@ -318,7 +320,7 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
     if (!curl)
     {
         fprintf(stderr, "Init failed\n");
-        return EXIT_FAILURE;
+        return QDMI_ERROR_OUTOFMEM;
     }
 
     // token
@@ -390,6 +392,8 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
     if (result != CURLE_OK)
     {
         fprintf(stderr, "[Backend].............Request problem: %s\n", curl_easy_strerror(result));
+
+        return QDMI_ERROR_BACKEND;
     }
 
     char *string = cJSON_Print(response.json);
@@ -415,7 +419,7 @@ int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int task_
     if (!curl)
     {
         fprintf(stderr, "Init failed\n");
-        return EXIT_FAILURE;
+        return QDMI_ERROR_OUTOFMEM;
     }
 
     int err = 0, numbits = 0;
@@ -470,6 +474,8 @@ int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int task_
     if (result != CURLE_OK)
     {
         fprintf(stderr, "Request problem: %s\n", curl_easy_strerror(result));
+        
+        return QDMI_ERROR_BACKEND;
     }
 
     // process data
@@ -525,7 +531,7 @@ int QDMI_control_test(QDMI_Device dev, QDMI_Job *job, int *flag, QDMI_Status *st
     if (!curl)
     {
         fprintf(stderr, "Init failed\n");
-        return EXIT_FAILURE;
+        return QDMI_ERROR_OUTOFMEM;
     }
 
     int err = 0, numbits = 0;
@@ -569,6 +575,9 @@ int QDMI_control_test(QDMI_Device dev, QDMI_Job *job, int *flag, QDMI_Status *st
     if (result != CURLE_OK)
     {
         fprintf(stderr, "Request problem: %s\n", curl_easy_strerror(result));
+
+        (*flag) = QDMI_HALTED;
+        return QDMI_ERROR_BACKEND;
     }
 
     // process data
