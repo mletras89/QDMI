@@ -371,7 +371,7 @@ int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
     if (!curl)
     {
         fprintf(stderr, "Init failed\n");
-        return EXIT_FAILURE;
+        return QDMI_ERROR_OUTOFMEM;
     }
     char *token_header = get_token();
 
@@ -402,7 +402,9 @@ int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
     CURLcode result = curl_easy_perform(curl);
     if (result != CURLE_OK)
     {
-        fprintf(stderr, "Request problem: %s\n", curl_easy_strerror(result));
+        fprintf(stderr, "[Backend].............Request problem: %s\n", curl_easy_strerror(result));
+
+        return QDMI_ERROR_BACKEND;
     }
 
     // obtain result
