@@ -269,6 +269,7 @@ int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
     curl_easy_setopt(curl, CURLOPT_URL, url);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, parse_json);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+    curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
 
     // headers
     struct curl_slist *headers = NULL;
@@ -347,6 +348,7 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
     curl_easy_setopt(curl, CURLOPT_URL, url);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, parse_json);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+    curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
 
     // set headers
     headers = curl_slist_append(headers, token_header);
@@ -451,6 +453,7 @@ int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int task_
     curl_easy_setopt(curl, CURLOPT_URL, url);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, parse_json);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+    curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
 
     // headers
     struct curl_slist *headers = NULL;
@@ -549,6 +552,7 @@ int QDMI_control_test(QDMI_Device dev, QDMI_Job *job, int *flag, QDMI_Status *st
     curl_easy_setopt(curl, CURLOPT_URL, url);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, parse_json);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+    curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
 
     // headers
     struct curl_slist *headers = NULL;
