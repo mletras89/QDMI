@@ -381,7 +381,7 @@ int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
 
     // set options
     char url[256];
-    snprintf(url, sizeof(url), "%s%s", base_url,"/1/wmiqc/qobj");
+    snprintf(url, sizeof(url), "%s%s", base_url, "/1/wmiqc/qobj");
 
     curl_easy_setopt(curl, CURLOPT_URL, url);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, parse_json);
@@ -402,6 +402,18 @@ int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
     if (result != CURLE_OK)
     {
         fprintf(stderr, "[Backend].............Request problem: %s\n", curl_easy_strerror(result));
+        return QDMI_ERROR_BACKEND;
+    }
+
+    // process data
+    long http_code = 0;
+    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
+    cJSON *message = cJSON_GetObjectItemCaseSensitive(response.json, "message");
+    char *string = cJSON_Print(message);
+
+    if (http_code != 200)
+    {
+        fprintf(stderr, "   [Backend].............Request problem: %ld - %s\n", http_code, string);
         return QDMI_ERROR_BACKEND;
     }
 
@@ -460,7 +472,7 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
 
     // set general options
     char url[256];
-    snprintf(url, sizeof(url), "%s%s", base_url,"/1/qiskitSimulator/qir");
+    snprintf(url, sizeof(url), "%s%s", base_url, "/1/qiskitSimulator/qir");
 
     curl_easy_setopt(curl, CURLOPT_URL, url);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, parse_json);
@@ -570,7 +582,7 @@ int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int task_
 
     // set options
     char url[256];
-    snprintf(url, sizeof(url), "%s%s", base_url,"/1/qiskitSimulator/qobj");
+    snprintf(url, sizeof(url), "%s%s", base_url, "/1/qiskitSimulator/qobj");
 
     curl_easy_setopt(curl, CURLOPT_URL, url);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, parse_json);
@@ -597,6 +609,8 @@ int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int task_
     // process data
     long http_code = 0;
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
+    cJSON *message = cJSON_GetObjectItemCaseSensitive(response.json, "message");
+    char *string = cJSON_Print(message);
 
     if (http_code == 200)
     {
@@ -623,7 +637,6 @@ int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int task_
         }
         free(bitstring_string);
         free(string);
-
     }
     else
     {
@@ -671,7 +684,7 @@ int QDMI_control_test(QDMI_Device dev, QDMI_Job *job, int *flag, QDMI_Status *st
 
     // set options
     char url[256];
-    snprintf(url, sizeof(url), "%s%s", base_url,"/1/qiskitSimulator/qobj");
+    snprintf(url, sizeof(url), "%s%s", base_url, "/1/qiskitSimulator/qobj");
 
     curl_easy_setopt(curl, CURLOPT_URL, url);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, parse_json);
@@ -700,7 +713,6 @@ int QDMI_control_test(QDMI_Device dev, QDMI_Job *job, int *flag, QDMI_Status *st
     // process data
     long http_code = 0;
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
-   
     if (http_code == 200)
     {
         //printf("   [Backend].............Job finished\n");
