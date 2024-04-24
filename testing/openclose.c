@@ -63,7 +63,7 @@ int main(int argc, char **argv)
     // put readable qir in qirmod.
     char *buffer = 0;
     long length;
-    FILE *f = fopen("../inputs/Bell_circuit.bc", "rb");
+    FILE *f = fopen("../inputs/circuit_excited.bc", "rb");
     fseek(f, 0, SEEK_END);
     frag->sizebuffer = ftell(f);
     fseek(f, 0, SEEK_SET);
@@ -91,7 +91,7 @@ int main(int argc, char **argv)
     srand(time(NULL));
     int task_id = rand();
     job->task_id = task_id;
-    err = QDMI_control_submit(device, &frag, 10000, device->library.info, &job);
+    err = QDMI_control_submit(device, &frag, 1024, device->library.info, &job);
     CHECK_ERR(err, "QDMI_control_submit");
 
     int wait_status = QDMI_control_wait(device, &job, &status);
