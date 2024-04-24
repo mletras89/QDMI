@@ -320,10 +320,23 @@ int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
     return QDMI_SUCCESS;
 }
 
+// https://stackoverflow.com/questions/600293/how-to-check-if-a-number-is-a-power-of-2
+bool IsPowerOfTwo(unsigned int x)
+{
+    return (x > 0) && ((x & (x - 1)) == 0);
+}
+
 // submit function. Need to know what the different structs are for
 int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInfo info, QDMI_Job *job)
 {
     printf("   [Backend].............QDMI_control_submit\n");
+
+    bool is_power_of_two = IsPowerOfTwo(numshots);
+    if (!is_power_of_two)
+    {
+        fprintf(stderr, "[Backend].............Powers of 2 required for number of shots, but is %i!\n", numshots);
+        return QDMI_ERROR_CONFIG;
+    }
 
     CURL *curl = curl_easy_init();
 
