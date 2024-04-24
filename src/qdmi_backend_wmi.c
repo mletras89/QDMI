@@ -221,7 +221,7 @@ char *get_token()
 }
 
 // directly parsing response to json
-size_t parse_json(void *contents, size_t size, size_t nmemb, struct ResponseStruct *response)
+static size_t parse_json(void *contents, size_t size, size_t nmemb, struct ResponseStruct *response)
 {
 
     size_t realsize = size * nmemb;
