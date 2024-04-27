@@ -278,43 +278,60 @@ void QDMI_get_gate_info(QDMI_Device dev, int gate_index, QDMI_Gate gate)
         //fprintf(stderr, "Error: 'coupling_map' is not an array.\n");
     }
     size_t num_coupling_maps = json_array_size(coupling_map_array);
-    // Allocate memory for coupling maps
-    gate->coupling_mapping = (QDMI_Gate_property **)malloc(num_coupling_maps * sizeof(QDMI_Gate_property *));
-    if (!gate->coupling_mapping) {
-        fprintf(stderr, "Error: Memory allocation failed.\n");
-    }
-    size_t num_connections;
-    // Loop through each coupling map
-    for (size_t j = 0; j < num_coupling_maps; ++j) {
-        json_t *coupling_map = json_array_get(coupling_map_array, j);
-        if (!json_is_array(coupling_map)) {
-            fprintf(stderr, "Error: Invalid coupling map.\n");
-            continue;
-        }
-        num_connections = json_array_size(coupling_map);
-        // Allocate memory for current coupling map
-        gate->coupling_mapping[j] = (int *)malloc(num_connections * sizeof(int));
-        if (!gate->coupling_mapping[j]) {
+    
+    if(num_coupling_maps != 0){
+        // Allocate memory for coupling maps
+        // Notice (num_coupling_maps + 1) -> To store a sentinel value so that FoMac knows when to stop looking for indices
+        gate->coupling_mapping = (QDMI_Gate_property **)malloc((num_coupling_maps + 1) * sizeof(QDMI_Gate_property *));
+        if (!gate->coupling_mapping) {
             fprintf(stderr, "Error: Memory allocation failed.\n");
-            // Free previously allocated memory
-            for (size_t k = 0; k < j; ++k) {
-                free(gate->coupling_mapping[k]);
-            }
-            free(gate->coupling_mapping);
-            continue;
         }
-        // Loop through each connection in the coupling map
-        for (size_t k = 0; k < num_connections; ++k) {
-            json_t *connection = json_array_get(coupling_map, k);
-            if (!json_is_integer(connection)) {
-                fprintf(stderr, "Error: Invalid connection.\n");
+        size_t num_connections;
+        // Loop through each coupling map
+        for (size_t j = 0; j < num_coupling_maps; ++j) {
+            json_t *coupling_map = json_array_get(coupling_map_array, j);
+            if (!json_is_array(coupling_map)) {
+                fprintf(stderr, "Error: Invalid coupling map.\n");
                 continue;
             }
-            int qubit = json_integer_value(connection);
-            gate->coupling_mapping[j][k] = qubit;
+            num_connections = json_array_size(coupling_map);
+
+            // Allocate memory for current coupling map
+            // Notice (num_connections + 1) -> To store a sentinel value so that FoMac knows when to stop looking for indices
+            gate->coupling_mapping[j] = (int *)malloc((num_connections + 1)* sizeof(int));
+            if (!gate->coupling_mapping[j]) {
+                fprintf(stderr, "Error: Memory allocation failed.\n");
+                // Free previously allocated memory
+                for (size_t k = 0; k < j; ++k) {
+                    free(gate->coupling_mapping[k]);
+                }
+                free(gate->coupling_mapping);
+                continue;
+            }
+            // Loop through each connection in the coupling map
+            for (size_t k = 0; k < num_connections; ++k) {
+                json_t *connection = json_array_get(coupling_map, k);
+                if (!json_is_integer(connection)) {
+                    fprintf(stderr, "Error: Invalid connection.\n");
+                    continue;
+                }
+                int qubit = json_integer_value(connection);
+                gate->coupling_mapping[j][k] = qubit; 
+
+                // Set sentinel value = -1
+                if(k == num_connections-1) gate->coupling_mapping[j][k+1] = -1;
+            }
+
+            // Set sentinel value to NULL
+            if(j == num_coupling_maps-1) gate->coupling_mapping[j+1] = NULL;
         }
     }
-    
+    // Set coupling_mapping to NULL if the backend doesn't provide it
+    else {
+        gate->coupling_mapping = NULL;
+    }   
+    gate->unitary  = "Unitary_Matrix";
+    gate->fidelity = 1.0;
 }
 
 int QDMI_query_all_gates(QDMI_Device dev, QDMI_Gate *gates)
