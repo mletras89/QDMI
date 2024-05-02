@@ -130,6 +130,8 @@ typedef struct QDMI_Gate_impl_d
     QDMI_Gate_property** coupling_mapping;
     char *unitary;
     float fidelity;
+    size_t size_coupling_map;
+    size_t gate_size;
 } QDMI_Gate_impl_t;
 
 typedef struct QDMI_Qubit_impl_d
