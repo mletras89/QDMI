@@ -108,7 +108,7 @@ int main(int argc, char **argv)
         num[i] = 0;
     }
 
-    err = QDMI_control_readout_raw_num(device, &status, job->task_id, &num);
+    err = QDMI_control_readout_raw_num(device, &status, job->task_id, num);
     CHECK_ERR(err, "QDMI_control_readout_raw_num");
 
     for (int i = 0; i < state_space; i++)
