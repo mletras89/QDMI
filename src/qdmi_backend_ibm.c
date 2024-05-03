@@ -2,8 +2,10 @@
 
 #define CHECK_ERR(a,b) { if (a!=QDMI_SUCCESS) { printf("\n[Error]: %i at %s",a,b); return 1; }}
 
-json_t *root;
+json_t *ibm_root;
 char **gate_set;
+json_t *ibm_properties;
+
 
 int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInfo info, QDMI_Job *job)
 {
@@ -54,6 +56,7 @@ int QDMI_control_pack_qir(QDMI_Device dev, void *qirmod, QDMI_Fragment *frag)
 
 int fetch_backend_configuration()
 {
+    // For retriving backend specific information
     char *conf_ibm = getenv("CONF_IBM");
     if (conf_ibm == NULL)
     {
@@ -69,16 +72,44 @@ int fetch_backend_configuration()
     }
 
     json_error_t error;
-    root = json_loadf(fp, 0, &error);
+    ibm_root = json_loadf(fp, 0, &error);
     fclose(fp);
-    if (!root) 
+    if (!ibm_root) 
     {
         fprintf(stderr, "Error parsing JSON: %s\n", error.text);
         return QDMI_ERROR_CONFIG;
     }
-    if (!json_is_object(root)) 
+    if (!json_is_object(ibm_root)) 
     {
         fprintf(stderr, "Root element is not an object.\n");
+        return QDMI_ERROR_CONFIG;
+    }
+
+    // For retriving qubit and gate properties
+    char *prop_ibm = getenv("PROP_IBM");
+    if (prop_ibm == NULL)
+    {
+        printf("   [Backend].............Couldn't open IBM's properties file\n");
+        return QDMI_ERROR_CONFIG;
+    }
+
+    FILE *fprop = fopen(prop_ibm, "r");
+    if (!fprop)
+    {
+        printf("   [Backend].............Failed to open properties JSON file\n");
+        return QDMI_ERROR_CONFIG;
+    }
+
+    ibm_properties = json_loadf(fprop, 0, &error);
+    fclose(fprop);
+    if (!ibm_properties) 
+    {
+        fprintf(stderr, "Error parsing JSON: %s\n", error.text);
+        return QDMI_ERROR_CONFIG;
+    }
+    if (!json_is_object(ibm_properties)) 
+    {
+        fprintf(stderr, "Root (property) element is not an object.\n");
         return QDMI_ERROR_CONFIG;
     }
     
@@ -111,8 +142,8 @@ int QDMI_backend_init(QInfo info)
 */
 int QDMI_query_device_property_exists(QDMI_Device dev, QDMI_Device_property prop, int* scope)
 {
-    //json_t *property = json_object_get(root, "backend_name");
-    json_t *property = json_object_get(root, backend_properties[prop->name]);
+
+    json_t *property = json_object_get(ibm_root, backend_properties[prop->name]);
     if (property) {
         *scope = 1;
         printf("%s property exists\n", backend_properties[prop->name]);
@@ -147,6 +178,7 @@ int QDMI_query_device_property_exists(QDMI_Device dev, QDMI_Device_property prop
         }
         return QDMI_SUCCESS;
     } else {
+        *scope = 0;
         printf("Queried property doesn't exists: Device property #%d\n", prop->name);
         return QDMI_ERROR_FATAL;
     }
@@ -154,7 +186,7 @@ int QDMI_query_device_property_exists(QDMI_Device dev, QDMI_Device_property prop
 
 int QDMI_query_device_property_c(QDMI_Device dev, QDMI_Device_property prop, char *value)
 {
-    json_t *property = json_object_get(root, backend_properties[prop->name]);
+    json_t *property = json_object_get(ibm_root, backend_properties[prop->name]);
     if (property && json_is_string(property)) {
         const char *tmp_value = json_string_value(property);
         strcpy(value, tmp_value);
@@ -167,7 +199,7 @@ int QDMI_query_device_property_c(QDMI_Device dev, QDMI_Device_property prop, cha
 
 int QDMI_query_device_property_i(QDMI_Device dev, QDMI_Device_property prop, int *value)
 {
-    json_t *property = json_object_get(root, backend_properties[prop->name]);
+    json_t *property = json_object_get(ibm_root, backend_properties[prop->name]);
     if (property && json_is_integer(property)) {
         *value = json_integer_value(property);
         return QDMI_SUCCESS;
@@ -179,7 +211,7 @@ int QDMI_query_device_property_i(QDMI_Device dev, QDMI_Device_property prop, int
 
 int QDMI_query_device_property_f(QDMI_Device dev, QDMI_Device_property prop, float *value)
 {
-    json_t *property = json_object_get(root, backend_properties[prop->name]);
+    json_t *property = json_object_get(ibm_root, backend_properties[prop->name]);
     if (property && json_is_real(property)) {
         *value = (float)json_real_value(property);
         return QDMI_SUCCESS;
@@ -191,7 +223,7 @@ int QDMI_query_device_property_f(QDMI_Device dev, QDMI_Device_property prop, flo
 
 int QDMI_query_device_property_d(QDMI_Device dev, QDMI_Device_property prop, double *value)
 {
-    json_t *property = json_object_get(root, backend_properties[prop->name]);
+    json_t *property = json_object_get(ibm_root, backend_properties[prop->name]);
     if (property && json_is_real(property)) {
         *value = json_real_value(property);
         return QDMI_SUCCESS;
@@ -218,7 +250,7 @@ int QDMI_populate_gateset(int num_gates, json_t *basis_gates)
                     free(gate_set[--i]);
                 }
                 free(gate_set);
-                json_decref(root);
+                json_decref(ibm_root);
                 return QDMI_ERROR_BACKEND;
             }
             i++;
@@ -229,7 +261,7 @@ int QDMI_populate_gateset(int num_gates, json_t *basis_gates)
                 free(gate_set[--i]);
             }
             free(gate_set);
-            json_decref(root);
+            json_decref(ibm_root);
             return QDMI_ERROR_CFGFILE;
         }
     }   
@@ -238,8 +270,8 @@ int QDMI_populate_gateset(int num_gates, json_t *basis_gates)
 }
 int QDMI_query_gateset_num(QDMI_Device dev, int *num_gates)
 {
-    //json_t *basis_gates = json_object_get(root, "basis_gates");
-    json_t *basis_gates = json_object_get(root, backend_properties[3]);
+
+    json_t *basis_gates = json_object_get(ibm_root, backend_properties[3]);
     if (basis_gates && json_is_array(basis_gates)) {
         size_t index;
         json_t *value;
@@ -258,7 +290,7 @@ void QDMI_get_gate_info(QDMI_Device dev, int gate_index, QDMI_Gate gate)
     gate->name     = gate_set[gate_index];
 
     // Add coupling_mapps for the gate
-    json_t *gates_array = json_object_get(root, backend_properties[4]);
+    json_t *gates_array = json_object_get(ibm_root, backend_properties[4]);
     if (!json_is_array(gates_array)) {
         fprintf(stderr, "Error: 'gates' is not an array.\n");
     }
@@ -404,7 +436,7 @@ int QDMI_set_coupling_mapping(QDMI_Device dev, int qubit_index, QDMI_Qubit qubit
 {
     qubit->index = qubit_index;
 
-    json_t *coupling_map = json_object_get(root, backend_properties[5]); // "coupling_map"
+    json_t *coupling_map = json_object_get(ibm_root, backend_properties[5]); // "coupling_map"
     size_t num_coupling_maps = json_array_size(coupling_map);
     int *temp_array = (int *)malloc(num_coupling_maps * sizeof(int));
     int count = 0;
@@ -489,7 +521,7 @@ int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits)
 
 int QDMI_query_qubits_num(QDMI_Device dev, int *num_qubits)
 {
-    json_t *property = json_object_get(root, backend_properties[2]);
+    json_t *property = json_object_get(ibm_root, backend_properties[2]);
     if (property && json_is_integer(property)) {
         *num_qubits = json_integer_value(property);
         return QDMI_SUCCESS;
@@ -498,4 +530,115 @@ int QDMI_query_qubits_num(QDMI_Device dev, int *num_qubits)
         return QDMI_ERROR_FATAL;
     }
     return QDMI_SUCCESS;
+}
+
+int QDMI_query_qubit_property_exists(QDMI_Device dev, QDMI_Qubit_property prop, QDMI_Qubit qubit, int* scope)
+{
+    int property_index;
+    if(prop == QDMI_T1_TIME)
+    {
+        property_index = 0;
+    }
+    else if(prop == QDMI_T2_TIME)
+    {
+        property_index = 1;
+    }
+    *scope = 1;
+    // Get qubits array
+    json_t *qubits = json_object_get(ibm_properties, "qubits");
+
+    if (!json_is_array(qubits)) {
+        fprintf(stderr, "error: qubits is not an array\n");
+        json_decref(ibm_properties);
+        return QDMI_ERROR_CONFIG;
+    }
+
+    size_t i, j;
+    
+    json_t *qb= json_array_get(qubits, qubit->index);
+    if (!json_is_array(qb)) {
+        fprintf(stderr, "Error: qb is not an array\n");
+        json_decref(ibm_properties);
+        return QDMI_ERROR_CONFIG;
+    }
+    // Iterate over properties of the qubit
+    for (j = 0; j < json_array_size(qb); j++) {
+        json_t *property = json_array_get(qb, j);
+        json_t *name = json_object_get(property, "name");
+        if (json_is_string(name)) {
+            const char *name_str = json_string_value(name);
+            if (strcmp(name_str, qubit_properties[property_index]) == 0) {
+                printf("%s property exists\n", qubit_properties[property_index]);
+                return QDMI_SUCCESS;
+            }
+        }
+    }
+        
+    printf("Queried property doesn't exists: Qubit property #%d\n", prop);
+    return QDMI_ERROR_FATAL;
+}
+
+int QDMI_query_qubit_property(QDMI_Device dev, QDMI_Qubit_property prop, QDMI_Qubit qubit, double* value)
+{
+    int property_index;
+    if(prop == QDMI_T1_TIME)
+    {
+        property_index = 0;
+    }
+    else if(prop == QDMI_T2_TIME)
+    {
+        property_index = 1;
+    }
+    else{
+        
+        printf("Unknown proprty queried: %d", prop);
+        return QDMI_ERROR_FATAL;
+    }
+
+    int scope;
+    int err = QDMI_query_qubit_property_exists(dev, prop, qubit, &scope);
+    if(err)
+    {
+        printf("Error: Unable to query proprty: %d", prop);
+        return QDMI_ERROR_FATAL;
+    }
+    // Get qubits array
+    json_t *qubits = json_object_get(ibm_properties, "qubits");
+
+    if (!json_is_array(qubits)) {
+        fprintf(stderr, "error: qubits is not an array\n");
+        json_decref(ibm_properties);
+        return QDMI_ERROR_CONFIG;
+    }
+
+    size_t i, j;
+
+    json_t *qb = json_array_get(qubits, qubit->index);
+    if (!json_is_array(qb)) {
+        fprintf(stderr, "Error: qb is not an array\n");
+        json_decref(ibm_properties);
+        return QDMI_ERROR_CONFIG;
+    }
+    // Iterate over properties of the qubit
+    for (j = 0; j < json_array_size(qb); j++) {
+        json_t *property = json_array_get(qb, j);
+        json_t *name = json_object_get(property, "name");
+        json_t *property_value = json_object_get(property, "value"); // Retrieve the value property
+        if (json_is_string(name) && json_is_number(property_value)) {
+            const char *name_str = json_string_value(name);
+            if (strcmp(name_str, qubit_properties[property_index]) == 0) {
+                printf("%s property exists\n", qubit_properties[property_index]);
+                // Save the value of the property
+                *value = json_number_value(property_value);
+                printf("Value of %s property: %f\n", qubit_properties[property_index], *value);
+                return QDMI_SUCCESS;
+            }
+        }
+        else
+        {
+            printf("Unknown Key type\n");
+            return QDMI_ERROR_CONFIG;
+        }
+    }
+ 
 }

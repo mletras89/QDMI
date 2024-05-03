@@ -235,8 +235,8 @@ int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits);
 typedef int (*QDMI_query_all_qubits_t)(QDMI_Device dev, QDMI_Qubit *qubits);
 int QDMI_query_qubit_property_exists(QDMI_Device dev, QDMI_Qubit_property prop, QDMI_Qubit qubit, int* scope);
 typedef int (*QDMI_query_qubit_property_exists_t)(QDMI_Device dev, QDMI_Qubit_property prop, QDMI_Qubit qubit, int* scope);
-int QDMI_query_qubit_property(QDMI_Device dev, QDMI_Qubit_property prop, QDMI_Qubit qubit, int* coupling_map);
-typedef int (*QDMI_query_qubit_property_t)(QDMI_Device dev, QDMI_Qubit_property prop, QDMI_Qubit qubit, int* coupling_map);
+int QDMI_query_qubit_property(QDMI_Device dev, QDMI_Qubit_property prop, QDMI_Qubit qubit, double* value);
+typedef int (*QDMI_query_qubit_property_t)(QDMI_Device dev, QDMI_Qubit_property prop, QDMI_Qubit qubit, double* value);
 
 
 /* Device Interface */

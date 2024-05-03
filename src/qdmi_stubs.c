@@ -161,9 +161,9 @@ int QDMI_query_qubit_property_exists(QDMI_Device dev, QDMI_Qubit_property prop, 
     return dev->library.QDMI_query_qubit_property_exists(dev, prop, qubit, scope);
 }
 
-int QDMI_query_qubit_property(QDMI_Device dev, QDMI_Qubit_property prop, QDMI_Qubit qubit, int* coupling_map)
+int QDMI_query_qubit_property(QDMI_Device dev, QDMI_Qubit_property prop, QDMI_Qubit qubit, double* value)
 {
-    return dev->library.QDMI_query_qubit_property(dev, prop, qubit, coupling_map);
+    return dev->library.QDMI_query_qubit_property(dev, prop, qubit, value);
 }
 
 /*----------------------------------------*/
