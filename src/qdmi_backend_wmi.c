@@ -109,7 +109,7 @@ int QDMI_control_readout_size(QDMI_Device dev, QDMI_Status *status, int *numbits
 {
     //printf("   [Backend].............Returning size\n");
     
-    *numbits = 3;
+    *numbits = 2;
     return QDMI_SUCCESS;
 }
 
@@ -229,14 +229,14 @@ size_t parse_json(void *contents, size_t size, size_t nmemb, struct ResponseStru
 // get status of device.
 int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
 {
-    printf("   [Backend].............WMI query device status\n");
+    printf("   [Backend].............WMI query device status OK\n");
 
     CURL *curl = curl_easy_init();
 
     if (!curl)
     {
-        fprintf(stderr, "Init failed\n");
-        return EXIT_FAILURE;
+        fprintf(stderr, "[Backend].............Curl init failed\n");
+        return QDMI_ERROR_OUTOFMEM;
     }
     char *token_header = get_token();
 
@@ -264,6 +264,19 @@ int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
     if (result != CURLE_OK)
     {
         fprintf(stderr, "Request problem: %s\n", curl_easy_strerror(result));
+        return QDMI_ERROR_BACKEND;
+    }
+
+    // process data
+    long http_code = 0;
+    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
+    cJSON *message = cJSON_GetObjectItemCaseSensitive(response.json, "message");
+    char *string = cJSON_Print(message);
+
+    if (http_code != 200)
+    {
+        fprintf(stderr, "   [Backend].............Request problem: %ld - %s\n", http_code, string);
+        return QDMI_ERROR_BACKEND;
     }
 
     // obtain result
@@ -289,14 +302,14 @@ int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
 // submit function. Need to know what the different structs are for
 int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInfo info, QDMI_Job *job)
 {
-    printf("   [Backend].............QDMI_control_submit\n");
+    printf("   [Backend].............Circuit received\n");
 
     CURL *curl = curl_easy_init();
 
     if (!curl)
     {
-        fprintf(stderr, "Init failed\n");
-        return EXIT_FAILURE;
+        fprintf(stderr, "[Backend].............Curl init failed\n");
+        return QDMI_ERROR_OUTOFMEM;
     }
 
     // token
@@ -364,9 +377,20 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
     if (result != CURLE_OK)
     {
         fprintf(stderr, "[Backend].............Request problem: %s\n", curl_easy_strerror(result));
+        return QDMI_ERROR_BACKEND;
     }
 
-    char *string = cJSON_Print(response.json);
+    // process data
+    long http_code = 0;
+    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
+    cJSON *message = cJSON_GetObjectItemCaseSensitive(response.json, "message");
+    char *string = cJSON_Print(message);
+
+    if (http_code != 200)
+    {
+        fprintf(stderr, "   [Backend].............Request problem: %ld - %s\n", http_code, string);
+        return QDMI_ERROR_BACKEND;
+    }
 
     free(string);
     free(response.json);
@@ -388,8 +412,8 @@ int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int task_
 
     if (!curl)
     {
-        fprintf(stderr, "Init failed\n");
-        return EXIT_FAILURE;
+        fprintf(stderr, "[Backend].............Curl init failed\n");
+        return QDMI_ERROR_OUTOFMEM;
     }
 
     int err = 0, numbits = 0;
@@ -398,15 +422,10 @@ int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int task_
     CHECK_ERR(err, "QDMI_control_readout_raw_num");
 
     // make sure results are an array of zeros
-    int state_space = 1;
-    for (int i; i < numbits; i++)
-    {
-        state_space *= 2;
-    }
-    for (int i = 0; i < state_space; i++)
-    {
+    unsigned int i;
+
+    for (i = 0; i < ((unsigned int)1 << numbits); i++)
         num[i] = 0;
-    }
 
     char *token_header = get_token();
 
@@ -439,7 +458,8 @@ int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int task_
     CURLcode result = curl_easy_perform(curl);
     if (result != CURLE_OK)
     {
-        fprintf(stderr, "Request problem: %s\n", curl_easy_strerror(result));
+        fprintf(stderr, "[Backend].............Request problem: %s\n", curl_easy_strerror(result));
+        return QDMI_ERROR_BACKEND;
     }
 
     // process data
@@ -448,11 +468,11 @@ int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int task_
 
     if (http_code == 200)
     {
-        printf("   [Backend].............Job finished\n");
+        //printf("   [Backend].............Job finished\n");
 
-        char *string = cJSON_Print(response.json);
+        cJSON *message = cJSON_GetObjectItemCaseSensitive(response.json, "message");
+        char *string = cJSON_Print(message);
 
-        int num[3];
         long bitstring_idx;
         char *bitstring_string;
 
@@ -475,6 +495,7 @@ int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int task_
     else
     {
         printf("   [Backend].............Job not done\n");
+        return QDMI_ERROR_BACKEND;
     }
 
     free(response.json);
@@ -488,20 +509,20 @@ int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int task_
 
 int QDMI_control_test(QDMI_Device dev, QDMI_Job *job, int *flag, QDMI_Status *status)
 {
-    printf("   [Backend].............Querying status\n");
+    //printf("   [Backend].............Querying status\n");
 
     CURL *curl = curl_easy_init();
 
     if (!curl)
     {
-        fprintf(stderr, "Init failed\n");
-        return EXIT_FAILURE;
+        fprintf(stderr, "[Backend].............Curl init failed\n");
+        return QDMI_ERROR_OUTOFMEM;
     }
 
     int err = 0, numbits = 0;
 
-    err = QDMI_control_readout_size(dev, status, &numbits);
-    CHECK_ERR(err, "QDMI_control_readout_raw_num");
+    //err = QDMI_control_readout_size(dev, status, &numbits); // TODO Why do we need this?
+    //CHECK_ERR(err, "QDMI_control_readout_raw_num");
 
     char *token_header = get_token();
 
@@ -522,8 +543,8 @@ int QDMI_control_test(QDMI_Device dev, QDMI_Job *job, int *flag, QDMI_Status *st
 
     // headers
     struct curl_slist *headers = NULL;
-    headers = curl_slist_append(headers, "Content-Type: application/json");
     headers = curl_slist_append(headers, token_header);
+    headers = curl_slist_append(headers, "Content-Type: application/json");
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
     // payload
@@ -534,27 +555,38 @@ int QDMI_control_test(QDMI_Device dev, QDMI_Job *job, int *flag, QDMI_Status *st
     CURLcode result = curl_easy_perform(curl);
     if (result != CURLE_OK)
     {
-        fprintf(stderr, "Request problem: %s\n", curl_easy_strerror(result));
+        fprintf(stderr, "[Backend].............Request problem: %s\n", curl_easy_strerror(result));
+
+        (*flag) = QDMI_HALTED;
+        return QDMI_ERROR_BACKEND;
     }
 
     // process data
     long http_code = 0;
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
-
+   
     if (http_code == 200)
     {
-        printf("   [Backend].............Job finished\n");
+        //printf("   [Backend].............Job finished\n");
         (*flag) = QDMI_COMPLETE;
     }
     else if (http_code == 202)
     {
-        printf("   [Backend].............Job Running\n");
+        //printf("   [Backend].............Job Running\n");
         (*flag) = QDMI_EXECUTING;
     }
     else
     {
-        printf("   [Backend].............Job Error\n");
+        cJSON *message = cJSON_GetObjectItemCaseSensitive(response.json, "message");
+        char *string = cJSON_Print(message);
+
+        fprintf(stderr, "   [Backend].............Request problem: %ld - %s\n", http_code, string);
+        
+        free(response.json);
+        free(job_id_json);
+
         (*flag) = QDMI_HALTED;
+        return QDMI_ERROR_BACKEND;
     }
 
     free(response.json);

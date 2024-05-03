@@ -13,6 +13,8 @@
 
 #include "qdmi_backend_qlm.h"
 
+#define CHECK_ERR(a,b) { if (a!=QDMI_SUCCESS) { printf("\n[Error]: %i at %s",a,b); return 1; }}
+
 char *createTheRequest(unsigned int shoots, QDMI_Fragment *frag, int task_id)
 {
     time_t timer;
@@ -105,11 +107,11 @@ void getRequiredNum(LLVMValueRef Function, int *requiredQubits, int *requiredRes
         if(LLVMIsStringAttribute(*Attrs)){
             unsigned int size;
             const char* key = LLVMGetStringAttributeKind(*Attrs, &size);
-            if(!strcmp(key, "required_num_qubits")){
+            if(!strcmp(key, "num_required_qubits")){
                 const char* value = LLVMGetStringAttributeValue(*Attrs, &size);
                 *requiredQubits = atoi(value);
             }
-            else if(!strcmp(key, "required_num_results")){
+            else if(!strcmp(key, "num_required_results")){
                 const char* value = LLVMGetStringAttributeValue(*Attrs, &size);
                 *requiredResults = atoi(value);
             }
@@ -117,6 +119,9 @@ void getRequiredNum(LLVMValueRef Function, int *requiredQubits, int *requiredRes
         AttrCount--;
         Attrs++;
     }
+
+    *requiredResults = 3;
+    *requiredQubits  = 3;
 }
 
 char* createQASMfromQIR(LLVMModuleRef qirModule)
@@ -150,6 +155,8 @@ char* createQASMfromQIR(LLVMModuleRef qirModule)
             }
         }
     }
+    //printf("\n\t%s", qasmCode);
+    //fflush(stdout);
     return qasmCode;
 }
 
@@ -161,10 +168,8 @@ void connectToTheRabbitMQ(amqp_connection_state_t *Connection,
 
     *Socket = amqp_tcp_socket_new(*Connection);
     assert(Socket != NULL);
-    printf("   [Backend].............R4\n");
     
     int status = amqp_socket_open(*Socket, HOST_NAME, PORT);
-    printf("   [Backend].............Status: %d\n", status);
     assert(status == AMQP_STATUS_OK);
     
     amqp_rpc_reply_t reply = amqp_login(*Connection, "/", 0, 131072, 0, AMQP_SASL_METHOD_PLAIN, "guest", "guest");
@@ -236,8 +241,8 @@ char *startConsume(amqp_connection_state_t *Connection, char *Queue)
         fprintf(stderr, "Failed to start consuming messages.\n");
 
     // TODO What do we need this loop for?
-    //for (;;)
-    //{
+    for (;;)
+    {
         amqp_rpc_reply_t res;
         amqp_envelope_t envelope;
 
@@ -253,23 +258,23 @@ char *startConsume(amqp_connection_state_t *Connection, char *Queue)
             0
         );
 
-        //if (AMQP_RESPONSE_NORMAL != res.reply_type)
-        //    break;
+        if (AMQP_RESPONSE_NORMAL != res.reply_type)
+            break;
 
         json_error_t theError;
 
         TheResponse = (char *)envelope.message.body.bytes;
         json_t *root = json_loads(TheResponse, 0, &theError);
 
-        printf("   [Backend].............The Response: %s\n", TheResponse);
+        //printf("   [Backend].............The Response: %s\n", TheResponse);
 
         if (!root)
         {
             TheResponse[theError.column - 1] = ' ';
             root = json_loads(TheResponse, 0, NULL);
         }
-    //    break;
-    //}
+        break;
+    }
 
     return TheResponse;
 }
@@ -291,13 +296,13 @@ int QDMI_backend_init(QInfo info)
 
 int QDMI_control_readout_size(QDMI_Device dev, QDMI_Status *status, int *numbits)
 {
-    *numbits = 38;
+    *numbits = 2;
     return QDMI_SUCCESS;
 }
 
 int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
 {
-    printf("   [Backend].............QLM query device status\n");
+    printf("   [Backend].............QLM query device status OK\n");
 
     *status = 1;
     return QDMI_SUCCESS;
@@ -307,8 +312,6 @@ int QDMI_control_pack_qir(QDMI_Device dev, void *qirmod, QDMI_Fragment *frag)
 {
     if(!dev || !qirmod || !frag)
         return QDMI_ERROR_FATAL;
-
-    //printf("   [QLMBackend]............QDMI_control_pack_qir\n");
 
     (*frag)->qirmod = qirmod;
 
@@ -344,7 +347,8 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
       (!(*frag)->qasmstr && !((*frag)->qirmod)))
         return QDMI_ERROR_FATAL;
 
-	printf("   [Backend].............QIR received\n");
+	printf("   [Backend].............Circuit received\n");
+
     LLVMModuleRef module = NULL;
     LLVMMemoryBufferRef mem_buffer = LLVMCreateMemoryBufferWithMemoryRange(
         (const char *)(*frag)->qirmod,
@@ -380,7 +384,6 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
         "qs_qlm_274973448280338"
 	);
 
-    printf("   [Backend].............0\n");
     return QDMI_SUCCESS;
 }
 
@@ -468,13 +471,26 @@ int QDMI_query_qubits_num(QDMI_Device dev, int *num_qubits)
     return QDMI_SUCCESS;
 }
 
+unsigned int reverseInt(unsigned int index)
+{
+    unsigned int reversed = index & 1;
+
+    index >>= 1;
+    while (index)
+    {
+        reversed <<= 1;
+        reversed |= index & 1;
+        index >>= 1;
+    }
+    return reversed;
+}
+
 int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int task_id, int *num)
 {
-    printf("   [Backend].............1\n");
+    printf("   [Backend].............Returning results\n");
+
     connectToTheRabbitMQ(&ListenConnection, &Listensocket);
-    printf("   [Backend].............2\n");
     char *TheResponse = startConsume(&ListenConnection, "qlm_test_dest");
-    printf("   [Backend].............3\n");
     closeConnections(&ListenConnection);
 
     json_error_t error;
@@ -499,16 +515,29 @@ int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int task_
     int execution_time_d = json_integer_value(execution_time);
     void *iter = json_object_iter(results);
     const char *key;
-    int value;
+    int err, numbits, value;
+
+    // make sure results are an array of zeros
+    err = QDMI_control_readout_size(dev, status, &numbits);
+    CHECK_ERR(err, "QDMI_control_readout_raw_num");
+    int state_space = 1 << numbits;
+    for (int i = 0; i < state_space; i++)
+        num[i] = 0;
 
     while (iter)
     {
         key = json_object_iter_key(iter);
         value = json_integer_value(json_object_iter_value(iter));
-        int index = (int) strtol(key, NULL, 2);
+        if (key == NULL)
+        {
+            printf("   [Backend].............Failed to retrieve key from JSON object iterator\n");
+            return QDMI_ERROR_FATAL;
+        }
+        unsigned int index = reverseInt((unsigned int) strtol(key, NULL, 2));
         num[index] = value;
         iter = json_object_iter_next(results, iter);
     }
+    fflush(stdout);
     
     return QDMI_SUCCESS;
 }
