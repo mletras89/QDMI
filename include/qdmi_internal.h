@@ -140,6 +140,10 @@ typedef struct QDMI_Qubit_impl_d
     QDMI_qubit_index index;
     QDMI_qubit_index* coupling_mapping;
     int size_coupling_mapping;
+    double t1;
+    double t2;
+    double readout_error;
+    double readout_length;
 } QDMI_Qubit_impl_t;
 
 /*----------------------------------------*/

@@ -26,7 +26,7 @@ const char *backend_properties[] =
 
 const char * qubit_properties[] =
 {
-    "T1", "T2"
+    "T1", "T2", "readout_error", "readout_length"
 };
 int fetch_configuration();
 #endif // QDMIBACKENDIBM_H

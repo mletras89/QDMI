@@ -77,6 +77,8 @@
 #define QDMI_T1_TIME      1
 #define QDMI_T2_TIME      2
 #define QDMI_T2_ECHO_TIME 3
+#define QDMI_READOUT_ERROR 4
+#define QDMI_READOUT_LENGTH 5
 
 /* Well known gate nams */
 /*
