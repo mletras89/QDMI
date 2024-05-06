@@ -80,6 +80,7 @@ typedef struct QDMI_Library_impl_d
     QDMI_query_all_qubits_t             QDMI_query_all_qubits;
     QDMI_query_qubit_property_exists_t  QDMI_query_qubit_property_exists;
     QDMI_query_qubit_property_t         QDMI_query_qubit_property;
+    QDMI_query_qubit_coupling_mapping_t QDMI_query_qubit_coupling_mapping;
     QDMI_device_status_t                QDMI_device_status;
     QDMI_device_quality_check_t         QDMI_device_quality_check;
     QDMI_device_quality_limit_t         QDMI_device_quality_limit;
@@ -130,7 +131,7 @@ typedef struct QDMI_Gate_impl_d
     const char *name;
     QDMI_Gate_property** coupling_mapping;
     char *unitary;
-    float fidelity;
+    double fidelity;
     size_t size_coupling_map;
     size_t gate_size;
 } QDMI_Gate_impl_t;

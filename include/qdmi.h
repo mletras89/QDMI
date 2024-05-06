@@ -17,7 +17,7 @@
 #define QDMI_TIME_PS 4
 
 /* Behavior of QDMI properties */
-#define QDMI_PROPERTY_NOTEXIST 0
+#define QDMI_PROPERTY_NOTEXIST -1
 #define QDMI_PROPERTY_STATIC   1
 #define QDMI_PROPERTY_DYNAMIC  2
 
@@ -79,6 +79,7 @@
 #define QDMI_T2_ECHO_TIME 3
 #define QDMI_READOUT_ERROR 4
 #define QDMI_READOUT_LENGTH 5
+#define QDMI_PROPERTY_NOT_DEFINED -9999999.999
 
 /* Well known gate nams */
 /*
@@ -239,6 +240,8 @@ int QDMI_query_qubit_property_exists(QDMI_Device dev, QDMI_Qubit_property prop, 
 typedef int (*QDMI_query_qubit_property_exists_t)(QDMI_Device dev, QDMI_Qubit_property prop, QDMI_Qubit qubit, int* scope);
 int QDMI_query_qubit_property(QDMI_Device dev, QDMI_Qubit_property prop, QDMI_Qubit qubit, double* value);
 typedef int (*QDMI_query_qubit_property_t)(QDMI_Device dev, QDMI_Qubit_property prop, QDMI_Qubit qubit, double* value);
+int QDMI_query_qubit_coupling_mapping(QDMI_Device dev, QDMI_Qubit qubit, int* coupling_map);
+typedef int (*QDMI_query_qubit_coupling_mapping_t)(QDMI_Device dev, QDMI_Qubit qubit, int* coupling_map);
 
 
 /* Device Interface */

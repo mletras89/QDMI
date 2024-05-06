@@ -322,6 +322,7 @@ int QDMI_load_libraries(QInfo sesioninfo)
         newlib->QDMI_query_all_qubits=dlsym(newlib->libhandle,"QDMI_query_all_qubits");
         newlib->QDMI_query_qubit_property_exists=dlsym(newlib->libhandle,"QDMI_query_qubit_property_exists");
         newlib->QDMI_query_qubit_property=dlsym(newlib->libhandle,"QDMI_query_qubit_property");
+        newlib->QDMI_query_qubit_coupling_mapping=dlsym(newlib->libhandle,"QDMI_query_qubit_coupling_mapping");
         newlib->QDMI_device_status=dlsym(newlib->libhandle,"QDMI_device_status");
         newlib->QDMI_device_quality_check=dlsym(newlib->libhandle,"QDMI_device_quality_check");
         newlib->QDMI_device_quality_limit=dlsym(newlib->libhandle,"QDMI_device_quality_limit");

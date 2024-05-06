@@ -60,7 +60,7 @@ int fetch_backend_configuration()
     char *conf_ibm = getenv("CONF_IBM");
     if (conf_ibm == NULL)
     {
-        printf("   [Backend].............Couldn't open IBM's config file\n");
+        printf("   [Backend].............CONF_IBM not set\n");
         return QDMI_ERROR_CONFIG;
     }
 
@@ -89,7 +89,7 @@ int fetch_backend_configuration()
     char *prop_ibm = getenv("PROP_IBM");
     if (prop_ibm == NULL)
     {
-        printf("   [Backend].............Couldn't open IBM's properties file\n");
+        printf("   [Backend].............PROP_IBM not set\n");
         return QDMI_ERROR_CONFIG;
     }
 
@@ -491,6 +491,58 @@ int QDMI_set_coupling_mapping(QDMI_Device dev, int qubit_index, QDMI_Qubit qubit
     free(temp_array);
 }
 
+int QDMI_set_qubit_properties(QDMI_Device dev, QDMI_Qubit qubit)
+{
+
+    // Get qubits array
+    json_t *qubits = json_object_get(ibm_properties, "qubits");
+
+    if (!json_is_array(qubits)) {
+        fprintf(stderr, "[Backend]..............Error: qubits is not an array\n");
+        json_decref(ibm_properties);
+        return QDMI_ERROR_CONFIG;
+    }
+
+    size_t i, j;
+    
+    json_t *qb= json_array_get(qubits, qubit->index);
+    if (!json_is_array(qb)) {
+        fprintf(stderr, "[Backend]..............Error: qb is not an array\n");
+        json_decref(ibm_properties);
+        return QDMI_ERROR_CONFIG;
+    }
+
+    // --> 4 properties hard coded
+    double values[4] = {QDMI_PROPERTY_NOT_DEFINED, QDMI_PROPERTY_NOT_DEFINED, QDMI_PROPERTY_NOT_DEFINED, QDMI_PROPERTY_NOT_DEFINED};
+
+    // Iterate over properties of the qubit
+    for (i = 0; i < 4; i++){
+        for (j = 0; j < json_array_size(qb); j++) {
+            json_t *property = json_array_get(qb, j);
+            json_t *name = json_object_get(property, "name");
+            json_t *property_value = json_object_get(property, "value"); // Retrieve the value property
+            if (json_is_string(name) && json_is_number(property_value)) {
+                const char *name_str = json_string_value(name);
+                if (strcmp(name_str, qubit_properties[i]) == 0) {
+                    // Save the value of the property
+                    values[i] = json_number_value(property_value);
+                }
+            }
+            else
+            {
+                printf("[Backend]..............Unknown Key type, check JSON file.\n");
+                return QDMI_ERROR_CONFIG;
+            }
+        }
+    }
+    
+    qubit->t1 = values[0];
+    qubit->t2 = values[1];
+    qubit->readout_error = values[2];
+    qubit->readout_length = values[3];
+
+}
+
 int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits)
 {
     int err, num_qubits;
@@ -512,8 +564,11 @@ int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits)
     }
 
     int i;
-    for (i = 0; i < num_qubits; i++)
+    for (i = 0; i < num_qubits; i++){
         QDMI_set_coupling_mapping(dev, i, (*qubits) + i);
+        QDMI_set_qubit_properties(dev, (*qubits) + i);
+    }
+        
 
     printf("   [Backend]..............Returning available qubits\n");
     return QDMI_SUCCESS;
@@ -534,84 +589,71 @@ int QDMI_query_qubits_num(QDMI_Device dev, int *num_qubits)
 
 int QDMI_query_qubit_property_exists(QDMI_Device dev, QDMI_Qubit_property prop, QDMI_Qubit qubit, int* scope)
 {
-    int property_index;
+
+    *scope = 1;
     if(prop == QDMI_T1_TIME)
-        property_index = 0;
+    {
+        if(qubit->t1 == QDMI_PROPERTY_NOT_DEFINED){
+            *scope = 0;
+            printf("[Backend]..............%s property doesn't exists\n", qubit_properties[0]);
+            return QDMI_PROPERTY_NOTEXIST;
+        }
+        else{
+            printf("[Backend]..............%s property exists\n",  qubit_properties[0]);
+            return QDMI_SUCCESS;
+        }
+
+    }
     else if(prop == QDMI_T2_TIME)
-        property_index = 1;
-    if(prop == QDMI_READOUT_ERROR)
-        property_index = 3;
+    {
+        if(qubit->t2 == QDMI_PROPERTY_NOT_DEFINED){
+            *scope = 0;
+            printf("[Backend]..............%s property doesn't exists\n", qubit_properties[1]);
+            return QDMI_PROPERTY_NOTEXIST;
+        }
+        else{
+            printf("[Backend]..............%s property exists\n",  qubit_properties[1]);
+            return QDMI_SUCCESS;
+        }
+
+    }
+    else if(prop == QDMI_READOUT_ERROR)
+    {
+        if(qubit->readout_error == QDMI_PROPERTY_NOT_DEFINED){
+            *scope = 0;
+            printf("[Backend]..............%s property doesn't exists\n", qubit_properties[2]);
+            return QDMI_PROPERTY_NOTEXIST;
+        }
+        else{
+            printf("[Backend]..............%s property exists\n",  qubit_properties[2]);
+            return QDMI_SUCCESS;
+        }
+
+    }
     else if(prop == QDMI_READOUT_LENGTH)
-        property_index = 4; 
+    {
+        if(qubit->readout_length == QDMI_PROPERTY_NOT_DEFINED){
+            *scope = 0;
+            printf("[Backend]..............%s property doesn't exists\n", qubit_properties[3]);
+            return QDMI_PROPERTY_NOTEXIST;
+        }
+        else{
+            printf("[Backend]..............%s property exists\n",  qubit_properties[3]);
+            return QDMI_SUCCESS;
+        }
+
+    }
     else{
         printf("[Backend]..............Unknown proprty queried: %d", prop);
         return QDMI_ERROR_FATAL;
     }
 
-    *scope = 1;
-    // Get qubits array
-    json_t *qubits = json_object_get(ibm_properties, "qubits");
-
-    if (!json_is_array(qubits)) {
-        fprintf(stderr, "[Backend]..............Error: qubits is not an array\n");
-        json_decref(ibm_properties);
-        return QDMI_ERROR_CONFIG;
-    }
-
-    size_t i, j;
-    
-    json_t *qb= json_array_get(qubits, qubit->index);
-    if (!json_is_array(qb)) {
-        fprintf(stderr, "[Backend]..............Error: qb is not an array\n");
-        json_decref(ibm_properties);
-        return QDMI_ERROR_CONFIG;
-    }
-    double value = -999999999;
-    // Iterate over properties of the qubit
-    for (j = 0; j < json_array_size(qb); j++) {
-        json_t *property = json_array_get(qb, j);
-        json_t *name = json_object_get(property, "name");
-        json_t *property_value = json_object_get(property, "value"); // Retrieve the value property
-        if (json_is_string(name) && json_is_number(property_value)) {
-            const char *name_str = json_string_value(name);
-            if (strcmp(name_str, qubit_properties[property_index]) == 0) {
-                printf("[Backend]..............%s property exists\n", qubit_properties[property_index]);
-                // Save the value of the property
-                value = json_number_value(property_value);
-                printf("[Backend]..............Returning the value of %s: \n", qubit_properties[property_index]);
-                break;
-            }
-        }
-        else
-        {
-            printf("[Backend]..............Unknown Key type, check JSON file.\n");
-            return QDMI_ERROR_CONFIG;
-        }
-    }
-    if(prop == QDMI_T1_TIME)
-        qubit->t1 = value;
-    else if(prop == QDMI_T2_TIME)
-        qubit->t2 = value;
-    if(prop == QDMI_READOUT_ERROR)
-        qubit->readout_error = value;
-    else if(prop == QDMI_READOUT_LENGTH)
-        qubit->readout_length = value;
-
-    printf("[Backend]..............Queried property doesn't exists: Qubit property #%d\n", prop);
-    return QDMI_SUCCESS;
 }
 
 int QDMI_query_qubit_property(QDMI_Device dev, QDMI_Qubit_property prop, QDMI_Qubit qubit, double* value)
 {
 
-    int scope;
-    int err = QDMI_query_qubit_property_exists(dev, prop, qubit, &scope);
-    if(err)
-    {
-        printf("Error: Unable to query property: %d", prop);
-        return QDMI_ERROR_FATAL;
-    }
-
+    // Ideally should be called after QDMI_query_qubit_property_exists
     if(prop == QDMI_T1_TIME)
         *value = qubit->t1;
     else if(prop == QDMI_T2_TIME)
@@ -621,5 +663,17 @@ int QDMI_query_qubit_property(QDMI_Device dev, QDMI_Qubit_property prop, QDMI_Qu
     else if(prop == QDMI_READOUT_LENGTH)
         *value = qubit->readout_length; 
     
+    return QDMI_SUCCESS;
+}
+
+int QDMI_query_qubit_coupling_mapping(QDMI_Device dev, QDMI_Qubit qubit, int* coupling_map)
+{
+    if(qubit->size_coupling_mapping == 0)
+    {
+        coupling_map = NULL;
+        printf("   [Backend].............No coupling map found\n");
+        return QDMI_WARN_GENERAL;
+    }
+    coupling_map = qubit->coupling_mapping;
     return QDMI_SUCCESS;
 }

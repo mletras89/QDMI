@@ -166,6 +166,11 @@ int QDMI_query_qubit_property(QDMI_Device dev, QDMI_Qubit_property prop, QDMI_Qu
     return dev->library.QDMI_query_qubit_property(dev, prop, qubit, value);
 }
 
+int QDMI_query_qubit_coupling_mapping(QDMI_Device dev, QDMI_Qubit qubit, int* coupling_map)
+{
+    return dev->library.QDMI_query_qubit_coupling_mapping(dev, qubit, coupling_map);
+}
+
 /*----------------------------------------*/
 /* Stub routines for device API */
 
