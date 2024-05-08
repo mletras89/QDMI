@@ -172,7 +172,7 @@ void connectToTheRabbitMQ(amqp_connection_state_t *Connection,
     int status = amqp_socket_open(*Socket, HOST_NAME, PORT);
     assert(status == AMQP_STATUS_OK);
     
-    amqp_rpc_reply_t reply = amqp_login(*Connection, "/", 0, 131072, 0, AMQP_SASL_METHOD_PLAIN, "guest", "guest");
+    amqp_rpc_reply_t reply = amqp_login(*Connection, "/", 0, 131072, 0, AMQP_SASL_METHOD_PLAIN, "guest", "Qrmguest");
     assert(reply.reply_type == AMQP_RESPONSE_NORMAL);
     
     amqp_channel_open_ok_t *res = amqp_channel_open(*Connection, 1);
