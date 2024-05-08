@@ -79,6 +79,7 @@
 #define QDMI_T2_ECHO_TIME 3
 #define QDMI_READOUT_ERROR 4
 #define QDMI_READOUT_LENGTH 5
+#define QDMI_QUBIT_COUPLING_MAP 6
 #define QDMI_PROPERTY_NOT_DEFINED -9999999.999
 
 /* Well known gate nams */

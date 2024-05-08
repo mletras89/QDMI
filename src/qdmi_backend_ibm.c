@@ -647,6 +647,20 @@ int QDMI_query_qubit_property_exists(QDMI_Device dev, QDMI_Qubit_property prop, 
         }
 
     }
+    else if(prop->name == QDMI_QUBIT_COUPLING_MAP)
+    {
+        prop->type = QDMI_ARRAY;
+        if(qubit->size_coupling_mapping == 0){
+            *scope = 0;
+            printf("[Backend]..............Qubit Coupling Mapping doesn't exists\n");
+            return QDMI_PROPERTY_NOTEXIST;
+        }
+        else{
+            printf("[Backend]..............Qubit Coupling Mapping property exists\n");
+            return QDMI_SUCCESS;
+        }
+
+    }
     else{
         prop->type = QDMI_NULL;
         printf("[Backend]..............Unknown proprty queried: %d", prop);
@@ -663,14 +677,17 @@ int QDMI_query_qubit_property_c(QDMI_Device dev, QDMI_Qubit qubit, QDMI_Qubit_pr
 
 int QDMI_query_qubit_property_i(QDMI_Device dev, QDMI_Qubit qubit, QDMI_Qubit_property prop, int *value)
 {
-    if(qubit->size_coupling_mapping == 0)
-    {
-        value = NULL;
-        printf("   [Backend].............No coupling map found\n");
-        return QDMI_WARN_GENERAL;
+    if(prop->name == QDMI_QUBIT_COUPLING_MAP){
+        if(qubit->size_coupling_mapping == 0)
+        {
+            value = NULL;
+            printf("   [Backend].............No coupling map found\n");
+            return QDMI_WARN_GENERAL;
+        }
+        value = qubit->coupling_mapping;
+        return QDMI_SUCCESS;
     }
-    value = qubit->coupling_mapping;
-    return QDMI_SUCCESS;
+    
 }
 
 int QDMI_query_qubit_property_f(QDMI_Device dev, QDMI_Qubit qubit, QDMI_Qubit_property prop, float *value)
