@@ -104,10 +104,11 @@ typedef int QDMI_Status;
 
 typedef int QDMI_qubit_index;
 typedef int QDMI_Gate_property;
-typedef int QDMI_Qubit_property;
+// typedef int QDMI_Qubit_property;
 
 //typedef int QDMI_Device_property;
 typedef struct QDMI_Device_property_impl_d *QDMI_Device_property;
+typedef struct QDMI_Qubit_property_impl_d *QDMI_Qubit_property;
 typedef struct QDMI_Gate_impl_d            *QDMI_Gate;
 typedef struct QDMI_Unitary_impl_d         *QDMI_Unitary;
 typedef struct QDMI_Qubit_impl_d           *QDMI_Qubit;
@@ -238,10 +239,16 @@ int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits);
 typedef int (*QDMI_query_all_qubits_t)(QDMI_Device dev, QDMI_Qubit *qubits);
 int QDMI_query_qubit_property_exists(QDMI_Device dev, QDMI_Qubit_property prop, QDMI_Qubit qubit, int* scope);
 typedef int (*QDMI_query_qubit_property_exists_t)(QDMI_Device dev, QDMI_Qubit_property prop, QDMI_Qubit qubit, int* scope);
-int QDMI_query_qubit_property(QDMI_Device dev, QDMI_Qubit_property prop, QDMI_Qubit qubit, double* value);
-typedef int (*QDMI_query_qubit_property_t)(QDMI_Device dev, QDMI_Qubit_property prop, QDMI_Qubit qubit, double* value);
-int QDMI_query_qubit_coupling_mapping(QDMI_Device dev, QDMI_Qubit qubit, int* coupling_map);
-typedef int (*QDMI_query_qubit_coupling_mapping_t)(QDMI_Device dev, QDMI_Qubit qubit, int* coupling_map);
+
+// query device property as int or float
+int QDMI_query_qubit_property_c(QDMI_Device dev, QDMI_Qubit qubit, QDMI_Qubit_property prop, char *value);
+typedef int (*QDMI_query_qubit_property_c_t)(QDMI_Device dev, QDMI_Qubit qubit, QDMI_Qubit_property prop, char *value);
+int QDMI_query_qubit_property_i(QDMI_Device dev, QDMI_Qubit qubit, QDMI_Qubit_property prop, int *value);
+typedef int (*QDMI_query_qubit_property_i_t)(QDMI_Device dev, QDMI_Qubit qubit, QDMI_Qubit_property prop, int *value);
+int QDMI_query_qubit_property_f(QDMI_Device dev, QDMI_Qubit qubit, QDMI_Qubit_property prop, float *value);
+typedef int (*QDMI_query_qubit_property_f_t)(QDMI_Device dev, QDMI_Qubit qubit, QDMI_Qubit_property prop, float *value);
+int QDMI_query_qubit_property_d(QDMI_Device dev, QDMI_Qubit qubit, QDMI_Qubit_property prop, double *value);
+typedef int (*QDMI_query_qubit_property_d_t)(QDMI_Device dev, QDMI_Qubit qubit, QDMI_Qubit_property prop, double *value);
 
 
 /* Device Interface */

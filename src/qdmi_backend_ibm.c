@@ -591,8 +591,9 @@ int QDMI_query_qubit_property_exists(QDMI_Device dev, QDMI_Qubit_property prop, 
 {
 
     *scope = 1;
-    if(prop == QDMI_T1_TIME)
+    if(prop->name == QDMI_T1_TIME)
     {
+        prop->type = QDMI_DOUBLE;
         if(qubit->t1 == QDMI_PROPERTY_NOT_DEFINED){
             *scope = 0;
             printf("[Backend]..............%s property doesn't exists\n", qubit_properties[0]);
@@ -604,8 +605,9 @@ int QDMI_query_qubit_property_exists(QDMI_Device dev, QDMI_Qubit_property prop, 
         }
 
     }
-    else if(prop == QDMI_T2_TIME)
+    else if(prop->name == QDMI_T2_TIME)
     {
+        prop->type = QDMI_DOUBLE;
         if(qubit->t2 == QDMI_PROPERTY_NOT_DEFINED){
             *scope = 0;
             printf("[Backend]..............%s property doesn't exists\n", qubit_properties[1]);
@@ -617,8 +619,9 @@ int QDMI_query_qubit_property_exists(QDMI_Device dev, QDMI_Qubit_property prop, 
         }
 
     }
-    else if(prop == QDMI_READOUT_ERROR)
+    else if(prop->name == QDMI_READOUT_ERROR)
     {
+        prop->type = QDMI_DOUBLE;
         if(qubit->readout_error == QDMI_PROPERTY_NOT_DEFINED){
             *scope = 0;
             printf("[Backend]..............%s property doesn't exists\n", qubit_properties[2]);
@@ -630,8 +633,9 @@ int QDMI_query_qubit_property_exists(QDMI_Device dev, QDMI_Qubit_property prop, 
         }
 
     }
-    else if(prop == QDMI_READOUT_LENGTH)
+    else if(prop->name == QDMI_READOUT_LENGTH)
     {
+        prop->type = QDMI_DOUBLE;
         if(qubit->readout_length == QDMI_PROPERTY_NOT_DEFINED){
             *scope = 0;
             printf("[Backend]..............%s property doesn't exists\n", qubit_properties[3]);
@@ -644,36 +648,49 @@ int QDMI_query_qubit_property_exists(QDMI_Device dev, QDMI_Qubit_property prop, 
 
     }
     else{
+        prop->type = QDMI_NULL;
         printf("[Backend]..............Unknown proprty queried: %d", prop);
         return QDMI_ERROR_FATAL;
     }
 
 }
 
-int QDMI_query_qubit_property(QDMI_Device dev, QDMI_Qubit_property prop, QDMI_Qubit qubit, double* value)
+int QDMI_query_qubit_property_c(QDMI_Device dev, QDMI_Qubit qubit, QDMI_Qubit_property prop, char *value)
 {
-
-    // Ideally should be called after QDMI_query_qubit_property_exists
-    if(prop == QDMI_T1_TIME)
-        *value = qubit->t1;
-    else if(prop == QDMI_T2_TIME)
-        *value = qubit->t2;
-    if(prop == QDMI_READOUT_ERROR)
-        *value = qubit->readout_error;
-    else if(prop == QDMI_READOUT_LENGTH)
-        *value = qubit->readout_length; 
-    
+    *value = "";
     return QDMI_SUCCESS;
 }
 
-int QDMI_query_qubit_coupling_mapping(QDMI_Device dev, QDMI_Qubit qubit, int* coupling_map)
+int QDMI_query_qubit_property_i(QDMI_Device dev, QDMI_Qubit qubit, QDMI_Qubit_property prop, int *value)
 {
     if(qubit->size_coupling_mapping == 0)
     {
-        coupling_map = NULL;
+        value = NULL;
         printf("   [Backend].............No coupling map found\n");
         return QDMI_WARN_GENERAL;
     }
-    coupling_map = qubit->coupling_mapping;
+    value = qubit->coupling_mapping;
+    return QDMI_SUCCESS;
+}
+
+int QDMI_query_qubit_property_f(QDMI_Device dev, QDMI_Qubit qubit, QDMI_Qubit_property prop, float *value)
+{
+    // Ideally should be called after QDMI_query_qubit_property_exists
+    *value = 1.1; 
+    return QDMI_SUCCESS;
+}
+
+int QDMI_query_qubit_property_d(QDMI_Device dev, QDMI_Qubit qubit, QDMI_Qubit_property prop, double *value)
+{
+    // Ideally should be called after QDMI_query_qubit_property_exists
+    if(prop->name == QDMI_T1_TIME)
+        *value = qubit->t1;
+    else if(prop->name == QDMI_T2_TIME)
+        *value = qubit->t2;
+    else if(prop->name == QDMI_READOUT_ERROR)
+        *value = qubit->readout_error;
+    else if(prop->name == QDMI_READOUT_LENGTH)
+        *value = qubit->readout_length; 
+    
     return QDMI_SUCCESS;
 }
