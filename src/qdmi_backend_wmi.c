@@ -3,9 +3,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <stdbool.h>
 #include <ctype.h>
 #include <dlfcn.h>
 #include <string.h>
+#include <unistd.h>
 #include <unistd.h>
 #include <curl/curl.h>
 #include <cjson/cJSON.h>
@@ -23,7 +25,19 @@
             return 1;                            \
         }                                        \
     }
+#define base_url "https://wmiqc-api.wmi.badw.de"
 
+#define CHECK_ERR(a, b)                          \
+    {                                            \
+        if (a != QDMI_SUCCESS)                   \
+        {                                        \
+            printf("\n[Error]: %i at %s", a, b); \
+            return 1;                            \
+        }                                        \
+    }
+
+struct ResponseStruct
+{
 struct ResponseStruct
 {
     cJSON *json;
@@ -51,6 +65,10 @@ cJSON *backend_configuration()
 
     cJSON *configuration = cJSON_ParseWithLength(configuration_string, len);
 
+    size_t len = strlen(configuration_string);
+
+    cJSON *configuration = cJSON_ParseWithLength(configuration_string, len);
+
     return configuration;
 }
 
@@ -65,6 +83,7 @@ cJSON *backend_options(int shots)
 
     cJSON *options = cJSON_ParseWithLength(option_string, len);
 
+    return options;
     return options;
 }
 
@@ -82,6 +101,8 @@ int QDMI_query_gateset_num(QDMI_Device dev, int *num_gates)
 // These properties are dummy values, why query each individually and not all at once like qiskit properties?
 void QDMI_get_gate_info(QDMI_Device dev, int gate_index, QDMI_Gate gate)
 {
+    gate->name = gate_set[gate_index];
+    gate->unitary = "Unitary_Matrix";
     gate->name = gate_set[gate_index];
     gate->unitary = "Unitary_Matrix";
     gate->fidelity = 1.0;
@@ -111,6 +132,7 @@ int QDMI_backend_init(QInfo info)
     int err;
 
     err = QDMI_core_register_belib(uri, regpointer);
+    // CHECK_ERR(err, "QDMI_core_register_belib");
     // CHECK_ERR(err, "QDMI_core_register_belib");
 
     return QDMI_SUCCESS;
@@ -188,6 +210,7 @@ int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits)
     return QDMI_SUCCESS;
 }
 
+// number of qubits
 // number of qubits
 int QDMI_query_qubits_num(QDMI_Device dev, int *num_qubits)
 {
@@ -349,10 +372,20 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
     {
         fprintf(stderr, "[Backend].............Curl init failed\n");
         return QDMI_ERROR_OUTOFMEM;
+
+    if (!curl)
+    {
+        fprintf(stderr, "[Backend].............Curl init failed\n");
+        return QDMI_ERROR_OUTOFMEM;
     }
 
     // token
+
+    // token
     char *token_header = get_token();
+
+    // init variables
+    struct curl_slist *headers = NULL;
 
     // init variables
     struct curl_slist *headers = NULL;
@@ -360,6 +393,7 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
     curl_mimepart *field = NULL;
     struct ResponseStruct response;
     response.json = NULL;
+    response.size = 0;
     response.size = 0;
 
     // task_id as string
@@ -369,7 +403,15 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
     sz = snprintf(NULL, 0, "\"%i\"", job_id);
     job_id_json = (char *)malloc(sz + 1);
     snprintf(job_id_json, sz + 1, "\"%i\"", job_id);
+    // task_id as string
+    int job_id = (*job)->task_id;
+    char *job_id_json;
+    size_t sz;
+    sz = snprintf(NULL, 0, "\"%i\"", job_id);
+    job_id_json = (char *)malloc(sz + 1);
+    snprintf(job_id_json, sz + 1, "\"%i\"", job_id);
     form = curl_mime_init(curl);
+
 
     // set general options
     char url[256];
@@ -389,9 +431,16 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
     char *configuration_string = cJSON_PrintUnformatted(configuration);
     cJSON *options = backend_options(numshots);
     char *options_string = cJSON_PrintUnformatted(options);
+    cJSON *configuration = backend_configuration();
+    char *configuration_string = cJSON_PrintUnformatted(configuration);
+    cJSON *options = backend_options(numshots);
+    char *options_string = cJSON_PrintUnformatted(options);
 
     field = curl_mime_addpart(form);
     curl_mime_name(field, "qir");
+    curl_mime_type(field, "application/form-data");
+    curl_mime_filename(field, "bitcode.bc"); // for the backend to see this as a file and not convert it to string.
+    curl_mime_data(field, (*frag)->qirmod, (*frag)->sizebuffer);
     curl_mime_type(field, "application/form-data");
     curl_mime_filename(field, "bitcode.bc"); // for the backend to see this as a file and not convert it to string.
     curl_mime_data(field, (*frag)->qirmod, (*frag)->sizebuffer);
@@ -400,10 +449,17 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
     curl_mime_name(field, "configuration");
     curl_mime_type(field, "application/json");
     curl_mime_data(field, configuration_string, CURL_ZERO_TERMINATED);
+    curl_mime_data(field, configuration_string, CURL_ZERO_TERMINATED);
 
     field = curl_mime_addpart(form);
     curl_mime_name(field, "options");
     curl_mime_type(field, "application/json");
+    curl_mime_data(field, options_string, CURL_ZERO_TERMINATED);
+
+    field = curl_mime_addpart(form);
+    curl_mime_name(field, "job_id");
+    curl_mime_type(field, "application/json");
+    curl_mime_data(field, job_id_json, CURL_ZERO_TERMINATED);
     curl_mime_data(field, options_string, CURL_ZERO_TERMINATED);
 
     field = curl_mime_addpart(form);
@@ -433,12 +489,31 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
         fprintf(stderr, "   [Backend].............Request problem: %ld - %s\n", http_code, string);
         return QDMI_ERROR_BACKEND;
     }
+    if (result != CURLE_OK)
+    {
+        fprintf(stderr, "[Backend].............Request problem: %s\n", curl_easy_strerror(result));
+        return QDMI_ERROR_BACKEND;
+    }
+
+    // process data
+    long http_code = 0;
+    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
+    cJSON *message = cJSON_GetObjectItemCaseSensitive(response.json, "message");
+    char *string = cJSON_Print(message);
+
+    if (http_code != 200)
+    {
+        fprintf(stderr, "   [Backend].............Request problem: %ld - %s\n", http_code, string);
+        return QDMI_ERROR_BACKEND;
+    }
 
     free(string);
     free(response.json);
     free(job_id_json);
+    free(job_id_json);
 
     curl_mime_free(form);
+    curl_slist_free_all(headers);
     curl_slist_free_all(headers);
     curl_easy_cleanup(curl);
 
