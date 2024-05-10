@@ -129,7 +129,9 @@ int QDMI_control_readout_size(QDMI_Device dev, QDMI_Status *status, int *numbits
 int QDMI_set_coupling_mapping(QDMI_Device dev, int qubit_index, QDMI_Qubit qubit)
 {
     qubit->index = qubit_index;
-
+    qubit->coupling_mapping = NULL;
+    
+    /*
     switch (qubit_index)
     {
     case 0:
@@ -156,6 +158,8 @@ int QDMI_set_coupling_mapping(QDMI_Device dev, int qubit_index, QDMI_Qubit qubit
         qubit->coupling_mapping = NULL;
         break;
     }
+    */
+
 }
 
 // Looks like this is initializing qubits and setting the coupling map for each qubit
