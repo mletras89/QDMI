@@ -442,18 +442,6 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
         return QDMI_ERROR_BACKEND;
     }
 
-    // process data
-    long http_code = 0;
-    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
-    cJSON *message = cJSON_GetObjectItemCaseSensitive(response.json, "message");
-    char *string = cJSON_Print(message);
-
-    if (http_code != 200)
-    {
-        fprintf(stderr, "   [Backend].............Request problem: %ld - %s\n", http_code, string);
-        return QDMI_ERROR_BACKEND;
-    }
-
     free(string);
     free(response.json);
     free(job_id_json);
