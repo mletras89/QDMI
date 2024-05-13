@@ -2,10 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <time.h>
 
 #include <qdmi.h>
-#include "qdmi_internal.h"
 #include "qdmi_internal.h"
 
 int QDMI_session_init(QInfo info, QDMI_Session *session);
@@ -20,19 +18,9 @@ QDMI_Library find_library_by_name(const char *libname);
             return 1;                            \
         }                                        \
     }
-#define CHECK_ERR(a, b)                          \
-    {                                            \
-        if (a != QDMI_SUCCESS)                   \
-        {                                        \
-            printf("\n[Error]: %i at %s", a, b); \
-            return 1;                            \
-        }                                        \
-    }
 
 int main(int argc, char **argv)
-int main(int argc, char **argv)
 {
-    putenv("TOKEN_WMI=../inputs/token.txt");
     putenv("TOKEN_WMI=../inputs/token.txt");
     QInfo info;
     QDMI_Session session = NULL;
@@ -41,13 +29,6 @@ int main(int argc, char **argv)
     QDMI_Device device;
     QDMI_Job job;
     int err, count = 0;
-
-    job = malloc(sizeof(struct QDMI_Job_impl_d));
-    if (device == NULL)
-    {
-        printf("\n[ERROR]: Job could not be created");
-        exit(EXIT_FAILURE);
-    }
 
     job = malloc(sizeof(struct QDMI_Job_impl_d));
     if (device == NULL)
@@ -93,10 +74,7 @@ int main(int argc, char **argv)
 
     lib = find_library_by_name("/home/martin/bin/lib/libbackend_wmi.so");
     if (!lib)
-    lib = find_library_by_name("/home/martin/bin/lib/libbackend_wmi.so");
-    if (!lib)
     {
-        printf("\n[ERROR]: Library could not be found");
         printf("\n[ERROR]: Library could not be found");
         exit(EXIT_FAILURE);
     }
@@ -138,30 +116,6 @@ int main(int argc, char **argv)
     {
         printf("Measurement: %i counts:: %i\n", i, num[i]);
     }
-    
-
-    int wait_status = QDMI_control_wait(device, &job, &status);
-
-    // init results array
-    int state_space = 1;
-    for (int i; i < num_qubits; i++)
-    {
-        state_space *= 2;
-    }
-    int num[state_space];
-    for (int i = 0; i < state_space; i++)
-    {
-        num[i] = 0;
-    }
-
-    err = QDMI_control_readout_raw_num(device, &status, job->task_id, &num);
-    CHECK_ERR(err, "QDMI_control_readout_raw_num");
-
-    for (int i = 0; i < state_space; i++)
-    {
-        printf("Measurement: %i counts:: %i\n", i, num[i]);
-    }
-    
 
     // QDMI_session_finalize(session) -> QDMI_internal_shutdown()
     err = QDMI_session_finalize(session);
@@ -170,11 +124,9 @@ int main(int argc, char **argv)
     err = QInfo_free(info);
     CHECK_ERR(err, "QInfo_free");
 
-
     free(frag->qirmod);
     free(frag);
     free(device);
-    free(job);
     free(job);
 
     printf("\n[DEBUG]: Test Finished\n\n");
