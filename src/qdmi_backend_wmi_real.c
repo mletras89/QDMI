@@ -85,8 +85,6 @@ void QDMI_get_gate_info(QDMI_Device dev, int gate_index, QDMI_Gate gate)
 {
     gate->name = gate_set[gate_index];
     gate->unitary = "Unitary_Matrix";
-    gate->name = gate_set[gate_index];
-    gate->unitary = "Unitary_Matrix";
     gate->fidelity = 1.0;
 }
 
