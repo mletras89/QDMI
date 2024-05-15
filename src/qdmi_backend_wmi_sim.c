@@ -36,7 +36,7 @@ cJSON *backend_configuration()
     \"backend_name\": \"dedicated\", \
     \"backend_version\": \"1.0.0\", \
     \"n_qubits\": 3, \
-    \"basis_gates\": [\"id\", \"x\", \"y\", \"sx\", \"rz\"], \
+    \"basis_gates\": [\"id\", \"x\", \"y\", \"sx\", \"rz\", \"mz\"], \
     \"coupling_map\": null, \
     \"simulator\": false, \
     \"local\": false, \
