@@ -529,6 +529,7 @@ int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int task_
     if (http_code == 200)
     {
         printf("   [Backend].............Job finished\n");
+        fflush(stdout);
 
         long bitstring_idx;
         char *bitstring_string;
@@ -629,6 +630,7 @@ int QDMI_control_test(QDMI_Device dev, QDMI_Job *job, int *flag, QDMI_Status *st
     if (http_code == 200)
     {
         printf("   [Backend].............Job finished\n");
+        fflush(stdout);
         (*flag) = QDMI_COMPLETE;
     }
     else if (http_code == 202)
