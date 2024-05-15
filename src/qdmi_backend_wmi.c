@@ -34,7 +34,7 @@ cJSON *backend_configuration()
 {
 
     char *configuration_string = "{ \
-    \"backend_name\": \"6q\", \
+    \"backend_name\": \"dedicated\", \
     \"backend_version\": \"1.0.0\", \
     \"n_qubits\": 3, \
     \"basis_gates\": [\"id\", \"x\", \"y\", \"sx\", \"rz\"], \
@@ -284,7 +284,7 @@ int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
     // payload
-    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, "{\"qobj\": {\"header\": {\"backend_name\": \"6q\"}}}");
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, "{\"qobj\": {\"header\": {\"backend_name\": \"dedicated\"}}}");
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "GET");
 
     // send request
