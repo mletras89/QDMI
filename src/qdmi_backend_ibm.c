@@ -94,7 +94,7 @@ int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
 
 int QDMI_backend_init(QInfo info)
 {
-    printf("   [Backend].............Initializing IBM via QDMI\n");
+    printf("   [Backend].............Initializing IBM (mockup) via QDMI\n");
 
     char *uri = NULL;
     void *regpointer = NULL;
