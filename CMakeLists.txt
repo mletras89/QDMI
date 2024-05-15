@@ -48,9 +48,13 @@ target_compile_definitions(backend_qlm PRIVATE _GNU_SOURCE)
 add_library(backend_ibm SHARED src/qdmi_backend_ibm.c)
 target_link_libraries(backend_ibm PRIVATE qinfo jansson)
 
-add_library(backend_wmi SHARED src/qdmi_backend_wmi.c)
-target_link_libraries(backend_wmi PRIVATE qinfo CURL::libcurl)
-target_link_libraries(backend_wmi PRIVATE qinfo cjson)
+add_library(backend_wmi_real SHARED src/qdmi_backend_wmi_real.c)
+target_link_libraries(backend_wmi_real PRIVATE qinfo CURL::libcurl)
+target_link_libraries(backend_wmi_real PRIVATE qinfo cjson)
+
+add_library(backend_wmi_sim SHARED src/qdmi_backend_wmi_sim.c)
+target_link_libraries(backend_wmi_sim PRIVATE qinfo CURL::libcurl)
+target_link_libraries(backend_wmi_sim PRIVATE qinfo cjson)
 
 add_library(backend_q7 SHARED src/qdmi_backend_q7.c)
 target_link_libraries(backend_q7 PRIVATE qinfo LLVM) 
@@ -83,13 +87,24 @@ target_include_directories(backend_ibm PUBLIC
     $<INSTALL_INTERFACE:include>
 )
 
-set_target_properties(backend_wmi PROPERTIES
+set_target_properties(backend_wmi_real PROPERTIES
     VERSION ${PROJECT_VERSION}
     SOVERSION ${PROJECT_VERSION_MAJOR}
     PUBLIC_HEADER "${PUBLIC_QDMI_HEADERS}"
 )
 
-target_include_directories(backend_wmi PUBLIC
+set_target_properties(backend_wmi_sim PROPERTIES
+    VERSION ${PROJECT_VERSION}
+    SOVERSION ${PROJECT_VERSION_MAJOR}
+    PUBLIC_HEADER "${PUBLIC_QDMI_HEADERS}"
+)
+
+target_include_directories(backend_wmi_real PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
+
+target_include_directories(backend_wmi_sim PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
@@ -127,7 +142,7 @@ target_include_directories(qdmi PUBLIC
 )
 
 install(
-    TARGETS qdmi backend_qlm backend_ibm backend_wmi backend_q7
+    TARGETS qdmi backend_qlm backend_ibm backend_wmi_real backend_wmi_sim backend_q7
     EXPORT qdmiConfig
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -135,7 +150,7 @@ install(
 )
 
 export(
-    TARGETS qdmi backend_qlm backend_ibm backend_wmi backend_q7
+    TARGETS qdmi backend_qlm backend_ibm backend_wmi_real backend_wmi_sim backend_q7
     NAMESPACE qdmi::
     FILE "${CMAKE_CURRENT_BINARY_DIR}/qdmiConfig.cmake"
 )
