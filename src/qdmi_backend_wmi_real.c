@@ -107,7 +107,7 @@ int QDMI_query_all_gates(QDMI_Device dev, QDMI_Gate *gates)
 // init not needed for wmi backend
 int QDMI_backend_init(QInfo info)
 {
-    printf("   [Backend].............Initializing WMI via QDMI\n");
+    printf("   [Backend].............Initializing WMI (real device) via QDMI\n");
 
     char *uri = NULL;
     void *regpointer = NULL;
@@ -254,7 +254,7 @@ static size_t parse_json(void *contents, size_t size, size_t nmemb, struct Respo
 int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
 {
 
-    printf("   [Backend].............WMI query device status.\n");
+    printf("   [Backend].............WMI (real device) query device status.\n");
 
     CURL *curl = curl_easy_init();
 
