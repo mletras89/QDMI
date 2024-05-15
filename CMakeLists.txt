@@ -49,7 +49,8 @@ add_library(backend_ibm SHARED src/qdmi_backend_ibm.c)
 target_link_libraries(backend_ibm PRIVATE qinfo jansson)
 
 add_library(backend_wmi SHARED src/qdmi_backend_wmi.c)
-target_link_libraries(backend_wmi PRIVATE qinfo CURL::libcurl cjson)
+target_link_libraries(backend_wmi PRIVATE qinfo CURL::libcurl)
+target_link_libraries(backend_wmi PRIVATE qinfo cjson)
 
 add_library(backend_q7 SHARED src/qdmi_backend_q7.c)
 target_link_libraries(backend_q7 PRIVATE qinfo LLVM) 
