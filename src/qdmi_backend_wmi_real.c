@@ -124,7 +124,7 @@ int QDMI_control_readout_size(QDMI_Device dev, QDMI_Status *status, int *numbits
 {
     printf("   [Backend].............Returning size\n");
 
-    *numbits = 3;
+    *numbits = 1;
     return QDMI_SUCCESS;
 }
 
@@ -133,35 +133,7 @@ int QDMI_set_coupling_mapping(QDMI_Device dev, int qubit_index, QDMI_Qubit qubit
 {
     qubit->index = qubit_index;
     qubit->coupling_mapping = NULL;
-
-    /*
-    switch (qubit_index)
-    {
-    case 0:
-        qubit->coupling_mapping = (QDMI_qubit_index *)malloc(2 * sizeof(QDMI_qubit_index));
-        qubit->coupling_mapping[0] = 1;
-        qubit->coupling_mapping[1] = 2;
-        qubit->size_coupling_mapping = 2;
-        break;
-    case 1:
-        qubit->coupling_mapping = (QDMI_qubit_index *)malloc(2 * sizeof(QDMI_qubit_index));
-        qubit->coupling_mapping[0] = 0;
-        qubit->coupling_mapping[1] = 2;
-        qubit->size_coupling_mapping = 2;
-        break;
-    case 2:
-        qubit->coupling_mapping = (QDMI_qubit_index *)malloc(2 * sizeof(QDMI_qubit_index));
-        qubit->coupling_mapping[0] = 0;
-        qubit->coupling_mapping[1] = 1;
-        qubit->size_coupling_mapping = 2;
-        break;
-    // don't know what default does
-    // JE: It handles case 3, case 4, and so on
-    default:
-        qubit->coupling_mapping = NULL;
-        break;
-    }
-    */
+    qubit->size_coupling_mapping = 0;
 }
 
 // Looks like this is initializing qubits and setting the coupling map for each qubit
@@ -193,7 +165,7 @@ int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits)
 // number of qubits
 int QDMI_query_qubits_num(QDMI_Device dev, int *num_qubits)
 {
-    *num_qubits = 3;
+    *num_qubits = 1;
     // printf("   [Backend].............QDMI_query_qubits_num\n");
     return QDMI_SUCCESS;
 }

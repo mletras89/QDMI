@@ -118,7 +118,7 @@ int QDMI_control_readout_size(QDMI_Device dev, QDMI_Status *status, int *numbits
 {
     printf("   [Backend].............Returning size\n");
     
-    *numbits = 2;
+    *numbits = 3;
     return QDMI_SUCCESS;
 }
 
@@ -127,6 +127,7 @@ int QDMI_set_coupling_mapping(QDMI_Device dev, int qubit_index, QDMI_Qubit qubit
 {
     qubit->index = qubit_index;
 
+    int i;
     switch (qubit_index) {
         case 0:
             qubit->coupling_mapping = (QDMI_qubit_index*)malloc(2 * sizeof(QDMI_qubit_index));
@@ -148,6 +149,7 @@ int QDMI_set_coupling_mapping(QDMI_Device dev, int qubit_index, QDMI_Qubit qubit
             break;
         default:
             qubit->coupling_mapping = NULL;
+            qubit->size_coupling_mapping = 0;
             break; 
     }
 }
@@ -172,6 +174,9 @@ int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits)
     for (i = 0; i < num_qubits; i++)
     {
         QDMI_set_coupling_mapping(dev, i, (*qubits) + i);
+
+        //for (int j = 0; j < (*qubits)[i].size_coupling_mapping; j++)
+        //    printf("qubit[%d]->coupling_mapping[%d] = %d \n", i, j, (*qubits)[i].coupling_mapping[j]);
     }
 
     printf("   [Backend].............Returning available qubits\n");
