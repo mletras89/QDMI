@@ -254,7 +254,7 @@ static size_t parse_json(void *contents, size_t size, size_t nmemb, struct Respo
 int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
 {
 
-    printf("   [Backend].............WMI (real device) query device status.\n");
+    printf("   [Backend].............WMI (real device) query device status OK\n");
 
     CURL *curl = curl_easy_init();
 

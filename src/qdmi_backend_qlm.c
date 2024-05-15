@@ -281,7 +281,7 @@ char *startConsume(amqp_connection_state_t *Connection, char *Queue)
 
 int QDMI_backend_init(QInfo info)
 {
-    printf("   [Backend].............Initializing QLM via QDMI\n");
+    printf("   [Backend].............Initializing QLM (simulator) via QDMI\n");
 
     char *uri = NULL;
     void *regpointer = NULL;
@@ -302,7 +302,7 @@ int QDMI_control_readout_size(QDMI_Device dev, QDMI_Status *status, int *numbits
 
 int QDMI_device_status(QDMI_Device dev, QInfo info, int *status)
 {
-    printf("   [Backend].............QLM query device status OK\n");
+    printf("   [Backend].............QLM (simulator) query device status OK\n");
 
     *status = 1;
     return QDMI_SUCCESS;
