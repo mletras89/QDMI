@@ -136,9 +136,9 @@ int QDMI_backend_init(QInfo info)
 
     return fetch_backend_configuration();
 }
+
 /*
 * This allows the QDMI to check if a property exists before querying it by just comparing the string
-
 */
 int QDMI_query_device_property_exists(QDMI_Device dev, QDMI_Device_property prop, int* scope)
 {
@@ -285,10 +285,8 @@ int QDMI_query_gateset_num(QDMI_Device dev, int *num_gates)
 
 }
 
-void QDMI_get_gate_info(QDMI_Device dev, int gate_index, QDMI_Gate gate)
+void QDMI_set_gate_coupling_map(QDMI_Gate gate, int gate_index)
 {
-    gate->name     = gate_set[gate_index];
-
     // Add coupling_mapps for the gate
     json_t *gates_array = json_object_get(ibm_root, backend_properties[4]);
     if (!json_is_array(gates_array)) {
@@ -351,9 +349,20 @@ void QDMI_get_gate_info(QDMI_Device dev, int gate_index, QDMI_Gate gate)
     // Set coupling_mapping to NULL if the backend doesn't provide it
     else {
         gate->coupling_mapping = NULL;
-    }   
+    }
+}
+
+void QDMI_set_gate_properties(QDMI_Gate gate)
+{
     gate->unitary  = "Unitary_Matrix";
     gate->fidelity = 1.0;
+}
+void QDMI_query_gate_info(QDMI_Gate gate, int gate_index)
+{
+    gate->name     = gate_set[gate_index];
+
+    QDMI_set_gate_coupling_map(gate, gate_index);
+    QDMI_set_gate_properties(gate);
 }
 
 int QDMI_query_all_gates(QDMI_Device dev, QDMI_Gate *gates)
@@ -370,7 +379,7 @@ int QDMI_query_all_gates(QDMI_Device dev, QDMI_Gate *gates)
     *gates = (QDMI_Gate)malloc(num_gates * sizeof(QDMI_Gate_impl_t));
 
     for (i = 0; i < num_gates; i++)
-        QDMI_get_gate_info(dev, i, (*gates) + i);
+        QDMI_query_gate_info((*gates) + i, i);
 
     return QDMI_SUCCESS;
 }
@@ -420,6 +429,7 @@ int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int task_
     return QDMI_SUCCESS;
 }
 
+
 /*The coupling map for IBM Athens backend is this:
 
 "coupling_map": [
@@ -438,7 +448,7 @@ int QDMI_control_readout_raw_num(QDMI_Device dev, QDMI_Status *status, int task_
 * The space and time complexity of this method can be further improved and 
     this version is just a prototype.
 */
-int QDMI_set_coupling_mapping(QDMI_Device dev, int qubit_index, QDMI_Qubit qubit)
+void QDMI_set_qubit_coupling_map(QDMI_Qubit qubit, int qubit_index)
 {
     qubit->index = qubit_index;
 
@@ -497,7 +507,7 @@ int QDMI_set_coupling_mapping(QDMI_Device dev, int qubit_index, QDMI_Qubit qubit
     free(temp_array);
 }
 
-int QDMI_set_qubit_properties(QDMI_Device dev, QDMI_Qubit qubit)
+void QDMI_set_qubit_properties(QDMI_Qubit qubit)
 {
 
     // Get qubits array
@@ -549,6 +559,12 @@ int QDMI_set_qubit_properties(QDMI_Device dev, QDMI_Qubit qubit)
 
 }
 
+int QDMI_query_qubit_info(QDMI_Qubit qubit, int qubit_index)
+{
+    QDMI_set_qubit_coupling_map(qubit, qubit_index);
+    QDMI_set_qubit_properties(qubit);
+}
+
 int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits)
 {
     int err, num_qubits;
@@ -571,8 +587,7 @@ int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits)
 
     int i;
     for (i = 0; i < num_qubits; i++){
-        QDMI_set_coupling_mapping(dev, i, (*qubits) + i);
-        QDMI_set_qubit_properties(dev, (*qubits) + i);
+        QDMI_query_qubit_info((*qubits) + i, i);
     }
         
 
@@ -609,7 +624,6 @@ int QDMI_query_qubit_property_exists(QDMI_Device dev, QDMI_Qubit_property prop, 
             printf("    [Backend]..............%s property does not exist\n",  qubit_properties[0]);
             return QDMI_SUCCESS;
         }
-
     }
     else if(prop->name == QDMI_T2_TIME)
     {
