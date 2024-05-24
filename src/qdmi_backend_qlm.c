@@ -17,11 +17,11 @@
 
 char *createTheRequest(unsigned int shoots, QDMI_Fragment *frag, int task_id)
 {
-    time_t timer;
-    char submit_time[26];
-    struct tm *tm_info;
-    timer = time(NULL);
-    tm_info = localtime(&timer);
+    //time_t timer;
+    char submit_time[26] = "";
+    //struct tm *tm_info;
+    //timer = time(NULL);
+    //tm_info = localtime(&timer);
     
     //strftime(submit_time, 26, "%Y-%m-%d %H:%M:%S", tm_info);
     //char task_id[10];
@@ -241,8 +241,8 @@ char *startConsume(amqp_connection_state_t *Connection, char *Queue)
         fprintf(stderr, "Failed to start consuming messages.\n");
 
     // TODO What do we need this loop for?
-    for (;;)
-    {
+    //for (;;)
+    //{
         amqp_rpc_reply_t res;
         amqp_envelope_t envelope;
 
@@ -251,15 +251,17 @@ char *startConsume(amqp_connection_state_t *Connection, char *Queue)
 
         amqp_maybe_release_buffers(*Connection);
 
+        printf("\n\n\t1\n");
         res = amqp_consume_message(
             *Connection, 
             &envelope, 
             NULL, 
             0
         );
+        printf("\n\n\t2\n");
 
         if (AMQP_RESPONSE_NORMAL != res.reply_type)
-            break;
+            return "1"; //break;
 
         json_error_t theError;
 
@@ -273,8 +275,8 @@ char *startConsume(amqp_connection_state_t *Connection, char *Queue)
             TheResponse[theError.column - 1] = ' ';
             root = json_loads(TheResponse, 0, NULL);
         }
-        break;
-    }
+        //break;
+    //}
 
     return TheResponse;
 }
@@ -381,7 +383,8 @@ int QDMI_control_submit(QDMI_Device dev, QDMI_Fragment *frag, int numshots, QInf
 		&SendConnection, 
 		TheRequest, 
 		//"qd_qrequest_reception_queue_274973451958055"
-        "qs_qlm_274973448280338"
+        //"qs_qlm_274973448280338"
+        "qs_qlm_qlm_274973448280338"
 	);
 
     return QDMI_SUCCESS;
