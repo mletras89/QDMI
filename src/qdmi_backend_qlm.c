@@ -251,14 +251,12 @@ char *startConsume(amqp_connection_state_t *Connection, char *Queue)
 
         amqp_maybe_release_buffers(*Connection);
 
-        printf("\n\n\t1\n");
         res = amqp_consume_message(
             *Connection, 
             &envelope, 
             NULL, 
             0
         );
-        printf("\n\n\t2\n");
 
         if (AMQP_RESPONSE_NORMAL != res.reply_type)
             return "1"; //break;
