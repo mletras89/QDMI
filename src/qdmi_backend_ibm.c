@@ -148,40 +148,47 @@ int QDMI_query_device_property_exists(QDMI_Device dev, QDMI_Device_property prop
         *scope = 1;
         printf("    [Backend]..............%s property exists\n", backend_properties[prop->name]);
         // Determine the type of the property using json_typeof
-        switch (json_typeof(property)) {
-            case JSON_STRING:
-                prop->type = QDMI_CHARS;
-                break;
-            case JSON_INTEGER:
-                prop->type = QDMI_INT;
-                break;
-            case JSON_REAL:
-                prop->type = QDMI_DOUBLE;
-                break;
-            case JSON_TRUE:
-                prop->type = QDMI_BOOLEAN;
-            case JSON_FALSE:
-                prop->type = QDMI_BOOLEAN;
-                break;
-            case JSON_ARRAY:
-                prop->type = QDMI_ARRAY;
-                break;
-            case JSON_OBJECT:
-                prop->type = QDMI_OBJECT;
-                break;
-            case JSON_NULL:
-                prop->type = QDMI_NULL;
-                break;
-            default:
-                printf("    [Backend]..............%s property has an unknown type.\n", backend_properties[prop->name]);
-                break;
-        }
         return QDMI_SUCCESS;
     } else {
         *scope = 0;
         printf("    [Backend]..............Queried property does not exist: Device property #%d\n", prop->name);
         return QDMI_ERROR_FATAL;
     }
+}
+
+int QDMI_query_device_property_type(QDMI_Device dev, QDMI_Device_property prop)
+{
+    json_t *property = json_object_get(ibm_root, backend_properties[prop->name]);
+    switch (json_typeof(property)) {
+        case JSON_STRING:
+            prop->type = QDMI_CHARS;
+            break;
+        case JSON_INTEGER:
+            prop->type = QDMI_INT;
+            break;
+        case JSON_REAL:
+            prop->type = QDMI_DOUBLE;
+            break;
+        case JSON_TRUE:
+            prop->type = QDMI_BOOLEAN;
+        case JSON_FALSE:
+            prop->type = QDMI_BOOLEAN;
+            break;
+        case JSON_ARRAY:
+            prop->type = QDMI_ARRAY;
+            break;
+        case JSON_OBJECT:
+            prop->type = QDMI_OBJECT;
+            break;
+        case JSON_NULL:
+            prop->type = QDMI_NULL;
+            break;
+        default:
+            printf("    [Backend]..............%s property has an unknown type.\n", backend_properties[prop->name]);
+            return QDMI_ERROR_FATAL;
+    }
+    return QDMI_SUCCESS;
+
 }
 
 int QDMI_query_device_property_c(QDMI_Device dev, QDMI_Device_property prop, char *value)
@@ -392,7 +399,7 @@ int QDMI_query_byname(QDMI_Device dev, char *name, QDMI_Gate *gate)
     for (i = 0; i < num_gates; i++) {
         if (strcmp(gate_set[i], name) == 0)
         {
-            QDMI_get_gate_info(dev, i, *gate);
+            QDMI_query_gate_info(*gate, i);
             return QDMI_SUCCESS;
         }
     }
@@ -608,13 +615,12 @@ int QDMI_query_qubits_num(QDMI_Device dev, int *num_qubits)
     return QDMI_SUCCESS;
 }
 
-int QDMI_query_qubit_property_exists(QDMI_Device dev, QDMI_Qubit_property prop, QDMI_Qubit qubit, int* scope)
+int QDMI_query_qubit_property_exists(QDMI_Device dev, QDMI_Qubit qubit, QDMI_Qubit_property prop, int* scope)
 {
 
     *scope = 1;
     if(prop->name == QDMI_T1_TIME)
     {
-        prop->type = QDMI_DOUBLE;
         if(qubit->t1 == QDMI_PROPERTY_NOT_DEFINED){
             *scope = 0;
             printf("    [Backend]..............%s property does not exist\n", qubit_properties[0]);
@@ -627,7 +633,6 @@ int QDMI_query_qubit_property_exists(QDMI_Device dev, QDMI_Qubit_property prop, 
     }
     else if(prop->name == QDMI_T2_TIME)
     {
-        prop->type = QDMI_DOUBLE;
         if(qubit->t2 == QDMI_PROPERTY_NOT_DEFINED){
             *scope = 0;
             printf("    [Backend]..............%s property does not exist\n", qubit_properties[1]);
@@ -641,7 +646,6 @@ int QDMI_query_qubit_property_exists(QDMI_Device dev, QDMI_Qubit_property prop, 
     }
     else if(prop->name == QDMI_READOUT_ERROR)
     {
-        prop->type = QDMI_DOUBLE;
         if(qubit->readout_error == QDMI_PROPERTY_NOT_DEFINED){
             *scope = 0;
             printf("    [Backend]..............%s property does not exist\n", qubit_properties[2]);
@@ -655,7 +659,6 @@ int QDMI_query_qubit_property_exists(QDMI_Device dev, QDMI_Qubit_property prop, 
     }
     else if(prop->name == QDMI_READOUT_LENGTH)
     {
-        prop->type = QDMI_DOUBLE;
         if(qubit->readout_length == QDMI_PROPERTY_NOT_DEFINED){
             *scope = 0;
             printf("    [Backend]..............%s property does not exist\n", qubit_properties[3]);
@@ -669,7 +672,6 @@ int QDMI_query_qubit_property_exists(QDMI_Device dev, QDMI_Qubit_property prop, 
     }
     else if(prop->name == QDMI_QUBIT_COUPLING_MAP)
     {
-        prop->type = QDMI_ARRAY;
         if(qubit->size_coupling_mapping == 0){
             *scope = 0;
             printf("    [Backend]..............Qubit Coupling Mapping does not exist\n");
@@ -682,11 +684,42 @@ int QDMI_query_qubit_property_exists(QDMI_Device dev, QDMI_Qubit_property prop, 
 
     }
     else{
-        prop->type = QDMI_NULL;
         printf("    [Backend]..............Unknown proprty queried: %d", prop->name);
         return QDMI_ERROR_FATAL;
     }
 
+}
+
+int QDMI_query_qubit_property_type(QDMI_Device dev, QDMI_Qubit qubit, QDMI_Qubit_property prop)
+{
+    if(prop->name == QDMI_T1_TIME)
+    {
+        prop->type = QDMI_DOUBLE;
+    }
+    else if(prop->name == QDMI_T2_TIME)
+    {
+        prop->type = QDMI_DOUBLE;
+    }
+    else if(prop->name == QDMI_READOUT_ERROR)
+    {
+        prop->type = QDMI_DOUBLE;
+
+    }
+    else if(prop->name == QDMI_READOUT_LENGTH)
+    {
+        prop->type = QDMI_DOUBLE;
+    }
+    else if(prop->name == QDMI_QUBIT_COUPLING_MAP)
+    {
+        prop->type = QDMI_ARRAY;
+    }
+    else{
+        prop->type = QDMI_NULL;
+        printf("    [Backend]..............Unknown property queried: %d", prop->name);
+        return QDMI_ERROR_FATAL;
+    }
+
+    return QDMI_SUCCESS;
 }
 
 int QDMI_query_qubit_property_c(QDMI_Device dev, QDMI_Qubit qubit, QDMI_Qubit_property prop, char *value)

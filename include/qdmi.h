@@ -200,6 +200,8 @@ typedef int (*QDMI_control_readout_raw_sample_t)(QDMI_Device dev, QDMI_Status *s
 // check if a specific device property exists
 int QDMI_query_device_property_exists(QDMI_Device dev, QDMI_Device_property prop, int* scope);
 typedef int (*QDMI_query_device_property_exists_t)(QDMI_Device dev, QDMI_Device_property prop, int* scope);
+int QDMI_query_device_property_type(QDMI_Device dev, QDMI_Device_property prop);
+typedef int (*QDMI_query_device_property_type_t)(QDMI_Device dev, QDMI_Device_property prop);
 
 // query device property as int or float
 int QDMI_query_device_property_i(QDMI_Device dev, QDMI_Device_property prop, int *value);
@@ -230,6 +232,8 @@ typedef int (*QDMI_query_gate_unitary_t)(QDMI_Device dev, QDMI_Gate gate, QDMI_U
 // routines to query gate properties
 int QDMI_query_gate_property_exists(QDMI_Device dev, QDMI_Gate gate, QDMI_Gate_property prop, int* scope);
 typedef int (*QDMI_query_gate_property_exists_t)(QDMI_Device dev, QDMI_Gate gate, QDMI_Gate_property prop, int* scope);
+int QDMI_query_gate_property_type(QDMI_Device dev, QDMI_Gate gate, QDMI_Gate_property prop);
+typedef int (*QDMI_query_gate_property_type_t)(QDMI_Device dev, QDMI_Gate gate, QDMI_Gate_property prop);
 int QDMI_query_gate_property_i(QDMI_Device dev, QDMI_Gate_property prop, QDMI_Gate gate, int *coor, int* value);
 typedef int (*QDMI_query_gate_property_i_t)(QDMI_Device dev, QDMI_Gate_property prop, QDMI_Gate gate, int *coor, int* value);
 int QDMI_query_gate_property_f(QDMI_Device dev, QDMI_Gate_property prop, QDMI_Gate gate, int *coor, float* value);
@@ -239,9 +243,10 @@ typedef int (*QDMI_query_gate_property_d_t)(QDMI_Device dev, QDMI_Gate_property 
 
 int QDMI_query_all_qubits(QDMI_Device dev, QDMI_Qubit *qubits);
 typedef int (*QDMI_query_all_qubits_t)(QDMI_Device dev, QDMI_Qubit *qubits);
-int QDMI_query_qubit_property_exists(QDMI_Device dev, QDMI_Qubit_property prop, QDMI_Qubit qubit, int* scope);
-typedef int (*QDMI_query_qubit_property_exists_t)(QDMI_Device dev, QDMI_Qubit_property prop, QDMI_Qubit qubit, int* scope);
-
+int QDMI_query_qubit_property_exists(QDMI_Device dev, QDMI_Qubit qubit, QDMI_Qubit_property prop, int* scope);
+typedef int (*QDMI_query_qubit_property_exists_t)(QDMI_Device dev, QDMI_Qubit qubit, QDMI_Qubit_property prop, int* scope);
+int QDMI_query_qubit_property_type(QDMI_Device dev, QDMI_Qubit qubit, QDMI_Qubit_property prop);
+typedef int (*QDMI_query_qubit_property_type_t)(QDMI_Device dev, QDMI_Qubit qubit, QDMI_Qubit_property prop);
 // query qubit property as int, float, etc.
 int QDMI_query_qubit_property_c(QDMI_Device dev, QDMI_Qubit qubit, QDMI_Qubit_property prop, char *value);
 typedef int (*QDMI_query_qubit_property_c_t)(QDMI_Device dev, QDMI_Qubit qubit, QDMI_Qubit_property prop, char *value);
