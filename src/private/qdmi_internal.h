@@ -70,6 +70,7 @@ typedef struct QDMI_Library_impl_d
     QDMI_control_readout_raw_sample_t   QDMI_control_readout_raw_sample;
     QDMI_query_device_property_exists_t QDMI_query_device_property_exists;
     QDMI_query_device_property_type_t   QDMI_query_device_property_type;
+    QDMI_query_device_property_c_t      QDMI_query_device_property_c;
     QDMI_query_device_property_i_t      QDMI_query_device_property_i;
     QDMI_query_device_property_f_t      QDMI_query_device_property_f;
     QDMI_query_device_property_d_t      QDMI_query_device_property_d;
