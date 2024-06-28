@@ -114,7 +114,6 @@ typedef int QDMI_Gate_property;
 // typedef int QDMI_Qubit_property;
 
 typedef int QDMI_Device_property;
-//typedef struct QDMI_Device_property_impl_d *QDMI_Device_property;
 typedef struct QDMI_Qubit_property_impl_d *QDMI_Qubit_property;
 typedef struct QDMI_Gate_impl_d            *QDMI_Gate;
 typedef struct QDMI_Unitary_impl_d         *QDMI_Unitary;
@@ -209,7 +208,7 @@ typedef int (*QDMI_query_device_property_exists_t)(QDMI_Device dev, QDMI_Device_
 int QDMI_query_device_property_type(QDMI_Device dev, QDMI_Device_property prop);
 typedef int (*QDMI_query_device_property_type_t)(QDMI_Device dev, QDMI_Device_property prop);
 
-// query device property as int or float
+// query device property as int, char, float, double
 int QDMI_query_device_property_i(QDMI_Device dev, QDMI_Device_property prop, int *value);
 typedef int (*QDMI_query_device_property_i_t)(QDMI_Device dev, QDMI_Device_property prop, int *value);
 int QDMI_query_device_property_c(QDMI_Device dev, QDMI_Device_property prop, char **value);

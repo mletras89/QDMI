@@ -132,12 +132,6 @@ typedef struct QDMI_Device_impl_d
     void                   *device_state;
 } QDMI_Device_impl_t;
 
-typedef struct QDMI_Device_property_impl_d
-{
-    int name;  // for e.g. 15 for backend_name
-    int type;  //INT_PROPERTY, etc,
-} QDMI_Device_property_impl_t;
-
 typedef struct QDMI_Qubit_property_impl_d
 {
     int name;  // for e.g. 15 for backend_name
