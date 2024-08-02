@@ -1,7 +1,3 @@
-compile_qdmi.sh
-inputs/
-inputs/token.txt
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -142,6 +138,7 @@ _skbuild/
 
 # Any build dirs in the tests
 test/**/build/
+/src/**/_version.py
 
 # Common editor files
 *~
