@@ -4,17 +4,15 @@ See https://llvm.org/LICENSE.txt for license information.
 SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <dlfcn.h>
-#include <string.h>
-#include <unistd.h>
-
 #include "private/qdmi_internal.h"
 
+#include <ctype.h>
+#include <dlfcn.h>
 #include <qinfo.h>
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 
 /*----------------------------------------*/
 /* Internal Routines: Startup and Shutdown */
@@ -22,395 +20,396 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 /*.....................................*/
 /* read configuration and load libraries */
 
-int QDMI_load_libraries(QDMI_Session* session, QInfo sesioninfo)
-{
-    char *configfilename = NULL;
-    FILE *configfile;
-    char *line;
-    size_t  length;
-    int  readlen;
-    //char *separator,*key,*param;
-    QDMI_Library newlib, runlib, prevlib, qdmi_library_list;
-    double dval;
-    long   lval;
-    int retval,initerr,err;
-    qdmi_library_list = (*session)->qdmi_library_list;
+int QDMI_load_libraries(QDMI_Session *session, QInfo sesioninfo) {
+  char *configfilename = NULL;
+  FILE *configfile;
+  char *line;
+  size_t length;
+  int readlen;
+  // char *separator,*key,*param;
+  QDMI_Library newlib, runlib, prevlib, qdmi_library_list;
+  double dval;
+  long lval;
+  int retval, initerr, err;
+  qdmi_library_list = (*session)->qdmi_library_list;
 
-    /* Determine location of configfile */
+  /* Determine location of configfile */
 
-    configfilename = getenv(QDMI_CONFIG_FILE);
-    if (configfilename==NULL)
-        configfilename=strdup(QDMI_CONFIG_FILE_DEFAULT);
+  configfilename = getenv(QDMI_CONFIG_FILE);
+  if (configfilename == NULL)
+    configfilename = strdup(QDMI_CONFIG_FILE_DEFAULT);
 
-    /* Read configuration file */
+  /* Read configuration file */
 
-    configfile=fopen(configfilename,"r");
-    if (configfile==NULL)
-    {
-        return QDMI_ERROR_NOCFGFILE;
+  configfile = fopen(configfilename, "r");
+  if (configfile == NULL) {
+    return QDMI_ERROR_NOCFGFILE;
+  }
+
+  do {
+    line = NULL;
+    readlen = getline(&line, &length, configfile);
+    if (readlen < 0) {
+      if (line != NULL)
+        free(line);
+
+      if (feof(configfile))
+        break;
+      else
+        return QDMI_ERROR_CFGFILE;
     }
 
-    do
-    {
-        line=NULL;
-        readlen=getline(&line,&length,configfile);
-        if (readlen<0)
-        {
-            if (line!=NULL)
-                free(line);
+    /* no error, no feof, i.e., line is valid */
 
-            if (feof(configfile))
-                break;
-            else
-                return QDMI_ERROR_CFGFILE;
+    if (line[0] != '#') {
+      /* not a comment */
+
+      const char *separator = strchr(line, '=');
+
+      if (separator == NULL) {
+        int err;
+
+        /* must be a starter for a new library */
+
+        /* create library object */
+
+        newlib = (QDMI_Library)calloc(sizeof(QDMI_Library_impl_t), 1);
+        if (newlib == NULL) {
+          if (line != NULL)
+            free(line);
+          return QDMI_ERROR_OUTOFMEM;
         }
 
-        /* no error, no feof, i.e., line is valid */
+        /* setup basic objects in library object */
 
-        if (line[0]!='#')
-        {
-            /* not a comment */
-
-            const char *separator = strchr(line,'=');
-
-            if (separator==NULL)
-            {
-                int err;
-
-                /* must be a starter for a new library */
-
-                /* create library object */
-
-                newlib=(QDMI_Library) calloc(sizeof(QDMI_Library_impl_t),1);
-                if (newlib==NULL)
-                {
-                    if (line!=NULL) free(line);
-                    return QDMI_ERROR_OUTOFMEM;
-                }
-
-                /* setup basic objects in library object */
-
-                err=QInfo_create(&(newlib->info));
-                if (err!=QINFO_SUCCESS)
-                {
-                    if (line!=NULL) free(line);
-                    return qdmi_internal_translate_qinfo_error(err);
-                }
-
-                char *newline = strrchr(line, '\n');
-                if (newline != NULL)
-                {
-                    char *nullterminatedline = malloc(newline - line + 1);
-                    strncpy(nullterminatedline, line, newline - line);
-                    nullterminatedline[newline - line /*- 1*/] = '\0';
-                    newlib->libname = nullterminatedline;
-                }
-                else
-                    newlib->libname = line;
-
-                newlib->libhandle=NULL;
-
-                /* add new library to list */
-
-                newlib->next=qdmi_library_list;
-                qdmi_library_list=newlib;
-            }
-            else
-            {
-                int err;
-
-                /* must be a parameter for an already started library */
-
-                if (qdmi_library_list == NULL)
-                {
-                    /* no library started */
-                    if (line != NULL)
-			            free(line);
-
-                    return QDMI_ERROR_CFGFILE;
-                }
-
-                /* get the strings from the file */
-
-		        size_t paramLength = separator - line;
-                char *param = (char *)malloc(paramLength + 1);
-
-                strncpy(param, line, paramLength);
-                param[paramLength] = '\0';
-
-                /* check type */
-
-		        if (param != NULL)
-                {
-                    const char *valueString = separator + 1;
-
-                    if (strchr(valueString, '.') != NULL)
-                    {
-                        QInfo_index index;
-                        err = QInfo_add(newlib->info, param, QINFO_TYPE_DOUBLE, &index);
-                        if (err != QINFO_SUCCESS)
-                        {
-                            if (line != NULL) {
-                              free(line);
-                            }
-                            return qdmi_internal_translate_qinfo_error(err);
-                        }
-                        err = QInfo_set_d(newlib->info, index, strtod(valueString, NULL));
-                        if (err != QINFO_SUCCESS)
-                        {
-                            if (line != NULL) {
-                              free(line);
-                            }
-                            return qdmi_internal_translate_qinfo_error(err);
-                        }
-                    }
-                    else if( isdigit(*valueString) )
-                    {
-                        char *endptr;
-                        int64_t val = strtoll(valueString, &endptr, 10);
-                        if (*endptr == '\0') {
-                            QInfo_index index;
-                            err = QInfo_add(newlib->info, param, QINFO_TYPE_INT64, &index);
-                            if (err != QINFO_SUCCESS)                            {
-                                if (line != NULL) {
-                                  free(line);
-                                }
-                                return qdmi_internal_translate_qinfo_error(err);
-                            }
-                            err = QInfo_set_i64(newlib->info, index, val);
-                            if (err != QINFO_SUCCESS)
-                            {
-                                if (line != NULL) {
-                                  free(line);
-                                }
-                                return qdmi_internal_translate_qinfo_error(err);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        /* now we have a string */
-                        QInfo_index index;
-                        err = QInfo_add(newlib->info, param, QINFO_TYPE_STRING, &index);
-                        if (err != QINFO_SUCCESS)
-                        {
-                            if (line != NULL) {
-                              free(line);
-                            }
-                            return qdmi_internal_translate_qinfo_error(err);
-                        }
-                        err = QInfo_set_c(newlib->info, index, valueString);
-                        if (err != QINFO_SUCCESS)
-                        {
-                            if (line != NULL) {
-                              free(line);
-                            }
-                            return qdmi_internal_translate_qinfo_error(err);
-                        }
-                    }
-                }
-
-                free(param);
-                free(line);
-            }
+        err = QInfo_create(&(newlib->info));
+        if (err != QINFO_SUCCESS) {
+          if (line != NULL)
+            free(line);
+          return qdmi_internal_translate_qinfo_error(err);
         }
-    } while (1);
 
-    /* the entire file is read and parsed into library list */
-    /* now load all backend libraries and grab fct pointers */
+        char *newline = strrchr(line, '\n');
+        if (newline != NULL) {
+          char *nullterminatedline = malloc(newline - line + 1);
+          strncpy(nullterminatedline, line, newline - line);
+          nullterminatedline[newline - line /*- 1*/] = '\0';
+          newlib->libname = nullterminatedline;
+        } else
+          newlib->libname = line;
 
-    newlib=qdmi_library_list;
-    retval=QDMI_SUCCESS;
+        newlib->libhandle = NULL;
 
-    while (newlib!=NULL)
-    {
-        /* open library */
+        /* add new library to list */
 
-        newlib->libhandle = dlopen(newlib->libname, RTLD_LAZY);
-        if (newlib->libhandle==NULL)
-        {
-            /* opening failed, remove that */
+        newlib->next = qdmi_library_list;
+        qdmi_library_list = newlib;
+      } else {
+        int err;
 
-            runlib=qdmi_library_list;
-            prevlib=NULL;
+        /* must be a parameter for an already started library */
 
-            while (runlib!=newlib)
-            {
-                prevlib=runlib;
-                runlib=runlib->next;
+        if (qdmi_library_list == NULL) {
+          /* no library started */
+          if (line != NULL)
+            free(line);
+
+          return QDMI_ERROR_CFGFILE;
+        }
+
+        /* get the strings from the file */
+
+        size_t paramLength = separator - line;
+        char *param = (char *)malloc(paramLength + 1);
+
+        strncpy(param, line, paramLength);
+        param[paramLength] = '\0';
+
+        /* check type */
+
+        if (param != NULL) {
+          const char *valueString = separator + 1;
+
+          if (strchr(valueString, '.') != NULL) {
+            QInfo_index index;
+            err = QInfo_add(newlib->info, param, QINFO_TYPE_DOUBLE, &index);
+            if (err != QINFO_SUCCESS) {
+              if (line != NULL) {
+                free(line);
+              }
+              return qdmi_internal_translate_qinfo_error(err);
             }
-
-            if (runlib==NULL)
-            {
-                /* can't find the library anymore, this should never happen */
-                return QDMI_ERROR_FATAL;
+            err = QInfo_set_d(newlib->info, index, strtod(valueString, NULL));
+            if (err != QINFO_SUCCESS) {
+              if (line != NULL) {
+                free(line);
+              }
+              return qdmi_internal_translate_qinfo_error(err);
             }
-
-            /* remove library from data structure */
-
-            if (prevlib==NULL)
-                qdmi_library_list=runlib->next;
-            else
-                prevlib->next=runlib->next;
-
-            retval=QDMI_WARN_NOBACKEND;
-
-            free(newlib->libname);
-            err=QInfo_free(newlib->info);
-            if (QInfo_is_Error(err))
+          } else if (isdigit(*valueString)) {
+            char *endptr;
+            int64_t val = strtoll(valueString, &endptr, 10);
+            if (*endptr == '\0') {
+              QInfo_index index;
+              err = QInfo_add(newlib->info, param, QINFO_TYPE_INT64, &index);
+              if (err != QINFO_SUCCESS) {
+                if (line != NULL) {
+                  free(line);
+                }
                 return qdmi_internal_translate_qinfo_error(err);
+              }
+              err = QInfo_set_i64(newlib->info, index, val);
+              if (err != QINFO_SUCCESS) {
+                if (line != NULL) {
+                  free(line);
+                }
+                return qdmi_internal_translate_qinfo_error(err);
+              }
+            }
+          } else {
+            /* now we have a string */
+            QInfo_index index;
+            err = QInfo_add(newlib->info, param, QINFO_TYPE_STRING, &index);
+            if (err != QINFO_SUCCESS) {
+              if (line != NULL) {
+                free(line);
+              }
+              return qdmi_internal_translate_qinfo_error(err);
+            }
+            err = QInfo_set_c(newlib->info, index, valueString);
+            if (err != QINFO_SUCCESS) {
+              if (line != NULL) {
+                free(line);
+              }
+              return qdmi_internal_translate_qinfo_error(err);
+            }
+          }
         }
 
-        /* eind all symbols */
+        free(param);
+        free(line);
+      }
+    }
+  } while (1);
 
-        newlib->QDMI_backend_init=dlsym(newlib->libhandle,"QDMI_backend_init");
+  /* the entire file is read and parsed into library list */
+  /* now load all backend libraries and grab fct pointers */
 
-        newlib->QDMI_control_pack_qasm2=dlsym(newlib->libhandle,"QDMI_control_pack_qasm2");
-        newlib->QDMI_control_pack_qir=dlsym(newlib->libhandle,"QDMI_control_pack_qir");
-        newlib->QDMI_control_submit=dlsym(newlib->libhandle,"QDMI_control_submit");
-        newlib->QDMI_control_cancel=dlsym(newlib->libhandle,"QDMI_control_cancel");
-        newlib->QDMI_control_pause=dlsym(newlib->libhandle,"QDMI_control_pause");
-        newlib->QDMI_control_test=dlsym(newlib->libhandle,"QDMI_control_test");
-        newlib->QDMI_control_wait=dlsym(newlib->libhandle,"QDMI_control_wait");
-        newlib->QDMI_control_extract_state=dlsym(newlib->libhandle,"QDMI_control_extract_state");
-        newlib->QDMI_control_readout_size=dlsym(newlib->libhandle,"QDMI_control_readout_size");
-        newlib->QDMI_control_readout_hist_size=dlsym(newlib->libhandle,"QDMI_control_readout_hist_size");
-        newlib->QDMI_control_readout_hist_top=dlsym(newlib->libhandle,"QDMI_control_readout_hist_top");
-        newlib->QDMI_control_readout_raw_num=dlsym(newlib->libhandle,"QDMI_control_readout_raw_num");
-        newlib->QDMI_control_readout_raw_sample=dlsym(newlib->libhandle,"QDMI_control_readout_raw_sample");
-        newlib->QDMI_query_device_property_exists=dlsym(newlib->libhandle,"QDMI_query_device_property_exists");
-        newlib->QDMI_query_device_property_type=dlsym(newlib->libhandle,"QDMI_query_device_property_type");
-        newlib->QDMI_query_device_property_i=dlsym(newlib->libhandle,"QDMI_query_device_property_i");
-        newlib->QDMI_query_device_property_f=dlsym(newlib->libhandle,"QDMI_query_device_property_f");
-        newlib->QDMI_query_device_property_d=dlsym(newlib->libhandle,"QDMI_query_device_property_d");
-        newlib->QDMI_query_device_property_c=dlsym(newlib->libhandle,"QDMI_query_device_property_c");
-        newlib->QDMI_query_gateset_num=dlsym(newlib->libhandle,"QDMI_query_gateset_num");
-        newlib->QDMI_query_qubits_num=dlsym(newlib->libhandle,"QDMI_query_qubits_num");
-        newlib->QDMI_query_all_gates=dlsym(newlib->libhandle,"QDMI_query_all_gates");
-        newlib->QDMI_query_byname=dlsym(newlib->libhandle,"QDMI_query_byname");
-        newlib->QDMI_query_gate_name=dlsym(newlib->libhandle,"QDMI_query_gate_name");
-        newlib->QDMI_query_gate_size=dlsym(newlib->libhandle,"QDMI_query_gate_size");
-        newlib->QDMI_query_gate_unitary=dlsym(newlib->libhandle,"QDMI_query_gate_unitary");
-        newlib->QDMI_query_gate_property_exists=dlsym(newlib->libhandle,"QDMI_query_gate_property_exists");
-        newlib->QDMI_query_gate_property_type=dlsym(newlib->libhandle,"QDMI_query_gate_property_type");
-        newlib->QDMI_query_gate_property_i=dlsym(newlib->libhandle,"QDMI_query_gate_property_i");
-        newlib->QDMI_query_gate_property_f=dlsym(newlib->libhandle,"QDMI_query_gate_property_f");
-        newlib->QDMI_query_gate_property_d=dlsym(newlib->libhandle,"QDMI_query_gate_property_d");
-        newlib->QDMI_query_all_qubits=dlsym(newlib->libhandle,"QDMI_query_all_qubits");
-        newlib->QDMI_query_qubit_property_exists=dlsym(newlib->libhandle,"QDMI_query_qubit_property_exists");
-        newlib->QDMI_query_qubit_property_type=dlsym(newlib->libhandle,"QDMI_query_qubit_property_type");
-        newlib->QDMI_query_qubit_property_c=dlsym(newlib->libhandle,"QDMI_query_qubit_property_c");
-        newlib->QDMI_query_qubit_property_i=dlsym(newlib->libhandle,"QDMI_query_qubit_property_i");
-        newlib->QDMI_query_qubit_property_f=dlsym(newlib->libhandle,"QDMI_query_qubit_property_f");
-        newlib->QDMI_query_qubit_property_d=dlsym(newlib->libhandle,"QDMI_query_qubit_property_d");
-        newlib->QDMI_device_status=dlsym(newlib->libhandle,"QDMI_device_status");
-        newlib->QDMI_device_quality_check=dlsym(newlib->libhandle,"QDMI_device_quality_check");
-        newlib->QDMI_device_quality_limit=dlsym(newlib->libhandle,"QDMI_device_quality_limit");
-        newlib->QDMI_device_quality_calibrate=dlsym(newlib->libhandle,"QDMI_device_quality_calibrate");
+  newlib = qdmi_library_list;
+  retval = QDMI_SUCCESS;
 
-	//printf("\n[TODO]: (qdmi_core.c) QDMI_ERROR_BACKEND");
-        if (
-            //(newlib->QDMI_control_pack_qasm2==NULL) ||
-            //(newlib->QDMI_control_pack_qir==NULL) ||
-            (newlib->QDMI_control_submit==NULL) ||
-            //(newlib->QDMI_control_cancel==NULL) ||
-            //(newlib->QDMI_control_pause==NULL) ||
-            //(newlib->QDMI_control_test==NULL) ||
-            //(newlib->QDMI_control_wait==NULL) ||
-            //(newlib->QDMI_control_extract_state==NULL) ||
-            (newlib->QDMI_control_readout_size==NULL) ||
-            //(newlib->QDMI_control_readout_hist_size==NULL) ||
-            //(newlib->QDMI_control_readout_hist_top==NULL) ||
-            (newlib->QDMI_control_readout_raw_num==NULL) ||
-            //(newlib->QDMI_control_readout_raw_sample==NULL) ||
-            //(newlib->QDMI_query_device_property_exists==NULL) ||
-            //(newlib->QDMI_query_device_property_i==NULL) ||
-            //(newlib->QDMI_query_device_property_f==NULL) ||
-            //(newlib->QDMI_query_device_property_d==NULL) ||
-            //(newlib->QDMI_query_gateset_num==NULL) ||
-            (newlib->QDMI_query_qubits_num==NULL) ||
-            (newlib->QDMI_query_all_gates==NULL) ||
-            //(newlib->QDMI_query_byname==NULL) ||
-            //(newlib->QDMI_query_gate_name==NULL) ||
-            //(newlib->QDMI_query_gate_size==NULL) ||
-            //(newlib->QDMI_query_gate_unitary==NULL) ||
-            //(newlib->QDMI_query_gate_property_exists==NULL) ||
-            //(newlib->QDMI_query_gate_property_i==NULL) ||
-            //(newlib->QDMI_query_gate_property_f==NULL) ||
-            //(newlib->QDMI_query_gate_property_d==NULL) ||
-            (newlib->QDMI_query_all_qubits==NULL) ||
-            (newlib->QDMI_device_status==NULL) //||
-            //(newlib->QDMI_device_quality_check==NULL) ||
-            //(newlib->QDMI_device_quality_limit==NULL) ||
-            //(newlib->QDMI_device_quality_calibrate==NULL)
-           )
-        {
-            /* same function didn't load / bad backend, need to abort */
-            retval=QDMI_ERROR_BACKEND;
-        }
+  while (newlib != NULL) {
+    /* open library */
 
-        newlib=newlib->next;
+    newlib->libhandle = dlopen(newlib->libname, RTLD_LAZY);
+    if (newlib->libhandle == NULL) {
+      /* opening failed, remove that */
+
+      runlib = qdmi_library_list;
+      prevlib = NULL;
+
+      while (runlib != newlib) {
+        prevlib = runlib;
+        runlib = runlib->next;
+      }
+
+      if (runlib == NULL) {
+        /* can't find the library anymore, this should never happen */
+        return QDMI_ERROR_FATAL;
+      }
+
+      /* remove library from data structure */
+
+      if (prevlib == NULL)
+        qdmi_library_list = runlib->next;
+      else
+        prevlib->next = runlib->next;
+
+      retval = QDMI_WARN_NOBACKEND;
+
+      free(newlib->libname);
+      err = QInfo_free(newlib->info);
+      if (QInfo_is_Error(err))
+        return qdmi_internal_translate_qinfo_error(err);
     }
 
-    /* Now all library are opened and symbols have been found */
-    /* Initialize all backend libraries */
+    /* eind all symbols */
 
-    newlib=qdmi_library_list;
+    newlib->QDMI_backend_init = dlsym(newlib->libhandle, "QDMI_backend_init");
 
-    while ((newlib!=NULL) && (!(QDMI_IS_FATAL(retval))))
-    {
-        initerr=newlib->QDMI_backend_init(newlib->info);
-        if (QDMI_IS_FATAL(initerr))
-            retval=initerr;
-        else
-            if (!(QDMI_IS_WARNING(retval)))
-                retval=initerr;
+    newlib->QDMI_control_pack_qasm2 =
+        dlsym(newlib->libhandle, "QDMI_control_pack_qasm2");
+    newlib->QDMI_control_pack_qir =
+        dlsym(newlib->libhandle, "QDMI_control_pack_qir");
+    newlib->QDMI_control_submit =
+        dlsym(newlib->libhandle, "QDMI_control_submit");
+    newlib->QDMI_control_cancel =
+        dlsym(newlib->libhandle, "QDMI_control_cancel");
+    newlib->QDMI_control_pause = dlsym(newlib->libhandle, "QDMI_control_pause");
+    newlib->QDMI_control_test = dlsym(newlib->libhandle, "QDMI_control_test");
+    newlib->QDMI_control_wait = dlsym(newlib->libhandle, "QDMI_control_wait");
+    newlib->QDMI_control_extract_state =
+        dlsym(newlib->libhandle, "QDMI_control_extract_state");
+    newlib->QDMI_control_readout_size =
+        dlsym(newlib->libhandle, "QDMI_control_readout_size");
+    newlib->QDMI_control_readout_hist_size =
+        dlsym(newlib->libhandle, "QDMI_control_readout_hist_size");
+    newlib->QDMI_control_readout_hist_top =
+        dlsym(newlib->libhandle, "QDMI_control_readout_hist_top");
+    newlib->QDMI_control_readout_raw_num =
+        dlsym(newlib->libhandle, "QDMI_control_readout_raw_num");
+    newlib->QDMI_control_readout_raw_sample =
+        dlsym(newlib->libhandle, "QDMI_control_readout_raw_sample");
+    newlib->QDMI_query_device_property_exists =
+        dlsym(newlib->libhandle, "QDMI_query_device_property_exists");
+    newlib->QDMI_query_device_property_type =
+        dlsym(newlib->libhandle, "QDMI_query_device_property_type");
+    newlib->QDMI_query_device_property_i =
+        dlsym(newlib->libhandle, "QDMI_query_device_property_i");
+    newlib->QDMI_query_device_property_f =
+        dlsym(newlib->libhandle, "QDMI_query_device_property_f");
+    newlib->QDMI_query_device_property_d =
+        dlsym(newlib->libhandle, "QDMI_query_device_property_d");
+    newlib->QDMI_query_device_property_c =
+        dlsym(newlib->libhandle, "QDMI_query_device_property_c");
+    newlib->QDMI_query_gateset_num =
+        dlsym(newlib->libhandle, "QDMI_query_gateset_num");
+    newlib->QDMI_query_qubits_num =
+        dlsym(newlib->libhandle, "QDMI_query_qubits_num");
+    newlib->QDMI_query_all_gates =
+        dlsym(newlib->libhandle, "QDMI_query_all_gates");
+    newlib->QDMI_query_byname = dlsym(newlib->libhandle, "QDMI_query_byname");
+    newlib->QDMI_query_gate_name =
+        dlsym(newlib->libhandle, "QDMI_query_gate_name");
+    newlib->QDMI_query_gate_size =
+        dlsym(newlib->libhandle, "QDMI_query_gate_size");
+    newlib->QDMI_query_gate_unitary =
+        dlsym(newlib->libhandle, "QDMI_query_gate_unitary");
+    newlib->QDMI_query_gate_property_exists =
+        dlsym(newlib->libhandle, "QDMI_query_gate_property_exists");
+    newlib->QDMI_query_gate_property_type =
+        dlsym(newlib->libhandle, "QDMI_query_gate_property_type");
+    newlib->QDMI_query_gate_property_i =
+        dlsym(newlib->libhandle, "QDMI_query_gate_property_i");
+    newlib->QDMI_query_gate_property_f =
+        dlsym(newlib->libhandle, "QDMI_query_gate_property_f");
+    newlib->QDMI_query_gate_property_d =
+        dlsym(newlib->libhandle, "QDMI_query_gate_property_d");
+    newlib->QDMI_query_all_qubits =
+        dlsym(newlib->libhandle, "QDMI_query_all_qubits");
+    newlib->QDMI_query_qubit_property_exists =
+        dlsym(newlib->libhandle, "QDMI_query_qubit_property_exists");
+    newlib->QDMI_query_qubit_property_type =
+        dlsym(newlib->libhandle, "QDMI_query_qubit_property_type");
+    newlib->QDMI_query_qubit_property_c =
+        dlsym(newlib->libhandle, "QDMI_query_qubit_property_c");
+    newlib->QDMI_query_qubit_property_i =
+        dlsym(newlib->libhandle, "QDMI_query_qubit_property_i");
+    newlib->QDMI_query_qubit_property_f =
+        dlsym(newlib->libhandle, "QDMI_query_qubit_property_f");
+    newlib->QDMI_query_qubit_property_d =
+        dlsym(newlib->libhandle, "QDMI_query_qubit_property_d");
+    newlib->QDMI_device_status = dlsym(newlib->libhandle, "QDMI_device_status");
+    newlib->QDMI_device_quality_check =
+        dlsym(newlib->libhandle, "QDMI_device_quality_check");
+    newlib->QDMI_device_quality_limit =
+        dlsym(newlib->libhandle, "QDMI_device_quality_limit");
+    newlib->QDMI_device_quality_calibrate =
+        dlsym(newlib->libhandle, "QDMI_device_quality_calibrate");
 
-        newlib=newlib->next;
+    // printf("\n[TODO]: (qdmi_core.c) QDMI_ERROR_BACKEND");
+    if (
+        //(newlib->QDMI_control_pack_qasm2==NULL) ||
+        //(newlib->QDMI_control_pack_qir==NULL) ||
+        (newlib->QDMI_control_submit == NULL) ||
+        //(newlib->QDMI_control_cancel==NULL) ||
+        //(newlib->QDMI_control_pause==NULL) ||
+        //(newlib->QDMI_control_test==NULL) ||
+        //(newlib->QDMI_control_wait==NULL) ||
+        //(newlib->QDMI_control_extract_state==NULL) ||
+        (newlib->QDMI_control_readout_size == NULL) ||
+        //(newlib->QDMI_control_readout_hist_size==NULL) ||
+        //(newlib->QDMI_control_readout_hist_top==NULL) ||
+        (newlib->QDMI_control_readout_raw_num == NULL) ||
+        //(newlib->QDMI_control_readout_raw_sample==NULL) ||
+        //(newlib->QDMI_query_device_property_exists==NULL) ||
+        //(newlib->QDMI_query_device_property_i==NULL) ||
+        //(newlib->QDMI_query_device_property_f==NULL) ||
+        //(newlib->QDMI_query_device_property_d==NULL) ||
+        //(newlib->QDMI_query_gateset_num==NULL) ||
+        (newlib->QDMI_query_qubits_num == NULL) ||
+        (newlib->QDMI_query_all_gates == NULL) ||
+        //(newlib->QDMI_query_byname==NULL) ||
+        //(newlib->QDMI_query_gate_name==NULL) ||
+        //(newlib->QDMI_query_gate_size==NULL) ||
+        //(newlib->QDMI_query_gate_unitary==NULL) ||
+        //(newlib->QDMI_query_gate_property_exists==NULL) ||
+        //(newlib->QDMI_query_gate_property_i==NULL) ||
+        //(newlib->QDMI_query_gate_property_f==NULL) ||
+        //(newlib->QDMI_query_gate_property_d==NULL) ||
+        (newlib->QDMI_query_all_qubits == NULL) ||
+        (newlib->QDMI_device_status == NULL) //||
+        //(newlib->QDMI_device_quality_check==NULL) ||
+        //(newlib->QDMI_device_quality_limit==NULL) ||
+        //(newlib->QDMI_device_quality_calibrate==NULL)
+    ) {
+      /* same function didn't load / bad backend, need to abort */
+      retval = QDMI_ERROR_BACKEND;
     }
 
-    /* Finish setup, cleanup after error */
+    newlib = newlib->next;
+  }
 
-    if (QDMI_IS_FATAL(retval))
-    {
-        runlib=qdmi_library_list;
+  /* Now all library are opened and symbols have been found */
+  /* Initialize all backend libraries */
 
-        while (runlib!=NULL)
-        {
-            free(runlib->libname);
-            if (runlib->libhandle)
-                dlclose(runlib->libhandle);
-            QInfo_free(runlib->info);
-            runlib=runlib->next;
-        }
-        qdmi_library_list=NULL;
-        return retval;
+  newlib = qdmi_library_list;
+
+  while ((newlib != NULL) && (!(QDMI_IS_FATAL(retval)))) {
+    initerr = newlib->QDMI_backend_init(newlib->info);
+    if (QDMI_IS_FATAL(initerr))
+      retval = initerr;
+    else if (!(QDMI_IS_WARNING(retval)))
+      retval = initerr;
+
+    newlib = newlib->next;
+  }
+
+  /* Finish setup, cleanup after error */
+
+  if (QDMI_IS_FATAL(retval)) {
+    runlib = qdmi_library_list;
+
+    while (runlib != NULL) {
+      free(runlib->libname);
+      if (runlib->libhandle)
+        dlclose(runlib->libhandle);
+      QInfo_free(runlib->info);
+      runlib = runlib->next;
     }
-    (*session)->qdmi_library_list = qdmi_library_list;
+    qdmi_library_list = NULL;
+    return retval;
+  }
+  (*session)->qdmi_library_list = qdmi_library_list;
 
-    return QDMI_SUCCESS;
+  return QDMI_SUCCESS;
 }
-
 
 /*.....................................*/
 /* Called when first session is created */
 
-int QDMI_internal_startup(QDMI_Session* session, QInfo info)
-{
-    return QDMI_load_libraries(session, info);
+int QDMI_internal_startup(QDMI_Session *session, QInfo info) {
+  return QDMI_load_libraries(session, info);
 }
-
 
 /*.....................................*/
 /* Cleanup when last active session is freed */
 
-int QDMI_internal_shutdown()
-{
-    /* So far nothing */
+int QDMI_internal_shutdown() {
+  /* So far nothing */
 
-    return QDMI_SUCCESS;
+  return QDMI_SUCCESS;
 }
-
 
 /*----------------------------------------*/
 /* Public Routines: Session Management */
@@ -421,45 +420,40 @@ int QDMI_internal_shutdown()
     OUT: created session
 */
 
-int QDMI_session_init(QInfo info, QDMI_Session *session)
-{
-    int err;
+int QDMI_session_init(QInfo info, QDMI_Session *session) {
+  int err;
 
-    *session=(QDMI_Session_impl_t*) malloc(sizeof(QDMI_Session_impl_t));
-    if (*session==NULL)
-        return QDMI_ERROR_OUTOFMEM;
+  *session = (QDMI_Session_impl_t *)malloc(sizeof(QDMI_Session_impl_t));
+  if (*session == NULL)
+    return QDMI_ERROR_OUTOFMEM;
 
-    // Copy `info` to `session->info`
-    err = QInfo_duplicate(info, &((*session)->info));
-    if (err!=QINFO_SUCCESS)
-    {
-        free(*session);
-        return qdmi_internal_translate_qinfo_error(err);
+  // Copy `info` to `session->info`
+  err = QInfo_duplicate(info, &((*session)->info));
+  if (err != QINFO_SUCCESS) {
+    free(*session);
+    return qdmi_internal_translate_qinfo_error(err);
+  }
+
+  if (qdmi_session_list == NULL) {
+    /* First session */
+
+    err = QDMI_internal_startup(session, info);
+
+    // printf("\n[TODO]: (qdmi_core.c) if (err !=/*==*/ QDMI_SUCCESS)");
+
+    if (err != /*==*/QDMI_SUCCESS) {
+      QInfo_free((*session)->info);
+      free(*session);
+
+      return err;
     }
+  }
 
-    if (qdmi_session_list==NULL)
-    {
-        /* First session */
+  (*session)->next = qdmi_session_list;
+  qdmi_session_list = *session;
 
-        err=QDMI_internal_startup(session, info);
-
-        //printf("\n[TODO]: (qdmi_core.c) if (err !=/*==*/ QDMI_SUCCESS)");
-
-        if (err !=/*==*/ QDMI_SUCCESS)
-        {
-            QInfo_free((*session)->info);
-            free(*session);
-
-            return err;
-        }
-    }
-
-    (*session)->next=qdmi_session_list;
-    qdmi_session_list=*session;
-
-    return QDMI_SUCCESS;
+  return QDMI_SUCCESS;
 }
-
 
 /*.....................................*/
 /* Destroy a Session */
@@ -467,37 +461,33 @@ int QDMI_session_init(QInfo info, QDMI_Session *session)
     OUT: n/a
 */
 
-int QDMI_session_finalize(QDMI_Session session)
-{
-    QDMI_Session sess,prev;
+int QDMI_session_finalize(QDMI_Session session) {
+  QDMI_Session sess, prev;
 
-    sess=qdmi_session_list;
-    prev=NULL;
+  sess = qdmi_session_list;
+  prev = NULL;
 
-    while (sess!=NULL)
-    {
-        if (sess==session)
-        {
-            if (prev==NULL)
-                qdmi_session_list=sess->next;
-            else
-                prev->next=sess->next;
+  while (sess != NULL) {
+    if (sess == session) {
+      if (prev == NULL)
+        qdmi_session_list = sess->next;
+      else
+        prev->next = sess->next;
 
-            QInfo_free(session->info);
-            free(session);
+      QInfo_free(session->info);
+      free(session);
 
-            if (qdmi_session_list==NULL)
-                return QDMI_internal_shutdown();
+      if (qdmi_session_list == NULL)
+        return QDMI_internal_shutdown();
 
-            return QDMI_SUCCESS;
-        }
-        prev=sess;
-        sess=sess->next;
+      return QDMI_SUCCESS;
     }
+    prev = sess;
+    sess = sess->next;
+  }
 
-    return QDMI_ERROR_NOSESSION;
+  return QDMI_ERROR_NOSESSION;
 }
-
 
 /*----------------------------------------*/
 /* Public Routines for Libraries: Registration */
@@ -509,11 +499,9 @@ int QDMI_session_finalize(QDMI_Session session)
     OUT: n/a
 */
 
-int QDMI_core_register_belib(char *uri, void *regpointer)
-{
-    return QDMI_ERROR_NOTIMPL;
+int QDMI_core_register_belib(char *uri, void *regpointer) {
+  return QDMI_ERROR_NOTIMPL;
 }
-
 
 /*.....................................*/
 /* Called by backend library to register a backend device */
@@ -521,11 +509,7 @@ int QDMI_core_register_belib(char *uri, void *regpointer)
     OUT: n/a
 */
 
-int QDMI_core_unregister_belib(char *uri)
-{
-    return QDMI_ERROR_NOTIMPL;
-}
-
+int QDMI_core_unregister_belib(char *uri) { return QDMI_ERROR_NOTIMPL; }
 
 /*----------------------------------------*/
 /* Public Routines for Clients: Remaining Core API */
@@ -536,11 +520,9 @@ int QDMI_core_unregister_belib(char *uri)
    OUT: return minor and major version
 */
 
-int QDMI_core_version(QDMI_Session *session, int* major, int* minor)
-{
-    return QDMI_SUCCESS;
+int QDMI_core_version(QDMI_Session *session, int *major, int *minor) {
+  return QDMI_SUCCESS;
 }
-
 
 /*.....................................*/
 /* Query the size of the device list */
@@ -548,21 +530,17 @@ int QDMI_core_version(QDMI_Session *session, int* major, int* minor)
    OUT: return the length of the list of devices
 */
 
-int QDMI_core_device_count(QDMI_Session *session, int *count)
-{
-    QDMI_Library lib = (*session)->qdmi_library_list;
-    *count = 0;
+int QDMI_core_device_count(QDMI_Session *session, int *count) {
+  QDMI_Library lib = (*session)->qdmi_library_list;
+  *count = 0;
 
-    while (lib != NULL)
-    {
-        (*count)++;
-        lib = lib->next;
-    }
+  while (lib != NULL) {
+    (*count)++;
+    lib = lib->next;
+  }
 
-
-    return QDMI_SUCCESS;
+  return QDMI_SUCCESS;
 }
-
 
 /*.....................................*/
 /* Open a device based on an index */
@@ -571,28 +549,32 @@ int QDMI_core_device_count(QDMI_Session *session, int *count)
         info object to control device open
 */
 
-int QDMI_core_open_device(QDMI_Session *session, int idx, QInfo *info, QDMI_Device* handle)
-{
-    int count;
-    int err = QDMI_core_device_count(session, &count);
-    if QDMI_IS_ERROR(err) return err;
+int QDMI_core_open_device(QDMI_Session *session, int idx, QInfo *info,
+                          QDMI_Device *handle) {
+  int count;
+  int err = QDMI_core_device_count(session, &count);
+  if QDMI_IS_ERROR (err)
+    return err;
 
-    if(count < idx) return  QDMI_ERROR_FATAL;
+  if (count < idx)
+    return QDMI_ERROR_FATAL;
 
-    (*handle) = (struct QDMI_Device_impl_d*)malloc(sizeof(struct QDMI_Device_impl_d));
-    if(*handle == NULL) return QDMI_ERROR_OUTOFMEM;
+  (*handle) =
+      (struct QDMI_Device_impl_d *)malloc(sizeof(struct QDMI_Device_impl_d));
+  if (*handle == NULL)
+    return QDMI_ERROR_OUTOFMEM;
 
-    QDMI_Library lib = (*session)->qdmi_library_list;
-    if(lib == NULL) return QDMI_ERROR_FATAL;
+  QDMI_Library lib = (*session)->qdmi_library_list;
+  if (lib == NULL)
+    return QDMI_ERROR_FATAL;
 
-    for(int index = 0; index < idx; index++)
-        lib = lib->next;
+  for (int index = 0; index < idx; index++)
+    lib = lib->next;
 
-    (*handle)->library = *lib;
+  (*handle)->library = *lib;
 
-    return QDMI_SUCCESS;
+  return QDMI_SUCCESS;
 }
-
 
 /*.....................................*/
 /* Query information of an opened device */
@@ -601,11 +583,9 @@ int QDMI_core_open_device(QDMI_Session *session, int idx, QInfo *info, QDMI_Devi
    OUT: info object that describes the device
 */
 
-int QDMI_core_query_device(QDMI_Session *session, int idx, QInfo *info)
-{
-    return QDMI_SUCCESS;
+int QDMI_core_query_device(QDMI_Session *session, int idx, QInfo *info) {
+  return QDMI_SUCCESS;
 }
-
 
 /*.....................................*/
 /* Close a device based on an index */
@@ -613,11 +593,9 @@ int QDMI_core_query_device(QDMI_Session *session, int idx, QInfo *info)
         index to be closed
 */
 
-int QDMI_core_close_device(QDMI_Session *session, QDMI_Device handle)
-{
-    return QDMI_SUCCESS;
+int QDMI_core_close_device(QDMI_Session *session, QDMI_Device handle) {
+  return QDMI_SUCCESS;
 }
-
 
 /*----------------------------------------*/
 /* The End. */
