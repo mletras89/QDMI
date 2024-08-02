@@ -233,127 +233,153 @@ int QDMI_load_libraries(QDMI_Session *session, QInfo sesioninfo) {
         return qdmi_internal_translate_qinfo_error(err);
     }
 
-    /* eind all symbols */
+    /* find all symbols */
 
-    newlib->QDMI_backend_init = dlsym(newlib->libhandle, "QDMI_backend_init");
-
-    newlib->QDMI_control_pack_qasm2 =
-        dlsym(newlib->libhandle, "QDMI_control_pack_qasm2");
-    newlib->QDMI_control_pack_qir =
-        dlsym(newlib->libhandle, "QDMI_control_pack_qir");
+    newlib->QDMI_backend_init =
+        (QDMI_backend_init_t)dlsym(newlib->libhandle, "QDMI_backend_init");
+    newlib->QDMI_control_pack_qasm2 = (QDMI_control_pack_qasm2_t)dlsym(
+        newlib->libhandle, "QDMI_control_pack_qasm2");
+    newlib->QDMI_control_pack_qir = (QDMI_control_pack_qir_t)dlsym(
+        newlib->libhandle, "QDMI_control_pack_qir");
     newlib->QDMI_control_submit =
-        dlsym(newlib->libhandle, "QDMI_control_submit");
+        (QDMI_control_submit_t)dlsym(newlib->libhandle, "QDMI_control_submit");
     newlib->QDMI_control_cancel =
-        dlsym(newlib->libhandle, "QDMI_control_cancel");
-    newlib->QDMI_control_pause = dlsym(newlib->libhandle, "QDMI_control_pause");
-    newlib->QDMI_control_test = dlsym(newlib->libhandle, "QDMI_control_test");
-    newlib->QDMI_control_wait = dlsym(newlib->libhandle, "QDMI_control_wait");
-    newlib->QDMI_control_extract_state =
-        dlsym(newlib->libhandle, "QDMI_control_extract_state");
-    newlib->QDMI_control_readout_size =
-        dlsym(newlib->libhandle, "QDMI_control_readout_size");
+        (QDMI_control_cancel_t)dlsym(newlib->libhandle, "QDMI_control_cancel");
+    newlib->QDMI_control_pause =
+        (QDMI_control_pause_t)dlsym(newlib->libhandle, "QDMI_control_pause");
+    newlib->QDMI_control_test =
+        (QDMI_control_test_t)dlsym(newlib->libhandle, "QDMI_control_test");
+    newlib->QDMI_control_wait =
+        (QDMI_control_wait_t)dlsym(newlib->libhandle, "QDMI_control_wait");
+    newlib->QDMI_control_extract_state = (QDMI_control_extract_state_t)dlsym(
+        newlib->libhandle, "QDMI_control_extract_state");
+    newlib->QDMI_control_readout_size = (QDMI_control_readout_size_t)dlsym(
+        newlib->libhandle, "QDMI_control_readout_size");
     newlib->QDMI_control_readout_hist_size =
-        dlsym(newlib->libhandle, "QDMI_control_readout_hist_size");
+        (QDMI_control_readout_hist_size_t)dlsym(
+            newlib->libhandle, "QDMI_control_readout_hist_size");
     newlib->QDMI_control_readout_hist_top =
-        dlsym(newlib->libhandle, "QDMI_control_readout_hist_top");
+        (QDMI_control_readout_hist_top_t)dlsym(newlib->libhandle,
+                                               "QDMI_control_readout_hist_top");
     newlib->QDMI_control_readout_raw_num =
-        dlsym(newlib->libhandle, "QDMI_control_readout_raw_num");
+        (QDMI_control_readout_raw_num_t)dlsym(newlib->libhandle,
+                                              "QDMI_control_readout_raw_num");
     newlib->QDMI_control_readout_raw_sample =
-        dlsym(newlib->libhandle, "QDMI_control_readout_raw_sample");
+        (QDMI_control_readout_raw_sample_t)dlsym(
+            newlib->libhandle, "QDMI_control_readout_raw_sample");
     newlib->QDMI_query_device_property_exists =
-        dlsym(newlib->libhandle, "QDMI_query_device_property_exists");
+        (QDMI_query_device_property_exists_t)dlsym(
+            newlib->libhandle, "QDMI_query_device_property_exists");
     newlib->QDMI_query_device_property_type =
-        dlsym(newlib->libhandle, "QDMI_query_device_property_type");
+        (QDMI_query_device_property_type_t)dlsym(
+            newlib->libhandle, "QDMI_query_device_property_type");
     newlib->QDMI_query_device_property_i =
-        dlsym(newlib->libhandle, "QDMI_query_device_property_i");
+        (QDMI_query_device_property_i_t)dlsym(newlib->libhandle,
+                                              "QDMI_query_device_property_i");
     newlib->QDMI_query_device_property_f =
-        dlsym(newlib->libhandle, "QDMI_query_device_property_f");
+        (QDMI_query_device_property_f_t)dlsym(newlib->libhandle,
+                                              "QDMI_query_device_property_f");
     newlib->QDMI_query_device_property_d =
-        dlsym(newlib->libhandle, "QDMI_query_device_property_d");
+        (QDMI_query_device_property_d_t)dlsym(newlib->libhandle,
+                                              "QDMI_query_device_property_d");
     newlib->QDMI_query_device_property_c =
-        dlsym(newlib->libhandle, "QDMI_query_device_property_c");
-    newlib->QDMI_query_gateset_num =
-        dlsym(newlib->libhandle, "QDMI_query_gateset_num");
-    newlib->QDMI_query_qubits_num =
-        dlsym(newlib->libhandle, "QDMI_query_qubits_num");
-    newlib->QDMI_query_all_gates =
-        dlsym(newlib->libhandle, "QDMI_query_all_gates");
-    newlib->QDMI_query_byname = dlsym(newlib->libhandle, "QDMI_query_byname");
-    newlib->QDMI_query_gate_name =
-        dlsym(newlib->libhandle, "QDMI_query_gate_name");
-    newlib->QDMI_query_gate_size =
-        dlsym(newlib->libhandle, "QDMI_query_gate_size");
-    newlib->QDMI_query_gate_unitary =
-        dlsym(newlib->libhandle, "QDMI_query_gate_unitary");
+        (QDMI_query_device_property_c_t)dlsym(newlib->libhandle,
+                                              "QDMI_query_device_property_c");
+    newlib->QDMI_query_gateset_num = (QDMI_query_gateset_num_t)dlsym(
+        newlib->libhandle, "QDMI_query_gateset_num");
+    newlib->QDMI_query_qubits_num = (QDMI_query_qubits_num_t)dlsym(
+        newlib->libhandle, "QDMI_query_qubits_num");
+    newlib->QDMI_query_all_gates = (QDMI_query_all_gates_t)dlsym(
+        newlib->libhandle, "QDMI_query_all_gates");
+    newlib->QDMI_query_byname =
+        (QDMI_query_byname_t)dlsym(newlib->libhandle, "QDMI_query_byname");
+    newlib->QDMI_query_gate_name = (QDMI_query_gate_name_t)dlsym(
+        newlib->libhandle, "QDMI_query_gate_name");
+    newlib->QDMI_query_gate_size = (QDMI_query_gate_size_t)dlsym(
+        newlib->libhandle, "QDMI_query_gate_size");
+    newlib->QDMI_query_gate_unitary = (QDMI_query_gate_unitary_t)dlsym(
+        newlib->libhandle, "QDMI_query_gate_unitary");
     newlib->QDMI_query_gate_property_exists =
-        dlsym(newlib->libhandle, "QDMI_query_gate_property_exists");
+        (QDMI_query_gate_property_exists_t)dlsym(
+            newlib->libhandle, "QDMI_query_gate_property_exists");
     newlib->QDMI_query_gate_property_type =
-        dlsym(newlib->libhandle, "QDMI_query_gate_property_type");
-    newlib->QDMI_query_gate_property_i =
-        dlsym(newlib->libhandle, "QDMI_query_gate_property_i");
-    newlib->QDMI_query_gate_property_f =
-        dlsym(newlib->libhandle, "QDMI_query_gate_property_f");
-    newlib->QDMI_query_gate_property_d =
-        dlsym(newlib->libhandle, "QDMI_query_gate_property_d");
-    newlib->QDMI_query_all_qubits =
-        dlsym(newlib->libhandle, "QDMI_query_all_qubits");
+        (QDMI_query_gate_property_type_t)dlsym(newlib->libhandle,
+                                               "QDMI_query_gate_property_type");
+    newlib->QDMI_query_gate_property_i = (QDMI_query_gate_property_i_t)dlsym(
+        newlib->libhandle, "QDMI_query_gate_property_i");
+    newlib->QDMI_query_gate_property_f = (QDMI_query_gate_property_f_t)dlsym(
+        newlib->libhandle, "QDMI_query_gate_property_f");
+    newlib->QDMI_query_gate_property_d = (QDMI_query_gate_property_d_t)dlsym(
+        newlib->libhandle, "QDMI_query_gate_property_d");
+    newlib->QDMI_query_all_qubits = (QDMI_query_all_qubits_t)dlsym(
+        newlib->libhandle, "QDMI_query_all_qubits");
     newlib->QDMI_query_qubit_property_exists =
-        dlsym(newlib->libhandle, "QDMI_query_qubit_property_exists");
+        (QDMI_query_qubit_property_exists_t)dlsym(
+            newlib->libhandle, "QDMI_query_qubit_property_exists");
     newlib->QDMI_query_qubit_property_type =
-        dlsym(newlib->libhandle, "QDMI_query_qubit_property_type");
-    newlib->QDMI_query_qubit_property_c =
-        dlsym(newlib->libhandle, "QDMI_query_qubit_property_c");
-    newlib->QDMI_query_qubit_property_i =
-        dlsym(newlib->libhandle, "QDMI_query_qubit_property_i");
-    newlib->QDMI_query_qubit_property_f =
-        dlsym(newlib->libhandle, "QDMI_query_qubit_property_f");
-    newlib->QDMI_query_qubit_property_d =
-        dlsym(newlib->libhandle, "QDMI_query_qubit_property_d");
-    newlib->QDMI_device_status = dlsym(newlib->libhandle, "QDMI_device_status");
-    newlib->QDMI_device_quality_check =
-        dlsym(newlib->libhandle, "QDMI_device_quality_check");
-    newlib->QDMI_device_quality_limit =
-        dlsym(newlib->libhandle, "QDMI_device_quality_limit");
+        (QDMI_query_qubit_property_type_t)dlsym(
+            newlib->libhandle, "QDMI_query_qubit_property_type");
+    newlib->QDMI_query_qubit_property_c = (QDMI_query_qubit_property_c_t)dlsym(
+        newlib->libhandle, "QDMI_query_qubit_property_c");
+    newlib->QDMI_query_qubit_property_i = (QDMI_query_qubit_property_i_t)dlsym(
+        newlib->libhandle, "QDMI_query_qubit_property_i");
+    newlib->QDMI_query_qubit_property_f = (QDMI_query_qubit_property_f_t)dlsym(
+        newlib->libhandle, "QDMI_query_qubit_property_f");
+    newlib->QDMI_query_qubit_property_d = (QDMI_query_qubit_property_d_t)dlsym(
+        newlib->libhandle, "QDMI_query_qubit_property_d");
+    newlib->QDMI_device_status =
+        (QDMI_device_status_t)dlsym(newlib->libhandle, "QDMI_device_status");
+    newlib->QDMI_device_quality_check = (QDMI_device_quality_check_t)dlsym(
+        newlib->libhandle, "QDMI_device_quality_check");
+    newlib->QDMI_device_quality_limit = (QDMI_device_quality_limit_t)dlsym(
+        newlib->libhandle, "QDMI_device_quality_limit");
     newlib->QDMI_device_quality_calibrate =
-        dlsym(newlib->libhandle, "QDMI_device_quality_calibrate");
+        (QDMI_device_quality_calibrate_t)dlsym(newlib->libhandle,
+                                               "QDMI_device_quality_calibrate");
 
-    // printf("\n[TODO]: (qdmi_core.c) QDMI_ERROR_BACKEND");
-    if (
-        //(newlib->QDMI_control_pack_qasm2==NULL) ||
-        //(newlib->QDMI_control_pack_qir==NULL) ||
+    if ((newlib->QDMI_control_pack_qasm2 == NULL) ||
+        (newlib->QDMI_control_pack_qir == NULL) ||
         (newlib->QDMI_control_submit == NULL) ||
-        //(newlib->QDMI_control_cancel==NULL) ||
-        //(newlib->QDMI_control_pause==NULL) ||
-        //(newlib->QDMI_control_test==NULL) ||
-        //(newlib->QDMI_control_wait==NULL) ||
-        //(newlib->QDMI_control_extract_state==NULL) ||
+        (newlib->QDMI_control_cancel == NULL) ||
+        (newlib->QDMI_control_pause == NULL) ||
+        (newlib->QDMI_control_test == NULL) ||
+        (newlib->QDMI_control_wait == NULL) ||
+        (newlib->QDMI_control_extract_state == NULL) ||
         (newlib->QDMI_control_readout_size == NULL) ||
-        //(newlib->QDMI_control_readout_hist_size==NULL) ||
-        //(newlib->QDMI_control_readout_hist_top==NULL) ||
+        (newlib->QDMI_control_readout_hist_size == NULL) ||
+        (newlib->QDMI_control_readout_hist_top == NULL) ||
         (newlib->QDMI_control_readout_raw_num == NULL) ||
-        //(newlib->QDMI_control_readout_raw_sample==NULL) ||
-        //(newlib->QDMI_query_device_property_exists==NULL) ||
-        //(newlib->QDMI_query_device_property_i==NULL) ||
-        //(newlib->QDMI_query_device_property_f==NULL) ||
-        //(newlib->QDMI_query_device_property_d==NULL) ||
-        //(newlib->QDMI_query_gateset_num==NULL) ||
+        (newlib->QDMI_control_readout_raw_sample == NULL) ||
+        (newlib->QDMI_query_device_property_exists == NULL) ||
+        (newlib->QDMI_query_device_property_type == NULL) ||
+        (newlib->QDMI_query_device_property_i == NULL) ||
+        (newlib->QDMI_query_device_property_f == NULL) ||
+        (newlib->QDMI_query_device_property_d == NULL) ||
+        (newlib->QDMI_query_device_property_c == NULL) ||
+        (newlib->QDMI_query_gateset_num == NULL) ||
         (newlib->QDMI_query_qubits_num == NULL) ||
         (newlib->QDMI_query_all_gates == NULL) ||
-        //(newlib->QDMI_query_byname==NULL) ||
-        //(newlib->QDMI_query_gate_name==NULL) ||
-        //(newlib->QDMI_query_gate_size==NULL) ||
-        //(newlib->QDMI_query_gate_unitary==NULL) ||
-        //(newlib->QDMI_query_gate_property_exists==NULL) ||
-        //(newlib->QDMI_query_gate_property_i==NULL) ||
-        //(newlib->QDMI_query_gate_property_f==NULL) ||
-        //(newlib->QDMI_query_gate_property_d==NULL) ||
+        (newlib->QDMI_query_byname == NULL) ||
+        (newlib->QDMI_query_gate_name == NULL) ||
+        (newlib->QDMI_query_gate_size == NULL) ||
+        (newlib->QDMI_query_gate_unitary == NULL) ||
+        (newlib->QDMI_query_gate_property_exists == NULL) ||
+        (newlib->QDMI_query_gate_property_type == NULL) ||
+        (newlib->QDMI_query_gate_property_i == NULL) ||
+        (newlib->QDMI_query_gate_property_f == NULL) ||
+        (newlib->QDMI_query_gate_property_d == NULL) ||
         (newlib->QDMI_query_all_qubits == NULL) ||
-        (newlib->QDMI_device_status == NULL) //||
-        //(newlib->QDMI_device_quality_check==NULL) ||
-        //(newlib->QDMI_device_quality_limit==NULL) ||
-        //(newlib->QDMI_device_quality_calibrate==NULL)
-    ) {
-      /* same function didn't load / bad backend, need to abort */
+        (newlib->QDMI_query_qubit_property_exists == NULL) ||
+        (newlib->QDMI_query_qubit_property_type == NULL) ||
+        (newlib->QDMI_query_qubit_property_i == NULL) ||
+        (newlib->QDMI_query_qubit_property_f == NULL) ||
+        (newlib->QDMI_query_qubit_property_d == NULL) ||
+        (newlib->QDMI_query_qubit_property_c == NULL) ||
+        (newlib->QDMI_device_status == NULL) ||
+        (newlib->QDMI_device_quality_check == NULL) ||
+        (newlib->QDMI_device_quality_limit == NULL) ||
+        (newlib->QDMI_device_quality_calibrate == NULL)) {
+      /* some function didn't load / bad backend, need to abort */
       retval = QDMI_ERROR_BACKEND;
     }
 
