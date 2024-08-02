@@ -317,43 +317,49 @@ int QDMI_load_libraries(QDMI_Session *session, QInfo sesioninfo) {
     newlib->QDMI_device_quality_calibrate =
         dlsym(newlib->libhandle, "QDMI_device_quality_calibrate");
 
-    // printf("\n[TODO]: (qdmi_core.c) QDMI_ERROR_BACKEND");
-    if (
-        //(newlib->QDMI_control_pack_qasm2==NULL) ||
-        //(newlib->QDMI_control_pack_qir==NULL) ||
+    if ((newlib->QDMI_control_pack_qasm2 == NULL) ||
+        (newlib->QDMI_control_pack_qir == NULL) ||
         (newlib->QDMI_control_submit == NULL) ||
-        //(newlib->QDMI_control_cancel==NULL) ||
-        //(newlib->QDMI_control_pause==NULL) ||
-        //(newlib->QDMI_control_test==NULL) ||
-        //(newlib->QDMI_control_wait==NULL) ||
-        //(newlib->QDMI_control_extract_state==NULL) ||
+        (newlib->QDMI_control_cancel == NULL) ||
+        (newlib->QDMI_control_pause == NULL) ||
+        (newlib->QDMI_control_test == NULL) ||
+        (newlib->QDMI_control_wait == NULL) ||
+        (newlib->QDMI_control_extract_state == NULL) ||
         (newlib->QDMI_control_readout_size == NULL) ||
-        //(newlib->QDMI_control_readout_hist_size==NULL) ||
-        //(newlib->QDMI_control_readout_hist_top==NULL) ||
+        (newlib->QDMI_control_readout_hist_size == NULL) ||
+        (newlib->QDMI_control_readout_hist_top == NULL) ||
         (newlib->QDMI_control_readout_raw_num == NULL) ||
-        //(newlib->QDMI_control_readout_raw_sample==NULL) ||
-        //(newlib->QDMI_query_device_property_exists==NULL) ||
-        //(newlib->QDMI_query_device_property_i==NULL) ||
-        //(newlib->QDMI_query_device_property_f==NULL) ||
-        //(newlib->QDMI_query_device_property_d==NULL) ||
-        //(newlib->QDMI_query_gateset_num==NULL) ||
+        (newlib->QDMI_control_readout_raw_sample == NULL) ||
+        (newlib->QDMI_query_device_property_exists == NULL) ||
+        (newlib->QDMI_query_device_property_type == NULL) ||
+        (newlib->QDMI_query_device_property_i == NULL) ||
+        (newlib->QDMI_query_device_property_f == NULL) ||
+        (newlib->QDMI_query_device_property_d == NULL) ||
+        (newlib->QDMI_query_device_property_c == NULL) ||
+        (newlib->QDMI_query_gateset_num == NULL) ||
         (newlib->QDMI_query_qubits_num == NULL) ||
         (newlib->QDMI_query_all_gates == NULL) ||
-        //(newlib->QDMI_query_byname==NULL) ||
-        //(newlib->QDMI_query_gate_name==NULL) ||
-        //(newlib->QDMI_query_gate_size==NULL) ||
-        //(newlib->QDMI_query_gate_unitary==NULL) ||
-        //(newlib->QDMI_query_gate_property_exists==NULL) ||
-        //(newlib->QDMI_query_gate_property_i==NULL) ||
-        //(newlib->QDMI_query_gate_property_f==NULL) ||
-        //(newlib->QDMI_query_gate_property_d==NULL) ||
+        (newlib->QDMI_query_byname == NULL) ||
+        (newlib->QDMI_query_gate_name == NULL) ||
+        (newlib->QDMI_query_gate_size == NULL) ||
+        (newlib->QDMI_query_gate_unitary == NULL) ||
+        (newlib->QDMI_query_gate_property_exists == NULL) ||
+        (newlib->QDMI_query_gate_property_type == NULL) ||
+        (newlib->QDMI_query_gate_property_i == NULL) ||
+        (newlib->QDMI_query_gate_property_f == NULL) ||
+        (newlib->QDMI_query_gate_property_d == NULL) ||
         (newlib->QDMI_query_all_qubits == NULL) ||
-        (newlib->QDMI_device_status == NULL) //||
-        //(newlib->QDMI_device_quality_check==NULL) ||
-        //(newlib->QDMI_device_quality_limit==NULL) ||
-        //(newlib->QDMI_device_quality_calibrate==NULL)
-    ) {
-      /* same function didn't load / bad backend, need to abort */
+        (newlib->QDMI_query_qubit_property_exists == NULL) ||
+        (newlib->QDMI_query_qubit_property_type == NULL) ||
+        (newlib->QDMI_query_qubit_property_i == NULL) ||
+        (newlib->QDMI_query_qubit_property_f == NULL) ||
+        (newlib->QDMI_query_qubit_property_d == NULL) ||
+        (newlib->QDMI_query_qubit_property_c == NULL) ||
+        (newlib->QDMI_device_status == NULL) ||
+        (newlib->QDMI_device_quality_check == NULL) ||
+        (newlib->QDMI_device_quality_limit == NULL) ||
+        (newlib->QDMI_device_quality_calibrate == NULL)) {
+      /* some function didn't load / bad backend, need to abort */
       retval = QDMI_ERROR_BACKEND;
     }
 
