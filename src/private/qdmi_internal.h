@@ -12,9 +12,10 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "qdmi_backend.h"
+
 #include <qinfo.h>
-#include <qdmi_backend.h>
-    
+
 /*--------------------------------w--------*/
 /* Internal-use constants */
 
@@ -38,23 +39,23 @@ typedef struct QDMI_Devicelist_d
 typedef struct QDMI_Library_impl_d
 {
     /* Info object */
-    
+
     QInfo info;
-    
+
     /* Name of the library to open */
-    
+
     char *libname;
-    
+
     /* Library handle */
-    
+
     void *libhandle;
-    
+
     /* All library management functions */
-    
+
     QDMI_backend_init_t                 QDMI_backend_init;
 
     /* All public functions */
-    
+
     QDMI_control_pack_qasm2_t           QDMI_control_pack_qasm2;
     QDMI_control_pack_qir_t             QDMI_control_pack_qir;
     QDMI_control_submit_t               QDMI_control_submit;
@@ -97,9 +98,9 @@ typedef struct QDMI_Library_impl_d
     QDMI_device_quality_check_t         QDMI_device_quality_check;
     QDMI_device_quality_limit_t         QDMI_device_quality_limit;
     QDMI_device_quality_calibrate_t     QDMI_device_quality_calibrate;
-    
+
     /* Pointer to next library */
-    
+
     struct QDMI_Library_impl_d *next;
 } QDMI_Library_impl_t;
 typedef QDMI_Library_impl_t *QDMI_Library;
@@ -180,7 +181,7 @@ int qdmi_internal_translate_qinfo_error(int err);
 char *trim_line(char *line);
 QDMI_Library find_library_by_name(const char *libname);
 char** get_qdmi_library_list_names(void);
-  
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

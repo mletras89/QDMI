@@ -6,31 +6,12 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 /* Headerfile to be included by all QDMI backend implementations */
 
-#ifndef QDMI_BACKEND_H
-#define QDMI_BACKEND_H
+#pragma once
 
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <qdmi.h>
-    
-/*----------------------------------------*/
-/* Backend-only constants */
-
-#define QINFO_INTERNAL_SPACEGRANULARITY 10
-
-
-/*----------------------------------------*/
-/* Backend-only types */
-
-typedef struct QInfo_value_space_d
-{
-    QInfo_value value;
-    int         occupied;
-    char        *name;
-} QInfo_value_space_t;
-
-
+#include "qdmi.h"
 
 /*----------------------------------------*/
 /* Backend-only Function defintions */
@@ -51,6 +32,4 @@ typedef int (*QDMI_backend_init_t)(QInfo info);
 
 #ifdef __cplusplus
 } // extern "C"
-#endif
-
 #endif

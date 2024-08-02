@@ -13,6 +13,8 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include "private/qdmi_internal.h"
 
+#include <qinfo.h>
+
 
 /*----------------------------------------*/
 /* Internal Routines: Startup and Shutdown */
@@ -31,33 +33,30 @@ int QDMI_load_libraries(QDMI_Session* session, QInfo sesioninfo)
     QDMI_Library newlib, runlib, prevlib, qdmi_library_list;
     double dval;
     long   lval;
-    QInfo_topic topic;
-    QInfo_value value;
     int retval,initerr,err;
     qdmi_library_list = (*session)->qdmi_library_list;
-    
 
     /* Determine location of configfile */
-    
+
     configfilename = getenv(QDMI_CONFIG_FILE);
     if (configfilename==NULL)
         configfilename=strdup(QDMI_CONFIG_FILE_DEFAULT);
-    
+
     /* Read configuration file */
-   
+
     configfile=fopen(configfilename,"r");
     if (configfile==NULL)
     {
         return QDMI_ERROR_NOCFGFILE;
     }
 
-    do 
+    do
     {
         line=NULL;
         readlen=getline(&line,&length,configfile);
         if (readlen<0)
         {
-            if (line!=NULL) 
+            if (line!=NULL)
                 free(line);
 
             if (feof(configfile))
@@ -65,32 +64,32 @@ int QDMI_load_libraries(QDMI_Session* session, QInfo sesioninfo)
             else
                 return QDMI_ERROR_CFGFILE;
         }
-        
+
         /* no error, no feof, i.e., line is valid */
-        
+
         if (line[0]!='#')
         {
             /* not a comment */
-            
+
             const char *separator = strchr(line,'=');
-            
+
             if (separator==NULL)
             {
                 int err;
-                
+
                 /* must be a starter for a new library */
-                
+
                 /* create library object */
-                
+
                 newlib=(QDMI_Library) calloc(sizeof(QDMI_Library_impl_t),1);
                 if (newlib==NULL)
                 {
                     if (line!=NULL) free(line);
                     return QDMI_ERROR_OUTOFMEM;
                 }
-                
+
                 /* setup basic objects in library object */
-                
+
                 err=QInfo_create(&(newlib->info));
                 if (err!=QINFO_SUCCESS)
                 {
@@ -110,29 +109,29 @@ int QDMI_load_libraries(QDMI_Session* session, QInfo sesioninfo)
                     newlib->libname = line;
 
                 newlib->libhandle=NULL;
-            
+
                 /* add new library to list */
-                
+
                 newlib->next=qdmi_library_list;
                 qdmi_library_list=newlib;
             }
             else
             {
                 int err;
-                
+
                 /* must be a parameter for an already started library */
-                
+
                 if (qdmi_library_list == NULL)
                 {
                     /* no library started */
-                    if (line != NULL) 
+                    if (line != NULL)
 			            free(line);
 
                     return QDMI_ERROR_CFGFILE;
                 }
-                
+
                 /* get the strings from the file */
-                
+
 		        size_t paramLength = separator - line;
                 char *param = (char *)malloc(paramLength + 1);
 
@@ -140,65 +139,50 @@ int QDMI_load_libraries(QDMI_Session* session, QInfo sesioninfo)
                 param[paramLength] = '\0';
 
                 /* check type */
-                
+
 		        if (param != NULL)
                 {
                     const char *valueString = separator + 1;
 
                     if (strchr(valueString, '.') != NULL)
                     {
-                        value.value_double = strtod(valueString, NULL);
-            
-                        /* we have a double */
-            
-                        value.value_long = 0;
-                        value.value_string = NULL;
-                
-                        err = QInfo_topic_add(newlib->info, param, QINFO_TYPE_DOUBLE, &topic);
+                        QInfo_index index;
+                        err = QInfo_add(newlib->info, param, QINFO_TYPE_DOUBLE, &index);
                         if (err != QINFO_SUCCESS)
                         {
-                            if (line != NULL)
-                                free(line);
-
+                            if (line != NULL) {
+                              free(line);
+                            }
                             return qdmi_internal_translate_qinfo_error(err);
                         }
-                        
-                        err = QInfo_topic_set(newlib->info, topic, &value);
+                        err = QInfo_set_d(newlib->info, index, strtod(valueString, NULL));
                         if (err != QINFO_SUCCESS)
                         {
-                            if (line != NULL) 
-                                free(line);
-
+                            if (line != NULL) {
+                              free(line);
+                            }
                             return qdmi_internal_translate_qinfo_error(err);
                         }
                     }
                     else if( isdigit(*valueString) )
                     {
                         char *endptr;
-                        value.value_long = strtol(valueString, &endptr, 10);
-
-                        if (*endptr == '\0')
-                        {
-                            /* now we have a long */
-
-                            value.value_double = 0.0;
-                            value.value_string = NULL;
-
-                            err = QInfo_topic_add(newlib->info, param, QINFO_TYPE_LONG, &topic);
-                            if (err != QINFO_SUCCESS)
-                            {
-                                if (line != NULL) 
-                                free(line);
-
-                                    return qdmi_internal_translate_qinfo_error(err);
+                        int64_t val = strtoll(valueString, &endptr, 10);
+                        if (*endptr == '\0') {
+                            QInfo_index index;
+                            err = QInfo_add(newlib->info, param, QINFO_TYPE_INT64, &index);
+                            if (err != QINFO_SUCCESS)                            {
+                                if (line != NULL) {
+                                  free(line);
+                                }
+                                return qdmi_internal_translate_qinfo_error(err);
                             }
-                            
-                            err = QInfo_topic_set(newlib->info, topic, &value);
+                            err = QInfo_set_i64(newlib->info, index, val);
                             if (err != QINFO_SUCCESS)
                             {
-                                if (line != NULL) 
-                                    free(line);
-
+                                if (line != NULL) {
+                                  free(line);
+                                }
                                 return qdmi_internal_translate_qinfo_error(err);
                             }
                         }
@@ -206,38 +190,21 @@ int QDMI_load_libraries(QDMI_Session* session, QInfo sesioninfo)
                     else
                     {
                         /* now we have a string */
-                        
-                        value.value_double = 0.0;
-                        value.value_long = 0;
-                        value.value_string = strdup(valueString);
-
-                        if (value.value_string == NULL)
-                        {
-                            if (line!=NULL) 
-                                free(line);
-
-                            return QDMI_ERROR_OUTOFMEM;
-                        }
-
-                        err = QInfo_topic_add(newlib->info , param, QINFO_TYPE_STRING, &topic);
+                        QInfo_index index;
+                        err = QInfo_add(newlib->info, param, QINFO_TYPE_STRING, &index);
                         if (err != QINFO_SUCCESS)
                         {
-                            if (line != NULL) 
-                                free(line);
-
-                            free(value.value_string);
-
+                            if (line != NULL) {
+                              free(line);
+                            }
                             return qdmi_internal_translate_qinfo_error(err);
                         }
-
-                        err = QInfo_topic_set(newlib->info, topic, &value);
+                        err = QInfo_set_c(newlib->info, index, valueString);
                         if (err != QINFO_SUCCESS)
                         {
-                            if (line != NULL) 
-                                free(line);
-
-                            free(value.value_string);
-
+                            if (line != NULL) {
+                              free(line);
+                            }
                             return qdmi_internal_translate_qinfo_error(err);
                         }
                     }
@@ -248,13 +215,13 @@ int QDMI_load_libraries(QDMI_Session* session, QInfo sesioninfo)
             }
         }
     } while (1);
-    
+
     /* the entire file is read and parsed into library list */
     /* now load all backend libraries and grab fct pointers */
-   
+
     newlib=qdmi_library_list;
     retval=QDMI_SUCCESS;
-    
+
     while (newlib!=NULL)
     {
         /* open library */
@@ -263,16 +230,16 @@ int QDMI_load_libraries(QDMI_Session* session, QInfo sesioninfo)
         if (newlib->libhandle==NULL)
         {
             /* opening failed, remove that */
-            
+
             runlib=qdmi_library_list;
             prevlib=NULL;
-            
+
             while (runlib!=newlib)
             {
                 prevlib=runlib;
                 runlib=runlib->next;
             }
-            
+
             if (runlib==NULL)
             {
                 /* can't find the library anymore, this should never happen */
@@ -280,22 +247,22 @@ int QDMI_load_libraries(QDMI_Session* session, QInfo sesioninfo)
             }
 
             /* remove library from data structure */
-            
+
             if (prevlib==NULL)
                 qdmi_library_list=runlib->next;
             else
                 prevlib->next=runlib->next;
-            
+
             retval=QDMI_WARN_NOBACKEND;
-            
+
             free(newlib->libname);
             err=QInfo_free(newlib->info);
-            if (QINFO_IS_FATAL(err))
+            if (QInfo_is_Error(err))
                 return qdmi_internal_translate_qinfo_error(err);
         }
 
         /* eind all symbols */
-        
+
         newlib->QDMI_backend_init=dlsym(newlib->libhandle,"QDMI_backend_init");
 
         newlib->QDMI_control_pack_qasm2=dlsym(newlib->libhandle,"QDMI_control_pack_qasm2");
@@ -384,12 +351,12 @@ int QDMI_load_libraries(QDMI_Session* session, QInfo sesioninfo)
 
         newlib=newlib->next;
     }
-    
+
     /* Now all library are opened and symbols have been found */
     /* Initialize all backend libraries */
-    
+
     newlib=qdmi_library_list;
-    
+
     while ((newlib!=NULL) && (!(QDMI_IS_FATAL(retval))))
     {
         initerr=newlib->QDMI_backend_init(newlib->info);
@@ -398,16 +365,16 @@ int QDMI_load_libraries(QDMI_Session* session, QInfo sesioninfo)
         else
             if (!(QDMI_IS_WARNING(retval)))
                 retval=initerr;
-        
+
         newlib=newlib->next;
     }
-    
+
     /* Finish setup, cleanup after error */
-    
+
     if (QDMI_IS_FATAL(retval))
     {
         runlib=qdmi_library_list;
-    
+
         while (runlib!=NULL)
         {
             free(runlib->libname);
@@ -440,7 +407,7 @@ int QDMI_internal_startup(QDMI_Session* session, QInfo info)
 int QDMI_internal_shutdown()
 {
     /* So far nothing */
-    
+
     return QDMI_SUCCESS;
 }
 
@@ -457,11 +424,11 @@ int QDMI_internal_shutdown()
 int QDMI_session_init(QInfo info, QDMI_Session *session)
 {
     int err;
-    
+
     *session=(QDMI_Session_impl_t*) malloc(sizeof(QDMI_Session_impl_t));
     if (*session==NULL)
         return QDMI_ERROR_OUTOFMEM;
-    
+
     // Copy `info` to `session->info`
     err = QInfo_duplicate(info, &((*session)->info));
     if (err!=QINFO_SUCCESS)
@@ -469,11 +436,11 @@ int QDMI_session_init(QInfo info, QDMI_Session *session)
         free(*session);
         return qdmi_internal_translate_qinfo_error(err);
     }
-    
+
     if (qdmi_session_list==NULL)
     {
         /* First session */
-        
+
         err=QDMI_internal_startup(session, info);
 
         //printf("\n[TODO]: (qdmi_core.c) if (err !=/*==*/ QDMI_SUCCESS)");
@@ -503,10 +470,10 @@ int QDMI_session_init(QInfo info, QDMI_Session *session)
 int QDMI_session_finalize(QDMI_Session session)
 {
     QDMI_Session sess,prev;
-    
+
     sess=qdmi_session_list;
     prev=NULL;
-   
+
     while (sess!=NULL)
     {
         if (sess==session)
@@ -515,19 +482,19 @@ int QDMI_session_finalize(QDMI_Session session)
                 qdmi_session_list=sess->next;
             else
                 prev->next=sess->next;
-            
+
             QInfo_free(session->info);
             free(session);
-            
+
             if (qdmi_session_list==NULL)
                 return QDMI_internal_shutdown();
-            
+
             return QDMI_SUCCESS;
         }
         prev=sess;
         sess=sess->next;
     }
-    
+
     return QDMI_ERROR_NOSESSION;
 }
 
@@ -585,7 +552,7 @@ int QDMI_core_device_count(QDMI_Session *session, int *count)
 {
     QDMI_Library lib = (*session)->qdmi_library_list;
     *count = 0;
-    
+
     while (lib != NULL)
     {
         (*count)++;
@@ -612,7 +579,7 @@ int QDMI_core_open_device(QDMI_Session *session, int idx, QInfo *info, QDMI_Devi
 
     if(count < idx) return  QDMI_ERROR_FATAL;
 
-    (*handle) = (struct QDMI_Device_impl_d*)malloc(sizeof(struct QDMI_Device_impl_d));    
+    (*handle) = (struct QDMI_Device_impl_d*)malloc(sizeof(struct QDMI_Device_impl_d));
     if(*handle == NULL) return QDMI_ERROR_OUTOFMEM;
 
     QDMI_Library lib = (*session)->qdmi_library_list;
@@ -620,7 +587,7 @@ int QDMI_core_open_device(QDMI_Session *session, int idx, QInfo *info, QDMI_Devi
 
     for(int index = 0; index < idx; index++)
         lib = lib->next;
-    
+
     (*handle)->library = *lib;
 
     return QDMI_SUCCESS;

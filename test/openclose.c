@@ -7,12 +7,8 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 
-#include <qdmi.h>
-int QDMI_session_init(QInfo info, QDMI_Session *session);
-int QDMI_session_finalize(QDMI_Session session);
-//QDMI_Library find_library_by_name(const char *libname);
+#include "qdmi.h"
 
 #define CHECK_ERR(a, b)                          \
     {                                            \
@@ -41,7 +37,7 @@ int main(int argc, char **argv)
 
     printf("%d\n", count);
     devices = malloc(sizeof(QDMI_Device) * count);
-    
+
     for(int i = 0; i < count; i++){
         err = QDMI_core_open_device(&session, i, &info, &devices[i]);
         CHECK_ERR(err, "QDMI_core_open_device");
@@ -50,7 +46,7 @@ int main(int argc, char **argv)
     }
 
     QDMI_control_pack_qasm2(devices[0], "testsfrt", &frag);
-    
+
 
 
     /*

@@ -4,13 +4,9 @@
   SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
-/* Headerfile to be included by all QDMI clients */
-
-#ifndef QDMI_H
-#define QDMI_H
+#pragma once
 
 #include <qinfo.h>
-
 
 /*----------------------------------------*/
 /* QDMI Constants for API usage*/
@@ -93,10 +89,13 @@
         QDMI_QUBIT
         QDMI_CNOT
         QDMI_H
- 
+
     (reserved names for well defined gate types)
  */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*----------------------------------------*/
 /* QDMI Type defintions */
@@ -123,11 +122,6 @@ typedef struct QDMI_Qubit_impl_d           *QDMI_Qubit;
 
 /*----------------------------------------*/
 /* Function defintions */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 
 /* Memory allocation routines */
 
@@ -235,7 +229,7 @@ typedef int (*QDMI_query_gate_size_t)(QDMI_Device dev, QDMI_Gate gate, int* gate
 int QDMI_query_gate_unitary(QDMI_Device dev, QDMI_Gate gate, QDMI_Unitary *unitary);
 typedef int (*QDMI_query_gate_unitary_t)(QDMI_Device dev, QDMI_Gate gate, QDMI_Unitary *unitary);
 
-  
+
 // routines to query gate properties
 int QDMI_query_gate_property_exists(QDMI_Device dev, QDMI_Gate gate, QDMI_Gate_property prop, int* scope);
 typedef int (*QDMI_query_gate_property_exists_t)(QDMI_Device dev, QDMI_Gate gate, QDMI_Gate_property prop, int* scope);
@@ -283,6 +277,4 @@ typedef int (*QDMI_device_quality_calibrate_t)(QDMI_Device dev);
 
 #ifdef __cplusplus
 } // extern "C"
-#endif
-
 #endif
