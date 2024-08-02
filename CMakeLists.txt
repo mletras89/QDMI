@@ -4,79 +4,64 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #-------------------------------------------------------------------------------
 
-cmake_minimum_required(VERSION 3.9)
+# set required cmake version
+cmake_minimum_required(VERSION 3.19...3.30)
 
-project(qdmi VERSION 0.1 DESCRIPTION "QDMI Core Library")
+project(qdmi
+		LANGUAGES C
+		VERSION 0.2.0
+		DESCRIPTION "QDMI Interface")
 
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-  #set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/../install CACHE PATH "..." FORCE)
-  set(CMAKE_INSTALL_PREFIX $ENV{HOME}/bin CACHE PATH "..." FORCE)
+# make scripts available to cmake
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+# check if this is the master project or used via add_subdirectory
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+	set(QDMI_MASTER_PROJECT ON)
+else()
+	set(QDMI_MASTER_PROJECT OFF)
 endif()
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_INSTALL_PREFIX}/cmake")
-list(APPEND CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}/cmake")
-include_directories("${CMAKE_INSTALL_PREFIX}/include")
 
-include(GNUInstallDirs)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+option(QDMI_INSTALL "Generate installation instructions for QDMI"
+       ${QDMI_MASTER_PROJECT})
+option(BUILD_QDMI_TESTS "Also build tests for the QDMI project"
+       ${QDMI_MASTER_PROJECT})
 
-add_compile_options("-g")
+# enable organization of targets into folders
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
+# Set a default build type if none was specified
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+	message(STATUS "Setting build type to 'Release' as none was specified.")
+	set(CMAKE_BUILD_TYPE
+	    Release
+	    CACHE STRING "Choose the type of build." FORCE)
+	# Set the possible values of build type for cmake-gui, ccmake
+	set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release"
+	             "MinSizeRel" "RelWithDebInfo")
+endif()
 
-find_package(qinfo REQUIRED)
+# Generate compile_commands.json to make it easier to work with clang-based
+# tools
+set(CMAKE_EXPORT_COMPILE_COMMANDS
+    ON
+    CACHE BOOL "Export compile commands" FORCE)
 
-add_compile_options("-g")
+# Require C standard
+set_property(GLOBAL PROPERTY CMAKE_C_STANDARD_REQUIRED ON)
+set_property(GLOBAL PROPERTY C_EXTENSIONS OFF)
 
-set(PUBLIC_QDMI_HEADERS
-    "include/qdmi.h"
-    "include/qdmi_backend.h"
-)
+include(cmake/ExternalDependencies.cmake)
 
-add_library(qdmi SHARED 
-    src/qdmi_core.c 
-    src/qdmi_internal.c 
-    src/qdmi_stubs.c 
-)
+# set the include directory for the build tree
+set(QDMI_INCLUDE_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include/qdmi")
 
-target_link_libraries(qdmi qinfo)
+# add main library code
+add_subdirectory(src)
 
-set_target_properties(qdmi PROPERTIES
-    VERSION ${PROJECT_VERSION}
-    SOVERSION ${PROJECT_VERSION_MAJOR}
-    PUBLIC_HEADER "${PUBLIC_QDMI_HEADERS}"
-)
-
-# configure_file(qinfo.pc.in qinfo.pc @ONLY)
-
-target_include_directories(qdmi PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>
-)
-
-install(
-    TARGETS qdmi
-    EXPORT qdmiConfig
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_PREFIX}/include
-)
-
-export(
-    TARGETS qdmi
-    NAMESPACE qdmi::
-    FILE "${CMAKE_CURRENT_BINARY_DIR}/qdmiConfig.cmake"
-)
-
-install(
-    EXPORT qdmiConfig
-    FILE qdmiConfig.cmake
-    DESTINATION "${CMAKE_INSTALL_PREFIX}/cmake"
-    NAMESPACE qdmi::
-)
-    
-# install(FILES ${CMAKE_BINARY_DIR}/mylib.pc
-#     DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig)
-
-add_executable(QDMIOpenClose testing/openclose.c)
-target_link_libraries(QDMIOpenClose qdmi)
-#add_test(QDMIOpenClose QDMIOpenClose)
+# add test code
+if(BUILD_QDMI_TESTS)
+	enable_testing()
+	include(GoogleTest)
+	add_subdirectory(test)
+endif()
