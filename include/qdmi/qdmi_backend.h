@@ -8,13 +8,13 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #pragma once
 
+#include "qdmi.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "qdmi.h"
-
 /*----------------------------------------*/
-/* Backend-only Function defintions */
+/* Backend-only Function definitions */
 
 #ifdef __cplusplus
 extern "C" {

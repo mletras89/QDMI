@@ -1,25 +1,26 @@
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Part of the MQSS Project, under the Apache License v2.0 with LLVM Exceptions.
 # See https://llvm.org/LICENSE.txt for license information.
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 # set required cmake version
 cmake_minimum_required(VERSION 3.19...3.30)
 
-project(qdmi
-		LANGUAGES C
-		VERSION 0.2.0
-		DESCRIPTION "QDMI Interface")
+project(
+  qdmi
+  LANGUAGES C
+  VERSION 0.2.0
+  DESCRIPTION "QDMI Interface")
 
 # make scripts available to cmake
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 # check if this is the master project or used via add_subdirectory
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-	set(QDMI_MASTER_PROJECT ON)
+  set(QDMI_MASTER_PROJECT ON)
 else()
-	set(QDMI_MASTER_PROJECT OFF)
+  set(QDMI_MASTER_PROJECT OFF)
 endif()
 
 option(QDMI_INSTALL "Generate installation instructions for QDMI"
@@ -32,13 +33,13 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # Set a default build type if none was specified
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-	message(STATUS "Setting build type to 'Release' as none was specified.")
-	set(CMAKE_BUILD_TYPE
-	    Release
-	    CACHE STRING "Choose the type of build." FORCE)
-	# Set the possible values of build type for cmake-gui, ccmake
-	set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release"
-	             "MinSizeRel" "RelWithDebInfo")
+  message(STATUS "Setting build type to 'Release' as none was specified.")
+  set(CMAKE_BUILD_TYPE
+      Release
+      CACHE STRING "Choose the type of build." FORCE)
+  # Set the possible values of build type for cmake-gui, ccmake
+  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release"
+                                               "MinSizeRel" "RelWithDebInfo")
 endif()
 
 # Generate compile_commands.json to make it easier to work with clang-based
@@ -61,7 +62,7 @@ add_subdirectory(src)
 
 # add test code
 if(BUILD_QDMI_TESTS)
-	enable_testing()
-	include(GoogleTest)
-	add_subdirectory(test)
+  enable_testing()
+  include(GoogleTest)
+  add_subdirectory(test)
 endif()
