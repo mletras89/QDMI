@@ -11,7 +11,7 @@ set(FETCH_PACKAGES "")
 # cmake-format: off
 set(QINFO_VERSION 0.2.0
     CACHE STRING "QInfo version")
-set(QINFO_REV "develop"
+set(QINFO_REV "c4e06b974d9ddd35964f41d7e40a17dd0f4b3539"
     CACHE STRING "QInfo identifier (tag, branch or commit hash)")
 set(QINFO_REPO_OWNER "Munich-Quantum-Software-Stack"
     CACHE STRING "QInfo repository owner (change when using a fork)")
