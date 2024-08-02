@@ -33,11 +33,8 @@ int QDMI_load_libraries(QDMI_Session* session, QInfo sesioninfo)
     QDMI_Library newlib, runlib, prevlib, qdmi_library_list;
     double dval;
     long   lval;
-    QInfo_topic topic;
-    QInfo_value value;
     int retval,initerr,err;
     qdmi_library_list = (*session)->qdmi_library_list;
-    
 
     /* Determine location of configfile */
 
@@ -149,58 +146,43 @@ int QDMI_load_libraries(QDMI_Session* session, QInfo sesioninfo)
 
                     if (strchr(valueString, '.') != NULL)
                     {
-                        value.value_double = strtod(valueString, NULL);
-            
-                        /* we have a double */
-            
-                        value.value_long = 0;
-                        value.value_string = NULL;
-                
-                        err = QInfo_topic_add(newlib->info, param, QINFO_TYPE_DOUBLE, &topic);
+                        QInfo_index index;
+                        err = QInfo_add(newlib->info, param, QINFO_TYPE_DOUBLE, &index);
                         if (err != QINFO_SUCCESS)
                         {
-                            if (line != NULL)
-                                free(line);
-
+                            if (line != NULL) {
+                              free(line);
+                            }
                             return qdmi_internal_translate_qinfo_error(err);
                         }
-                        
-                        err = QInfo_topic_set(newlib->info, topic, &value);
+                        err = QInfo_set_d(newlib->info, index, strtod(valueString, NULL));
                         if (err != QINFO_SUCCESS)
                         {
-                            if (line != NULL) 
-                                free(line);
-
+                            if (line != NULL) {
+                              free(line);
+                            }
                             return qdmi_internal_translate_qinfo_error(err);
                         }
                     }
                     else if( isdigit(*valueString) )
                     {
                         char *endptr;
-                        value.value_long = strtol(valueString, &endptr, 10);
-
-                        if (*endptr == '\0')
-                        {
-                            /* now we have a long */
-
-                            value.value_double = 0.0;
-                            value.value_string = NULL;
-
-                            err = QInfo_topic_add(newlib->info, param, QINFO_TYPE_LONG, &topic);
-                            if (err != QINFO_SUCCESS)
-                            {
-                                if (line != NULL) 
-                                free(line);
-
-                                    return qdmi_internal_translate_qinfo_error(err);
+                        int64_t val = strtoll(valueString, &endptr, 10);
+                        if (*endptr == '\0') {
+                            QInfo_index index;
+                            err = QInfo_add(newlib->info, param, QINFO_TYPE_INT64, &index);
+                            if (err != QINFO_SUCCESS)                            {
+                                if (line != NULL) {
+                                  free(line);
+                                }
+                                return qdmi_internal_translate_qinfo_error(err);
                             }
-                            
-                            err = QInfo_topic_set(newlib->info, topic, &value);
+                            err = QInfo_set_i64(newlib->info, index, val);
                             if (err != QINFO_SUCCESS)
                             {
-                                if (line != NULL) 
-                                    free(line);
-
+                                if (line != NULL) {
+                                  free(line);
+                                }
                                 return qdmi_internal_translate_qinfo_error(err);
                             }
                         }
@@ -208,38 +190,21 @@ int QDMI_load_libraries(QDMI_Session* session, QInfo sesioninfo)
                     else
                     {
                         /* now we have a string */
-                        
-                        value.value_double = 0.0;
-                        value.value_long = 0;
-                        value.value_string = strdup(valueString);
-
-                        if (value.value_string == NULL)
-                        {
-                            if (line!=NULL) 
-                                free(line);
-
-                            return QDMI_ERROR_OUTOFMEM;
-                        }
-
-                        err = QInfo_topic_add(newlib->info , param, QINFO_TYPE_STRING, &topic);
+                        QInfo_index index;
+                        err = QInfo_add(newlib->info, param, QINFO_TYPE_STRING, &index);
                         if (err != QINFO_SUCCESS)
                         {
-                            if (line != NULL) 
-                                free(line);
-
-                            free(value.value_string);
-
+                            if (line != NULL) {
+                              free(line);
+                            }
                             return qdmi_internal_translate_qinfo_error(err);
                         }
-
-                        err = QInfo_topic_set(newlib->info, topic, &value);
+                        err = QInfo_set_c(newlib->info, index, valueString);
                         if (err != QINFO_SUCCESS)
                         {
-                            if (line != NULL) 
-                                free(line);
-
-                            free(value.value_string);
-
+                            if (line != NULL) {
+                              free(line);
+                            }
                             return qdmi_internal_translate_qinfo_error(err);
                         }
                     }
@@ -292,7 +257,7 @@ int QDMI_load_libraries(QDMI_Session* session, QInfo sesioninfo)
 
             free(newlib->libname);
             err=QInfo_free(newlib->info);
-            if (QINFO_IS_FATAL(err))
+            if (QInfo_is_Error(err))
                 return qdmi_internal_translate_qinfo_error(err);
         }
 
