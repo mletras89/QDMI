@@ -130,7 +130,15 @@ int QDMI_load_libraries(QDMI_Session *session, QInfo sesioninfo) {
         if (param != NULL) {
           const char *valueString = separator + 1;
 
-          if (strchr(valueString, '.') != NULL) {
+          /* if parameter starts end ends with ", treat it as a string */
+          int isQuotedString = 0;
+          if ((valueString[0] == '"' && valueString[strlen(valueString) - 1] == '"') ||
+              (valueString[0] == '"' && valueString[strlen(valueString) - 2] == '"' && valueString[strlen(valueString) - 1] == '\n'))
+          {
+              isQuotedString = 1;
+          }
+
+          if (!isQuotedString && strchr(valueString, '.') != NULL) {
             QInfo_index index;
             err = QInfo_add(newlib->info, param, QINFO_TYPE_DOUBLE, &index);
             if (err != QINFO_SUCCESS) {
@@ -146,7 +154,7 @@ int QDMI_load_libraries(QDMI_Session *session, QInfo sesioninfo) {
               }
               return qdmi_internal_translate_qinfo_error(err);
             }
-          } else if (isdigit(*valueString)) {
+          } else if (!isQuotedString && isdigit(*valueString)) {
             char *endptr;
             int64_t val = strtoll(valueString, &endptr, 10);
             if (*endptr == '\0') {
@@ -176,13 +184,25 @@ int QDMI_load_libraries(QDMI_Session *session, QInfo sesioninfo) {
               }
               return qdmi_internal_translate_qinfo_error(err);
             }
-            err = QInfo_set_c(newlib->info, index, valueString);
+            /* remove trailing newline */
+            char *localValueString = strndup(valueString, strlen(valueString));
+            if (localValueString[strlen(localValueString) - 1] == '\n') {
+                localValueString[strlen(localValueString) - 1] = '\0';
+            }
+            /* remove quotes */
+            char *strippedLocalValueString = localValueString;
+            if (isQuotedString) {
+                strippedLocalValueString[strlen(strippedLocalValueString) - 1] = '\0';
+                strippedLocalValueString = strippedLocalValueString + 1;
+            }
+            err = QInfo_set_c(newlib->info, index, strippedLocalValueString);
             if (err != QINFO_SUCCESS) {
               if (line != NULL) {
                 free(line);
               }
               return qdmi_internal_translate_qinfo_error(err);
             }
+            free(localValueString);
           }
         }
 
