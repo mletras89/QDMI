@@ -4,8 +4,9 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # ------------------------------------------------------------------------------
 
-add_subdirectory(qdmi_v2)
+add_library(QDMIBackendV2 SHARED backend_v2.c)
+target_link_libraries(QDMIBackendV2 PUBLIC qdmi::qdmi_v2)
 
-add_executable(QDMIOpenClose openclose.c)
-target_link_libraries(QDMIOpenClose qdmi::qdmi)
-add_test(QDMIOpenClose QDMIOpenClose)
+add_executable(QDMI_test test.c)
+target_link_libraries(QDMI_test PRIVATE qdmi::qdmi_v2 QDMIBackendV2)
+add_test(QDMI_test QDMI_test)

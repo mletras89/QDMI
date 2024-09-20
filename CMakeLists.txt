@@ -56,6 +56,7 @@ include(cmake/ExternalDependencies.cmake)
 
 # set the include directory for the build tree
 set(QDMI_INCLUDE_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include/qdmi")
+set(QDMI_V2_INCLUDE_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include/qdmi_v2")
 
 # add main library code
 add_subdirectory(src)

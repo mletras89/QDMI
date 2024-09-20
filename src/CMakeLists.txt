@@ -20,6 +20,8 @@ if(QDMI_INSTALL)
       "${QDMI_CMAKE_CONFIG_DIR}/qdmi-targets.cmake")
 endif()
 
+add_subdirectory(qdmi_v2)
+
 if(NOT TARGET qdmi)
   add_library(
     qdmi SHARED
