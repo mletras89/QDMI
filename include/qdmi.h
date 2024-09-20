@@ -6,8 +6,6 @@
 
 #pragma once
 
-#include <qinfo.h>
-
 /*----------------------------------------*/
 /* QDMI Constants for API usage*/
 
