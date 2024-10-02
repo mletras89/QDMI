@@ -8,7 +8,7 @@
 - Description: Class for managing individual sessions
 - Members:
   - `QInfo info`: Additional/Optional information of the session
-- Methos:
+- Methods:
   - `int QDMI_Session_create(QInfo info, QDMI_Session* session)`:
 
 ### Device
@@ -18,13 +18,13 @@
 - Members:- 
   - `char* name`: Name of the device
   - `QInfo info`: Additional/Optional information of the session
+
 ### Site
 
 - Name: `QDMI_Site`
 - Description:
 - Members:
   - `QInfo info`: Additional/Optional information of the session
-
 
 ### Operation
 
