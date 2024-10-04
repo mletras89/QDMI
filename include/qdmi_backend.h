@@ -13,6 +13,11 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 extern "C" {
 #endif
 
+typedef struct QDMI_Operation_impl_d {
+
+} QDMI_Operation_impl_t;
+typedef struct QDMI_Operation_impl_d *QDMI_Operation;
+
 /**
  * @brief Check if a device property exists.
  * @param prop The property to query.
