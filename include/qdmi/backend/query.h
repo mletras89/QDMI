@@ -12,6 +12,58 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 extern "C" {
 #endif
 
+// TODO Where to put this block of code (including the next 4 function definitions)? What should be its name? It may be altered by backend implementers, so this would speak in favour to put it into src put there we do not have headers so far...
+
+typedef struct QDMI_Operation_impl_d {
+    char *name; /**< The name of the operation. */
+} QDMI_Operation_impl_t;
+
+typedef struct QDMI_Operation_impl_d *QDMI_Operation;
+
+typedef struct QDMI_Site_impl_d {
+    int index; /**< The index of the site. */
+} QDMI_Site_impl_t;
+
+typedef struct QDMI_Site_impl_d *QDMI_Site;
+
+// TODO Should we put these functions here? What exactly should be its name?
+
+/**
+ * @brief Query all operations.
+ * @param operations The pointer to the operations.
+ * @param size The number of operations.
+ * @return QDMI_SUCCESS if the operations were queried successfully, an error code
+ * otherwise.
+ */
+int QDMI_query_all_operations(QDMI_Operation **operations, int *size);
+
+/**
+ * @brief Query an operation by name.
+ * @param name The name of the operation.
+ * @param operation The operation.
+ * @return QDMI_SUCCESS if the operation was queried successfully, an error code
+ * otherwise.
+ */
+int QDMI_query_operation_by_name(const char *name, QDMI_Operation *operation);
+
+/**
+ * @brief Query all sites.
+ * @param sites The pointer to the sites.
+ * @param size The number of sites.
+ * @return QDMI_SUCCESS if the sites were queried successfully, an error code
+ * otherwise.
+ */
+int QDMI_query_all_sites(QDMI_Site **sites, int *size);
+
+/**
+ * @brief Query a site by index.
+ * @param index The index of the site.
+ * @param site The site.
+ * @return QDMI_SUCCESS if the site was queried successfully, an error code
+ * otherwise.
+ */
+int QDMI_query_site_by_index(int index, QDMI_Site *site);
+
 // TODO: Check documentation output: Does this section appear in the generated
 // doc?
 
