@@ -11,15 +11,23 @@ extern "C" {
 #endif
 
 enum QDMI_Device_Property_t {
-  QDMI_NUM_QUBITS = 0, /**< The number of qubits in the device. */
+    QDMI_NUM_QUBITS = 0, /**< The number of qubits in the device. */
 };
+
 typedef enum QDMI_Device_Property_t QDMI_Device_Property;
 
 // TODO Do we need an extra "QDMI_Operation_At_Site_Property" enum???
 enum QDMI_Operation_Property_t {
-  QDMI_OP_FIDELITY = 0, /**< The fidelity of an operation. */
+    QDMI_OP_FIDELITY = 0, /**< The fidelity of an operation. */
 };
+
 typedef enum QDMI_Operation_Property_t QDMI_Operation_Property;
+
+enum QDMI_Site_Property_t {
+    QDMI_NA_ZONE = 0, /**< The zone a site belongs to. */
+};
+
+typedef enum QDMI_Site_Property_t QDMI_Site_Property;
 
 #ifdef __cplusplus
 } // extern "C"

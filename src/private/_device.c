@@ -11,6 +11,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <dlfcn.h>
 #include <stdlib.h>
+#include <qdmi/backend/query.h>
 
 #define LOAD_SYMBOL(device, symbol)                                            \
   {                                                                            \
@@ -38,6 +39,40 @@ int QDMI_device_open(const char *lib_name, QDMI_Device *device) {
   LOAD_SYMBOL(*device, QDMI_query_device_property_double);
   LOAD_SYMBOL(*device, QDMI_query_device_property_float);
   LOAD_SYMBOL(*device, QDMI_query_device_property_int);
+  LOAD_SYMBOL(*device, QDMI_query_device_property_char_list);
+  LOAD_SYMBOL(*device, QDMI_query_device_property_double_list);
+  LOAD_SYMBOL(*device, QDMI_query_device_property_float_list);
+  LOAD_SYMBOL(*device, QDMI_query_device_property_int_list);
+
+  LOAD_SYMBOL(*device, QDMI_query_all_sites);
+  LOAD_SYMBOL(*device, QDMI_query_site_by_index);
+  LOAD_SYMBOL(*device, QDMI_query_site_property_char);
+  LOAD_SYMBOL(*device, QDMI_query_site_property_double);
+  LOAD_SYMBOL(*device, QDMI_query_site_property_float);
+  LOAD_SYMBOL(*device, QDMI_query_site_property_int);
+  LOAD_SYMBOL(*device, QDMI_query_site_property_char_list);
+  LOAD_SYMBOL(*device, QDMI_query_site_property_double_list);
+  LOAD_SYMBOL(*device, QDMI_query_site_property_float_list);
+  LOAD_SYMBOL(*device, QDMI_query_site_property_int_list);
+
+  LOAD_SYMBOL(*device, QDMI_query_all_operations);
+  LOAD_SYMBOL(*device, QDMI_query_operation_by_name);
+  LOAD_SYMBOL(*device, QDMI_query_operation_property_char);
+  LOAD_SYMBOL(*device, QDMI_query_operation_property_double);
+  LOAD_SYMBOL(*device, QDMI_query_operation_property_float);
+  LOAD_SYMBOL(*device, QDMI_query_operation_property_int);
+  LOAD_SYMBOL(*device, QDMI_query_operation_property_char_list);
+  LOAD_SYMBOL(*device, QDMI_query_operation_property_double_list);
+  LOAD_SYMBOL(*device, QDMI_query_operation_property_float_list);
+  LOAD_SYMBOL(*device, QDMI_query_operation_property_int_list);
+  LOAD_SYMBOL(*device, QDMI_query_operation_at_site_property_char);
+  LOAD_SYMBOL(*device, QDMI_query_operation_at_site_property_double);
+  LOAD_SYMBOL(*device, QDMI_query_operation_at_site_property_float);
+  LOAD_SYMBOL(*device, QDMI_query_operation_at_site_property_int);
+  LOAD_SYMBOL(*device, QDMI_query_operation_at_site_property_char_list);
+  LOAD_SYMBOL(*device, QDMI_query_operation_at_site_property_double_list);
+  LOAD_SYMBOL(*device, QDMI_query_operation_at_site_property_float_list);
+  LOAD_SYMBOL(*device, QDMI_query_operation_at_site_property_int_list);
   // initialize the next pointer to NULL
   (*device)->next = NULL;
   // return success
