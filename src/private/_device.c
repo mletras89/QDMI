@@ -4,21 +4,22 @@ See https://llvm.org/LICENSE.txt for license information.
 SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
-#include "private/qdmi_device.h"
+#include "qdmi/private/_device.h"
 
-#include "private/qdmi_types.h"
-#include "qdmi_return_codes.h"
+#include "qdmi/private/_types.h"
+#include "qdmi/return_codes.h"
 
 #include <dlfcn.h>
 #include <stdlib.h>
 
-#define LOAD_SYMBOL(device, symbol) {                                          \
-  (device)->symbol = (symbol##_t)dlsym((device)->lib_handle, #symbol);         \
-  if ((device)->symbol == NULL) {                                              \
-    QDMI_device_close(device);                                                 \
-    return QDMI_ERROR_NOT_FOUND;                                               \
-  }                                                                            \
-}
+#define LOAD_SYMBOL(device, symbol)                                            \
+  {                                                                            \
+    *(void **)(&((device)->symbol)) = dlsym((device)->lib_handle, #symbol);    \
+    if ((device)->symbol == NULL) {                                            \
+      QDMI_device_close(device);                                               \
+      return QDMI_ERROR_NOT_FOUND;                                             \
+    }                                                                          \
+  }
 
 int QDMI_device_open(const char *lib_name, QDMI_Device *device) {
   // allocate memory for the device
@@ -33,7 +34,6 @@ int QDMI_device_open(const char *lib_name, QDMI_Device *device) {
     return QDMI_ERROR_LIB_NOT_FOUND;
   }
   // load the function symbols from the dynamic library
-  LOAD_SYMBOL(*device, QDMI_query_device_property_exists);
   LOAD_SYMBOL(*device, QDMI_query_device_property_char);
   LOAD_SYMBOL(*device, QDMI_query_device_property_double);
   LOAD_SYMBOL(*device, QDMI_query_device_property_float);
@@ -44,10 +44,9 @@ int QDMI_device_open(const char *lib_name, QDMI_Device *device) {
   return QDMI_SUCCESS;
 }
 
-int QDMI_device_close(const QDMI_Device device) {
+void QDMI_device_close(QDMI_Device device) {
   // close the dynamic library
   dlclose(device->lib_handle);
   // free the memory allocated for the device
   free(device);
-  return QDMI_SUCCESS;
 }

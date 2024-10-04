@@ -6,11 +6,15 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #pragma once
 
-#include "qdmi_device.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/**
+ * @brief Opaque type for a device.
+ * @details A device stores all functions implemented in its dynamic library.
+ */
+typedef struct QDMI_Device_impl_d *QDMI_Device;
 
 /**
  * @brief Opaque type for a QDMI session.
@@ -21,7 +25,8 @@ typedef struct QDMI_Session_impl_d *QDMI_Session;
 /**
  * @brief Allocate a new QDMI session.
  * @param session the new session.
- * @return QDMI_SUCCESS if the session was allocated successfully, an error code otherwise.
+ * @return QDMI_SUCCESS if the session was allocated successfully, an error code
+ * otherwise.
  */
 int QDMI_session_alloc(QDMI_Session *session);
 
@@ -33,19 +38,24 @@ void QDMI_session_free(QDMI_Session session);
 
 /**
  * @brief Open and attach a device to a QDMI session.
- * @details The device is loaded from a dynamic library. The memory for the device is allocated and initialized.
+ * @details The device is loaded from a dynamic library. The memory for the
+ * device is allocated and initialized.
  * @param session the session.
- * @param lib_name the name of the library that contains the dynamic library of a device.
+ * @param lib_name the name of the library that contains the dynamic library of
+ * a device.
  * @param device the device that is opened and attached.
- * @return QDMI_SUCCESS if the device was added successfully, an error code otherwise.
+ * @return QDMI_SUCCESS if the device was added successfully, an error code
+ * otherwise.
  */
-int QDMI_session_open_device(QDMI_Session session, const char *lib_name, QDMI_Device *device);
+int QDMI_session_open_device(QDMI_Session session, const char *lib_name,
+                             QDMI_Device *device);
 
 /**
  * @brief Close and detach a device from a QDMI session.
  * @param session the session.
  * @param device the device that is closed and detached.
- * @return QDMI_SUCCESS if the device was removed successfully, an error code otherwise.
+ * @return QDMI_SUCCESS if the device was removed successfully, an error code
+ * otherwise.
  */
 int QDMI_session_close_device(QDMI_Session session, QDMI_Device device);
 

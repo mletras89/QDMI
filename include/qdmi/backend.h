@@ -6,14 +6,13 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #pragma once
 
+#include "qdmi/backend/query.h" // IWYU pragma: export
+#include "qdmi/properties.h"    // IWYU pragma: export
+#include "qdmi/return_codes.h"  // IWYU pragma: export
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-enum QDMI_Device_Property_t {
-  QDMI_NUM_QUBITS = 0, /**< The number of qubits in the device. */
-};
-typedef enum QDMI_Device_Property_t QDMI_Device_Property;
 
 #ifdef __cplusplus
 } // extern "C"

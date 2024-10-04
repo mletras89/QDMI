@@ -15,7 +15,7 @@
 
 - Name: `QDMI_Device`
 - Description: Main class representing a quantum device
-- Members:- 
+- Members:-
   - `char* name`: Name of the device
   - `QInfo info`: Additional/Optional information of the session
 
@@ -31,4 +31,4 @@
 - Name: `QDMI_Operation`
 - Description:
 - Members:
-  - `QInfo info`: Additional/Optional information of the session 
+  - `QInfo info`: Additional/Optional information of the session

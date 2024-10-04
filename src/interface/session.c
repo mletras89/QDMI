@@ -4,11 +4,11 @@ See https://llvm.org/LICENSE.txt for license information.
 SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
-#include "qdmi_session.h"
+#include "qdmi/interface/session.h"
 
-#include "private/qdmi_types.h"
-#include "private/qdmi_device.h"
-#include "qdmi_return_codes.h"
+#include "qdmi/private/_device.h"
+#include "qdmi/private/_types.h"
+#include "qdmi/return_codes.h"
 
 #include <stdlib.h>
 
@@ -24,10 +24,10 @@ int QDMI_session_alloc(QDMI_Session *session) {
   return QDMI_SUCCESS;
 }
 
-void QDMI_session_free(const QDMI_Session session) {
+void QDMI_session_free(QDMI_Session session) {
   // close and free all devices
   while (session->device_list != NULL) {
-    const QDMI_Device next = session->device_list->next;
+    QDMI_Device next = session->device_list->next;
     QDMI_device_close(session->device_list);
     session->device_list = next;
   }
@@ -35,7 +35,8 @@ void QDMI_session_free(const QDMI_Session session) {
   free(session);
 }
 
-int QDMI_session_open_device(const QDMI_Session session, const char *lib_name, QDMI_Device *device) {
+int QDMI_session_open_device(QDMI_Session session, const char *lib_name,
+                             QDMI_Device *device) {
   // open device
   const int err = QDMI_device_open(lib_name, device);
   if (!QDMI_is_Success(err)) {
@@ -48,8 +49,7 @@ int QDMI_session_open_device(const QDMI_Session session, const char *lib_name, Q
   return QDMI_SUCCESS;
 }
 
-int QDMI_session_close_device(const QDMI_Session session,
-                              const QDMI_Device device) {
+int QDMI_session_close_device(QDMI_Session session, QDMI_Device device) {
   // find device in session
   QDMI_Device prev = NULL;
   QDMI_Device curr = session->device_list;
