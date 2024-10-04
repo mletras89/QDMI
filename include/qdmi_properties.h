@@ -11,7 +11,7 @@ extern "C" {
 #endif
 
 enum QDMI_Device_Property_t {
-  QDMI_NUM_QUBITS = 0, /// The number of qubits in the device.
+  QDMI_NUM_QUBITS = 0, /**< The number of qubits in the device. */
 };
 typedef enum QDMI_Device_Property_t QDMI_Device_Property;
 

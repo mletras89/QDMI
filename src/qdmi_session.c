@@ -72,3 +72,5 @@ int QDMI_session_close_device(const QDMI_Session session,
   // return success
   return QDMI_SUCCESS;
 }
+
+// TODO implement iterator over device_list

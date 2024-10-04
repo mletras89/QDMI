@@ -46,6 +46,10 @@ int main() {
       return 1;
     }
   }
+  // free resources
+  QDMI_session_close_device(session, device5);
+  QDMI_session_close_device(session, device7);
+  QDMI_session_free(session);
   // print the number of qubits in the devices
   printf("Number of qubits in device5: %d\n", num_qubits5);
   printf("Number of qubits in device7: %d\n", num_qubits7);
