@@ -36,8 +36,8 @@ if(NOT TARGET qdmi)
     PUBLIC $<BUILD_INTERFACE:${QDMI_INCLUDE_BUILD_DIR}>
     PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/private>)
 
-  # add warnings to the library
-  target_link_libraries(qdmi PRIVATE qinfo::project_warnings)
+  # add warnings to the library target_link_libraries(qdmi PRIVATE
+  # qinfo::project_warnings)
 
   # link to qinfo
   target_link_libraries(qdmi PUBLIC qinfo::qinfo)

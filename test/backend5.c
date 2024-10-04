@@ -4,15 +4,26 @@ See https://llvm.org/LICENSE.txt for license information.
 SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
-#include "backend5.h"
-
 #include "qdmi/backend.h"
 
-#include <stddef.h>
-#include <stdlib.h>
+#include <string.h>
+
+// TODO Implement test cases for the defined properties.
 
 int QDMI_query_device_property_char(const QDMI_Device_Property prop,
-                                    char *value) {
+                                    char **value) {
+  if (prop == QDMI_NAME) {
+    *value = "Backend with 5 qubits";
+    return QDMI_SUCCESS;
+  }
+  if (prop == QDMI_DEVICE_VERSION) {
+    *value = "0.0.1";
+    return QDMI_SUCCESS;
+  }
+  if (prop == QDMI_LIBRARY_VERSION) {
+    *value = "0.1.0";
+    return QDMI_SUCCESS;
+  }
   return QDMI_ERROR_NOT_IMPLEMENTED;
 }
 
@@ -23,6 +34,14 @@ int QDMI_query_device_property_double(const QDMI_Device_Property prop,
 
 int QDMI_query_device_property_float(const QDMI_Device_Property prop,
                                      float *value) {
+  if (prop == QDMI_AVG_T1_TIME) {
+    *value = 1000.0F;
+    return QDMI_SUCCESS;
+  }
+  if (prop == QDMI_AVG_T2_TIME) {
+    *value = 100000.0F;
+    return QDMI_SUCCESS;
+  }
   return QDMI_ERROR_NOT_IMPLEMENTED;
 }
 
@@ -52,185 +71,170 @@ int QDMI_query_device_property_float_list(const QDMI_Device_Property prop,
 
 int QDMI_query_device_property_int_list(const QDMI_Device_Property prop,
                                         int **value, int *size) {
-  return QDMI_ERROR_NOT_IMPLEMENTED;
-}
-
-int QDMI_query_all_sites(QDMI_Site **sites, int *size) {
-  // TODO Is that beautiful?? That should be in some initialization function that does not exist yet.
-  *sites = (QDMI_Site *)malloc(sizeof(QDMI_Site) * 6);
-  for (int i = 0; i < 6; i++) {
-    (*sites)[i] = (QDMI_Site)malloc(sizeof(QDMI_Site_impl_t));
-    (*sites)[i]->index = i;
+  if (prop == QDMI_COUPLING_MAP) {
+    *size = 10;
+    // This defines a circular coupling map, i.e., qubit 0 is connected to 1,
+    // 1 to 2, and so on, and qubit 4 is connected to 0 again.
+    *value = (int[]){0, 1, 1, 2, 2, 3, 3, 4, 4, 0};
+    return QDMI_SUCCESS;
   }
-  *size = 6;
-  return QDMI_SUCCESS;
-}
-
-int QDMI_query_site_by_index(int index, QDMI_Site *site) {
-  *site = NULL;
-  return QDMI_ERROR_NOT_FOUND;
-}
-
-int QDMI_query_site_property_char(const QDMI_Site site,
-                                  const QDMI_Site_Property prop, char *value) {
   return QDMI_ERROR_NOT_IMPLEMENTED;
 }
 
-int QDMI_query_site_property_double(const QDMI_Site site,
+int QDMI_query_site_property_char(const int site, const QDMI_Site_Property prop,
+                                  char **value) {
+  return QDMI_ERROR_NOT_IMPLEMENTED;
+}
+
+int QDMI_query_site_property_double(const int site,
                                     const QDMI_Site_Property prop,
                                     double *value) {
   return QDMI_ERROR_NOT_IMPLEMENTED;
 }
 
-int QDMI_query_site_property_float(const QDMI_Site site,
+int QDMI_query_site_property_float(const int site,
                                    const QDMI_Site_Property prop,
                                    float *value) {
+  if (prop == QDMI_T1_TIME) {
+    // One could also specify the T1 for each qubit individually.
+    if (site >= 0 && site < 5) {
+      *value = 1000.0F;
+      return QDMI_SUCCESS;
+    }
+  } else if (prop == QDMI_T2_TIME) {
+    // One could also specify the T1 for each qubit individually.
+    if (site >= 0 && site < 5) {
+      *value = 100000.0F;
+      return QDMI_SUCCESS;
+    }
+  }
   return QDMI_ERROR_NOT_IMPLEMENTED;
 }
 
-int QDMI_query_site_property_int(const QDMI_Site site,
-                                 const QDMI_Site_Property prop, int *value) {
+int QDMI_query_site_property_int(const int site, const QDMI_Site_Property prop,
+                                 int *value) {
   return QDMI_ERROR_NOT_IMPLEMENTED;
 }
 
-int QDMI_query_site_property_char_list(const QDMI_Site site,
+int QDMI_query_site_property_char_list(const int site,
                                        const QDMI_Site_Property prop,
-                                       char **value,
-                                       int *size) {
+                                       char **value, int *size) {
   return QDMI_ERROR_NOT_IMPLEMENTED;
 }
 
-int QDMI_query_site_property_double_list(const QDMI_Site site,
+int QDMI_query_site_property_double_list(const int site,
                                          const QDMI_Site_Property prop,
                                          double **value, int *size) {
   return QDMI_ERROR_NOT_IMPLEMENTED;
 }
 
-int QDMI_query_site_property_float_list(const QDMI_Site site,
+int QDMI_query_site_property_float_list(const int site,
                                         const QDMI_Site_Property prop,
                                         float **value, int *size) {
   return QDMI_ERROR_NOT_IMPLEMENTED;
 }
 
-int QDMI_query_site_property_int_list(const QDMI_Site site,
+int QDMI_query_site_property_int_list(const int site,
                                       const QDMI_Site_Property prop,
-                                      int **value,
-                                      int *size) {
+                                      int **value, int *size) {
   return QDMI_ERROR_NOT_IMPLEMENTED;
 }
 
-int QDMI_query_all_operations(QDMI_Operation **operations, int *size) {
-  *operations = NULL;
-  *size = 0;
-  return QDMI_SUCCESS;
-}
-
-int QDMI_query_operation_by_name(const char *name, QDMI_Operation *operation) {
-  *operation = NULL;
-  return QDMI_ERROR_NOT_FOUND;
-}
-
-int QDMI_query_operation_property_char(const QDMI_Operation operation,
+int QDMI_query_operation_property_char(const char *operation, const int *sites,
+                                       const int num_sites,
                                        const QDMI_Operation_Property prop,
-                                       char *value) {
+                                       char **value) {
   return QDMI_ERROR_NOT_IMPLEMENTED;
 }
 
-int QDMI_query_operation_property_double(const QDMI_Operation operation,
+int QDMI_query_operation_property_double(const char *operation,
+                                         const int *sites, const int num_sites,
                                          const QDMI_Operation_Property prop,
                                          double *value) {
   return QDMI_ERROR_NOT_IMPLEMENTED;
 }
 
-int QDMI_query_operation_property_float(const QDMI_Operation operation,
+int QDMI_query_operation_property_float(const char *operation, const int *sites,
+                                        const int num_sites,
                                         const QDMI_Operation_Property prop,
                                         float *value) {
+  if (prop == QDMI_OPERATION_DURATION) {
+    // One could also specify the duration depending on the site, see fidelity.
+    if (strcmp(operation, "CZ") == 0) {
+      // The case num_sites = 0 queries the property globally without specifying
+      // a pair of sites.
+      if (num_sites != 0 && num_sites != 2) {
+        return QDMI_ERROR_INVALID_ARGUMENT;
+      }
+      *value = 0.1F;
+      return QDMI_SUCCESS;
+    }
+  } else if (prop == QDMI_OPERATION_FIDELITY) {
+    if (strcmp(operation, "CZ") == 0) {
+      if (num_sites != 2 || sites[0] == sites[1]) {
+        return QDMI_ERROR_INVALID_ARGUMENT;
+      }
+      if ((sites[0] == 0 && sites[1] == 1) ||
+          (sites[0] == 1 && sites[1] == 0)) {
+        *value = 0.99F;
+        return QDMI_SUCCESS;
+      } else if ((sites[0] == 1 && sites[1] == 2) ||
+                 (sites[0] == 2 && sites[1] == 1)) {
+        *value = 0.98F;
+        return QDMI_SUCCESS;
+      } else if ((sites[0] == 2 && sites[1] == 3) ||
+                 (sites[0] == 3 && sites[1] == 2)) {
+        *value = 0.97F;
+        return QDMI_SUCCESS;
+      } else if ((sites[0] == 3 && sites[1] == 4) ||
+                 (sites[0] == 4 && sites[1] == 3)) {
+        *value = 0.96F;
+        return QDMI_SUCCESS;
+      } else if ((sites[0] == 4 && sites[1] == 0) ||
+                 (sites[0] == 0 && sites[1] == 4)) {
+        *value = 0.95F;
+        return QDMI_SUCCESS;
+      } else {
+        return QDMI_ERROR_INVALID_ARGUMENT;
+      }
+    }
+  }
   return QDMI_ERROR_NOT_IMPLEMENTED;
 }
 
-int QDMI_query_operation_property_int(const QDMI_Operation operation,
+int QDMI_query_operation_property_int(const char *operation, const int *sites,
+                                      const int num_sites,
                                       const QDMI_Operation_Property prop,
                                       int *value) {
   return QDMI_ERROR_NOT_IMPLEMENTED;
 }
 
-int QDMI_query_operation_property_char_list(const QDMI_Operation operation,
+int QDMI_query_operation_property_char_list(const char *operation,
+                                            const int *sites,
+                                            const int num_sites,
                                             const QDMI_Operation_Property prop,
                                             char **value, int *size) {
   return QDMI_ERROR_NOT_IMPLEMENTED;
 }
 
-int QDMI_query_operation_property_double_list(QDMI_Operation operation,
-                                              const QDMI_Operation_Property
-                                              prop,
-                                              double **value, int *size) {
+int QDMI_query_operation_property_double_list(
+    const char *operation, const int *sites, const int num_sites,
+    const QDMI_Operation_Property prop, double **value, int *size) {
   return QDMI_ERROR_NOT_IMPLEMENTED;
 }
 
-int QDMI_query_operation_property_float_list(QDMI_Operation operation,
+int QDMI_query_operation_property_float_list(const char *operation,
+                                             const int *sites,
+                                             const int num_sites,
                                              const QDMI_Operation_Property prop,
                                              float **value, int *size) {
   return QDMI_ERROR_NOT_IMPLEMENTED;
 }
 
-int QDMI_query_operation_property_int_list(QDMI_Operation operation,
+int QDMI_query_operation_property_int_list(const char *operation,
+                                           const int *sites,
+                                           const int num_sites,
                                            const QDMI_Operation_Property prop,
                                            int **value, int *size) {
-  return QDMI_ERROR_NOT_IMPLEMENTED;
-}
-
-int QDMI_query_operation_at_site_property_char(const QDMI_Operation operation,
-                                               const QDMI_Site site,
-                                               const QDMI_Operation_Property
-                                               prop,
-                                               char *value) {
-  return QDMI_ERROR_NOT_IMPLEMENTED;
-}
-
-int QDMI_query_operation_at_site_property_double(const QDMI_Operation operation,
-                                                 const QDMI_Site site,
-                                                 const QDMI_Operation_Property
-                                                 prop,
-                                                 double *value) {
-  return QDMI_ERROR_NOT_IMPLEMENTED;
-}
-
-int QDMI_query_operation_at_site_property_float(const QDMI_Operation operation,
-                                                const QDMI_Site site,
-                                                const QDMI_Operation_Property
-                                                prop,
-                                                float *value) {
-  return QDMI_ERROR_NOT_IMPLEMENTED;
-}
-
-int QDMI_query_operation_at_site_property_int(const QDMI_Operation operation,
-                                              const QDMI_Site site,
-                                              const QDMI_Operation_Property
-                                              prop,
-                                              int *value) {
-  return QDMI_ERROR_NOT_IMPLEMENTED;
-}
-
-int QDMI_query_operation_at_site_property_char_list(
-    const QDMI_Operation operation, const QDMI_Site site,
-    const QDMI_Operation_Property prop, char **value, int *size) {
-  return QDMI_ERROR_NOT_IMPLEMENTED;
-}
-
-int QDMI_query_operation_at_site_property_double_list(
-    const QDMI_Operation operation, const QDMI_Site site,
-    const QDMI_Operation_Property prop, double **value, int *size) {
-  return QDMI_ERROR_NOT_IMPLEMENTED;
-}
-
-int QDMI_query_operation_at_site_property_float_list(
-    const QDMI_Operation operation, const QDMI_Site site,
-    const QDMI_Operation_Property prop, float **value, int *size) {
-  return QDMI_ERROR_NOT_IMPLEMENTED;
-}
-
-int QDMI_query_operation_at_site_property_int_list(
-    const QDMI_Operation operation, const QDMI_Site site,
-    const QDMI_Operation_Property prop, int **value, int *size) {
   return QDMI_ERROR_NOT_IMPLEMENTED;
 }

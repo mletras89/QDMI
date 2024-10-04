@@ -14,8 +14,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 int QDMI_session_alloc(QDMI_Session *session) {
   // allocate session
-  // TODO Why do not use `QDMI_Session` instead of `QDMI_Session_impl_t *`?
-  *session = (QDMI_Session_impl_t *)malloc(sizeof(QDMI_Session_impl_t));
+  *session = (QDMI_Session)malloc(sizeof(QDMI_Session_impl_t));
   if (*session == NULL) {
     return QDMI_ERROR_OUT_OF_MEM;
   }
@@ -73,5 +72,4 @@ int QDMI_session_close_device(QDMI_Session session, QDMI_Device device) {
   // return success
   return QDMI_SUCCESS;
 }
-
 // TODO implement iterator over device_list

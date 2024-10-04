@@ -12,19 +12,14 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 extern "C" {
 #endif
 
-// TODO Where to put this block of code?
+/** \defgroup ControlJobSubmissionInterface Control Job Submission Interface
+ * Functions Functions related to controlling job submission.
+ *  @{
+ */
 
-typedef struct QDMI_Operation_impl_d {
-    char *name; /**< The name of the operation. */
-} QDMI_Operation_impl_t;
+// TODO: Implement control interface
 
-typedef struct QDMI_Operation_impl_d *QDMI_Operation;
-
-typedef struct QDMI_Site_impl_d {
-    int index; /**< The index of the site. */
-} QDMI_Site_impl_t;
-
-typedef struct QDMI_Site_impl_d *QDMI_Site;
+/** @} */ // end of ControlJobSubmissionInterface
 
 #ifdef __cplusplus
 } // extern "C"

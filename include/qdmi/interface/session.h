@@ -6,15 +6,11 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #pragma once
 
+#include "qdmi/interface/query.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/**
- * @brief Opaque type for a device.
- * @details A device stores all functions implemented in its dynamic library.
- */
-typedef struct QDMI_Device_impl_d *QDMI_Device;
 
 /**
  * @brief Opaque type for a QDMI session.
