@@ -13,6 +13,11 @@ extern "C" {
 #endif
 
 /**
+ * @brief Opaque type for a device.
+ * @details A device stores all functions implemented in its dynamic library.
+ */
+typedef struct QDMI_Device_impl_d *QDMI_Device;
+/**
  * @brief Opaque type for a job.
  * @details A job is a handle to manage the job after it is submitted and to
  * access the results.
@@ -29,26 +34,30 @@ typedef struct QDMI_Job_impl_d *QDMI_Job;
  * @details Create a job consisting of a circuit represented by a QASM string
  * and submit it to the device. The returned job handle helps to track the job
  * status.
+ * @param dev The device to submit the job to.
  * @param qasm_string The QASM string to submit.
  * @param num_shots The number of shots to take.
  * @param job The job to submit.
  * @return int Returns QDMI_SUCCESS if the job was successfully submitted,
  * otherwise an error code.
  */
-int QDMI_control_submit_qasm(char *qasm_string, int num_shots, QDMI_Job *job);
+int QDMI_control_submit_qasm(QDMI_Device dev, char *qasm_string, int num_shots,
+                             QDMI_Job *job);
 
 /**
  * @brief Submit a QIR string to the device.
  * @details Create a job consisting of a circuit represented by a QIR string and
  * submit it to the device. The returned job handle helps to track the job
  * status.
+ * @param dev The device to submit the job to.
  * @param qir_string The QIR string to submit.
  * @param num_shots The number of shots to take.
  * @param job The job to submit.
  * @return int Returns QDMI_SUCCESS if the job was successfully submitted,
  * otherwise an error code.
  */
-int QDMI_control_submit_qir(char *qir_string, int num_shots, QDMI_Job *job);
+int QDMI_control_submit_qir(QDMI_Device dev, char *qir_string, int num_shots,
+                            QDMI_Job *job);
 
 /**
  * @brief Cancel an already submitted job.
@@ -58,7 +67,7 @@ int QDMI_control_submit_qir(char *qir_string, int num_shots, QDMI_Job *job);
  * @return int Returns QDMI_SUCCESS if the job was successfully cancelled,
  * otherwise an error code.
  */
-int QDMI_control_cancel(QDMI_Job job);
+int QDMI_control_cancel(QDMI_Device dev, QDMI_Job job);
 
 /**
  * @brief Check the status of a job.
@@ -68,7 +77,7 @@ int QDMI_control_cancel(QDMI_Job job);
  * @return int Returns QDMI_SUCCESS if the job status was successfully checked,
  * otherwise an error code.
  */
-int QDMI_control_check(QDMI_Job job, QDMI_Job_Status *status);
+int QDMI_control_check(QDMI_Device dev, QDMI_Job job, QDMI_Job_Status *status);
 
 /**
  * @brief Wait for a job to finish.
@@ -77,7 +86,7 @@ int QDMI_control_check(QDMI_Job job, QDMI_Job_Status *status);
  * @return int Returns QDMI_SUCCESS if the job is finished, otherwise an error
  * code when the waiting failed.
  */
-int QDMI_control_wait(QDMI_Job job);
+int QDMI_control_wait(QDMI_Device dev, QDMI_Job job);
 
 /** @} */ // end of ControlSubmissionInterface
 
@@ -103,7 +112,8 @@ int QDMI_control_wait(QDMI_Job job);
  * otherwise an error code.
  * @see QDMI_control_get_raw
  */
-int QDMI_control_get_hist(QDMI_Job job, char ***data, int **counts, int *size);
+int QDMI_control_get_hist(QDMI_Device dev, QDMI_Job job, char ***data,
+                          int **counts, int *size);
 
 /**
  * @brief Retrieve the raw measurement results of a job.
@@ -120,7 +130,8 @@ int QDMI_control_get_hist(QDMI_Job job, char ***data, int **counts, int *size);
  * @return int Returns QDMI_SUCCESS if the results were successfully retrieved,
  * otherwise an error code.
  */
-int QDMI_control_get_raw(QDMI_Job job, char ***data, int *size);
+int QDMI_control_get_raw(QDMI_Device dev, QDMI_Job job, char ***data,
+                         int *size);
 
 /** @} */ // end of ControlResultInterface
 
@@ -131,10 +142,11 @@ int QDMI_control_get_raw(QDMI_Job job, char ***data, int *size);
 
 /**
  * @brief Initiate a calibration run on the device.
+ * @param dev The device to calibrate.
  * @return int Returns QDMI_SUCCESS if the calibration has started, otherwise an
  * error code.
  */
-int QDMI_control_calibrate();
+int QDMI_control_calibrate(QDMI_Device dev);
 
 /** @} */ // end of ControlCalibrationInterface
 

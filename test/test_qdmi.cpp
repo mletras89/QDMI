@@ -58,7 +58,7 @@ TEST_F(QDMITest, QueryNumQubits) {
       << "Failed to open device";
   int num_qubits = 0;
   ASSERT_TRUE(QDMI_is_Success(
-      QDMI_query_device_property_int(device, QDMI_NUM_QUBITS, &num_qubits)))
+      QDMI_query_device_property_int32(device, QDMI_NUM_QUBITS, &num_qubits)))
       << "Failed to query number of qubits";
   ASSERT_EQ(num_qubits, 5);
 }

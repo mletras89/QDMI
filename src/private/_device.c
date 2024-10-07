@@ -34,32 +34,48 @@ int QDMI_device_open(const char *lib_name, QDMI_Device *device) {
     return QDMI_ERROR_LIB_NOT_FOUND;
   }
   // load the function symbols from the dynamic library
-  LOAD_SYMBOL(*device, QDMI_query_device_property_char);
+  LOAD_SYMBOL(*device, QDMI_query_device_property_string);
   LOAD_SYMBOL(*device, QDMI_query_device_property_double);
   LOAD_SYMBOL(*device, QDMI_query_device_property_float);
-  LOAD_SYMBOL(*device, QDMI_query_device_property_int);
-  LOAD_SYMBOL(*device, QDMI_query_device_property_char_list);
+  LOAD_SYMBOL(*device, QDMI_query_device_property_int32);
+  LOAD_SYMBOL(*device, QDMI_query_device_property_int64);
+  LOAD_SYMBOL(*device, QDMI_query_device_property_string_list);
   LOAD_SYMBOL(*device, QDMI_query_device_property_double_list);
   LOAD_SYMBOL(*device, QDMI_query_device_property_float_list);
-  LOAD_SYMBOL(*device, QDMI_query_device_property_int_list);
+  LOAD_SYMBOL(*device, QDMI_query_device_property_int32_list);
+  LOAD_SYMBOL(*device, QDMI_query_device_property_int64_list);
 
-  LOAD_SYMBOL(*device, QDMI_query_site_property_char);
+  LOAD_SYMBOL(*device, QDMI_query_site_property_string);
   LOAD_SYMBOL(*device, QDMI_query_site_property_double);
   LOAD_SYMBOL(*device, QDMI_query_site_property_float);
-  LOAD_SYMBOL(*device, QDMI_query_site_property_int);
-  LOAD_SYMBOL(*device, QDMI_query_site_property_char_list);
+  LOAD_SYMBOL(*device, QDMI_query_site_property_int32);
+  LOAD_SYMBOL(*device, QDMI_query_site_property_int64);
+  LOAD_SYMBOL(*device, QDMI_query_site_property_string_list);
   LOAD_SYMBOL(*device, QDMI_query_site_property_double_list);
   LOAD_SYMBOL(*device, QDMI_query_site_property_float_list);
-  LOAD_SYMBOL(*device, QDMI_query_site_property_int_list);
+  LOAD_SYMBOL(*device, QDMI_query_site_property_int32_list);
+  LOAD_SYMBOL(*device, QDMI_query_site_property_int64_list);
 
-  LOAD_SYMBOL(*device, QDMI_query_operation_property_char);
+  LOAD_SYMBOL(*device, QDMI_query_operation_property_string);
   LOAD_SYMBOL(*device, QDMI_query_operation_property_double);
   LOAD_SYMBOL(*device, QDMI_query_operation_property_float);
-  LOAD_SYMBOL(*device, QDMI_query_operation_property_int);
-  LOAD_SYMBOL(*device, QDMI_query_operation_property_char_list);
+  LOAD_SYMBOL(*device, QDMI_query_operation_property_int32);
+  LOAD_SYMBOL(*device, QDMI_query_operation_property_int64);
+  LOAD_SYMBOL(*device, QDMI_query_operation_property_string_list);
   LOAD_SYMBOL(*device, QDMI_query_operation_property_double_list);
   LOAD_SYMBOL(*device, QDMI_query_operation_property_float_list);
-  LOAD_SYMBOL(*device, QDMI_query_operation_property_int_list);
+  LOAD_SYMBOL(*device, QDMI_query_operation_property_int32_list);
+  LOAD_SYMBOL(*device, QDMI_query_operation_property_int64_list);
+
+  LOAD_SYMBOL(*device, QDMI_control_submit_qasm);
+  LOAD_SYMBOL(*device, QDMI_control_submit_qir);
+  LOAD_SYMBOL(*device, QDMI_control_cancel);
+  LOAD_SYMBOL(*device, QDMI_control_check);
+  LOAD_SYMBOL(*device, QDMI_control_wait);
+  LOAD_SYMBOL(*device, QDMI_control_get_hist);
+  LOAD_SYMBOL(*device, QDMI_control_get_raw);
+  LOAD_SYMBOL(*device, QDMI_control_calibrate);
+
   // initialize the next pointer to NULL
   (*device)->next = NULL;
   // return success

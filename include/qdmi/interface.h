@@ -6,6 +6,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #pragma once
 
+#include "qdmi/interface/control.h" // IWYU pragma: export
 #include "qdmi/interface/query.h"   // IWYU pragma: export
 #include "qdmi/interface/session.h" // IWYU pragma: export
 #include "qdmi/properties.h"        // IWYU pragma: export

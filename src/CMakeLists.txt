@@ -45,6 +45,9 @@ if(NOT TARGET qdmi)
   # set required C standard
   target_compile_features(qdmi PUBLIC c_std_11)
 
+  # specify the language for the target
+  set_target_properties(qdmi PROPERTIES LINKER_LANGUAGE C)
+
   # always include debug symbols (avoids common problems with LTO)
   target_compile_options(qdmi PUBLIC -g)
 
