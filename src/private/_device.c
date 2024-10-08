@@ -74,6 +74,8 @@ int QDMI_device_open(const char *lib_name, QDMI_Device *device) {
   LOAD_SYMBOL(*device, QDMI_control_wait);
   LOAD_SYMBOL(*device, QDMI_control_get_hist);
   LOAD_SYMBOL(*device, QDMI_control_get_raw);
+  LOAD_SYMBOL(*device, QDMI_control_initialize);
+  LOAD_SYMBOL(*device, QDMI_control_finalize);
   LOAD_SYMBOL(*device, QDMI_control_calibrate);
 
   // initialize the next pointer to NULL
@@ -83,6 +85,8 @@ int QDMI_device_open(const char *lib_name, QDMI_Device *device) {
 }
 
 void QDMI_device_close(QDMI_Device device) {
+  // finalize the device
+  device->QDMI_control_finalize();
   // close the dynamic library
   dlclose(device->lib_handle);
   // free the memory allocated for the device

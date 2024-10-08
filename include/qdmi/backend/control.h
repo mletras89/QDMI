@@ -19,9 +19,9 @@ extern "C" {
  */
 typedef struct QDMI_Job_impl_d *QDMI_Job;
 
-/** \defgroup ControlSubmissionInterface Control Job Submission Interface
- * Functions related to submitting jobs.
- *  @{
+/** @name Control Job Submission Interface
+ *  Functions related to submitting jobs.
+ * @{
  */
 
 /**
@@ -79,11 +79,12 @@ int QDMI_control_check(QDMI_Job job, QDMI_Job_Status *status);
  */
 int QDMI_control_wait(QDMI_Job job);
 
-/** @} */ // end of ControlSubmissionInterface
+/// @}
 
-/** \defgroup ControlResultInterface Control Result Retrieval Interface
+/**
+ * @name Control Result Retrieval Interface
  * Functions related to retrieving the results of a job.
- *  @{
+ * @{
  */
 
 /**
@@ -122,12 +123,31 @@ int QDMI_control_get_hist(QDMI_Job job, char ***data, int **counts, int *size);
  */
 int QDMI_control_get_raw(QDMI_Job job, char ***data, int *size);
 
-/** @} */ // end of ControlResultInterface
+/// @}
 
-/** \defgroup ControlCalibrationInterface Control Calibration Interface
- * Functions related to calibrating the device.
- *  @{
+/** @name General Control Interface
+ * Functions related to general control of the device.
+ * @{
  */
+
+/**
+ * @brief Initialize a device.
+ * @details A device can expect that this function is called once in the
+ * beginning before any other functions are invoked on that device.
+ * @return int Returns QDMI_SUCCESS if the initialization was successful,
+ * otherwise an error code.
+ */
+int QDMI_control_initialize();
+
+/**
+ * @brief Finalize a device.
+ * @details A device can expect that this function is called once at the end of
+ * a session and no other functions are invoked on that device after that
+ * anymore.
+ * @return int Returns QDMI_SUCCESS if the initialization was successful,
+ * otherwise an error code.
+ */
+int QDMI_control_finalize();
 
 /**
  * @brief Initiate a calibration run on the device.
@@ -136,7 +156,7 @@ int QDMI_control_get_raw(QDMI_Job job, char ***data, int *size);
  */
 int QDMI_control_calibrate();
 
-/** @} */ // end of ControlCalibrationInterface
+/// @}
 
 #ifdef __cplusplus
 } // extern "C"

@@ -24,9 +24,10 @@ typedef struct QDMI_Device_impl_d *QDMI_Device;
  */
 typedef struct QDMI_Job_impl_d *QDMI_Job;
 
-/** \defgroup ControlSubmissionInterface Control Job Submission Interface
+/**
+ * @name Control Job Submission Interface
  * Functions related to submitting jobs.
- *  @{
+ * @{
  */
 
 /**
@@ -88,11 +89,12 @@ int QDMI_control_check(QDMI_Device dev, QDMI_Job job, QDMI_Job_Status *status);
  */
 int QDMI_control_wait(QDMI_Device dev, QDMI_Job job);
 
-/** @} */ // end of ControlSubmissionInterface
+/// @}
 
-/** \defgroup ControlResultInterface Control Result Retrieval Interface
+/**
+ * @name Control Result Retrieval Interface
  * Functions related to retrieving the results of a job.
- *  @{
+ * @{
  */
 
 /**
@@ -133,22 +135,24 @@ int QDMI_control_get_hist(QDMI_Device dev, QDMI_Job job, char ***data,
 int QDMI_control_get_raw(QDMI_Device dev, QDMI_Job job, char ***data,
                          int *size);
 
-/** @} */ // end of ControlResultInterface
+/// @}
 
-/** \defgroup ControlCalibrationInterface Control Calibration Interface
- * Functions related to calibrating the device.
- *  @{
+/// @}
+
+/** @name General Control Interface
+ * Functions related to general control of the device.
+ * @{
  */
 
 /**
  * @brief Initiate a calibration run on the device.
- * @param dev The device to calibrate.
+ * @param dev The device to initialize.
  * @return int Returns QDMI_SUCCESS if the calibration has started, otherwise an
  * error code.
  */
 int QDMI_control_calibrate(QDMI_Device dev);
 
-/** @} */ // end of ControlCalibrationInterface
+/// @}
 
 #ifdef __cplusplus
 } // extern "C"

@@ -23,6 +23,8 @@ enum QDMI_DEVICE_PROPERTY_T {
   QDMI_AVG_T2_TIME = 6, /**< The average T2 time of a site in µs as float. */
   QDMI_COUPLING_MAP =
       7, /**< The coupling map of the device as a list of tuples. */
+  QDMI_GATE_SET =
+      8, /**< The set of gates supported by the device as a string list. */
 };
 
 typedef enum QDMI_DEVICE_PROPERTY_T QDMI_Device_Property;

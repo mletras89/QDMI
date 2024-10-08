@@ -20,9 +20,10 @@ extern "C" {
 // hosting on GitHub pages. However, sphinx looks much better and is more
 // flexible.
 
-/** \defgroup QueryDeviceInterface Query Device Interface Functions
- *  Functions related to querying device properties.
- *  @{
+/**
+ * @name Query Device Interface Functions
+ * Functions related to querying device properties.
+ * @{
  */
 
 /**
@@ -125,9 +126,10 @@ int QDMI_query_device_property_int32_list(QDMI_Device_Property prop,
 int QDMI_query_device_property_int64_list(QDMI_Device_Property prop,
                                           int64_t **values, int *size);
 
-/** @} */ // end of QueryDeviceInterface
+/// @}
 
-/** \defgroup QuerySiteInterface Query Site Interface Functions
+/**
+ * @name Query Site Interface
  * Functions related to querying site properties.
  * @{
  */
@@ -247,9 +249,9 @@ int QDMI_query_site_property_int32_list(int site, QDMI_Site_Property prop,
 int QDMI_query_site_property_int64_list(int site, QDMI_Site_Property prop,
                                         int64_t **values, int *size);
 
-/** @} */ // end of QuerySiteInterface
+///@}
 
-/** \defgroup QueryOperationInterface Query Operation Interface Functions
+/** @name Query Operation Interface
  * Functions related to querying operation properties.
  * @{
  */
@@ -405,7 +407,7 @@ int QDMI_query_operation_at_site_property_int64_list(
     const char *operation, int *sites, int num_sites,
     QDMI_Operation_Property prop, int64_t **values, int *size);
 
-/** @} */ // end of QueryOperationInterface
+/// @}
 
 #ifdef __cplusplus
 } // extern "C"

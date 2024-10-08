@@ -20,9 +20,10 @@ extern "C" {
  */
 typedef struct QDMI_Device_impl_d *QDMI_Device;
 
-/** \defgroup QueryDeviceInterface Query Device Interface Functions
- *  Functions related to querying device properties.
- *  @{
+/**
+ * @name Query Device Interface Functions
+ * Functions related to querying device properties.
+ * @{
  */
 
 /**
@@ -145,11 +146,12 @@ int QDMI_query_device_property_int64_list(QDMI_Device device,
                                           QDMI_Device_Property prop,
                                           int64_t **values, int *size);
 
-/** @} */ // end of QueryDeviceInterface
+/// @}
 
-/** \defgroup QuerySiteInterface Query Site Interface Functions
+/**
+ * @name Query Site Interface Functions
  * Functions related to querying operation properties at specific site.
- *  @{
+ * @{
  */
 
 /**
@@ -282,11 +284,12 @@ int QDMI_query_site_property_int64_list(QDMI_Device device, int site,
                                         QDMI_Site_Property prop, int **values,
                                         int64_t *size);
 
-/** @} */ // end of QuerySiteInterface
+/// @}
 
-/** \defgroup QueryOperationInterface Query Operation Interface Functions
+/**
+ * @name Query Operation Interface Functions
  * Functions related to querying operation properties at specific site.
- *  @{
+ * @{
  */
 
 /**
@@ -465,7 +468,7 @@ int QDMI_query_operation_property_int64_list(QDMI_Device device,
                                              QDMI_Operation_Property prop,
                                              int64_t **values, int *size);
 
-/** @} */ // end of QueryOperationInterface
+/// @}
 
 #ifdef __cplusplus
 } // extern "C"
