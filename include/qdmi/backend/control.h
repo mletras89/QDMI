@@ -53,7 +53,6 @@ int QDMI_control_submit_qir(char *qir_string, int num_shots, QDMI_Job *job);
 /**
  * @brief Cancel an already submitted job.
  * @details Remove the job from the queue of waiting jobs.
- * @param dev The device to cancel the job on.
  * @param job The job to cancel.
  * @return int Returns QDMI_SUCCESS if the job was successfully cancelled,
  * otherwise an error code.
@@ -62,7 +61,6 @@ int QDMI_control_cancel(QDMI_Job job);
 
 /**
  * @brief Check the status of a job.
- * @param dev The device to check the job status on.
  * @param job The job to check the status of.
  * @param status The status of the job.
  * @return int Returns QDMI_SUCCESS if the job status was successfully checked,
@@ -72,7 +70,6 @@ int QDMI_control_check(QDMI_Job job, QDMI_Job_Status *status);
 
 /**
  * @brief Wait for a job to finish.
- * @param dev The device to wait for the job on.
  * @param job The job to wait for.
  * @return int Returns QDMI_SUCCESS if the job is finished, otherwise an error
  * code when the waiting failed.
@@ -95,7 +92,6 @@ int QDMI_control_wait(QDMI_Job job);
  * respective measurement outcomes and the values are the number of times the
  * outcome was measured. Pairs for which the value is 0 are not included.
  * For the format of the keys, see also \ref QDMI_control_get_raw.
- * @param dev The device to retrieve the results from.
  * @param job The job to retrieve the results from.
  * @param data The list of keys.
  * @param counts The list of values.
@@ -114,7 +110,6 @@ int QDMI_control_get_hist(QDMI_Job job, char ***data, int **counts, int *size);
  * represents the outcome of the first qubit, the second character the outcome
  * of the second qubit, and so on. The strings are in little-endian order, i.e.,
  * the first character represents the least significant bit.
- * @param dev The device to retrieve the results from.
  * @param job The job to retrieve the results from.
  * @param data The list of raw measurement outcomes.
  * @param size The size, i.e., the number of elements of the list.
@@ -137,7 +132,7 @@ int QDMI_control_get_raw(QDMI_Job job, char ***data, int *size);
  * @return int Returns QDMI_SUCCESS if the initialization was successful,
  * otherwise an error code.
  */
-int QDMI_control_initialize();
+int QDMI_control_initialize(void);
 
 /**
  * @brief Finalize a device.
@@ -147,14 +142,14 @@ int QDMI_control_initialize();
  * @return int Returns QDMI_SUCCESS if the initialization was successful,
  * otherwise an error code.
  */
-int QDMI_control_finalize();
+int QDMI_control_finalize(void);
 
 /**
  * @brief Initiate a calibration run on the device.
  * @return int Returns QDMI_SUCCESS if the calibration has started, otherwise an
  * error code.
  */
-int QDMI_control_calibrate();
+int QDMI_control_calibrate(void);
 
 /// @}
 

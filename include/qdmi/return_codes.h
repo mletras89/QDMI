@@ -14,8 +14,9 @@ extern "C" {
 
 // TODO Should that be placed here?
 enum QDMI_JOB_STATUS_T {
-  QDMI_JOB_READY = 0, /**< The job is ready and the result can be retrieved. */
-  QDMI_JOB_RUNNING =
+  QDMI_JOB_STATUS_DONE =
+      0, /**< The job is done and the result can be retrieved. */
+  QDMI_JOB_STATUS_RUNNING =
       1, /**< The job is running and the result is not yet available. */
 };
 

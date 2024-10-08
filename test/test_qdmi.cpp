@@ -20,6 +20,8 @@ constexpr const char *Shared_library_file_extension() {
 #endif
 }
 
+// TODO Implement test cases for the defined properties.
+
 class QDMITest : public ::testing::Test {
 protected:
   void SetUp() override {
@@ -52,7 +54,7 @@ TEST_F(QDMITest, OpenMultipleDevices) {
       << "Failed to open second device";
 }
 
-TEST_F(QDMITest, QueryNumQubits) {
+TEST_F(QDMITest, QueryNumQubits5) {
   ASSERT_TRUE(QDMI_is_Success(
       QDMI_session_open_device(session, backend5_name.c_str(), &device)))
       << "Failed to open device";
@@ -61,4 +63,33 @@ TEST_F(QDMITest, QueryNumQubits) {
       QDMI_query_device_property_int32(device, QDMI_NUM_QUBITS, &num_qubits)))
       << "Failed to query number of qubits";
   ASSERT_EQ(num_qubits, 5);
+}
+
+TEST_F(QDMITest, QueryNumQubits7) {
+  ASSERT_TRUE(QDMI_is_Success(
+      QDMI_session_open_device(session, backend7_name.c_str(), &device)))
+      << "Failed to open device";
+  int num_qubits = 0;
+  ASSERT_TRUE(QDMI_is_Success(
+      QDMI_query_device_property_int32(device, QDMI_NUM_QUBITS, &num_qubits)))
+      << "Failed to query number of qubits";
+  ASSERT_EQ(num_qubits, 7);
+}
+
+TEST_F(QDMITest, QueryName) {
+  char *value = NULL;
+  QDMI_query_device_property_string(device, QDMI_NAME, &value);
+  ASSERT_STREQ(value, "Backend with 5 qubits");
+}
+
+TEST_F(QDMITest, QueryDeviceVersion) {
+  char *value = NULL;
+  QDMI_query_device_property_string(device, QDMI_DEVICE_VERSION, &value);
+  ASSERT_STREQ(value, "0.0.1");
+}
+
+TEST_F(QDMITest, QueryLibraryVersion) {
+  char *value = NULL;
+  QDMI_query_device_property_string(device, QDMI_LIBRARY_VERSION, &value);
+  ASSERT_STREQ(value, "0.0.1");
 }

@@ -6,9 +6,15 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include "qdmi/backend.h"
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
-// TODO Implement test cases for the defined properties.
+// TODO should that be placed in the backend implementation?
+typedef struct QDMI_Job_impl_d {
+  int id;
+} QDMI_Job_impl_t;
 
 typedef struct QDMI_Job_impl_d *QDMI_Job;
 
@@ -63,7 +69,12 @@ int QDMI_query_device_property_int64(const QDMI_Device_Property prop,
 
 int QDMI_query_device_property_string_list(const QDMI_Device_Property prop,
                                            char ***value, int *size) {
-  return QDMI_ERROR_NOT_IMPLEMENTED;
+  if (prop == QDMI_GATE_SET) {
+    *value = (char *[]){"CZ", "RX", "RY", "RZ"};
+    *size = 4;
+    return QDMI_SUCCESS;
+  }
+  return QDMI_ERROR_INVALID_ARGUMENT;
 }
 
 int QDMI_query_device_property_double_list(const QDMI_Device_Property prop,
@@ -279,27 +290,64 @@ int QDMI_query_operation_property_int64_list(const char *operation,
 }
 
 int QDMI_control_submit_qasm(char *qasm_string, int num_shots, QDMI_Job *job) {
-  return QDMI_ERROR_NOT_IMPLEMENTED;
+  *job = (QDMI_Job)malloc(sizeof(QDMI_Job_impl_t));
+  // set job id to current time for demonstration purposes
+  (*job)->id = (int)time(NULL);
+  printf("[QDMI] Submitted QASM job with id %d\n", (*job)->id);
+  return QDMI_SUCCESS;
 }
 
 int QDMI_control_submit_qir(char *qir_string, int num_shots, QDMI_Job *job) {
   return QDMI_ERROR_NOT_IMPLEMENTED;
 }
 
-int QDMI_control_cancel(QDMI_Job job) { return QDMI_ERROR_NOT_IMPLEMENTED; }
-
-int QDMI_control_check(QDMI_Job job, QDMI_Job_Status *status) {
-  return QDMI_ERROR_NOT_IMPLEMENTED;
+int QDMI_control_cancel(QDMI_Job job) {
+  printf("[QDMI] Cancelled job with id %d\n", job->id);
+  return QDMI_SUCCESS;
 }
 
-int QDMI_control_wait(QDMI_Job job) { return QDMI_ERROR_NOT_IMPLEMENTED; }
+int QDMI_control_check(QDMI_Job job, QDMI_Job_Status *status) {
+  *status = QDMI_JOB_STATUS_DONE;
+  printf("[QDMI] Checked job with id %d\n", job->id);
+  return QDMI_SUCCESS;
+}
+
+int QDMI_control_wait(QDMI_Job job) {
+  printf("[QDMI] Waiting for job with id %d\n", job->id);
+  return QDMI_SUCCESS;
+}
 
 int QDMI_control_get_hist(QDMI_Job job, char ***data, int **counts, int *size) {
-  return QDMI_ERROR_NOT_IMPLEMENTED;
+  char **raw_data = NULL;
+  int raw_size = 0;
+  QDMI_control_get_raw(job, &raw_data, &raw_size);
+  *data = (char **)malloc(sizeof(char *) * raw_size);
+  *counts = (int *)malloc(sizeof(int) * raw_size);
+  *size = 0;
+  for (int i = 0; i < raw_size; i++) {
+    // if data already contains the next measured state
+    int j = 0;
+    for (; j < *size; j++) {
+      if (strcmp(raw_data[i], (*data)[j]) == 0) {
+        (*counts)[j]++;
+        break;
+      }
+    }
+    // if data does not contain the next measured state
+    if (j == *size) {
+      (*data)[i] = raw_data[i];
+      (*counts)[i] = 1;
+      (*size)++;
+    }
+  }
+  return QDMI_SUCCESS;
 }
 
 int QDMI_control_get_raw(QDMI_Job job, char ***data, int *size) {
-  return QDMI_ERROR_NOT_IMPLEMENTED;
+  *data = (char *[]){"00000", "10001", "01000", "00010", "10001"};
+  *size = 5;
+  printf("[QDMI] Retrieved raw data for job with id %d\n", job->id);
+  return QDMI_SUCCESS;
 }
 
 int QDMI_control_initialize() { return QDMI_SUCCESS; }

@@ -6,12 +6,11 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include "qdmi/backend.h"
 
-#include <inttypes.h>
 #include <string.h>
 
-// TODO Implement test cases for the defined properties.
-
-typedef struct QDMI_Job_impl_d *QDMI_Job;
+typedef struct QDMI_Job_impl_d {
+  int id;
+} QDMI_Job_impl_t;
 
 int QDMI_query_device_property_string(const QDMI_Device_Property prop,
                                       char **value) {
