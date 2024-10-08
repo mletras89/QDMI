@@ -95,7 +95,6 @@ TEST_F(QDMITest, QueryDeviceLibraryVersion) {
 }
 
 TEST_F(QDMITest, QueryDeviceNotImplemented) {
-  char *value = NULL;
-  QDMI_query_device_property_string(device, QDMI_BACKEND_VERSION, &value);
-  ASSERT_STREQ(value, "0.0.1");
+  ASSERT_EQ(QDMI_query_device_property_string(device, QDMI_DEVICE_MAX, NULL),
+            QDMI_ERROR_INVALID_ARGUMENT);
 }

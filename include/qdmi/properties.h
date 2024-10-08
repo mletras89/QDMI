@@ -25,6 +25,13 @@ enum QDMI_DEVICE_PROPERTY_T {
       7, /**< The coupling map of the device as a list of tuples. */
   QDMI_GATE_SET =
       8, /**< The set of gates supported by the device as a string list. */
+  /**
+   * @brief The maximum value of the enum.
+   * @details This value can be used for bounds checks by the backends.
+   * @note This value should always be updated to be the last and maximum value
+   * of the enum.
+   */
+  QDMI_DEVICE_PROPERTY_MAX = 9,
 };
 
 typedef enum QDMI_DEVICE_PROPERTY_T QDMI_Device_Property;
@@ -36,8 +43,13 @@ enum QDMI_DEVICE_STATUS_T {
   QDMI_DEVICE_ERROR = 3,       /**< The device is in an error state. */
   QDMI_DEVICE_MAINTENANCE = 4, /**< The device is in maintenance. */
   QDMI_DEVICE_CALIBRATION = 5, /**< The device is in calibration. */
-  QDMI_DEVICE_MAX = 6,
-  /**< The maximum value of the enum. */ // TODO MAX_VALUE
+  /**
+   * @brief The maximum value of the enum.
+   * @details This value can be used for bounds checks by the backends.
+   * @note This value should always be updated to be the last and maximum value
+   * of the enum.
+   */
+  QDMI_DEVICE_STATUS_MAX = 6,
 };
 
 typedef enum QDMI_DEVICE_STATUS_T QDMI_Device_Status;
@@ -45,6 +57,13 @@ typedef enum QDMI_DEVICE_STATUS_T QDMI_Device_Status;
 enum QDMI_SITE_PROPERTY_T {
   QDMI_T1_TIME = 0, /**< The T1 time of a site in µs as float. */
   QDMI_T2_TIME = 1, /**< The T2 time of a site in µs as float. */
+  /**
+   * @brief The maximum value of the enum.
+   * @details This value can be used for bounds checks by the backends.
+   * @note This value should always be updated to be the last and maximum value
+   * of the enum.
+   */
+  QDMI_SITE_PROPERTY_MAX = 2,
 };
 
 typedef enum QDMI_SITE_PROPERTY_T QDMI_Site_Property;
@@ -53,6 +72,13 @@ enum QDMI_OPERATION_PROPERTY_T {
   QDMI_OPERATION_DURATION =
       0, /**< The duration of an operation in µs as float. */
   QDMI_OPERATION_FIDELITY = 1, /**< The fidelity of an operation as float. */
+  /**
+   * @brief The maximum value of the enum.
+   * @details This value can be used for bounds checks by the backends.
+   * @note This value should always be updated to be the last and maximum value
+   * of the enum.
+   */
+  QDMI_OPERATION_PROPERTY_MAX = 2,
 };
 
 typedef enum QDMI_OPERATION_PROPERTY_T QDMI_Operation_Property;
