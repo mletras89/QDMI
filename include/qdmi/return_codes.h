@@ -12,7 +12,6 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 extern "C" {
 #endif
 
-// TODO Should that be placed here?
 enum QDMI_JOB_STATUS_T {
   QDMI_JOB_STATUS_DONE =
       0, /**< The job is done and the result can be retrieved. */

@@ -21,8 +21,6 @@ constexpr const char *Shared_library_file_extension() {
 #endif
 }
 
-// TODO Implement test cases for the defined properties.
-
 class QDMITest : public ::testing::Test {
 protected:
   void SetUp() override {

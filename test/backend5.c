@@ -11,7 +11,6 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <string.h>
 #include <time.h>
 
-// TODO should that be placed in the backend implementation?
 typedef struct QDMI_Job_impl_d {
   int id;
 } QDMI_Job_impl_t;
