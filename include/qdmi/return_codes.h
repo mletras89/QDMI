@@ -17,7 +17,7 @@ enum QDMI_JOB_STATUS_T {
   QDMI_JOB_STATUS_DONE =
       0, /**< The job is done and the result can be retrieved. */
   QDMI_JOB_STATUS_RUNNING =
-      1, /**< The job is running and the result is not yet available. */
+      1 /**< The job is running and the result is not yet available. */
 };
 
 typedef enum QDMI_JOB_STATUS_T QDMI_Job_Status;
@@ -34,7 +34,7 @@ enum QDMI_STATUS {
   QDMI_ERROR_LIB_NOT_FOUND = -4,
   QDMI_ERROR_NOT_FOUND = -5,
   QDMI_ERROR_OUT_OF_RANGE = -6,
-  QDMI_ERROR_INVALID_ARGUMENT = -7,
+  QDMI_ERROR_INVALID_ARGUMENT = -7
 };
 
 /**

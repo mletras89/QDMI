@@ -6,7 +6,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include "qdmi/backend.h"
 
-#include <string.h>
+#include <string>
 
 typedef struct QDMI_Job_impl_d {
   int id;
@@ -15,15 +15,21 @@ typedef struct QDMI_Job_impl_d {
 int QDMI_query_device_property_string(const QDMI_Device_Property prop,
                                       char **value) {
   if (prop == QDMI_NAME) {
-    *value = "Backend with 7 qubits";
+    const std::string name("Backend with 7 qubits");
+    *value = new char[name.length() + 1];
+    strcpy(*value, name.c_str());
     return QDMI_SUCCESS;
   }
   if (prop == QDMI_DEVICE_VERSION) {
-    *value = "0.0.1";
+    const std::string version("0.0.1");
+    *value = new char[version.length() + 1];
+    strcpy(*value, version.c_str());
     return QDMI_SUCCESS;
   }
   if (prop == QDMI_LIBRARY_VERSION) {
-    *value = "0.1.0";
+    const std::string version("0.1.0");
+    *value = new char[version.length() + 1];
+    strcpy(*value, version.c_str());
     return QDMI_SUCCESS;
   }
   return QDMI_ERROR_INVALID_ARGUMENT;

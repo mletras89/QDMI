@@ -7,7 +7,7 @@
 add_library(backend5 SHARED backend5.c)
 target_link_libraries(backend5 PRIVATE qdmi qinfo::project_warnings)
 
-add_library(backend7 SHARED backend7.c)
+add_library(backend7 SHARED backend7.cpp)
 target_link_libraries(backend7 PRIVATE qdmi qinfo::project_warnings)
 
 if(TARGET qdmi_test)

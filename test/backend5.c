@@ -21,15 +21,21 @@ typedef struct QDMI_Job_impl_d *QDMI_Job;
 int QDMI_query_device_property_string(const QDMI_Device_Property prop,
                                       char **value) {
   if (prop == QDMI_NAME) {
-    *value = "Backend with 5 qubits";
+    char *name = "Backend with 5 qubits";
+    *value = (char *)malloc(strlen(name) + 1);
+    strcpy(*value, name);
     return QDMI_SUCCESS;
   }
   if (prop == QDMI_DEVICE_VERSION) {
-    *value = "0.0.1";
+    char *version = "0.0.1";
+    *value = (char *)malloc(strlen(version) + 1);
+    strcpy(*value, version);
     return QDMI_SUCCESS;
   }
   if (prop == QDMI_LIBRARY_VERSION) {
-    *value = "0.1.0";
+    char *version = "0.1.0";
+    *value = (char *)malloc(strlen(version) + 1);
+    strcpy(*value, version);
     return QDMI_SUCCESS;
   }
   return QDMI_ERROR_INVALID_ARGUMENT;
@@ -50,7 +56,7 @@ int QDMI_query_device_property_float(const QDMI_Device_Property prop,
     *value = 100000.0F;
     return QDMI_SUCCESS;
   }
-  return QDMI_ERROR_NOT_IMPLEMENTED;
+  return QDMI_ERROR_INVALID_ARGUMENT;
 }
 
 int QDMI_query_device_property_int32(const QDMI_Device_Property prop,
@@ -70,7 +76,14 @@ int QDMI_query_device_property_int64(const QDMI_Device_Property prop,
 int QDMI_query_device_property_string_list(const QDMI_Device_Property prop,
                                            char ***value, int *size) {
   if (prop == QDMI_GATE_SET) {
-    *value = (char *[]){"CZ", "RX", "RY", "RZ"};
+    *value = (char **)malloc(sizeof(char *) * 4);
+    for (int i = 0; i < 4; i++) {
+      (*value)[i] = (char *)malloc(sizeof(char) * 3);
+    }
+    strcpy((*value)[0], "CZ");
+    strcpy((*value)[1], "RX");
+    strcpy((*value)[2], "RY");
+    strcpy((*value)[3], "RZ");
     *size = 4;
     return QDMI_SUCCESS;
   }
@@ -321,8 +334,8 @@ int QDMI_control_get_hist(QDMI_Job job, char ***data, int **counts, int *size) {
   char **raw_data = NULL;
   int raw_size = 0;
   QDMI_control_get_raw(job, &raw_data, &raw_size);
-  *data = (char **)malloc(sizeof(char *) * raw_size);
-  *counts = (int *)malloc(sizeof(int) * raw_size);
+  *data = (char **)malloc(sizeof(char *) * (unsigned long)raw_size);
+  *counts = (int *)malloc(sizeof(int) * (unsigned long)raw_size);
   *size = 0;
   for (int i = 0; i < raw_size; i++) {
     // if data already contains the next measured state
@@ -350,8 +363,8 @@ int QDMI_control_get_raw(QDMI_Job job, char ***data, int *size) {
   return QDMI_SUCCESS;
 }
 
-int QDMI_control_initialize() { return QDMI_SUCCESS; }
+int QDMI_control_initialize(void) { return QDMI_SUCCESS; }
 
-int QDMI_control_finalize() { return QDMI_SUCCESS; }
+int QDMI_control_finalize(void) { return QDMI_SUCCESS; }
 
-int QDMI_control_calibrate() { return QDMI_ERROR_NOT_IMPLEMENTED; }
+int QDMI_control_calibrate(void) { return QDMI_ERROR_NOT_IMPLEMENTED; }

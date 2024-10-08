@@ -6,6 +6,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include "qdmi/interface.h"
 
+#include <array>
 #include <cstdlib>
 #include <gtest/gtest.h>
 #include <string>
@@ -28,6 +29,7 @@ protected:
     ASSERT_TRUE(QDMI_is_Success(QDMI_session_alloc(&session)))
         << "Failed to allocate session";
   }
+
   void TearDown() override { QDMI_session_free(session); }
 
   QDMI_Session session = nullptr;
@@ -78,23 +80,70 @@ TEST_F(QDMITest, QueryNumQubits7) {
 
 TEST_F(QDMITest, QueryDeviceName) {
   char *value = NULL;
+  QDMI_session_open_device(session, backend5_name.c_str(), &device);
   QDMI_query_device_property_string(device, QDMI_NAME, &value);
   ASSERT_STREQ(value, "Backend with 5 qubits");
 }
 
+TEST_F(QDMITest, QueryDeviceName7) {
+  char *value = NULL;
+  QDMI_session_open_device(session, backend7_name.c_str(), &device);
+  QDMI_query_device_property_string(device, QDMI_NAME, &value);
+  ASSERT_STREQ(value, "Backend with 7 qubits");
+}
+
 TEST_F(QDMITest, QueryDeviceVersion) {
   char *value = NULL;
+  QDMI_session_open_device(session, backend5_name.c_str(), &device);
   QDMI_query_device_property_string(device, QDMI_DEVICE_VERSION, &value);
   ASSERT_STREQ(value, "0.0.1");
 }
 
 TEST_F(QDMITest, QueryDeviceLibraryVersion) {
   char *value = NULL;
+  QDMI_session_open_device(session, backend5_name.c_str(), &device);
   QDMI_query_device_property_string(device, QDMI_LIBRARY_VERSION, &value);
   ASSERT_STREQ(value, "0.1.0");
 }
 
+TEST_F(QDMITest, QueryAvgT1Time) {
+  float value = 0;
+  QDMI_session_open_device(session, backend5_name.c_str(), &device);
+  QDMI_query_device_property_float(device, QDMI_AVG_T1_TIME, &value);
+  ASSERT_FLOAT_EQ(value, 1000);
+}
+
+TEST_F(QDMITest, QueryAvgT2Time) {
+  float value = 0;
+  QDMI_session_open_device(session, backend5_name.c_str(), &device);
+  QDMI_query_device_property_float(device, QDMI_AVG_T2_TIME, &value);
+  ASSERT_FLOAT_EQ(value, 100000);
+}
+
+TEST_F(QDMITest, QueryGateSet) {
+  char **gate_set = nullptr;
+  int num_gates = 0;
+  const std::array<std::string, 4> value = {"CZ", "RX", "RY", "RZ"};
+  QDMI_session_open_device(session, backend5_name.c_str(), &device);
+  QDMI_query_device_property_string_list(device, QDMI_GATE_SET, &gate_set,
+                                         &num_gates);
+  for (std::size_t i = 0; i < static_cast<std::size_t>(num_gates); i++) {
+    ASSERT_STREQ(gate_set[i], value[i].c_str());
+  }
+}
+
 TEST_F(QDMITest, QueryDeviceNotImplemented) {
-  ASSERT_EQ(QDMI_query_device_property_string(device, QDMI_DEVICE_MAX, NULL),
+  QDMI_session_open_device(session, backend5_name.c_str(), &device);
+  ASSERT_EQ(QDMI_query_device_property_string(device, QDMI_DEVICE_PROPERTY_MAX,
+                                              nullptr),
+            QDMI_ERROR_INVALID_ARGUMENT);
+  ASSERT_EQ(QDMI_query_device_property_float(device, QDMI_DEVICE_PROPERTY_MAX,
+                                             nullptr),
+            QDMI_ERROR_INVALID_ARGUMENT);
+  ASSERT_EQ(QDMI_query_device_property_int32(device, QDMI_DEVICE_PROPERTY_MAX,
+                                             nullptr),
+            QDMI_ERROR_INVALID_ARGUMENT);
+  ASSERT_EQ(QDMI_query_device_property_string_list(
+                device, QDMI_DEVICE_PROPERTY_MAX, nullptr, nullptr),
             QDMI_ERROR_INVALID_ARGUMENT);
 }

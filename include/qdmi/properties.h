@@ -31,7 +31,7 @@ enum QDMI_DEVICE_PROPERTY_T {
    * @note This value should always be updated to be the last and maximum value
    * of the enum.
    */
-  QDMI_DEVICE_PROPERTY_MAX = 9,
+  QDMI_DEVICE_PROPERTY_MAX = 9
 };
 
 typedef enum QDMI_DEVICE_PROPERTY_T QDMI_Device_Property;
@@ -49,7 +49,7 @@ enum QDMI_DEVICE_STATUS_T {
    * @note This value should always be updated to be the last and maximum value
    * of the enum.
    */
-  QDMI_DEVICE_STATUS_MAX = 6,
+  QDMI_DEVICE_STATUS_MAX = 6
 };
 
 typedef enum QDMI_DEVICE_STATUS_T QDMI_Device_Status;
@@ -63,7 +63,7 @@ enum QDMI_SITE_PROPERTY_T {
    * @note This value should always be updated to be the last and maximum value
    * of the enum.
    */
-  QDMI_SITE_PROPERTY_MAX = 2,
+  QDMI_SITE_PROPERTY_MAX = 2
 };
 
 typedef enum QDMI_SITE_PROPERTY_T QDMI_Site_Property;
@@ -78,7 +78,7 @@ enum QDMI_OPERATION_PROPERTY_T {
    * @note This value should always be updated to be the last and maximum value
    * of the enum.
    */
-  QDMI_OPERATION_PROPERTY_MAX = 2,
+  QDMI_OPERATION_PROPERTY_MAX = 2
 };
 
 typedef enum QDMI_OPERATION_PROPERTY_T QDMI_Operation_Property;
