@@ -76,7 +76,7 @@ TEST_F(QDMITest, QueryNumQubits7) {
   ASSERT_EQ(num_qubits, 7);
 }
 
-TEST_F(QDMITest, QueryName) {
+TEST_F(QDMITest, QueryDeviceName) {
   char *value = NULL;
   QDMI_query_device_property_string(device, QDMI_NAME, &value);
   ASSERT_STREQ(value, "Backend with 5 qubits");
@@ -88,8 +88,14 @@ TEST_F(QDMITest, QueryDeviceVersion) {
   ASSERT_STREQ(value, "0.0.1");
 }
 
-TEST_F(QDMITest, QueryLibraryVersion) {
+TEST_F(QDMITest, QueryDeviceLibraryVersion) {
   char *value = NULL;
   QDMI_query_device_property_string(device, QDMI_LIBRARY_VERSION, &value);
+  ASSERT_STREQ(value, "0.1.0");
+}
+
+TEST_F(QDMITest, QueryDeviceNotImplemented) {
+  char *value = NULL;
+  QDMI_query_device_property_string(device, QDMI_BACKEND_VERSION, &value);
   ASSERT_STREQ(value, "0.0.1");
 }
