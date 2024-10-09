@@ -55,6 +55,26 @@ int QDMI_session_open_device(QDMI_Session session, const char *lib_name,
  */
 int QDMI_session_close_device(QDMI_Session session, QDMI_Device device);
 
+/**
+ * @brief Get an open device associated with a QDMI session.
+ * @param session the session.
+ * @param index the index of the device in the session.
+ * @param device the device that is retrieved.
+ * @return QDMI_SUCCESS if the device was retrieved successfully, an error code
+ * otherwise.
+ */
+int QDMI_session_get_device(QDMI_Session session, int index,
+                            QDMI_Device *device);
+
+/**
+ * @brief Get the number of devices associated with a QDMI session.
+ * @param session the session.
+ * @param num_devices the number of devices in the session.
+ * @return QDMI_SUCCESS if the number of devices was retrieved successfully, an
+ * error code otherwise.
+ */
+int QDMI_session_get_num_devices(QDMI_Session session, int *num_devices);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

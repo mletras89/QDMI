@@ -72,4 +72,33 @@ int QDMI_session_close_device(QDMI_Session session, QDMI_Device device) {
   // return success
   return QDMI_SUCCESS;
 }
-// TODO implement iterator over device_list
+
+int QDMI_session_get_device(QDMI_Session session, int index,
+                            QDMI_Device *device) {
+  // find device in session
+  QDMI_Device curr = session->device_list;
+  for (int i = 0; i < index; i++) {
+    if (curr == NULL) {
+      return QDMI_ERROR_OUT_OF_RANGE;
+    }
+    curr = curr->next;
+  }
+  // return device
+  *device = curr;
+  // return success
+  return QDMI_SUCCESS;
+}
+
+int QDMI_session_get_num_devices(QDMI_Session session, int *num_devices) {
+  // count devices in session
+  int count = 0;
+  QDMI_Device curr = session->device_list;
+  while (curr != NULL) {
+    count++;
+    curr = curr->next;
+  }
+  // return number of devices
+  *num_devices = count;
+  // return success
+  return QDMI_SUCCESS;
+}
