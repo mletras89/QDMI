@@ -4,6 +4,12 @@ See https://llvm.org/LICENSE.txt for license information.
 SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
+/** @file
+ * @brief Define the private types for the QDMI project.
+ * @note This header is private and not available to projects including this
+ * project.
+ */
+
 #pragma once
 
 #include "qdmi/properties.h"

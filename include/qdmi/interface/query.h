@@ -4,6 +4,10 @@ See https://llvm.org/LICENSE.txt for license information.
 SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
+/** @file
+ * @brief Define the interface for querying properties of a device.
+ */
+
 #pragma once
 
 #include "qdmi/properties.h"

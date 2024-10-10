@@ -1,5 +1,0 @@
-breathe
-furo
-myst_parser>=0.13
-sphinx-copybutton
-sphinxext-opengraph

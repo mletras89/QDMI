@@ -4,6 +4,10 @@ See https://llvm.org/LICENSE.txt for license information.
 SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
+/** @file
+ * @brief Define the interface for controlling a QDMI device.
+ */
+
 #pragma once
 
 #include "qdmi/return_codes.h"
@@ -134,8 +138,6 @@ int QDMI_control_get_hist(QDMI_Device dev, QDMI_Job job, char ***data,
  */
 int QDMI_control_get_raw(QDMI_Device dev, QDMI_Job job, char ***data,
                          int *size);
-
-/// @}
 
 /// @}
 

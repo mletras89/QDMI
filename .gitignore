@@ -8,6 +8,9 @@ __pycache__/
 .ccache/
 cmake-build-*
 
+# Doxygen
+doxygen-build/
+
 # Distribution / packaging
 .Python
 /build/
