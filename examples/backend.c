@@ -4,6 +4,11 @@ See https://llvm.org/LICENSE.txt for license information.
 SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
+/** @file
+ * @brief A simple example of a backend implementation in C.
+ * @details This file can be used as a template for implementing a backend in C.
+ */
+
 #include "qdmi/backend.h"
 
 #include <stdio.h>

@@ -23,18 +23,3 @@ environment and consists of four main components:
   checking the status of the device.
 - **QDMI Query**: Allows querying properties of the device, e.g., supported gates, error rates, gate
   duration, etc.
-
----
-
-```{toctree}
-:caption: User Guide
-
-faq
-support
-```
-
-```{toctree}
-:caption: API Reference
-
-api/index
-```

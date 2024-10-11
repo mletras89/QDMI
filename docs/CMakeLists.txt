@@ -8,6 +8,10 @@ file(GLOB_RECURSE DOXYGEN_INPUT_FILES ${DOXYGEN_INPUT_DIRS}/*.h
      ${DOXYGEN_INPUT_DIRS}/*.c ${DOXYGEN_INPUT_DIRS}/*.md)
 string(REPLACE ";" " " DOXYGEN_INPUT_DIRS "${DOXYGEN_INPUT_DIRS}")
 
+# Set the Doxygen configured configuration file
+set(DOXYGEN_EXAMPLE_DIRS ${PROJECT_SOURCE_DIR}/examples)
+string(REPLACE ";" " " DOXYGEN_INPUT_DIRS "${DOXYGEN_INPUT_DIRS}")
+
 # Set the output directory for the generated documentation
 set(DOXYGEN_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR})
 
@@ -26,9 +30,11 @@ configure_file(${DOXYGEN_CONFIG_FILE_IN} ${DOXYGEN_CONFIG_FILE_OUT} @ONLY)
 # Create a custom command to run Doxygen
 add_custom_command(
   OUTPUT ${DOXYGEN_OUTPUT_DIR}/html/index.html
-  DEPENDS ${DOXYGEN_INPUT_FILES} ${DOXYGEN_CONFIG_FILE_IN}
+  DEPENDS ${DOXYGEN_INPUT_FILES}
+          ${DOXYGEN_CONFIG_FILE_IN}
           ${CMAKE_CURRENT_SOURCE_DIR}/header.html
           ${CMAKE_CURRENT_SOURCE_DIR}/layout.xml
+          ${CMAKE_CURRENT_SOURCE_DIR}/style.css
   COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_CONFIG_FILE_OUT}
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
   COMMENT "Generating API documentation with Doxygen"
