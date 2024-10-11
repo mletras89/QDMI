@@ -4,11 +4,8 @@
   <!-- Navigation index tabs for HTML output -->
   <navindex>
     <tab type="mainpage" visible="no" title=""/>
-    <tab type="pages" visible="no" title="" intro=""/>
     <tab type="usergroup" title="User Guide" url="[none]">
-      <tab type="user" url="@ref faq.md" title="FAQ"/>
-      <tab type="user" url="@ref examples.md" title="Examples"/>
-      <tab type="user" url="@ref support.md" title="Support"/>
+      <tab type="pages" visible="yes" title="" intro=""/>
     </tab>
     <tab type="topics" visible="yes" title="" intro=""/>
     <tab type="modules" visible="no" title="" intro="">
