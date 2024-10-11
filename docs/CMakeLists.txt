@@ -20,6 +20,8 @@ FetchContent_GetProperties(doxygen-awesome-css SOURCE_DIR AWESOME_CSS_DIR)
 
 # Replace variables inside @@ with the current values
 configure_file(${DOXYGEN_CONFIG_FILE_IN} ${DOXYGEN_CONFIG_FILE_OUT} @ONLY)
+# configure_file(_static/qdmi.svg _static/qdmi.svg COPYONLY)
+# configure_file(_static/mqss_logo.png _static/mqss_logo.png COPYONLY)
 
 # Create a custom command to run Doxygen
 add_custom_command(

@@ -19,6 +19,9 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 extern "C" {
 #endif
 
+/**
+ * @brief Handle for a job.
+ */
 typedef struct QDMI_Job_impl_d *QDMI_Job;
 
 typedef int (*QDMI_query_device_property_string_t)(QDMI_Device_Property prop,
@@ -175,126 +178,126 @@ typedef struct QDMI_Device_impl_d {
 
   // TODO Is `code` the right way to go? Or is \ref better?
 
-  /// Function pointer to the @code QDMI_query_device_property_string@endcode
+  /// Function pointer to the @code QDMI_query_device_property_string @endcode
   /// function.
   QDMI_query_device_property_string_t QDMI_query_device_property_string;
-  /// Function pointer to the @code QDMI_query_device_property_double@endcode
+  /// Function pointer to the @code QDMI_query_device_property_double @endcode
   /// function.
   QDMI_query_device_property_double_t QDMI_query_device_property_double;
-  /// Function pointer to the @code QDMI_query_device_property_float@endcode
+  /// Function pointer to the @code QDMI_query_device_property_float @endcode
   /// function.
   QDMI_query_device_property_float_t QDMI_query_device_property_float;
-  /// Function pointer to the @code QDMI_query_device_property_int32@endcode
+  /// Function pointer to the @code QDMI_query_device_property_int32 @endcode
   /// function.
   QDMI_query_device_property_int32_t QDMI_query_device_property_int32;
-  /// Function pointer to the @code QDMI_query_device_property_int64@endcode
+  /// Function pointer to the @code QDMI_query_device_property_int64 @endcode
   /// function.
   QDMI_query_device_property_int64_t QDMI_query_device_property_int64;
   /// Function pointer to the @code
-  /// QDMI_query_device_property_string_list@endcode function.
+  /// QDMI_query_device_property_string_list @endcode function.
   QDMI_query_device_property_string_list_t
       QDMI_query_device_property_string_list;
   /// Function pointer to the @code
-  /// QDMI_query_device_property_double_list@endcode function.
+  /// QDMI_query_device_property_double_list @endcode function.
   QDMI_query_device_property_double_list_t
       QDMI_query_device_property_double_list;
   /// Function pointer to the @code
-  /// QDMI_query_device_property_float_list@endcode function.
+  /// QDMI_query_device_property_float_list @endcode function.
   QDMI_query_device_property_float_list_t QDMI_query_device_property_float_list;
   /// Function pointer to the @code
-  /// QDMI_query_device_property_int32_list@endcode function.
+  /// QDMI_query_device_property_int32_list @endcode function.
   QDMI_query_device_property_int32_list_t QDMI_query_device_property_int32_list;
   /// Function pointer to the @code
-  /// QDMI_query_device_property_int64_list@endcode function.
+  /// QDMI_query_device_property_int64_list @endcode function.
   QDMI_query_device_property_int64_list_t QDMI_query_device_property_int64_list;
 
-  /// Function pointer to the @code QDMI_query_site_property_string@endcode
+  /// Function pointer to the @code QDMI_query_site_property_string @endcode
   /// function.
   QDMI_query_site_property_string_t QDMI_query_site_property_string;
-  /// Function pointer to the @code QDMI_query_site_property_double@endcode
+  /// Function pointer to the @code QDMI_query_site_property_double @endcode
   /// function.
   QDMI_query_site_property_double_t QDMI_query_site_property_double;
-  /// Function pointer to the @code QDMI_query_site_property_float@endcode
+  /// Function pointer to the @code QDMI_query_site_property_float @endcode
   /// function.
   QDMI_query_site_property_float_t QDMI_query_site_property_float;
-  /// Function pointer to the @code QDMI_query_site_property_int32@endcode
+  /// Function pointer to the @code QDMI_query_site_property_int32 @endcode
   /// function.
   QDMI_query_site_property_int32_t QDMI_query_site_property_int32;
-  /// Function pointer to the @code QDMI_query_site_property_int64@endcode
+  /// Function pointer to the @code QDMI_query_site_property_int64 @endcode
   /// function.
   QDMI_query_site_property_int64_t QDMI_query_site_property_int64;
 
-  /// Function pointer to the @code QDMI_query_site_property_string_list@endcode
-  /// function.
+  /// Function pointer to the @code QDMI_query_site_property_string_list
+  /// @endcode function.
   QDMI_query_site_property_string_list_t QDMI_query_site_property_string_list;
   /// Function pointer to the @code
-  /// QDMI_query_site_property_double_list@endcode function.
+  /// QDMI_query_site_property_double_list @endcode function.
   QDMI_query_site_property_double_list_t QDMI_query_site_property_double_list;
-  /// Function pointer to the @code QDMI_query_site_property_float_list@endcode
+  /// Function pointer to the @code QDMI_query_site_property_float_list @endcode
   /// function.
   QDMI_query_site_property_float_list_t QDMI_query_site_property_float_list;
-  /// Function pointer to the @code QDMI_query_site_property_int32_list@endcode
+  /// Function pointer to the @code QDMI_query_site_property_int32_list @endcode
   /// function.
   QDMI_query_site_property_int32_list_t QDMI_query_site_property_int32_list;
-  /// Function pointer to the @code QDMI_query_site_property_int64_list@endcode
+  /// Function pointer to the @code QDMI_query_site_property_int64_list @endcode
   /// function.
   QDMI_query_site_property_int64_list_t QDMI_query_site_property_int64_list;
 
   /// Function pointer to the @code
-  /// QDMI_query_operation_property_string@endcode function.
+  /// QDMI_query_operation_property_string @endcode function.
   QDMI_query_operation_property_string_t QDMI_query_operation_property_string;
   /// Function pointer to the @code
-  /// QDMI_query_operation_property_double@endcode function.
+  /// QDMI_query_operation_property_double @endcode function.
   QDMI_query_operation_property_double_t QDMI_query_operation_property_double;
   /// Function pointer to the @code
-  /// QDMI_query_operation_property_float@endcode function.
+  /// QDMI_query_operation_property_float @endcode function.
   QDMI_query_operation_property_float_t QDMI_query_operation_property_float;
   /// Function pointer to the @code
-  /// QDMI_query_operation_property_int32@endcode function.
+  /// QDMI_query_operation_property_int32 @endcode function.
   QDMI_query_operation_property_int32_t QDMI_query_operation_property_int32;
   /// Function pointer to the @code
-  /// QDMI_query_operation_property_int64@endcode function.
+  /// QDMI_query_operation_property_int64 @endcode function.
   QDMI_query_operation_property_int64_t QDMI_query_operation_property_int64;
   /// Function pointer to the @code
-  /// QDMI_query_operation_property_string_list@endcode function.
+  /// QDMI_query_operation_property_string_list @endcode function.
   QDMI_query_operation_property_string_list_t
       QDMI_query_operation_property_string_list;
   /// Function pointer to the @code
-  /// QDMI_query_operation_property_double_list@endcode function.
+  /// QDMI_query_operation_property_double_list @endcode function.
   QDMI_query_operation_property_double_list_t
       QDMI_query_operation_property_double_list;
   /// Function pointer to the @code
-  /// QDMI_query_operation_property_float_list@endcode function.
+  /// QDMI_query_operation_property_float_list @endcode function.
   QDMI_query_operation_property_float_list_t
       QDMI_query_operation_property_float_list;
   /// Function pointer to the @code
-  /// QDMI_query_operation_property_int32_list@endcode function.
+  /// QDMI_query_operation_property_int32_list @endcode function.
   QDMI_query_operation_property_int32_list_t
       QDMI_query_operation_property_int32_list;
   /// Function pointer to the @code
-  /// QDMI_query_operation_property_int64_list@endcode function.
+  /// QDMI_query_operation_property_int64_list @endcode function.
   QDMI_query_operation_property_int64_list_t
       QDMI_query_operation_property_int64_list;
 
-  /// Function pointer to the @code QDMI_control_submit_qasm@endcode function.
+  /// Function pointer to the @code QDMI_control_submit_qasm @endcode function.
   QDMI_control_submit_qasm_t QDMI_control_submit_qasm;
-  /// Function pointer to the @code QDMI_control_submit_qir@endcode function.
+  /// Function pointer to the @code QDMI_control_submit_qir @endcode function.
   QDMI_control_submit_qir_t QDMI_control_submit_qir;
-  /// Function pointer to the @code QDMI_control_cancel@endcode function.
+  /// Function pointer to the @code QDMI_control_cancel @endcode function.
   QDMI_control_cancel_t QDMI_control_cancel;
-  /// Function pointer to the @code QDMI_control_check@endcode function.
+  /// Function pointer to the @code QDMI_control_check @endcode function.
   QDMI_control_check_t QDMI_control_check;
-  /// Function pointer to the @code QDMI_control_wait@endcode function.
+  /// Function pointer to the @code QDMI_control_wait @endcode function.
   QDMI_control_wait_t QDMI_control_wait;
-  /// Function pointer to the @code QDMI_control_get_hist@endcode function.
+  /// Function pointer to the @code QDMI_control_get_hist @endcode function.
   QDMI_control_get_hist_t QDMI_control_get_hist;
-  /// Function pointer to the @code QDMI_control_get_raw@endcode function.
+  /// Function pointer to the @code QDMI_control_get_raw @endcode function.
   QDMI_control_get_raw_t QDMI_control_get_raw;
-  /// Function pointer to the @code QDMI_control_initialize@endcode function.
+  /// Function pointer to the @code QDMI_control_initialize @endcode function.
   QDMI_control_initialize_t QDMI_control_initialize;
-  /// Function pointer to the @code QDMI_control_finalize@endcode function.
+  /// Function pointer to the @code QDMI_control_finalize @endcode function.
   QDMI_control_finalize_t QDMI_control_finalize;
-  /// Function pointer to the @code QDMI_control_calibrate@endcode function.
+  /// Function pointer to the @code QDMI_control_calibrate @endcode function.
   QDMI_control_calibrate_t QDMI_control_calibrate;
 
   struct QDMI_Device_impl_d *next; /**< Pointer to the next device. */
