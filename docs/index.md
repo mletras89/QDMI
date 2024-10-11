@@ -2,7 +2,7 @@
 
 ## Quantum Device Management Interface
 
-![QDMI](_static/qdmi.svg)
+![QDMI](_static/qdmi.png)
 
 The Quantum Device Management Interface (QDMI) is the central part of the Munich Quantum Software
 Stack (MQSS)—a sophisticated software stack to connect end users to the wide range of possible
