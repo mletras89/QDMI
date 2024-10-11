@@ -9,8 +9,10 @@ file(GLOB_RECURSE DOXYGEN_INPUT_FILES ${DOXYGEN_INPUT_DIRS}/*.h
 string(REPLACE ";" " " DOXYGEN_INPUT_DIRS "${DOXYGEN_INPUT_DIRS}")
 
 # Set the Doxygen configured configuration file
-set(DOXYGEN_EXAMPLE_DIRS ${PROJECT_SOURCE_DIR}/examples)
-string(REPLACE ";" " " DOXYGEN_INPUT_DIRS "${DOXYGEN_INPUT_DIRS}")
+set(DOXYGEN_EXAMPLE_DIRS
+    ${PROJECT_SOURCE_DIR}/examples ${PROJECT_SOURCE_DIR}/.github
+    ${PROJECT_SOURCE_DIR}/README.md)
+string(REPLACE ";" " " DOXYGEN_EXAMPLE_DIRS "${DOXYGEN_EXAMPLE_DIRS}")
 
 # Set the output directory for the generated documentation
 set(DOXYGEN_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR})

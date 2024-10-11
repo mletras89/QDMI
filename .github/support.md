@@ -1,5 +1,7 @@
 # Support
 
+<!-- [DOXYGEN] -->
+
 If you are stuck with a problem using QDMI or have questions, please get in touch at our
 [Issues](https://github.com/Munich-Quantum-Software-Stack/QDMI/issues) or
 [Discussions](https://github.com/Munich-Quantum-Software-Stack/QDMI/discussions). We'd love to help.
@@ -16,3 +18,5 @@ You can save time by following this procedure when reporting a problem:
 
 You can also always reach us at
 [mqss@munich-quantum-valley.de](mailto:mqss@munich-quantum-valley.de).
+
+<!-- [DOXYGEN] -->
