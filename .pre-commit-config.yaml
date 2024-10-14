@@ -76,6 +76,7 @@ repos:
           - --print-width=100
           - --prose-wrap=always
           - --tab-width=2
+        exclude: ^docs/header\.html$
 
   # Catch common capitalization mistakes
   - repo: local
