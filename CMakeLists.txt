@@ -59,8 +59,6 @@ set(QDMI_INCLUDE_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 # add main library code
 add_subdirectory(src)
-# add documentation
-add_subdirectory(docs)
 
 # add test code
 if(BUILD_QDMI_TESTS)
