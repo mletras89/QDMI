@@ -1,3 +1,5 @@
+<!-- This file is a static page and included in the CMakeLists.txt file. -->
+
 # FAQ
 
 ## What is MQSS?
