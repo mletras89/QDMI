@@ -7,45 +7,57 @@ Ready to contribute to QDMI? This guide will help you get started.
 
 ## Initial Setup
 
-1. Fork the [QDMI](https://github.com/Munich-Quantum-Software-Stack/QDMI) repository on GitHub (see <https://docs.github.com/en/get-started/quickstart/fork-a-repo>).
+1. Fork the [QDMI](https://github.com/Munich-Quantum-Software-Stack/QDMI) repository on GitHub (see
+   <https://docs.github.com/en/get-started/quickstart/fork-a-repo>).
 
 2. Clone your fork locally
 
    ```sh
    git clone git@github.com:your_name_here/QDMI.git
    ```
-   
+
 3. Change into the project directory
 
    ```sh
    cd QDMI
    ```
-   
+
 4. Create a branch for local development
 
    ```sh
    git checkout -b name-of-your-bugfix-or-feature
    ```
-   
+
    Now you can make your changes locally.
 
-5. (Optional, **highly recommended**) Install [pre-commit](https://pre-commit.com/) to automatically run a set of checks before each commit. The easiest way to install pre-commit is via [uv](https://docs.astral.sh/uv/).
+5. (Optional, **highly recommended**) Install [pre-commit](https://pre-commit.com/) to automatically
+   run a set of checks before each commit.
 
-   ```sh
-   uv tool install pre-commit
-   pre-commit install
-   ```
+   <div class="tabbed">
 
-   \note
-   If you do not have `uv` installed, you can install it via
-    ```sh
-    curl -LsSf https://astral.sh/uv/install.sh | sh
-    ```
-   on macOS and Linux or
-   ```sh
-   powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
-   ```
-   on Windows.
+   - <b class="tab-title">via `uv`</b> The easiest way to install pre-commit is via
+     [uv](https://docs.astral.sh/uv/).
+
+     \code{.sh} uv tool install pre-commit \endcode
+
+   - <b class="tab-title">via `brew`</b> If you use macOS, then pre-commit is in Homebrew, use
+
+     \code{.shell} brew install pre-commit \endcode
+
+   - <b class="tab-title">via `pipx`</b> If you prefer to use [pipx](https://pypa.github.io/pipx/),
+     you can install pre-commit with
+
+     \code{.shell} pipx install pre-commit \endcode
+
+   - <b class="tab-title">via `pip`</b> If you prefer to use regular `pip` (preferably in a virtual
+     environment), you can install pre-commit with
+
+     \code{.shell} pip install pre-commit \endcode
+
+   </div>
+   Afterwards, you can install the pre-commit hooks with
+
+   \code{.shell} pre-commit install \endcode
 
 ## Working on Source Code
 
@@ -54,50 +66,96 @@ The example backends and the tests require a C++ compiler supporting _C++17_.
 
 ### Configure and Build
 
-QDMI uses CMake as its build system.
-Building a project using CMake is a two-step process:
+QDMI uses CMake as its build system. Building a project using CMake is a two-step process:
 
 First, the project needs to be _configured_ by calling
 
+```shell
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+```
 
+This tells CMake to generate the build system in the `build` directory for a release build.
 
+After the configuration, the project can be _built_ by calling
 
-## Build Instructions
+```shell
+cmake --build build --config Release
+```
 
-### Documentation
+### Running Tests
 
-The documentation can be built with the CMake target `qdmi_docs`. After building this target, with
+We use the [GoogleTest](https://google.github.io/googletest/primer.html) framework for unit testing
+of the QDMI interface. All tests are contained in the `test` directory. After building the project
+(as described above), the C++ unit tests can be conveniently executed by running
 
-```sh
+```shell
+ctest -C Release --test-dir build
+```
+
+from the main project directory.
+
+### Code Formatting and Linting
+
+This project mostly follows the [LLVM Coding Standard](https://llvm.org/docs/CodingStandards.html),
+which is a set of guidelines for writing C/C++ code. To ensure the quality of the code and that it
+conforms to these guidelines, we use
+
+- [clang-tidy](https://clang.llvm.org/extra/clang-tidy/) -- a static analysis tool that checks for
+  common mistakes in C/C++ code, and
+- [clang-format](https://clang.llvm.org/docs/ClangFormat.html) -- a tool that automatically formats
+  C/C++ code according to a given style guide.
+
+Common IDEs like [Visual Studio Code](https://code.visualstudio.com/) or
+[CLion](https://www.jetbrains.com/clion/) have plugins that can automatically run clang-tidy on the
+code and automatically format it with clang-format.
+
+- If you are using Visual Studio Code, you can install the
+  [clangd extension](https://marketplace.visualstudio.com/items?itemName=llvm-vs-code-extensions.vscode-clangd).
+- If you are using CLion, you can configure the project to use the `.clang-tidy` and `.clang-format`
+  files in the project root directory.
+
+They will automatically execute clang-tidy on your code and highlight any issues. In many cases,
+they also provide quick-fixes for these issues. Furthermore, they provide a command to automatically
+format your code according to the given style.
+
+\note After configuring CMake, you can run clang-tidy on a file by calling
+`clang-tidy <FILE> -- -I <PATH_TO_INCLUDE_DIRECTORY>` where `<FILE>` is the file you want to analyze
+and `<PATH_TO_INCLUDE_DIRECTORY>` is the path to the `include` directory of the project.
+
+### Format for Comments
+
+For the information to be displayed correctly in the documentation, it is essential that the
+comments follow the format required by Doxygen. Below you find some tags, that are commonly used
+within the documentation of a function:
+
+- `@brief` For a brief, one-line description of the function. Should always be provided.
+- `@details` For a longer, detailed description of the function.
+- `@param` To explain the usage of a parameter. Should be provided for each parameter.
+- `@return` To explain the return value. Should be provided if the function returns a value.
+
+\note In the current setting, the long description is always prepended with the brief description.
+So there is no need to repeat the brief description in the details.
+
+## Working on the Documentation
+
+The documentation is generated using [Doxygen](https://www.doxygen.nl/index.html), which is
+seamlessly integrated into the CMake build system.
+
+### Building the Documentation
+
+The documentation can be built with the CMake target `qdmi_docs` via
+
+```shell
 cmake -S . -B build
 cmake --build build --target qdmi_docs
 ```
 
-the generated webpage can be inspected by opening the file in `docs/html/index.html` in the CMake
+The generated webpage can be inspected by opening the file in `docs/html/index.html` in the CMake
 build directory.
-
-## Working on Source Code
-
-<!-- TODO -->
-
-### Format for Comments
-
-For the information to be displayed correctly on the webpage, it is essential that the comments
-follow the format required by Doxygen. Below you find some tags, that are commonly used within the
-documentation of a function:
-
-- `@brief` For a brief, one-line description of the function
-- `@details` For a longer, detailed description of the function. Note: In the current setting, the
-  long description is always prepended with the brief description. So there is no need to repeat the
-  brief description in the details.
-- `@param` To explain the usage of a parameter
-- `@return` To explain the return value
-
-## Working on Documentation
 
 ### Static Content
 
-The generated webpage contains also four static sites, namely the main page, the support page, the
+The generated webpage also contains four static sites, namely the main page, the support page, the
 FAQ page, and this development guide. The respective markdown files that serve as the source for
 those sites are contained in `docs/` where `index.md` contains the content of the main page.
 
@@ -107,26 +165,21 @@ In order to include source files to be listed among the menu item `API Reference
 must be marked as documented. This is accomplished by adding a comment like the following to the top
 of the file. Right now, this is done for all files in the include directory.
 
+<!-- prettier-ignore-start -->
 \verbatim
 
 /** @file
  * @brief Include all public headers for the QDMI interface.
- * @details The detailed description of the interface is provided in the 
+ * @details The detailed description of the interface is provided in the
  * @ref interface/control.h and @ref interface/query.h.
  */
 
 \endverbatim
-
-<div class="tabbed">
-
-- <b class="tab-title">Tab 1</b> This is the content of tab 1
-- <b class="tab-title">Tab 2</b> This is the content of tab 2
-
-</div>
+<!-- prettier-ignore-end -->
 
 ### Further Links
 
-- For more details see the official documentation of Doxygen that can be found here:
+- For more details, see the official documentation of Doxygen that can be found here:
   [https://www.doxygen.nl/manual/docblocks.html](https://www.doxygen.nl/manual/docblocks.html).
 - More tags and commands can be found in the list provided here:
   [https://www.doxygen.nl/manual/commands.html#cmd_intro](https://www.doxygen.nl/manual/commands.html#cmd_intro)
