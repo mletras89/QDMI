@@ -10,8 +10,8 @@ set(DOXYGEN_INPUT_DIRS ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/src)
 # correctly and is not passed to Doxygen. Whenever such a file is modified,
 # CMake detects that change and will rerun the Doxygen command instead of using
 # the cached result when the target `qdmi_docs`is built.
-file(GLOB_RECURSE DOXYGEN_INPUT_FILES ${DOXYGEN_INPUT_DIRS}/*.h
-     ${DOXYGEN_INPUT_DIRS}/*.c ${CMAKE_CURRENT_SOURCE_DIR}/*.md)
+file(GLOB_RECURSE DOXYGEN_INPUT_FILES ${PROJECT_SOURCE_DIR}/include/*.h
+     ${PROJECT_SOURCE_DIR}/src/*.c ${CMAKE_CURRENT_SOURCE_DIR}/*.md)
 # After the variable above is correctly initialized, we can add the additional
 # files that are not source code but still part of the documentation. IMPORTANT:
 # The order the files with the static content are added here influences their
