@@ -8,6 +8,6 @@
 
 ![](_static/qdmi.png)
 
-<!-- Include the content of README.md between the pair of markers DOXYGEN. -->
+<!-- Include the content of README.md between the pair of markers DOXYGEN MAIN. -->
 
-\snippet{doc} README.md DOXYGEN
+\snippet{doc} README.md DOXYGEN MAIN
