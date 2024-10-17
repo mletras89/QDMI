@@ -33,9 +33,9 @@ protected:
   QDMI_Session session = nullptr;
   QDMI_Device device = nullptr;
   const std::string backend5_name =
-      std::string("./libbackend5") + Shared_library_file_extension();
+      std::string("../examples/libbackend5") + Shared_library_file_extension();
   const std::string backend7_name =
-      std::string("./libbackend7") + Shared_library_file_extension();
+      std::string("../examples/libbackend7") + Shared_library_file_extension();
 };
 
 TEST_F(QDMITest, OpenDevice) {
