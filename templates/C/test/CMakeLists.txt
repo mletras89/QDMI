@@ -4,43 +4,36 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # ------------------------------------------------------------------------------
 
-if(TARGET qdmi_test)
-  return()
-endif()
-
 # add CXX language support
 enable_language(CXX)
 
 # ------------------------------------------------------------------------------
 # Interface Test
 # ------------------------------------------------------------------------------
-# test that a backend implementation implements all functions NOTE: This
-# executable is not meant to be ever executed, only linked.
-add_executable(test_backend5 test_functions.c)
-# link the Google test infrastructure to the test executable.
-target_link_libraries(test_backend5 PRIVATE qdmi::qdmi backend5)
 
-# test that a backend implementation implements all functions NOTE: This
-# executable is not meant to be ever executed, only linked.
-add_executable(test_backend7 test_functions.c)
+# test that a backend implementation implements all functions
+#
+# NOTE: This executable is not meant to be ever executed, only linked.
+add_executable(my_backend_implemented_test test_functions.c)
 # link the Google test infrastructure to the test executable.
-target_link_libraries(test_backend7 PRIVATE qdmi::qdmi backend7)
+target_link_libraries(my_backend_implemented_test PRIVATE qdmi::qdmi my_backend)
 
 # ------------------------------------------------------------------------------
 # Functional Tests
 # ------------------------------------------------------------------------------
+
 # create an executable in which the tests will be stored
-add_executable(qdmi_test test_qdmi.cpp)
+add_executable(my_backend_test test_my_backend.cpp)
 
 # link the Google test infrastructure to the test executable.
-target_link_libraries(qdmi_test PRIVATE gtest_main qdmi::qdmi)
+target_link_libraries(my_backend_test PRIVATE gtest_main qdmi::qdmi)
 
 # discover tests
 gtest_discover_tests(
-  qdmi_test
+  my_backend_test
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
   PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
              DISCOVERY_TIMEOUT 60)
 
-# ensure backend5 and backend7 are built whenever qdmi_test is built
-add_dependencies(qdmi_test backend5 backend7 test_backend5 test_backend7)
+# ensure backend5 and backend7 are built whenever my_backend_test is built
+add_dependencies(my_backend_test my_backend test_backend)
