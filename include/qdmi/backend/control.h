@@ -5,7 +5,17 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
 /** @file
- * @brief Define the control interface for a QDMI backend.
+ * @brief The control interface implemented by a QDMI backend.
+ * @see qdmi/interface/control.h for the API interface.
+ * @details
+ * Backend implementations are expected to provide **at least one** of the
+ * submission functions
+ * - @ref QDMI_control_submit_qir_module (preferred)
+ * - @ref QDMI_control_submit_qir_string
+ * - @ref QDMI_control_submit_qasm
+ *
+ * For all of these, the remaining two can be implemented via simple
+ * conversions.
  */
 // todo: it would be nice to show an example of this in the documentation
 

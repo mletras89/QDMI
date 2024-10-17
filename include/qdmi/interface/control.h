@@ -5,7 +5,28 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
 /** @file
- * @brief Define the interface for controlling a QDMI device.
+ * @brief The interface for controlling a device via QDMI.
+ * @details The control interface allows submitting jobs to a device, managing
+ * the jobs, and retrieving the results.
+ *
+ * Consumers of the interface may assume that at least one of the submission
+ * functions
+ * - @ref QDMI_control_submit_qir_module
+ * - @ref QDMI_control_submit_qir_string
+ * - @ref QDMI_control_submit_qasm
+ *
+ * is implemented by the backend. Assuming the computation is generally
+ * available as a QIR module, a reasonable strategy for the job submission would
+ * be to
+ * - try submitting the QIR module directly.
+ * - if that fails, try converting the QIR module to a QIR string and submit
+ * that.
+ * - if that fails, try converting the QIR string to a QASM string and submit
+ * that.
+ *
+ * Based on the assumption that any backend is supposed to support at least one
+ * of the submission functions, the above procedure should always succeed.
+ * @see qdmi/backend/control.h for the backend interface.
  */
 // todo: it would be nice to show an example of this in the documentation
 #pragma once
