@@ -4,5 +4,5 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # ------------------------------------------------------------------------------
 
-add_library(my_c_backend SHARED my_backend.c)
-target_link_libraries(my_c_backend PRIVATE qdmi::qdmi qdmi::project_warnings)
+add_library(my_cxx_backend SHARED my_backend.cpp)
+target_link_libraries(my_cxx_backend PRIVATE qdmi::qdmi qdmi::project_warnings)
