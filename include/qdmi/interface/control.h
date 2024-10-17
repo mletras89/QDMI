@@ -61,8 +61,23 @@ int QDMI_control_submit_qasm(QDMI_Device dev, char *qasm_string, int num_shots,
  * @return int Returns QDMI_SUCCESS if the job was successfully submitted,
  * otherwise an error code.
  */
-int QDMI_control_submit_qir(QDMI_Device dev, char *qir_string, int num_shots,
-                            QDMI_Job *job);
+int QDMI_control_submit_qir_string(QDMI_Device dev, char *qir_string,
+                                   int num_shots, QDMI_Job *job);
+
+/**
+ * @brief Submit a QIR module to the device.
+ * @details Create a job consisting of a circuit represented by an in-memory
+ * LLVM module containing QIR and submit it to the device. The returned job
+ * handle helps to track the job status.
+ * @param dev The device to submit the job to.
+ * @param qir_module The module to submit.
+ * @param num_shots The number of shots to take.
+ * @param job The job to submit.
+ * @return @ref QDMI_SUCCESS if the job was successfully submitted,
+ * otherwise an error code.
+ */
+int QDMI_control_submit_qir_module(QDMI_Device dev, void *qir_module,
+                                   int num_shots, QDMI_Job *job);
 
 /**
  * @brief Cancel an already submitted job.

@@ -56,7 +56,8 @@ int QDMI_device_open(const char *lib_name, QDMI_Device *device) {
   LOAD_SYMBOL(*device, QDMI_query_operation_property_int_list);
 
   LOAD_SYMBOL(*device, QDMI_control_submit_qasm);
-  LOAD_SYMBOL(*device, QDMI_control_submit_qir);
+  LOAD_SYMBOL(*device, QDMI_control_submit_qir_string);
+  LOAD_SYMBOL(*device, QDMI_control_submit_qir_module);
   LOAD_SYMBOL(*device, QDMI_control_cancel);
   LOAD_SYMBOL(*device, QDMI_control_check);
   LOAD_SYMBOL(*device, QDMI_control_wait);

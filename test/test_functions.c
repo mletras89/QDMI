@@ -44,7 +44,8 @@ int main() {
   QDMI_query_operation_at_site_property_int_list(NULL, NULL, 0, 0, NULL, NULL);
   // control interface
   QDMI_control_submit_qasm(NULL, 0, NULL);
-  QDMI_control_submit_qir(NULL, 0, NULL);
+  QDMI_control_submit_qir_string(NULL, 0, NULL);
+  QDMI_control_submit_qir_module(NULL, 0, NULL);
   QDMI_control_cancel(NULL);
   QDMI_control_check(NULL, NULL);
   QDMI_control_wait(NULL);
