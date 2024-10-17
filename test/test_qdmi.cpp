@@ -60,7 +60,7 @@ TEST_F(QDMITest, QueryNumQubits5) {
       << "Failed to open device";
   int num_qubits = 0;
   ASSERT_TRUE(QDMI_is_Success(
-      QDMI_query_device_property_int32(device, QDMI_NUM_QUBITS, &num_qubits)))
+      QDMI_query_device_property_int(device, QDMI_NUM_QUBITS, &num_qubits)))
       << "Failed to query number of qubits";
   ASSERT_EQ(num_qubits, 5);
 }
@@ -71,7 +71,7 @@ TEST_F(QDMITest, QueryNumQubits7) {
       << "Failed to open device";
   int num_qubits = 0;
   ASSERT_TRUE(QDMI_is_Success(
-      QDMI_query_device_property_int32(device, QDMI_NUM_QUBITS, &num_qubits)))
+      QDMI_query_device_property_int(device, QDMI_NUM_QUBITS, &num_qubits)))
       << "Failed to query number of qubits";
   ASSERT_EQ(num_qubits, 7);
 }
@@ -105,16 +105,16 @@ TEST_F(QDMITest, QueryDeviceLibraryVersion) {
 }
 
 TEST_F(QDMITest, QueryAvgT1Time) {
-  float value = 0;
+  double value = 0;
   QDMI_session_open_device(session, backend5_name.c_str(), &device);
-  QDMI_query_device_property_float(device, QDMI_AVG_T1_TIME, &value);
+  QDMI_query_device_property_double(device, QDMI_AVG_T1_TIME, &value);
   ASSERT_FLOAT_EQ(value, 1000);
 }
 
 TEST_F(QDMITest, QueryAvgT2Time) {
-  float value = 0;
+  double value = 0;
   QDMI_session_open_device(session, backend5_name.c_str(), &device);
-  QDMI_query_device_property_float(device, QDMI_AVG_T2_TIME, &value);
+  QDMI_query_device_property_double(device, QDMI_AVG_T2_TIME, &value);
   ASSERT_FLOAT_EQ(value, 100000);
 }
 
@@ -135,12 +135,12 @@ TEST_F(QDMITest, QueryDeviceNotImplemented) {
   ASSERT_EQ(QDMI_query_device_property_string(device, QDMI_DEVICE_PROPERTY_MAX,
                                               nullptr),
             QDMI_ERROR_INVALID_ARGUMENT);
-  ASSERT_EQ(QDMI_query_device_property_float(device, QDMI_DEVICE_PROPERTY_MAX,
-                                             nullptr),
+  ASSERT_EQ(QDMI_query_device_property_double(device, QDMI_DEVICE_PROPERTY_MAX,
+                                              nullptr),
             QDMI_ERROR_INVALID_ARGUMENT);
-  ASSERT_EQ(QDMI_query_device_property_int32(device, QDMI_DEVICE_PROPERTY_MAX,
-                                             nullptr),
-            QDMI_ERROR_INVALID_ARGUMENT);
+  ASSERT_EQ(
+      QDMI_query_device_property_int(device, QDMI_DEVICE_PROPERTY_MAX, nullptr),
+      QDMI_ERROR_INVALID_ARGUMENT);
   ASSERT_EQ(QDMI_query_device_property_string_list(
                 device, QDMI_DEVICE_PROPERTY_MAX, nullptr, nullptr),
             QDMI_ERROR_INVALID_ARGUMENT);
