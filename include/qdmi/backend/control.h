@@ -7,6 +7,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 /** @file
  * @brief Define the control interface for a QDMI backend.
  */
+// todo: it would be nice to show an example of this in the documentation
 
 #pragma once
 

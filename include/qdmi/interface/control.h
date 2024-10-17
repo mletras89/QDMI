@@ -7,7 +7,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 /** @file
  * @brief Define the interface for controlling a QDMI device.
  */
-
+// todo: it would be nice to show an example of this in the documentation
 #pragma once
 
 #include "qdmi/return_codes.h"
@@ -161,6 +161,9 @@ int QDMI_control_get_raw(QDMI_Device dev, QDMI_Job job, char ***data,
  * @{
  */
 
+// TODO: should we remove this for the first version and create a tracking issue
+// for properly designing the interface for calibration? I have a feeling that
+// this should become a separate component next to query and control
 /**
  * @brief Initiate a calibration run on the device.
  * @param dev The device to initialize.
