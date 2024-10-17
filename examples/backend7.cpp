@@ -7,7 +7,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 /** @file
  * @brief A simple example of a backend implementation in C++.
  * @details This file can be used as a template for implementing a backend in
- * C++. For more implemented functions, see also the \ref backend.c file.
+ * C++. For more implemented functions, see also the \ref backend5.c file.
  */
 
 #include "qdmi/backend.h"
@@ -105,44 +105,39 @@ int QDMI_query_site_property_int_list(const int site,
   return QDMI_ERROR_INVALID_ARGUMENT;
 }
 
-int QDMI_query_operation_property_string(const char *operation,
-                                         const int *sites, const int num_sites,
-                                         const QDMI_Operation_Property prop,
-                                         char **value) {
+int QDMI_query_operation_at_site_property_string(
+    const char *operation, const int *sites, const int num_sites,
+    const QDMI_Operation_Property prop, char **value) {
   return QDMI_ERROR_INVALID_ARGUMENT;
 }
 
-int QDMI_query_operation_property_double(const char *operation,
-                                         const int *sites, const int num_sites,
-                                         const QDMI_Operation_Property prop,
-                                         double *value) {
+int QDMI_query_operation_at_site_property_double(
+    const char *operation, const int *sites, const int num_sites,
+    const QDMI_Operation_Property prop, double *value) {
   return QDMI_ERROR_INVALID_ARGUMENT;
 }
 
-int QDMI_query_operation_property_int(const char *operation, const int *sites,
-                                      const int num_sites,
-                                      const QDMI_Operation_Property prop,
-                                      int *value) {
+int QDMI_query_operation_at_site_property_int(
+    const char *operation, const int *sites, const int num_sites,
+    const QDMI_Operation_Property prop, int *value) {
   return QDMI_ERROR_INVALID_ARGUMENT;
 }
 
-int QDMI_query_operation_property_string_list(
+int QDMI_query_operation_at_site_property_string_list(
     const char *operation, const int *sites, const int num_sites,
     const QDMI_Operation_Property prop, char ***value, int *size) {
   return QDMI_ERROR_INVALID_ARGUMENT;
 }
 
-int QDMI_query_operation_property_double_list(
+int QDMI_query_operation_at_site_property_double_list(
     const char *operation, const int *sites, const int num_sites,
     const QDMI_Operation_Property prop, double **value, int *size) {
   return QDMI_ERROR_INVALID_ARGUMENT;
 }
 
-int QDMI_query_operation_property_int_list(const char *operation,
-                                           const int *sites,
-                                           const int num_sites,
-                                           const QDMI_Operation_Property prop,
-                                           int **value, int *size) {
+int QDMI_query_operation_at_site_property_int_list(
+    const char *operation, const int *sites, const int num_sites,
+    const QDMI_Operation_Property prop, int **value, int *size) {
   return QDMI_ERROR_INVALID_ARGUMENT;
 }
 

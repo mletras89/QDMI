@@ -11,6 +11,24 @@ endif()
 # add CXX language support
 enable_language(CXX)
 
+# ------------------------------------------------------------------------------
+# Interface Test
+# ------------------------------------------------------------------------------
+# test that a backend implementation implements all functions NOTE: This
+# executable is not meant to be ever executed, only linked.
+add_executable(test_backend5 test_functions.c)
+# link the Google test infrastructure to the test executable.
+target_link_libraries(test_backend5 PRIVATE qdmi::qdmi backend5)
+
+# test that a backend implementation implements all functions NOTE: This
+# executable is not meant to be ever executed, only linked.
+add_executable(test_backend7 test_functions.c)
+# link the Google test infrastructure to the test executable.
+target_link_libraries(test_backend7 PRIVATE qdmi::qdmi backend7)
+
+# ------------------------------------------------------------------------------
+# Functional Tests
+# ------------------------------------------------------------------------------
 # create an executable in which the tests will be stored
 add_executable(qdmi_test test_qdmi.cpp)
 
@@ -26,4 +44,4 @@ gtest_discover_tests(
              DISCOVERY_TIMEOUT 60)
 
 # ensure backend5 and backend7 are built whenever qdmi_test is built
-add_dependencies(qdmi_test backend5 backend7)
+add_dependencies(qdmi_test backend5 backend7 test_backend5 test_backend7)
