@@ -99,8 +99,11 @@ typedef int (*QDMI_query_operation_property_int_list_t)(
 typedef int (*QDMI_control_submit_qasm_t)(char *qasm_string, int num_shots,
                                           QDMI_Job *job);
 
-typedef int (*QDMI_control_submit_qir_t)(char *qir_string, int num_shots,
-                                         QDMI_Job *job);
+typedef int (*QDMI_control_submit_qir_string_t)(char *qir_string, int num_shots,
+                                                QDMI_Job *job);
+
+typedef int (*QDMI_control_submit_qir_module_t)(void *qir_module, int num_shots,
+                                                QDMI_Job *job);
 
 typedef int (*QDMI_control_cancel_t)(QDMI_Job job);
 
@@ -193,8 +196,12 @@ typedef struct QDMI_Device_impl_d {
 
   /// Function pointer to the @code QDMI_control_submit_qasm @endcode function.
   QDMI_control_submit_qasm_t QDMI_control_submit_qasm;
-  /// Function pointer to the @code QDMI_control_submit_qir @endcode function.
-  QDMI_control_submit_qir_t QDMI_control_submit_qir;
+  /// Function pointer to the @code QDMI_control_submit_qir_string @endcode
+  /// function.
+  QDMI_control_submit_qir_string_t QDMI_control_submit_qir_string;
+  /// Function pointer to the @code QDMI_control_submit_qir_module @endcode
+  /// function.
+  QDMI_control_submit_qir_module_t QDMI_control_submit_qir_module;
   /// Function pointer to the @code QDMI_control_cancel @endcode function.
   QDMI_control_cancel_t QDMI_control_cancel;
   /// Function pointer to the @code QDMI_control_check @endcode function.

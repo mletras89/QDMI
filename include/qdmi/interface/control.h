@@ -5,9 +5,30 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
 /** @file
- * @brief Define the interface for controlling a QDMI device.
+ * @brief The interface for controlling a device via QDMI.
+ * @details The control interface allows submitting jobs to a device, managing
+ * the jobs, and retrieving the results.
+ *
+ * Consumers of the interface may assume that at least one of the submission
+ * functions
+ * - @ref QDMI_control_submit_qir_module
+ * - @ref QDMI_control_submit_qir_string
+ * - @ref QDMI_control_submit_qasm
+ *
+ * is implemented by the backend. Assuming the computation is generally
+ * available as a QIR module, a reasonable strategy for the job submission would
+ * be to
+ * - try submitting the QIR module directly.
+ * - if that fails, try converting the QIR module to a QIR string and submit
+ * that.
+ * - if that fails, try converting the QIR string to a QASM string and submit
+ * that.
+ *
+ * Based on the assumption that any backend is supposed to support at least one
+ * of the submission functions, the above procedure should always succeed.
+ * @see qdmi/backend/control.h for the backend interface.
  */
-
+// todo: it would be nice to show an example of this in the documentation
 #pragma once
 
 #include "qdmi/return_codes.h"
@@ -43,7 +64,7 @@ typedef struct QDMI_Job_impl_d *QDMI_Job;
  * @param qasm_string The QASM string to submit.
  * @param num_shots The number of shots to take.
  * @param job The job to submit.
- * @return int Returns QDMI_SUCCESS if the job was successfully submitted,
+ * @return @ref QDMI_SUCCESS if the job was successfully submitted,
  * otherwise an error code.
  */
 int QDMI_control_submit_qasm(QDMI_Device dev, char *qasm_string, int num_shots,
@@ -58,18 +79,33 @@ int QDMI_control_submit_qasm(QDMI_Device dev, char *qasm_string, int num_shots,
  * @param qir_string The QIR string to submit.
  * @param num_shots The number of shots to take.
  * @param job The job to submit.
- * @return int Returns QDMI_SUCCESS if the job was successfully submitted,
+ * @return @ref QDMI_SUCCESS if the job was successfully submitted,
  * otherwise an error code.
  */
-int QDMI_control_submit_qir(QDMI_Device dev, char *qir_string, int num_shots,
-                            QDMI_Job *job);
+int QDMI_control_submit_qir_string(QDMI_Device dev, char *qir_string,
+                                   int num_shots, QDMI_Job *job);
+
+/**
+ * @brief Submit a QIR module to the device.
+ * @details Create a job consisting of a circuit represented by an in-memory
+ * LLVM module containing QIR and submit it to the device. The returned job
+ * handle helps to track the job status.
+ * @param dev The device to submit the job to.
+ * @param qir_module The module to submit.
+ * @param num_shots The number of shots to take.
+ * @param job The job to submit.
+ * @return @ref QDMI_SUCCESS if the job was successfully submitted,
+ * otherwise an error code.
+ */
+int QDMI_control_submit_qir_module(QDMI_Device dev, void *qir_module,
+                                   int num_shots, QDMI_Job *job);
 
 /**
  * @brief Cancel an already submitted job.
  * @details Remove the job from the queue of waiting jobs.
  * @param dev The device to cancel the job on.
  * @param job The job to cancel.
- * @return int Returns QDMI_SUCCESS if the job was successfully cancelled,
+ * @return @ref QDMI_SUCCESS if the job was successfully cancelled,
  * otherwise an error code.
  */
 int QDMI_control_cancel(QDMI_Device dev, QDMI_Job job);
@@ -79,7 +115,7 @@ int QDMI_control_cancel(QDMI_Device dev, QDMI_Job job);
  * @param dev The device to check the job status on.
  * @param job The job to check the status of.
  * @param status The status of the job.
- * @return int Returns QDMI_SUCCESS if the job status was successfully checked,
+ * @return @ref QDMI_SUCCESS if the job status was successfully checked,
  * otherwise an error code.
  */
 int QDMI_control_check(QDMI_Device dev, QDMI_Job job, QDMI_Job_Status *status);
@@ -88,7 +124,7 @@ int QDMI_control_check(QDMI_Device dev, QDMI_Job job, QDMI_Job_Status *status);
  * @brief Wait for a job to finish.
  * @param dev The device to wait for the job on.
  * @param job The job to wait for.
- * @return int Returns QDMI_SUCCESS if the job is finished, otherwise an error
+ * @return @ref QDMI_SUCCESS if the job is finished, otherwise an error
  * code when the waiting failed.
  */
 int QDMI_control_wait(QDMI_Device dev, QDMI_Job job);
@@ -114,7 +150,7 @@ int QDMI_control_wait(QDMI_Device dev, QDMI_Job job);
  * @param data The list of keys.
  * @param counts The list of values.
  * @param size The size, i.e., the number of elements of each list.
- * @return int Returns QDMI_SUCCESS if the results were successfully retrieved,
+ * @return @ref QDMI_SUCCESS if the results were successfully retrieved,
  * otherwise an error code.
  * @see QDMI_control_get_raw
  */
@@ -133,7 +169,7 @@ int QDMI_control_get_hist(QDMI_Device dev, QDMI_Job job, char ***data,
  * @param job The job to retrieve the results from.
  * @param data The list of raw measurement outcomes.
  * @param size The size, i.e., the number of elements of the list.
- * @return int Returns QDMI_SUCCESS if the results were successfully retrieved,
+ * @return @ref QDMI_SUCCESS if the results were successfully retrieved,
  * otherwise an error code.
  */
 int QDMI_control_get_raw(QDMI_Device dev, QDMI_Job job, char ***data,
@@ -146,10 +182,13 @@ int QDMI_control_get_raw(QDMI_Device dev, QDMI_Job job, char ***data,
  * @{
  */
 
+// TODO: should we remove this for the first version and create a tracking issue
+// for properly designing the interface for calibration? I have a feeling that
+// this should become a separate component next to query and control
 /**
  * @brief Initiate a calibration run on the device.
  * @param dev The device to initialize.
- * @return int Returns QDMI_SUCCESS if the calibration has started, otherwise an
+ * @return @ref QDMI_SUCCESS if the calibration has started, otherwise an
  * error code.
  */
 int QDMI_control_calibrate(QDMI_Device dev);

@@ -32,7 +32,7 @@ typedef enum QDMI_JOB_STATUS_T QDMI_Job_Status;
  */
 enum QDMI_STATUS {
   QDMI_WARN_GENERAL = 1,
-  QDMI_SUCCESS = 0,
+  QDMI_SUCCESS = 0, /**< The operation was successful. */
   QDMI_ERROR_FATAL = -1,
   QDMI_ERROR_OUT_OF_MEM = -2,
   QDMI_ERROR_NOT_IMPLEMENTED = -3,

@@ -5,8 +5,19 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
 /** @file
- * @brief Define the control interface for a QDMI backend.
+ * @brief The control interface implemented by a QDMI backend.
+ * @see qdmi/interface/control.h for the API interface.
+ * @details
+ * Backend implementations are expected to provide **at least one** of the
+ * submission functions
+ * - @ref QDMI_control_submit_qir_module (preferred)
+ * - @ref QDMI_control_submit_qir_string
+ * - @ref QDMI_control_submit_qasm
+ *
+ * For all of these, the remaining two can be implemented via simple
+ * conversions.
  */
+// todo: it would be nice to show an example of this in the documentation
 
 #pragma once
 
@@ -36,7 +47,7 @@ typedef struct QDMI_Job_impl_d *QDMI_Job;
  * @param qasm_string The QASM string to submit.
  * @param num_shots The number of shots to take.
  * @param job The job to submit.
- * @return int Returns QDMI_SUCCESS if the job was successfully submitted,
+ * @return @ref QDMI_SUCCESS if the job was successfully submitted,
  * otherwise an error code.
  */
 int QDMI_control_submit_qasm(char *qasm_string, int num_shots, QDMI_Job *job);
@@ -49,16 +60,31 @@ int QDMI_control_submit_qasm(char *qasm_string, int num_shots, QDMI_Job *job);
  * @param qir_string The QIR string to submit.
  * @param num_shots The number of shots to take.
  * @param job The job to submit.
- * @return int Returns QDMI_SUCCESS if the job was successfully submitted,
+ * @return @ref QDMI_SUCCESS if the job was successfully submitted,
  * otherwise an error code.
  */
-int QDMI_control_submit_qir(char *qir_string, int num_shots, QDMI_Job *job);
+int QDMI_control_submit_qir_string(char *qir_string, int num_shots,
+                                   QDMI_Job *job);
+
+/**
+ * @brief Submit a QIR module to the device.
+ * @details Create a job consisting of a circuit represented by an in-memory
+ * LLVM module containing QIR and submit it to the device. The returned job
+ * handle helps to track the job status.
+ * @param qir_module The module to submit.
+ * @param num_shots The number of shots to take.
+ * @param job The job to submit.
+ * @return @ref QDMI_SUCCESS if the job was successfully submitted,
+ * otherwise an error code.
+ */
+int QDMI_control_submit_qir_module(void *qir_module, int num_shots,
+                                   QDMI_Job *job);
 
 /**
  * @brief Cancel an already submitted job.
  * @details Remove the job from the queue of waiting jobs.
  * @param job The job to cancel.
- * @return int Returns QDMI_SUCCESS if the job was successfully cancelled,
+ * @return @ref QDMI_SUCCESS if the job was successfully cancelled,
  * otherwise an error code.
  */
 int QDMI_control_cancel(QDMI_Job job);
@@ -67,7 +93,7 @@ int QDMI_control_cancel(QDMI_Job job);
  * @brief Check the status of a job.
  * @param job The job to check the status of.
  * @param status The status of the job.
- * @return int Returns QDMI_SUCCESS if the job status was successfully checked,
+ * @return @ref QDMI_SUCCESS if the job status was successfully checked,
  * otherwise an error code.
  */
 int QDMI_control_check(QDMI_Job job, QDMI_Job_Status *status);
@@ -75,7 +101,7 @@ int QDMI_control_check(QDMI_Job job, QDMI_Job_Status *status);
 /**
  * @brief Wait for a job to finish.
  * @param job The job to wait for.
- * @return int Returns QDMI_SUCCESS if the job is finished, otherwise an error
+ * @return @ref QDMI_SUCCESS if the job is finished, otherwise an error
  * code when the waiting failed.
  */
 int QDMI_control_wait(QDMI_Job job);
@@ -100,7 +126,7 @@ int QDMI_control_wait(QDMI_Job job);
  * @param data The list of keys.
  * @param counts The list of values.
  * @param size The size, i.e., the number of elements of each list.
- * @return int Returns QDMI_SUCCESS if the results were successfully retrieved,
+ * @return @ref QDMI_SUCCESS if the results were successfully retrieved,
  * otherwise an error code.
  * @see QDMI_control_get_raw
  */
@@ -117,7 +143,7 @@ int QDMI_control_get_hist(QDMI_Job job, char ***data, int **counts, int *size);
  * @param job The job to retrieve the results from.
  * @param data The list of raw measurement outcomes.
  * @param size The size, i.e., the number of elements of the list.
- * @return int Returns QDMI_SUCCESS if the results were successfully retrieved,
+ * @return @ref QDMI_SUCCESS if the results were successfully retrieved,
  * otherwise an error code.
  */
 int QDMI_control_get_raw(QDMI_Job job, char ***data, int *size);
@@ -133,7 +159,7 @@ int QDMI_control_get_raw(QDMI_Job job, char ***data, int *size);
  * @brief Initialize a device.
  * @details A device can expect that this function is called once in the
  * beginning before any other functions are invoked on that device.
- * @return int Returns QDMI_SUCCESS if the initialization was successful,
+ * @return @ref QDMI_SUCCESS if the initialization was successful,
  * otherwise an error code.
  */
 int QDMI_control_initialize(void);
@@ -143,14 +169,14 @@ int QDMI_control_initialize(void);
  * @details A device can expect that this function is called once at the end of
  * a session and no other functions are invoked on that device after that
  * anymore.
- * @return int Returns QDMI_SUCCESS if the initialization was successful,
+ * @return @ref QDMI_SUCCESS if the initialization was successful,
  * otherwise an error code.
  */
 int QDMI_control_finalize(void);
 
 /**
  * @brief Initiate a calibration run on the device.
- * @return int Returns QDMI_SUCCESS if the calibration has started, otherwise an
+ * @return @ref QDMI_SUCCESS if the calibration has started, otherwise an
  * error code.
  */
 int QDMI_control_calibrate(void);
