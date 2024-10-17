@@ -80,8 +80,8 @@ typedef enum QDMI_DEVICE_STATUS_T QDMI_Device_Status;
 
 /// Enum of the site properties that can be queried.
 enum QDMI_SITE_PROPERTY_T {
-  QDMI_T1_TIME = 0, /**< The T1 time of a site in µs as float. */
-  QDMI_T2_TIME = 1, /**< The T2 time of a site in µs as float. */
+  QDMI_T1_TIME = 0, /**< @code double@endcode The T1 time of a site in µs. */
+  QDMI_T2_TIME = 1, /**< @code double@endcode The T2 time of a site in µs. */
   /**
    * @brief The maximum value of the enum.
    * @details This value can be used for bounds checks by the backends.
@@ -97,8 +97,9 @@ typedef enum QDMI_SITE_PROPERTY_T QDMI_Site_Property;
 /// Enum of the operation properties that can be queried.
 enum QDMI_OPERATION_PROPERTY_T {
   QDMI_OPERATION_DURATION =
-      0, /**< The duration of an operation in µs as float. */
-  QDMI_OPERATION_FIDELITY = 1, /**< The fidelity of an operation as float. */
+      0, /**< @code double@endcode The duration of an operation in µs. */
+  QDMI_OPERATION_FIDELITY =
+      1, /**< @code double@endcode The fidelity of an operation. */
   /**
    * @brief The maximum value of the enum.
    * @details This value can be used for bounds checks by the backends.
