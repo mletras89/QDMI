@@ -16,6 +16,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 extern "C" {
 #endif
 
+/// Enum of the device properties that can be queried.
 enum QDMI_JOB_STATUS_T {
   QDMI_JOB_STATUS_DONE =
       0, /**< The job is done and the result can be retrieved. */
@@ -23,6 +24,7 @@ enum QDMI_JOB_STATUS_T {
       1 /**< The job is running and the result is not yet available. */
 };
 
+/// Type of the device status.
 typedef enum QDMI_JOB_STATUS_T QDMI_Job_Status;
 
 /**
