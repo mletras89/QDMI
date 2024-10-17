@@ -33,8 +33,7 @@ target_link_libraries(test_backend7 PRIVATE qdmi::qdmi backend7)
 add_executable(qdmi_test test_qdmi.cpp)
 
 # link the Google test infrastructure to the test executable.
-target_link_libraries(qdmi_test PRIVATE gtest_main qdmi::qdmi
-                                        qinfo::project_warnings)
+target_link_libraries(qdmi_test PRIVATE gtest_main qdmi::qdmi)
 
 # discover tests
 gtest_discover_tests(
