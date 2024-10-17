@@ -36,36 +36,24 @@ int QDMI_device_open(const char *lib_name, QDMI_Device *device) {
   // load the function symbols from the dynamic library
   LOAD_SYMBOL(*device, QDMI_query_device_property_string);
   LOAD_SYMBOL(*device, QDMI_query_device_property_double);
-  LOAD_SYMBOL(*device, QDMI_query_device_property_float);
-  LOAD_SYMBOL(*device, QDMI_query_device_property_int32);
-  LOAD_SYMBOL(*device, QDMI_query_device_property_int64);
+  LOAD_SYMBOL(*device, QDMI_query_device_property_int);
   LOAD_SYMBOL(*device, QDMI_query_device_property_string_list);
   LOAD_SYMBOL(*device, QDMI_query_device_property_double_list);
-  LOAD_SYMBOL(*device, QDMI_query_device_property_float_list);
-  LOAD_SYMBOL(*device, QDMI_query_device_property_int32_list);
-  LOAD_SYMBOL(*device, QDMI_query_device_property_int64_list);
+  LOAD_SYMBOL(*device, QDMI_query_device_property_int_list);
 
   LOAD_SYMBOL(*device, QDMI_query_site_property_string);
   LOAD_SYMBOL(*device, QDMI_query_site_property_double);
-  LOAD_SYMBOL(*device, QDMI_query_site_property_float);
-  LOAD_SYMBOL(*device, QDMI_query_site_property_int32);
-  LOAD_SYMBOL(*device, QDMI_query_site_property_int64);
+  LOAD_SYMBOL(*device, QDMI_query_site_property_int);
   LOAD_SYMBOL(*device, QDMI_query_site_property_string_list);
   LOAD_SYMBOL(*device, QDMI_query_site_property_double_list);
-  LOAD_SYMBOL(*device, QDMI_query_site_property_float_list);
-  LOAD_SYMBOL(*device, QDMI_query_site_property_int32_list);
-  LOAD_SYMBOL(*device, QDMI_query_site_property_int64_list);
+  LOAD_SYMBOL(*device, QDMI_query_site_property_int_list);
 
   LOAD_SYMBOL(*device, QDMI_query_operation_property_string);
   LOAD_SYMBOL(*device, QDMI_query_operation_property_double);
-  LOAD_SYMBOL(*device, QDMI_query_operation_property_float);
-  LOAD_SYMBOL(*device, QDMI_query_operation_property_int32);
-  LOAD_SYMBOL(*device, QDMI_query_operation_property_int64);
+  LOAD_SYMBOL(*device, QDMI_query_operation_property_int);
   LOAD_SYMBOL(*device, QDMI_query_operation_property_string_list);
   LOAD_SYMBOL(*device, QDMI_query_operation_property_double_list);
-  LOAD_SYMBOL(*device, QDMI_query_operation_property_float_list);
-  LOAD_SYMBOL(*device, QDMI_query_operation_property_int32_list);
-  LOAD_SYMBOL(*device, QDMI_query_operation_property_int64_list);
+  LOAD_SYMBOL(*device, QDMI_query_operation_property_int_list);
 
   LOAD_SYMBOL(*device, QDMI_control_submit_qasm);
   LOAD_SYMBOL(*device, QDMI_control_submit_qir);
