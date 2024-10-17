@@ -35,8 +35,8 @@ enum QDMI_DEVICE_PROPERTY_T {
    * pairs in the list are flattened such that the first qubit of the pair is at
    * index 2n and the second qubit is at index 2n+1. For example, a 2-qubit
    * device with a coupling map of (0, 1) would return @code {0, 1}@endcode. A
-   * 3-qubit device with a coupling map of (0, 1), (1, 2) would return @code{0,
-   * 1, 1, 2}@endcode.
+   * 3-qubit device with a coupling map of (0, 1), (1, 2) would return
+   * @code {0, 1, 1, 2}@endcode.
    */
   QDMI_COUPLING_MAP = 7,
   /**
@@ -96,10 +96,14 @@ typedef enum QDMI_SITE_PROPERTY_T QDMI_Site_Property;
 
 /// Enum of the operation properties that can be queried.
 enum QDMI_OPERATION_PROPERTY_T {
-  QDMI_OPERATION_DURATION =
-      0, /**< @code double@endcode The duration of an operation in µs. */
-  QDMI_OPERATION_FIDELITY =
-      1, /**< @code double@endcode The fidelity of an operation. */
+  /**
+   * @brief @code double @endcode The duration of an operation in µs.
+   */
+  QDMI_OPERATION_DURATION = 0,
+  /**
+   * @brief @code double @endcode The fidelity of an operation.
+   */
+  QDMI_OPERATION_FIDELITY = 1,
   /**
    * @brief The maximum value of the enum.
    * @details This value can be used for bounds checks by the backends.
