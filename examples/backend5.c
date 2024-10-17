@@ -20,8 +20,6 @@ typedef struct QDMI_Job_impl_d {
   int id;
 } QDMI_Job_impl_t;
 
-typedef struct QDMI_Job_impl_d *QDMI_Job;
-
 int QDMI_query_device_property_string(const QDMI_Device_Property prop,
                                       char **value) {
   if (prop == QDMI_NAME) {
