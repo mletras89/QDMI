@@ -20,6 +20,18 @@ if(QDMI_INSTALL)
       "${QDMI_CMAKE_CONFIG_DIR}/qdmi-targets.cmake")
 endif()
 
+if(NOT TARGET project_warnings)
+	# Use the warnings specified in CompilerWarnings.cmake
+	add_library(project_warnings INTERFACE)
+
+	# Standard compiler warnings
+	include(${PROJECT_SOURCE_DIR}/cmake/CompilerWarnings.cmake)
+	set_project_warnings(project_warnings)
+
+	# Add alias
+	add_library(qdmi::project_warnings ALIAS project_warnings)
+endif()
+
 if(NOT TARGET qdmi)
   # collect all private source files
   file(GLOB_RECURSE QDMI_PRIVATE_SOURCES CONFIGURE_DEPENDS private/*.c)
@@ -36,11 +48,8 @@ if(NOT TARGET qdmi)
     PUBLIC $<BUILD_INTERFACE:${QDMI_INCLUDE_BUILD_DIR}>
     PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/private>)
 
-  # add warnings to the library target_link_libraries(qdmi PRIVATE
-  # qinfo::project_warnings)
-
-  # link to qinfo
-  target_link_libraries(qdmi PUBLIC qinfo::qinfo)
+  # add warnings to the library
+  target_link_libraries(qdmi PRIVATE qdmi::project_warnings)
 
   # set required C standard
   target_compile_features(qdmi PUBLIC c_std_11)
