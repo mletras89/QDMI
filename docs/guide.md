@@ -48,13 +48,18 @@ In order to include source files to be listed among the menu item `API Reference
 must be marked as documented. This is accomplished by adding a comment like the following to the top
 of the file. Right now, this is done for all files in the include directory.
 
-```C
-/** @file
- * @brief Include all public headers for the QDMI interface.
- * @details The detailed description of the interface is provided in the @ref
- * interface/control.h and @ref interface/query.h.
- */
-```
+\verbatim /\*\* @file
+
+- @brief Include all public headers for the QDMI interface.
+- @details The detailed description of the interface is provided in the @ref
+- interface/control.h and @ref interface/query.h. \*/ \endverbatim
+
+<div class="tabbed">
+
+- <b class="tab-title">Tab 1</b> This is the content of tab 1
+- <b class="tab-title">Tab 2</b> This is the content of tab 2
+
+</div>
 
 ### Further Links
 
