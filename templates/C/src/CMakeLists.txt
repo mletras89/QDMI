@@ -5,4 +5,4 @@
 # ------------------------------------------------------------------------------
 
 add_library(my_backend SHARED backend.c)
-target_link_libraries(my_backend PRIVATE qdmi::qdmi)
+target_link_libraries(my_backend PRIVATE qdmi::qdmi qdmi::project_warnings)

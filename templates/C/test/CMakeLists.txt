@@ -16,7 +16,7 @@ enable_language(CXX)
 # NOTE: This executable is not meant to be ever executed, only linked.
 add_executable(my_backend_implemented_test test_functions.c)
 # link the Google test infrastructure to the test executable.
-target_link_libraries(my_backend_implemented_test PRIVATE qdmi::qdmi my_backend)
+target_link_libraries(my_backend_implemented_test PRIVATE qdmi::qdmi qdmi::project_warnings my_backend)
 
 # ------------------------------------------------------------------------------
 # Functional Tests
@@ -26,7 +26,7 @@ target_link_libraries(my_backend_implemented_test PRIVATE qdmi::qdmi my_backend)
 add_executable(my_backend_test test_my_backend.cpp)
 
 # link the Google test infrastructure to the test executable.
-target_link_libraries(my_backend_test PRIVATE gtest_main qdmi::qdmi)
+target_link_libraries(my_backend_test PRIVATE gtest_main qdmi::qdmi qdmi::project_warnings)
 
 # discover tests
 gtest_discover_tests(
