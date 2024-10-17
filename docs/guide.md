@@ -3,6 +3,65 @@
 <!-- IMPORTANT: Keep the line above as the first line. -->
 <!-- This file is a static page and included in the CMakeLists.txt file. -->
 
+Ready to contribute to QDMI? This guide will help you get started.
+
+## Initial Setup
+
+1. Fork the [QDMI](https://github.com/Munich-Quantum-Software-Stack/QDMI) repository on GitHub (see <https://docs.github.com/en/get-started/quickstart/fork-a-repo>).
+
+2. Clone your fork locally
+
+   ```sh
+   git clone git@github.com:your_name_here/QDMI.git
+   ```
+   
+3. Change into the project directory
+
+   ```sh
+   cd QDMI
+   ```
+   
+4. Create a branch for local development
+
+   ```sh
+   git checkout -b name-of-your-bugfix-or-feature
+   ```
+   
+   Now you can make your changes locally.
+
+5. (Optional, **highly recommended**) Install [pre-commit](https://pre-commit.com/) to automatically run a set of checks before each commit. The easiest way to install pre-commit is via [uv](https://docs.astral.sh/uv/).
+
+   ```sh
+   uv tool install pre-commit
+   pre-commit install
+   ```
+
+   \note
+   If you do not have `uv` installed, you can install it via
+    ```sh
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    ```
+   on macOS and Linux or
+   ```sh
+   powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+   ```
+   on Windows.
+
+## Working on Source Code
+
+Building the project requires a C compiler supporting _C11_ and a minimum CMake version of _3.19_.
+The example backends and the tests require a C++ compiler supporting _C++17_.
+
+### Configure and Build
+
+QDMI uses CMake as its build system.
+Building a project using CMake is a two-step process:
+
+First, the project needs to be _configured_ by calling
+
+
+
+
 ## Build Instructions
 
 ### Documentation
@@ -48,11 +107,15 @@ In order to include source files to be listed among the menu item `API Reference
 must be marked as documented. This is accomplished by adding a comment like the following to the top
 of the file. Right now, this is done for all files in the include directory.
 
-\verbatim /\*\* @file
+\verbatim
 
-- @brief Include all public headers for the QDMI interface.
-- @details The detailed description of the interface is provided in the @ref
-- interface/control.h and @ref interface/query.h. \*/ \endverbatim
+/** @file
+ * @brief Include all public headers for the QDMI interface.
+ * @details The detailed description of the interface is provided in the 
+ * @ref interface/control.h and @ref interface/query.h.
+ */
+
+\endverbatim
 
 <div class="tabbed">
 
