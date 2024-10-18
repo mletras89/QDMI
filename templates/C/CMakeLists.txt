@@ -16,12 +16,7 @@ project(
 # make scripts available to cmake
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-if(TARGET qdmi::qdmi)
-  message(STATUS "Backend template: QDMI is available.")
-else()
-  message(STATUS "Backend template: QDMI will be included via FetchContent")
-  include(cmake/ExternalDependencies.cmake)
-endif()
+include(cmake/ExternalDependencies.cmake)
 
 # set the include directory for the build tree
 set(QDMI_INCLUDE_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
