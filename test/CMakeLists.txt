@@ -16,17 +16,17 @@ enable_language(CXX)
 # ------------------------------------------------------------------------------
 # test that a backend implementation implements all functions NOTE: This
 # executable is not meant to be ever executed, only linked.
-add_executable(test_backend5 test_functions.cpp)
+add_executable(test_c_backend test_impl.cpp)
 # link the Google test infrastructure to the test executable.
-target_link_libraries(test_backend5 PRIVATE qdmi::qdmi qdmi::project_warnings
-                                            backend5)
+target_link_libraries(test_c_backend PRIVATE qdmi::qdmi qdmi::project_warnings
+                                             c_backend)
 
 # test that a backend implementation implements all functions NOTE: This
 # executable is not meant to be ever executed, only linked.
-add_executable(test_backend7 test_functions.cpp)
+add_executable(test_cxx_backend test_impl.cpp)
 # link the Google test infrastructure to the test executable.
-target_link_libraries(test_backend7 PRIVATE qdmi::qdmi qdmi::project_warnings
-                                            backend7)
+target_link_libraries(test_cxx_backend
+                      PRIVATE qdmi::qdmi qdmi::project_warnings cxx_backend)
 
 # ------------------------------------------------------------------------------
 # Functional Tests
@@ -45,5 +45,6 @@ gtest_discover_tests(
   PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
              DISCOVERY_TIMEOUT 60)
 
-# ensure backend5 and backend7 are built whenever qdmi_test is built
-add_dependencies(qdmi_test backend5 backend7 test_backend5 test_backend7)
+# ensure c_backend and cxx_backend are built whenever qdmi_test is built
+add_dependencies(qdmi_test c_backend cxx_backend test_c_backend
+                 test_cxx_backend)
