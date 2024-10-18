@@ -57,7 +57,8 @@ include(cmake/ExternalDependencies.cmake)
 # set the include directory for the build tree
 set(QDMI_INCLUDE_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
-# add main library code
+# add main library code IMPORTANT: This directory must be included before the
+# templates. Find those couple of lines below.
 add_subdirectory(src)
 # add documentation
 add_subdirectory(docs)
@@ -66,6 +67,10 @@ add_subdirectory(docs)
 if(BUILD_QDMI_TESTS)
   enable_testing()
   include(GoogleTest)
+  # include examples, these are used by the tests
   add_subdirectory(examples)
   add_subdirectory(test)
+  # include templates
+  add_subdirectory(templates/C)
+  add_subdirectory(templates/C++)
 endif()

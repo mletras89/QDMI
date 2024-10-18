@@ -16,15 +16,17 @@ enable_language(CXX)
 # ------------------------------------------------------------------------------
 # test that a backend implementation implements all functions NOTE: This
 # executable is not meant to be ever executed, only linked.
-add_executable(test_backend5 test_functions.c)
+add_executable(test_backend5 test_functions.cpp)
 # link the Google test infrastructure to the test executable.
-target_link_libraries(test_backend5 PRIVATE qdmi::qdmi qdmi::project_warnings backend5)
+target_link_libraries(test_backend5 PRIVATE qdmi::qdmi qdmi::project_warnings
+                                            backend5)
 
 # test that a backend implementation implements all functions NOTE: This
 # executable is not meant to be ever executed, only linked.
-add_executable(test_backend7 test_functions.c)
+add_executable(test_backend7 test_functions.cpp)
 # link the Google test infrastructure to the test executable.
-target_link_libraries(test_backend7 PRIVATE qdmi::qdmi qdmi::project_warnings backend7)
+target_link_libraries(test_backend7 PRIVATE qdmi::qdmi qdmi::project_warnings
+                                            backend7)
 
 # ------------------------------------------------------------------------------
 # Functional Tests
@@ -33,7 +35,8 @@ target_link_libraries(test_backend7 PRIVATE qdmi::qdmi qdmi::project_warnings ba
 add_executable(qdmi_test test_qdmi.cpp)
 
 # link the Google test infrastructure to the test executable.
-target_link_libraries(qdmi_test PRIVATE gtest_main qdmi::qdmi qdmi::project_warnings)
+target_link_libraries(qdmi_test PRIVATE gtest_main qdmi::qdmi
+                                        qdmi::project_warnings)
 
 # discover tests
 gtest_discover_tests(
