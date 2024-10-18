@@ -14,8 +14,8 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include "qdmi/interface.h"
 
-#include <cstddef>
 #include <string>
+#include <utility>
 #include <vector>
 
 class Tool {
@@ -23,7 +23,7 @@ private:
   QDMI_Device device;
 
 public:
-  explicit Tool(QDMI_Device device) : device(device) {}
+  explicit Tool(QDMI_Device dev) : device(dev) {}
 
 private:
   int getDeviceNumQubits();

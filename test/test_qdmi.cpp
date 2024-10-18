@@ -109,14 +109,14 @@ TEST_F(QDMITest, QueryAvgT1Time) {
   double value = 0;
   QDMI_session_open_device(session, c_backend_name.c_str(), &device);
   QDMI_query_device_property_double(device, QDMI_AVG_T1_TIME, &value);
-  ASSERT_FLOAT_EQ(value, 1000);
+  ASSERT_DOUBLE_EQ(value, 1000);
 }
 
 TEST_F(QDMITest, QueryAvgT2Time) {
   double value = 0;
   QDMI_session_open_device(session, c_backend_name.c_str(), &device);
   QDMI_query_device_property_double(device, QDMI_AVG_T2_TIME, &value);
-  ASSERT_FLOAT_EQ(value, 100000);
+  ASSERT_DOUBLE_EQ(value, 100000);
 }
 
 TEST_F(QDMITest, QueryGateSet) {
