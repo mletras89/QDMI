@@ -18,31 +18,32 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <iterator>
 #include <regex>
 #include <sstream>
+#include <stdexcept>
 #include <string>
 #include <utility>
 #include <vector>
 
-int Tool::getDeviceNumQubits() {
+int Tool::get_device_num_qubits() {
   int num_qubits = 0;
   QDMI_query_device_property_int(device, QDMI_NUM_QUBITS, &num_qubits);
   return num_qubits;
 }
 
-std::vector<std::pair<int, int>> Tool::getDeviceCouplingMap() {
+std::vector<std::pair<int, int>> Tool::get_device_coupling_map() {
   int size = 0;
   int *values = nullptr;
   QDMI_query_device_property_int_list(device, QDMI_COUPLING_MAP, &values,
                                       &size);
   std::vector<std::pair<int, int>> coupling_map;
   for (int i = 0; i < size; i += 2) {
-    coupling_map.push_back(std::make_pair(values[i], values[i + 1]));
+    coupling_map.emplace_back(values[i], values[i + 1]);
   }
   return coupling_map;
 }
 
-std::string Tool::replaceAllOccurrences(std::string str,
-                                        const std::string &from,
-                                        const std::string &to) {
+std::string Tool::replace_all_occurrences(std::string str,
+                                          const std::string &from,
+                                          const std::string &to) {
   size_t start_pos = 0;
   while ((start_pos = str.find(from, start_pos)) != std::string::npos) {
     str.replace(start_pos, from.length(), to);
@@ -53,7 +54,7 @@ std::string Tool::replaceAllOccurrences(std::string str,
 
 std::string Tool::compile(const std::string &qasm_string) {
   // Check whether the circuit only uses up to two qubits
-  const std::regex re("qreg \\w+\\[(\\d)\\];");
+  const std::regex re(R"(qreg \w+\[(\d)\];)");
   const auto begin =
       std::sregex_iterator(qasm_string.begin(), qasm_string.end(), re);
   const auto end = std::sregex_iterator();
@@ -72,26 +73,26 @@ std::string Tool::compile(const std::string &qasm_string) {
                                 "this tool only supports up to two qubits.");
   }
   // Check whether the device provides enough qubits
-  if (num_qubits > getDeviceNumQubits()) {
+  if (num_qubits > get_device_num_qubits()) {
     throw std::invalid_argument(
         "The device does not provide enough qubits for the circuit.");
   }
   // Choose an arbitrary edge for the two qubits
-  const auto edge = getDeviceCouplingMap().front();
+  const auto edge = get_device_coupling_map().front();
   std::stringstream from;
   from << "qreg q[" << num_qubits << "];";
   std::stringstream to;
-  to << "qreg q[" << getDeviceNumQubits() << "];";
-  auto result = replaceAllOccurrences(qasm_string, from.str(), to.str());
+  to << "qreg q[" << get_device_num_qubits() << "];";
+  auto result = replace_all_occurrences(qasm_string, from.str(), to.str());
   from.clear();
   from << "q[0]";
   to.clear();
   to << "q[" << edge.first << "]";
-  result = replaceAllOccurrences(result, from.str(), to.str());
+  result = replace_all_occurrences(result, from.str(), to.str());
   from.clear();
   from << "q[1]";
   to.clear();
   to << "q[" << edge.second << "]";
-  result = replaceAllOccurrences(result, from.str(), to.str());
+  result = replace_all_occurrences(result, from.str(), to.str());
   return result;
 }

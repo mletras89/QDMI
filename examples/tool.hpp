@@ -26,12 +26,13 @@ public:
   explicit Tool(QDMI_Device dev) : device(dev) {}
 
 private:
-  int getDeviceNumQubits();
+  int get_device_num_qubits();
 
-  std::vector<std::pair<int, int>> getDeviceCouplingMap();
+  std::vector<std::pair<int, int>> get_device_coupling_map();
 
-  std::string replaceAllOccurrences(std::string str, const std::string &from,
-                                    const std::string &to);
+  static std::string replace_all_occurrences(std::string str,
+                                             const std::string &from,
+                                             const std::string &to);
 
 public:
   /**
