@@ -94,7 +94,8 @@ The code is publicly available hosted on GitHub at
 
 ### Under which license is QDMI released?
 
-QDMI is released under the Apache License v2.0 with LLVM Exceptions. See [LICENSE](LICENSE) for more
+QDMI is released under the Apache License v2.0 with LLVM Exceptions. See
+[LICENSE](https://github.com/Munich-Quantum-Software-Stack/QDMI/blob/develop/LICENSE) for more
 information. Any contribution to the project is assumed to be under the same license.
 
 ### Why is it written in C and not in Python?
