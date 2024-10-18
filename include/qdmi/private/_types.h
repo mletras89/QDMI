@@ -116,11 +116,11 @@ typedef int (*QDMI_control_get_hist_t)(QDMI_Job job, char ***data, int **counts,
 
 typedef int (*QDMI_control_get_raw_t)(QDMI_Job job, char ***data, int *size);
 
-typedef int (*QDMI_control_initialize_t)();
+typedef int (*QDMI_control_initialize_t)(void);
 
-typedef int (*QDMI_control_finalize_t)();
+typedef int (*QDMI_control_finalize_t)(void);
 
-typedef int (*QDMI_control_calibrate_t)();
+typedef int (*QDMI_control_calibrate_t)(void);
 
 /**
  * @brief Definition of the QDMI Device.
