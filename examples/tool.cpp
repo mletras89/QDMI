@@ -53,7 +53,7 @@ std::string Tool::replaceAllOccurrences(std::string str,
 
 std::string Tool::compile(const std::string &qasm_string) {
   // Check whether the circuit only uses up to two qubits
-  const std::regex re("^qreg \\w+\\[(\\d)\\];");
+  const std::regex re("qreg \\w+\\[(\\d)\\];");
   const auto begin =
       std::sregex_iterator(qasm_string.begin(), qasm_string.end(), re);
   const auto end = std::sregex_iterator();
