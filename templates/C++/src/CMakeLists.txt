@@ -9,3 +9,4 @@
 # accordingly.
 add_library(my_cxx_backend SHARED my_backend.cpp)
 target_link_libraries(my_cxx_backend PRIVATE qdmi::qdmi qdmi::project_warnings)
+add_library(qdmi::my_cxx_backend ALIAS my_cxx_backend)
