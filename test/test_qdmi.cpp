@@ -6,8 +6,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include "qdmi/interface.h"
 #include "test_impl.hpp"
-// TODO is that fine to include the header this way?
-#include "../examples/tool.hpp"
+#include "tool.hpp"
 
 #include <array>
 #include <cstdlib>
@@ -15,7 +14,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <string>
 
 // Instantiate the test suite with different parameters
-INSTANTIATE_TEST_SUITE_P(QDMIMyCBackend,         // Custom instantiation name
+INSTANTIATE_TEST_SUITE_P(QDMIBackend,            // Custom instantiation name
                          QDMIImplementationTest, // Test suite name
                          // Parameters to test with
                          ::testing::Values("../examples/libc_backend",
@@ -78,28 +77,28 @@ TEST_F(QDMITest, QueryNumQubits7) {
 }
 
 TEST_F(QDMITest, QueryDeviceName) {
-  char *value = NULL;
+  char *value = nullptr;
   QDMI_session_open_device(session, c_backend_name.c_str(), &device);
   QDMI_query_device_property_string(device, QDMI_NAME, &value);
   ASSERT_STREQ(value, "Backend with 5 qubits");
 }
 
 TEST_F(QDMITest, QueryDeviceName7) {
-  char *value = NULL;
+  char *value = nullptr;
   QDMI_session_open_device(session, cxx_backend_name.c_str(), &device);
   QDMI_query_device_property_string(device, QDMI_NAME, &value);
   ASSERT_STREQ(value, "Backend with 7 qubits");
 }
 
 TEST_F(QDMITest, QueryDeviceVersion) {
-  char *value = NULL;
+  char *value = nullptr;
   QDMI_session_open_device(session, c_backend_name.c_str(), &device);
   QDMI_query_device_property_string(device, QDMI_DEVICE_VERSION, &value);
   ASSERT_STREQ(value, "0.0.1");
 }
 
 TEST_F(QDMITest, QueryDeviceLibraryVersion) {
-  char *value = NULL;
+  char *value = nullptr;
   QDMI_session_open_device(session, c_backend_name.c_str(), &device);
   QDMI_query_device_property_string(device, QDMI_LIBRARY_VERSION, &value);
   ASSERT_STREQ(value, "0.1.0");

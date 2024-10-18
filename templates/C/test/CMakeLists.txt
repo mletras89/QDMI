@@ -6,6 +6,9 @@
 
 # add CXX language support
 enable_language(CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # ------------------------------------------------------------------------------
 # Non-Functional Tests
@@ -14,9 +17,10 @@ enable_language(CXX)
 # test that a backend implementation implements all functions
 #
 # NOTE: This executable is not meant to be ever executed, only linked.
-add_executable(my_c_backend_definitions_test ${QDMI_TEST_DIR}/test_defs.cpp)
-target_link_libraries(my_c_backend_definitions_test
-                      PRIVATE qdmi::qdmi qdmi::project_warnings my_c_backend)
+add_executable(qdmi_test_my_c_backend_defs ${QDMI_TEST_DIR}/utils/test_defs.cpp)
+target_link_libraries(
+  qdmi_test_my_c_backend_defs PRIVATE qdmi::qdmi qdmi::my_c_backend
+                                      qdmi::project_warnings)
 
 # ------------------------------------------------------------------------------
 # Functional Tests
@@ -27,8 +31,8 @@ add_executable(my_c_backend_test test_my_backend.cpp)
 
 # link the Google test infrastructure to the test executable.
 target_link_libraries(
-  my_c_backend_test PRIVATE gtest_main qdmi::qdmi_implementation_test
-                            qdmi::qdmi qdmi::project_warnings)
+  my_c_backend_test PRIVATE gtest_main qdmi::qdmi qdmi::test_impl
+                            qdmi::project_warnings)
 
 # discover tests
 gtest_discover_tests(
@@ -39,4 +43,4 @@ gtest_discover_tests(
 
 # ensure my_backend and my_backend_definitions_test are built whenever
 # my_backend_test is built
-add_dependencies(my_c_backend_test my_c_backend my_c_backend_definitions_test)
+add_dependencies(my_c_backend_test my_c_backend qdmi_test_my_c_backend_defs)

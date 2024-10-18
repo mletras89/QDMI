@@ -17,7 +17,6 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include "qdmi/interface.h"
 
-#include <cstddef>
 #include <gtest/gtest.h>
 #include <string>
 
