@@ -163,5 +163,3 @@ int QDMI_control_get_raw_dev(QDMI_Job job, char ***data, int *size) {
 int QDMI_control_initialize_dev(void) { return QDMI_ERROR_NOT_IMPLEMENTED; }
 
 int QDMI_control_finalize_dev(void) { return QDMI_ERROR_NOT_IMPLEMENTED; }
-
-int QDMI_control_calibrate_dev(void) { return QDMI_ERROR_NOT_IMPLEMENTED; }
