@@ -5,13 +5,13 @@
 # ------------------------------------------------------------------------------
 
 # ------------------------------------------------------------------------------
-# Interface Test
+# Non-Functional Tests
 # ------------------------------------------------------------------------------
 
 # test that a backend implementation implements all functions
 #
 # NOTE: This executable is not meant to be ever executed, only linked.
-add_executable(my_cxx_backend_implemented_test test_impl.cpp)
+add_executable(my_cxx_backend_implemented_test ${QDMI_TEST_DIR}/test_impl.cpp)
 # link the Google test infrastructure to the test executable.
 target_link_libraries(my_cxx_backend_implemented_test
                       PRIVATE qdmi::qdmi qdmi::project_warnings my_cxx_backend)
