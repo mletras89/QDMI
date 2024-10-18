@@ -35,6 +35,10 @@ target_link_libraries(cxx_backend_definitions_test
 add_library(qdmi_implementation_test SHARED test_impl.cpp test_impl.hpp)
 target_link_libraries(qdmi_implementation_test PRIVATE gtest qdmi::qdmi
                                                        qdmi::project_warnings)
+
+# build gtest as position independent code to link it with the shared library
+set_property(TARGET gtest PROPERTY POSITION_INDEPENDENT_CODE ON)
+
 # TODO: Is the current place and name of the header `test_impl.cpp` good???
 target_include_directories(qdmi_implementation_test PUBLIC ./)
 add_library(qdmi::qdmi_implementation_test ALIAS qdmi_implementation_test)
