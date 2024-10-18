@@ -13,8 +13,6 @@
 
 # QDMI — Quantum Device Management Interface (QDMI)
 
-<!-- [DOXYGEN] -->
-
 The Quantum Device Management Interface (QDMI) is the central part of the Munich Quantum Software
 Stack (MQSS)—a sophisticated software stack to connect end users to the wide range of possible
 quantum backends. It enables the submission to and the control of gate-based quantum systems and
@@ -34,14 +32,6 @@ environment and consists of four main components:
   checking the status of the device.
 - **QDMI Query**: Allows querying properties of the device, e.g., supported gates, error rates, gate
   duration, etc.
-
-<!-- [DOXYGEN] -->
-
-<p align="center">
-  <a href="https://mqss.readthedocs.io/projects/qdmi">
-  <img width=30% src="https://img.shields.io/badge/documentation-blue?style=for-the-badge&logo=read%20the%20docs" alt="Documentation" />
-  </a>
-</p>
 
 > [!IMPORTANT]
 >
