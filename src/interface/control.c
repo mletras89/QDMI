@@ -51,7 +51,3 @@ int QDMI_control_initialize(QDMI_Device dev) {
 int QDMI_control_finalize(QDMI_Device dev) {
   return dev->QDMI_control_finalize();
 }
-
-int QDMI_control_calibrate(QDMI_Device dev) {
-  return dev->QDMI_control_calibrate();
-}

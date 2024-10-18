@@ -179,5 +179,3 @@ int QDMI_control_get_raw(QDMI_Job job, char ***data, int *size) {
 int QDMI_control_initialize() { return QDMI_SUCCESS; }
 
 int QDMI_control_finalize() { return QDMI_SUCCESS; }
-
-int QDMI_control_calibrate() { return QDMI_ERROR_INVALID_ARGUMENT; }

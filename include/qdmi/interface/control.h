@@ -203,17 +203,6 @@ int QDMI_control_initialize(QDMI_Device dev);
  */
 int QDMI_control_finalize(QDMI_Device dev);
 
-// TODO: should we remove this for the first version and create a tracking issue
-// for properly designing the interface for calibration? I have a feeling that
-// this should become a separate component next to query and control
-/**
- * @brief Initiate a calibration run on the device.
- * @param dev The device to initialize.
- * @return @ref QDMI_SUCCESS if the calibration has started, otherwise an
- * error code.
- */
-int QDMI_control_calibrate(QDMI_Device dev);
-
 /// @}
 
 #ifdef __cplusplus

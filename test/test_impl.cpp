@@ -217,10 +217,3 @@ TEST_P(QDMIImplementationTest, DISABLED_ControlFinalizeImplemented) {
   // dead code.
   QDMI_control_finalize(device);
 }
-
-TEST_P(QDMIImplementationTest, DISABLED_ControlCalibrateImplemented) {
-  // Only check for definition of function while linking, not executing it.
-  // NOTE: GTEST_SKIP() does not work because this renders the following line as
-  // dead code.
-  QDMI_control_calibrate(device);
-}

@@ -174,13 +174,6 @@ int QDMI_control_initialize(void);
  */
 int QDMI_control_finalize(void);
 
-/**
- * @brief Initiate a calibration run on the device.
- * @return @ref QDMI_SUCCESS if the calibration has started, otherwise an
- * error code.
- */
-int QDMI_control_calibrate(void);
-
 /// @}
 
 #ifdef __cplusplus

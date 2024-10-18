@@ -63,5 +63,4 @@ int main() {
   QDMI_control_get_raw(nullptr, nullptr, nullptr);
   QDMI_control_initialize();
   QDMI_control_finalize();
-  QDMI_control_calibrate();
 }

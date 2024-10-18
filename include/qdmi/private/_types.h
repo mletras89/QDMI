@@ -120,8 +120,6 @@ typedef int (*QDMI_control_initialize_t)(void);
 
 typedef int (*QDMI_control_finalize_t)(void);
 
-typedef int (*QDMI_control_calibrate_t)(void);
-
 /**
  * @brief Definition of the QDMI Device.
  */
@@ -213,8 +211,6 @@ typedef struct QDMI_Device_impl_d {
   QDMI_control_initialize_t QDMI_control_initialize;
   /// Function pointer to the @code QDMI_control_finalize @endcode function.
   QDMI_control_finalize_t QDMI_control_finalize;
-  /// Function pointer to the @code QDMI_control_calibrate @endcode function.
-  QDMI_control_calibrate_t QDMI_control_calibrate;
 
   struct QDMI_Device_impl_d *next; /**< Pointer to the next device. */
 } QDMI_Device_impl_t;
