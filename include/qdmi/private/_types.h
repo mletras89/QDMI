@@ -96,14 +96,14 @@ typedef int (*QDMI_query_operation_property_int_list_t)(
     const char *operation, const int *sites, int num_sites,
     QDMI_Device_Property prop, int **value, int *size);
 
-typedef int (*QDMI_control_submit_qasm_t)(char *qasm_string, int num_shots,
-                                          QDMI_Job *job);
+typedef int (*QDMI_control_submit_qasm_t)(const char *qasm_string,
+                                          int num_shots, QDMI_Job *job);
 
-typedef int (*QDMI_control_submit_qir_string_t)(char *qir_string, int num_shots,
-                                                QDMI_Job *job);
+typedef int (*QDMI_control_submit_qir_string_t)(const char *qir_string,
+                                                int num_shots, QDMI_Job *job);
 
-typedef int (*QDMI_control_submit_qir_module_t)(void *qir_module, int num_shots,
-                                                QDMI_Job *job);
+typedef int (*QDMI_control_submit_qir_module_t)(const void *qir_module,
+                                                int num_shots, QDMI_Job *job);
 
 typedef int (*QDMI_control_cancel_t)(QDMI_Job job);
 

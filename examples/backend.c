@@ -233,7 +233,8 @@ int QDMI_query_operation_property_int_list(const char *operation,
   return QDMI_ERROR_INVALID_ARGUMENT;
 }
 
-int QDMI_control_submit_qasm(char *qasm_string, int num_shots, QDMI_Job *job) {
+int QDMI_control_submit_qasm(const char *qasm_string, int num_shots,
+                             QDMI_Job *job) {
   *job = (QDMI_Job)malloc(sizeof(QDMI_Job_impl_t));
   // set job id to current time for demonstration purposes
   (*job)->id = (int)time(NULL);
@@ -241,12 +242,12 @@ int QDMI_control_submit_qasm(char *qasm_string, int num_shots, QDMI_Job *job) {
   return QDMI_SUCCESS;
 }
 
-int QDMI_control_submit_qir_string(char *qir_string, int num_shots,
+int QDMI_control_submit_qir_string(const char *qir_string, int num_shots,
                                    QDMI_Job *job) {
   return QDMI_ERROR_INVALID_ARGUMENT;
 }
 
-int QDMI_control_submit_qir_module(void *qir_module, int num_shots,
+int QDMI_control_submit_qir_module(const void *qir_module, int num_shots,
                                    QDMI_Job *job) {
   return QDMI_ERROR_INVALID_ARGUMENT;
 }

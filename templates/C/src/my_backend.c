@@ -127,16 +127,17 @@ int QDMI_query_operation_property_int_list(const char *operation,
   return QDMI_ERROR_NOT_IMPLEMENTED;
 }
 
-int QDMI_control_submit_qasm(char *qasm_string, int num_shots, QDMI_Job *job) {
+int QDMI_control_submit_qasm(const char *qasm_string, int num_shots,
+                             QDMI_Job *job) {
   return QDMI_ERROR_NOT_IMPLEMENTED;
 }
 
-int QDMI_control_submit_qir_string(char *qir_string, int num_shots,
+int QDMI_control_submit_qir_string(const char *qir_string, int num_shots,
                                    QDMI_Job *job) {
   return QDMI_ERROR_NOT_IMPLEMENTED;
 }
 
-int QDMI_control_submit_qir_module(void *qir_string, int num_shots,
+int QDMI_control_submit_qir_module(const void *qir_string, int num_shots,
                                    QDMI_Job *job) {
   return QDMI_ERROR_NOT_IMPLEMENTED;
 }

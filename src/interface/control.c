@@ -7,17 +7,17 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include "qdmi/private/_types.h"
 #include "qdmi/properties.h"
 
-int QDMI_control_submit_qasm(QDMI_Device dev, char *qasm_string, int num_shots,
-                             QDMI_Job *job) {
+int QDMI_control_submit_qasm(QDMI_Device dev, const char *qasm_string,
+                             int num_shots, QDMI_Job *job) {
   return dev->QDMI_control_submit_qasm(qasm_string, num_shots, job);
 }
 
-int QDMI_control_submit_qir_string(QDMI_Device dev, char *qir_string,
+int QDMI_control_submit_qir_string(QDMI_Device dev, const char *qir_string,
                                    int num_shots, QDMI_Job *job) {
   return dev->QDMI_control_submit_qir_string(qir_string, num_shots, job);
 }
 
-int QDMI_control_submit_qir_module(QDMI_Device dev, void *qir_module,
+int QDMI_control_submit_qir_module(QDMI_Device dev, const void *qir_module,
                                    int num_shots, QDMI_Job *job) {
   return dev->QDMI_control_submit_qir_module(qir_module, num_shots, job);
 }

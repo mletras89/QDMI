@@ -50,7 +50,8 @@ typedef struct QDMI_Job_impl_d *QDMI_Job;
  * @return @ref QDMI_SUCCESS if the job was successfully submitted,
  * otherwise an error code.
  */
-int QDMI_control_submit_qasm(char *qasm_string, int num_shots, QDMI_Job *job);
+int QDMI_control_submit_qasm(const char *qasm_string, int num_shots,
+                             QDMI_Job *job);
 
 /**
  * @brief Submit a QIR string to the device.
@@ -63,7 +64,7 @@ int QDMI_control_submit_qasm(char *qasm_string, int num_shots, QDMI_Job *job);
  * @return @ref QDMI_SUCCESS if the job was successfully submitted,
  * otherwise an error code.
  */
-int QDMI_control_submit_qir_string(char *qir_string, int num_shots,
+int QDMI_control_submit_qir_string(const char *qir_string, int num_shots,
                                    QDMI_Job *job);
 
 /**
@@ -77,7 +78,7 @@ int QDMI_control_submit_qir_string(char *qir_string, int num_shots,
  * @return @ref QDMI_SUCCESS if the job was successfully submitted,
  * otherwise an error code.
  */
-int QDMI_control_submit_qir_module(void *qir_module, int num_shots,
+int QDMI_control_submit_qir_module(const void *qir_module, int num_shots,
                                    QDMI_Job *job);
 
 /**
