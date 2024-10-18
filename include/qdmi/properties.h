@@ -17,18 +17,18 @@ extern "C" {
 /// Enum of the device properties that can be queried.
 enum QDMI_DEVICE_PROPERTY_T {
   QDMI_NAME = 0, /**< @code char* @endcode (string) The name of the device. */
-  QDMI_DEVICE_STATUS =
-      1, /**< @code char* @endcode (string) The status of the device. */
   QDMI_DEVICE_VERSION =
-      2, /**< @code char* @endcode (string) The version of the device. */
+      1, /**< @code char* @endcode (string) The version of the device. */
   QDMI_LIBRARY_VERSION =
-      3, /**< @code char* @endcode (string) The implemented version of QDMI. */
+      2, /**< @code char* @endcode (string) The implemented version of QDMI. */
   QDMI_NUM_QUBITS =
-      4, /**< @code int @endcode The number of qubits in the device. */
+      3, /**< @code int @endcode The number of qubits in the device. */
+  QDMI_DEVICE_STATUS =
+      4, /**< @code int @endcode The @ref QDMI_Device_Status of the device. */
   QDMI_AVG_T1_TIME =
-      5, /**< @code double @endcode The average T1 time of a site in µs. */
+      5, /**< @code double @endcode The average T1 time of a qubit in µs. */
   QDMI_AVG_T2_TIME =
-      6, /**< @code double @endcode The average T2 time of a site in µs. */
+      6, /**< @code double @endcode The average T2 time of a qubit in µs. */
   /**
    * @brief @code int* @endcode (int list) The coupling map of the device.
    * @details The returned list contains pairs of qubits that are coupled. The
