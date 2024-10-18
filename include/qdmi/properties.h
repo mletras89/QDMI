@@ -116,6 +116,17 @@ enum QDMI_OPERATION_PROPERTY_T {
 /// Type of the operation properties.
 typedef enum QDMI_OPERATION_PROPERTY_T QDMI_Operation_Property;
 
+/// Enum of the device properties that can be queried.
+enum QDMI_JOB_STATUS_T {
+  QDMI_JOB_STATUS_DONE =
+      0, /**< The job is done, and the result can be retrieved. */
+  QDMI_JOB_STATUS_RUNNING =
+      1 /**< The job is running, and the result is not yet available. */
+};
+
+/// Type of the device status.
+typedef enum QDMI_JOB_STATUS_T QDMI_Job_Status;
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

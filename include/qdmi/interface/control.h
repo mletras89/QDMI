@@ -31,7 +31,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 // todo: it would be nice to show an example of this in the documentation
 #pragma once
 
-#include "qdmi/return_codes.h"
+#include "qdmi/properties.h"
 
 #ifdef __cplusplus
 extern "C" {
