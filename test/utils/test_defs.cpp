@@ -59,6 +59,7 @@ int main() {
   QDMI_control_wait_dev(nullptr);
   QDMI_control_get_hist_dev(nullptr, nullptr, nullptr, nullptr);
   QDMI_control_get_raw_dev(nullptr, nullptr, nullptr);
+  QDMI_control_free_job_dev(nullptr);
   QDMI_control_initialize_dev();
   QDMI_control_finalize_dev();
 }

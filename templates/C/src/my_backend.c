@@ -13,6 +13,8 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include "qdmi/backend.h"
 
+#include <stdlib.h>
+
 /**
  * @brief Implementation of the QDMI_Job structure.
  * @details This structure can, e.g., be used to store the job id.
@@ -159,6 +161,8 @@ int QDMI_control_get_hist_dev(QDMI_Job job, char ***data, int **counts,
 int QDMI_control_get_raw_dev(QDMI_Job job, char ***data, int *size) {
   return QDMI_ERROR_NOT_IMPLEMENTED;
 }
+
+void QDMI_control_free_job_dev(QDMI_Job job) { free(job); }
 
 int QDMI_control_initialize_dev(void) { return QDMI_ERROR_NOT_IMPLEMENTED; }
 

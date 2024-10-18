@@ -44,6 +44,10 @@ int QDMI_control_get_raw(QDMI_Device dev, QDMI_Job job, char ***data,
   return dev->QDMI_control_get_raw(job, data, size);
 }
 
+void QDMI_control_free_job(QDMI_Device dev, QDMI_Job job) {
+  dev->QDMI_control_free_job(job);
+}
+
 int QDMI_control_initialize(QDMI_Device dev) {
   return dev->QDMI_control_initialize();
 }

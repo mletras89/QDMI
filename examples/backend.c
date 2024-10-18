@@ -323,6 +323,11 @@ int QDMI_control_get_raw_dev(QDMI_Job job, char ***data, int *size) {
   return QDMI_SUCCESS;
 }
 
+void QDMI_control_free_job_dev(QDMI_Job job) {
+  // this method should free all resources associated with the job
+  free(job);
+}
+
 int QDMI_control_initialize_dev(void) { return QDMI_SUCCESS; }
 
 int QDMI_control_finalize_dev(void) { return QDMI_SUCCESS; }

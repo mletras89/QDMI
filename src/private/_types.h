@@ -115,6 +115,8 @@ typedef int (*QDMI_control_get_hist_t)(QDMI_Job job, char ***data, int **counts,
 
 typedef int (*QDMI_control_get_raw_t)(QDMI_Job job, char ***data, int *size);
 
+typedef void (*QDMI_control_free_job_t)(QDMI_Job job);
+
 typedef int (*QDMI_control_initialize_t)(void);
 
 typedef int (*QDMI_control_finalize_t)(void);
@@ -206,6 +208,8 @@ typedef struct QDMI_Device_impl_d {
   QDMI_control_get_hist_t QDMI_control_get_hist;
   /// Function pointer to the @code QDMI_control_get_raw @endcode function.
   QDMI_control_get_raw_t QDMI_control_get_raw;
+  /// Function pointer to the @code QDMI_control_free_job @endcode function.
+  QDMI_control_free_job_t QDMI_control_free_job;
   /// Function pointer to the @code QDMI_control_initialize @endcode function.
   QDMI_control_initialize_t QDMI_control_initialize;
   /// Function pointer to the @code QDMI_control_finalize @endcode function.

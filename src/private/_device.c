@@ -70,6 +70,7 @@ int QDMI_device_open(const char *lib_name, QDMI_Device *device) {
   LOAD_SYMBOL(*device, QDMI_control_wait);
   LOAD_SYMBOL(*device, QDMI_control_get_hist);
   LOAD_SYMBOL(*device, QDMI_control_get_raw);
+  LOAD_SYMBOL(*device, QDMI_control_free_job);
   LOAD_SYMBOL(*device, QDMI_control_initialize);
 
   // initialize the next pointer to NULL

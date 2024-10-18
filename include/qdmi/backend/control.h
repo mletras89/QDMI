@@ -150,6 +150,13 @@ int QDMI_control_get_hist_dev(QDMI_Job job, char ***data, int **counts,
  */
 int QDMI_control_get_raw_dev(QDMI_Job job, char ***data, int *size);
 
+/**
+ * @brief Free a job.
+ * @details Free the resources associated with a job.
+ * @param job The job to free.
+ */
+void QDMI_control_free_job_dev(QDMI_Job job);
+
 /// @}
 
 /** @name General Control Interface
