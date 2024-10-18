@@ -148,72 +148,79 @@ TEST_P(QDMIImplementationTest, QueryOperationAtSitePropertyIntListImplemented) {
             QDMI_ERROR_INVALID_ARGUMENT);
 }
 
-TEST_P(QDMIImplementationTest, DISABLED_ControlSubmitQasmImplemented) {
-  // Only check for definition of function while linking, not executing it.
-  // NOTE: GTEST_SKIP() does not work because this renders the following line as
-  // dead code.
-  QDMI_control_submit_qasm(device, nullptr, 0, nullptr);
+TEST_P(QDMIImplementationTest, ControlImplemented) {
+  QDMI_Job job = nullptr;
+  const std::string qasm_string = "OPENQASM 2.0;\n"
+                                  "include \"qelib1.inc\";\n"
+                                  "qreg q[2];\n"
+                                  "h q[0];\n"
+                                  "cx q[0], q[1];\n";
+  ASSERT_NE(QDMI_control_submit_qasm(device, qasm_string.c_str(), 10, &job),
+            QDMI_ERROR_NOT_IMPLEMENTED);
 }
 
-TEST_P(QDMIImplementationTest, DISABLED_ControlSubmitQirStringImplemented) {
-  // Only check for definition of function while linking, not executing it.
-  // NOTE: GTEST_SKIP() does not work because this renders the following line as
-  // dead code.
-  QDMI_control_submit_qir_string(device, nullptr, 0, nullptr);
+TEST_P(QDMIImplementationTest, ControlCancelImplemented) {
+  QDMI_Job job = nullptr;
+  const std::string qasm_string = "OPENQASM 2.0;\n"
+                                  "include \"qelib1.inc\";\n"
+                                  "qreg q[2];\n"
+                                  "h q[0];\n"
+                                  "cx q[0], q[1];\n";
+  ASSERT_NE(QDMI_control_submit_qasm(device, qasm_string.c_str(), 10, &job),
+            QDMI_ERROR_NOT_IMPLEMENTED);
+  ASSERT_NE(QDMI_control_cancel(device, job), QDMI_ERROR_NOT_IMPLEMENTED);
 }
 
-TEST_P(QDMIImplementationTest, DISABLED_ControlSubmitQirModuleImplemented) {
-  // Only check for definition of function while linking, not executing it.
-  // NOTE: GTEST_SKIP() does not work because this renders the following line as
-  // dead code.
-  QDMI_control_submit_qir_module(device, nullptr, 0, nullptr);
+TEST_P(QDMIImplementationTest, ControlCheckImplemented) {
+  QDMI_Job job = nullptr;
+  QDMI_Job_Status status = QDMI_JOB_STATUS_RUNNING;
+  const std::string qasm_string = "OPENQASM 2.0;\n"
+                                  "include \"qelib1.inc\";\n"
+                                  "qreg q[2];\n"
+                                  "h q[0];\n"
+                                  "cx q[0], q[1];\n";
+  ASSERT_NE(QDMI_control_submit_qasm(device, qasm_string.c_str(), 10, &job),
+            QDMI_ERROR_NOT_IMPLEMENTED);
+  ASSERT_NE(QDMI_control_check(device, job, &status),
+            QDMI_ERROR_NOT_IMPLEMENTED);
 }
 
-TEST_P(QDMIImplementationTest, DISABLED_ControlCancelImplemented) {
-  // Only check for definition of function while linking, not executing it.
-  // NOTE: GTEST_SKIP() does not work because this renders the following line as
-  // dead code.
-  QDMI_control_cancel(device, nullptr);
-}
-
-TEST_P(QDMIImplementationTest, DISABLED_ControlCheckImplemented) {
-  // Only check for definition of function while linking, not executing it.
-  // NOTE: GTEST_SKIP() does not work because this renders the following line as
-  // dead code.
-  QDMI_control_check(device, nullptr, nullptr);
-}
-
-TEST_P(QDMIImplementationTest, DISABLED_ControlWaitImplemented) {
-  // Only check for definition of function while linking, not executing it.
-  // NOTE: GTEST_SKIP() does not work because this renders the following line as
-  // dead code.
-  QDMI_control_wait(device, nullptr);
+TEST_P(QDMIImplementationTest, ControlWaitImplemented) {
+  QDMI_Job job = nullptr;
+  const std::string qasm_string = "OPENQASM 2.0;\n"
+                                  "include \"qelib1.inc\";\n"
+                                  "qreg q[2];\n"
+                                  "h q[0];\n"
+                                  "cx q[0], q[1];\n";
+  ASSERT_NE(QDMI_control_submit_qasm(device, qasm_string.c_str(), 10, &job),
+            QDMI_ERROR_NOT_IMPLEMENTED);
+  ASSERT_NE(QDMI_control_wait(device, job), QDMI_ERROR_NOT_IMPLEMENTED);
 }
 
 TEST_P(QDMIImplementationTest, DISABLED_ControlGetHistImplemented) {
-  // Only check for definition of function while linking, not executing it.
-  // NOTE: GTEST_SKIP() does not work because this renders the following line as
-  // dead code.
-  QDMI_control_get_hist(device, nullptr, nullptr, nullptr, nullptr);
+  ASSERT_NE(QDMI_control_get_hist(device, nullptr, nullptr, nullptr, nullptr),
+            QDMI_ERROR_NOT_IMPLEMENTED);
 }
 
 TEST_P(QDMIImplementationTest, DISABLED_ControlGetRawImplemented) {
-  // Only check for definition of function while linking, not executing it.
-  // NOTE: GTEST_SKIP() does not work because this renders the following line as
-  // dead code.
-  QDMI_control_get_raw(device, nullptr, nullptr, nullptr);
+  ASSERT_NE(QDMI_control_get_raw(device, nullptr, nullptr, nullptr),
+            QDMI_ERROR_NOT_IMPLEMENTED);
 }
 
-TEST_P(QDMIImplementationTest, DISABLED_ControlInitializeImplemented) {
-  // Only check for definition of function while linking, not executing it.
-  // NOTE: GTEST_SKIP() does not work because this renders the following line as
-  // dead code.
-  QDMI_control_initialize(device);
+TEST_P(QDMIImplementationTest, DISABLED_ControlSubmitQirStringImplemented) {
+  ASSERT_NE(QDMI_control_submit_qir_string(device, nullptr, 0, nullptr),
+            QDMI_ERROR_NOT_IMPLEMENTED);
 }
 
-TEST_P(QDMIImplementationTest, DISABLED_ControlFinalizeImplemented) {
-  // Only check for definition of function while linking, not executing it.
-  // NOTE: GTEST_SKIP() does not work because this renders the following line as
-  // dead code.
-  QDMI_control_finalize(device);
+TEST_P(QDMIImplementationTest, DISABLED_ControlSubmitQirModuleImplemented) {
+  ASSERT_NE(QDMI_control_submit_qir_module(device, nullptr, 0, nullptr),
+            QDMI_ERROR_NOT_IMPLEMENTED);
+}
+
+TEST_P(QDMIImplementationTest, ControlInitializeImplemented) {
+  ASSERT_NE(QDMI_control_initialize(device), QDMI_ERROR_NOT_IMPLEMENTED);
+}
+
+TEST_P(QDMIImplementationTest, ControlFinalizeImplemented) {
+  ASSERT_NE(QDMI_control_finalize(device), QDMI_ERROR_NOT_IMPLEMENTED);
 }

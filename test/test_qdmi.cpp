@@ -134,10 +134,14 @@ TEST_F(QDMITest, QueryGateSet) {
 TEST_F(QDMITest, ToolCompile) {
   QDMI_session_open_device(session, c_backend_name.c_str(), &device);
   Tool tool(device);
-  const std::string input = "qreg q[2];\n"
+  const std::string input = "OPENQASM 2.0;\n"
+                            "include \"qelib1.inc\";\n"
+                            "qreg q[2];\n"
                             "h q[0];\n"
                             "cx q[0], q[1];\n";
-  const std::string expected = "qreg q[5];\n"
+  const std::string expected = "OPENQASM 2.0;\n"
+                               "include \"qelib1.inc\";\n"
+                               "qreg q[5];\n"
                                "h q[0];\n"
                                "cx q[0], q[1];\n";
   const std::string actual = tool.compile(input);
