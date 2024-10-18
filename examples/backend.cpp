@@ -12,6 +12,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include "qdmi/backend.h"
 
+#include <cstring>
 #include <string>
 
 typedef struct QDMI_Job_impl_d {
