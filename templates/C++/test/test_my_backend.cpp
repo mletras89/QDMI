@@ -8,9 +8,10 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include "test_impl.hpp"
 
 #include <gtest/gtest.h>
+#include <string>
 
 // Instantiate the test suite with different parameters
-INSTANTIATE_TEST_SUITE_P(QDMIMyCBackend,         // Custom instantiation name
+INSTANTIATE_TEST_SUITE_P(QDMIMyCXXBackend,       // Custom instantiation name
                          QDMIImplementationTest, // Test suite name
                          // Parameters to test with
                          ::testing::Values("../examples/libmy_backend"));
