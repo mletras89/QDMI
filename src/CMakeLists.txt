@@ -61,7 +61,7 @@ if(NOT TARGET qdmi)
   target_compile_options(qdmi PUBLIC -g)
 
   # enable coverage collection options
-  option(ENABLE_COVERAGE "Enable coverage reporting for gcc/clang" FALSE)
+  option(ENABLE_COVERAGE "Enable coverage reporting" FALSE)
   if(ENABLE_COVERAGE)
     target_compile_options(qdmi PUBLIC --coverage -fprofile-arcs
                                        -ftest-coverage -O0)

@@ -5,13 +5,16 @@
 # ------------------------------------------------------------------------------
 
 # NOTE: If you change the target name, the name of the shared library will also
-# change. Hence, in the test you have to adopt the name of the shared library
+# change. Hence, in the test you have to adapt the name of the shared library
 # accordingly.
 add_library(c_backend SHARED backend.c)
 target_link_libraries(c_backend PRIVATE qdmi::qdmi)
 
 # add C++ language support
 enable_language(CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # NOTE: If you change the target name, the name of the shared library will also
 # change. Hence, in the test you have to adopt the name of the shared library
