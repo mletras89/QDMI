@@ -4,7 +4,7 @@ See https://llvm.org/LICENSE.txt for license information.
 SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
-#include "qdmi/private/_types.h"
+#include "_types.h"
 #include "qdmi/properties.h"
 
 int QDMI_control_submit_qasm(QDMI_Device dev, const char *qasm_string,

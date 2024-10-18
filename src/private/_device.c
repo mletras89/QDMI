@@ -4,9 +4,9 @@ See https://llvm.org/LICENSE.txt for license information.
 SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
-#include "qdmi/private/_device.h"
+#include "_device.h"
 
-#include "qdmi/private/_types.h"
+#include "_types.h"
 #include "qdmi/return_codes.h"
 
 #include <dlfcn.h>
