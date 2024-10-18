@@ -24,16 +24,14 @@ mediating between their competing interests, bridging between technologies, and 
 corresponding figures of merits and constraints to be considered. QDMI is therefore the method of
 choice for integrating new platforms into the MQSS and for software tools to query information from
 these platforms. QDMI is provided as a C header file to allow fast integration into an HPC
-environment and consists of four main components:
+environment and consists of three main components:
 
 - **QDMI Core**: Provides core functionality to manage sessions as well as to open and close
   connections to devices.
-- **QDMI Control**: Enables the control of the quantum devices. One can submit quantum circuits,
-  control the job queue, and readout measurement results.
-- **QDMI Device**: Provides device handling functionality, like initiating the calibration or
-  checking the status of the device.
 - **QDMI Query**: Allows querying properties of the device, e.g., supported gates, error rates, gate
   duration, etc.
+- **QDMI Control**: Enables the control of the quantum devices. One can submit quantum circuits,
+  control the job queue, and readout measurement results.
 
 <!-- [DOXYGEN MAIN] -->
 
