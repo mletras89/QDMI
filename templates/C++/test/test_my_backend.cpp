@@ -5,18 +5,15 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
 #include "qdmi/interface.h"
+#include "test_impl.hpp"
 
 #include <gtest/gtest.h>
 
-constexpr const char *Shared_library_file_extension() {
-#if defined(_WIN32)
-  return ".dll";
-#elif defined(__APPLE__)
-  return ".dylib";
-#else
-  return ".so";
-#endif
-}
+// Instantiate the test suite with different parameters
+INSTANTIATE_TEST_SUITE_P(QDMIMyCBackend,         // Custom instantiation name
+                         QDMIImplementationTest, // Test suite name
+                         // Parameters to test with
+                         ::testing::Values("../examples/libmy_backend"));
 
 class QDMITest : public ::testing::Test {
 protected:

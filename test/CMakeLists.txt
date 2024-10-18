@@ -14,8 +14,9 @@ enable_language(CXX)
 # ------------------------------------------------------------------------------
 # Non-Functional Tests
 # ------------------------------------------------------------------------------
-# test that a backend implementation implements all functions NOTE: This
-# executable is not meant to be ever executed, only linked.
+# test that a backend implementation implements all functions
+#
+# NOTE: This executable is not meant to be ever executed, only linked.
 add_executable(c_backend_definitions_test test_defs.cpp)
 target_link_libraries(c_backend_definitions_test
                       PRIVATE qdmi::qdmi qdmi::project_warnings c_backend)
@@ -31,9 +32,11 @@ target_link_libraries(cxx_backend_definitions_test
 # ------------------------------------------------------------------------------
 # Create a shared library that contains a test suite that can be used to test
 # whether all functions are implemented in the backend.
-add_library(qdmi_implementation_test SHARED test_impl.cpp)
+add_library(qdmi_implementation_test SHARED test_impl.cpp test_impl.hpp)
 target_link_libraries(qdmi_implementation_test PRIVATE gtest qdmi::qdmi
                                                        qdmi::project_warnings)
+# TODO: Is the current place and name of the header `test_impl.cpp` good???
+target_include_directories(qdmi_implementation_test PUBLIC ./)
 add_library(qdmi::qdmi_implementation_test ALIAS qdmi_implementation_test)
 
 # create an executable in which the tests will be stored

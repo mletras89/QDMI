@@ -13,39 +13,24 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  * function returns QDMI_ERROR_NOT_IMPLEMENTED.
  */
 
+#include "test_impl.hpp"
+
 #include "qdmi/interface.h"
 
 #include <cstddef>
 #include <gtest/gtest.h>
 #include <string>
 
-constexpr const char *Shared_library_file_extension() {
-#if defined(_WIN32)
-  return ".dll";
-#elif defined(__APPLE__)
-  return ".dylib";
-#else
-  return ".so";
-#endif
+void QDMIImplementationTest::SetUp() {
+  ASSERT_TRUE(QDMI_is_Success(QDMI_session_alloc(&session)))
+      << "Failed to allocate session";
+  backend_name = GetParam() + Shared_library_file_extension();
+  ASSERT_TRUE(QDMI_is_Success(
+      QDMI_session_open_device(session, backend_name.c_str(), &device)))
+      << "Failed to open device";
 }
 
-class QDMIImplementationTest : public ::testing::TestWithParam<std::string> {
-protected:
-  void SetUp() override {
-    ASSERT_TRUE(QDMI_is_Success(QDMI_session_alloc(&session)))
-        << "Failed to allocate session";
-    backend_name = GetParam() + Shared_library_file_extension();
-    ASSERT_TRUE(QDMI_is_Success(
-        QDMI_session_open_device(session, backend_name.c_str(), &device)))
-        << "Failed to open device";
-  }
-
-  void TearDown() override { QDMI_session_free(session); }
-
-  QDMI_Session session = nullptr;
-  QDMI_Device device = nullptr;
-  std::string backend_name;
-};
+void QDMIImplementationTest::TearDown() { QDMI_session_free(session); }
 
 TEST_P(QDMIImplementationTest, QueryDevicePropertyStringImplemented) {
   ASSERT_EQ(QDMI_query_device_property_string(device, QDMI_DEVICE_PROPERTY_MAX,

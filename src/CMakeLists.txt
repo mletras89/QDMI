@@ -21,15 +21,15 @@ if(QDMI_INSTALL)
 endif()
 
 if(NOT TARGET project_warnings)
-	# Use the warnings specified in CompilerWarnings.cmake
-	add_library(project_warnings INTERFACE)
+  # Use the warnings specified in CompilerWarnings.cmake
+  add_library(project_warnings INTERFACE)
 
-	# Standard compiler warnings
-	include(${PROJECT_SOURCE_DIR}/cmake/CompilerWarnings.cmake)
-	set_project_warnings(project_warnings)
+  # Standard compiler warnings
+  include(${PROJECT_SOURCE_DIR}/cmake/CompilerWarnings.cmake)
+  set_project_warnings(project_warnings)
 
-	# Add alias
-	add_library(qdmi::project_warnings ALIAS project_warnings)
+  # Add alias
+  add_library(qdmi::project_warnings ALIAS project_warnings)
 endif()
 
 if(NOT TARGET qdmi)
@@ -47,6 +47,8 @@ if(NOT TARGET qdmi)
     qdmi
     PUBLIC $<BUILD_INTERFACE:${QDMI_INCLUDE_BUILD_DIR}>
     PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/private>)
+  # TODO Does that really ensure that the headers in the private directory are
+  # "private"?
 
   # add warnings to the library
   target_link_libraries(qdmi PRIVATE qdmi::project_warnings)
