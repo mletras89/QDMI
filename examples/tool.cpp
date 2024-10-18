@@ -38,6 +38,8 @@ std::vector<std::pair<int, int>> Tool::get_device_coupling_map() {
   for (int i = 0; i < size; i += 2) {
     coupling_map.emplace_back(values[i], values[i + 1]);
   }
+  // make sure to clean up the allocated memory
+  delete[] values;
   return coupling_map;
 }
 
