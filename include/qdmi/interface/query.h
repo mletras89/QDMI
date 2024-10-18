@@ -12,8 +12,6 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include "qdmi/properties.h"
 
-#include <inttypes.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif
