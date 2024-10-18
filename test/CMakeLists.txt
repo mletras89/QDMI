@@ -40,7 +40,8 @@ target_link_libraries(qdmi_implementation_test PRIVATE gtest qdmi::qdmi
 set_property(TARGET gtest PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 # TODO: Is the current place and name of the header `test_impl.cpp` good???
-target_include_directories(qdmi_implementation_test PUBLIC ./)
+target_include_directories(qdmi_implementation_test
+                           PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 add_library(qdmi::qdmi_implementation_test ALIAS qdmi_implementation_test)
 
 # create an executable in which the tests will be stored
