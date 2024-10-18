@@ -12,8 +12,11 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include "qdmi/backend.h"
 
+#include <ctime>
 #include <cstring>
 #include <string>
+#include <unordered_map>
+#include <vector>
 
 typedef struct QDMI_Job_impl_d {
   int id;
@@ -149,33 +152,72 @@ int QDMI_query_operation_property_int_list(const char *operation,
 
 int QDMI_control_submit_qasm(const char *qasm_string, int num_shots,
                              QDMI_Job *job) {
-  return QDMI_ERROR_INVALID_ARGUMENT;
+  *job = new QDMI_Job_impl_t;
+  // set job id to current time for demonstration purposes
+  (*job)->id = static_cast<int>(time(nullptr));
+  return QDMI_SUCCESS;
 }
 
 int QDMI_control_submit_qir_string(const char *qir_string, int num_shots,
                                    QDMI_Job *job) {
-  return QDMI_ERROR_INVALID_ARGUMENT;
+  *job = new QDMI_Job_impl_t;
+  // set job id to current time for demonstration purposes
+  (*job)->id = static_cast<int>(time(nullptr));
+  return QDMI_SUCCESS;
 }
 
 int QDMI_control_submit_qir_module(const void *qir_module, int num_shots,
                                    QDMI_Job *job) {
-  return QDMI_ERROR_INVALID_ARGUMENT;
+  *job = new QDMI_Job_impl_t;
+  // set job id to current time for demonstration purposes
+  (*job)->id = static_cast<int>(time(nullptr));
+  return QDMI_SUCCESS;
 }
 
-int QDMI_control_cancel(QDMI_Job job) { return QDMI_ERROR_INVALID_ARGUMENT; }
+int QDMI_control_cancel(QDMI_Job job) { return QDMI_SUCCESS; }
 
 int QDMI_control_check(QDMI_Job job, QDMI_Job_Status *status) {
-  return QDMI_ERROR_INVALID_ARGUMENT;
+  *status = QDMI_JOB_STATUS_DONE;
+  return QDMI_SUCCESS;
 }
 
-int QDMI_control_wait(QDMI_Job job) { return QDMI_ERROR_INVALID_ARGUMENT; }
+int QDMI_control_wait(QDMI_Job job) { return QDMI_SUCCESS; }
 
 int QDMI_control_get_hist(QDMI_Job job, char ***data, int **counts, int *size) {
+  char **raw_data = nullptr;
+  int raw_size = 0;
+  QDMI_control_get_raw(job, &raw_data, &raw_size);
+  std::vector<std::string> str_vector(raw_size);
+  for (int i = 0; i < raw_size; ++i) {
+    str_vector[i] = raw_data[i];
+  }
+  std::unordered_map<std::string, int> hist;
+  for (const auto &str : str_vector) {
+    hist[str]++;
+  }
+  *size = hist.size();
+  *data = new char *[*size];
+  *counts = new int[*size];
+  int i = 0;
+  for (const auto &pair : hist) {
+    (*data)[i] = new char[pair.first.length() + 1];
+    strcpy((*data)[i], pair.first.c_str());
+    (*counts)[i] = pair.second;
+    ++i;
+  }
   return QDMI_ERROR_INVALID_ARGUMENT;
 }
 
 int QDMI_control_get_raw(QDMI_Job job, char ***data, int *size) {
-  return QDMI_ERROR_INVALID_ARGUMENT;
+  std::vector<std::string> str_vector = {"0001100", "1011001", "0001100",
+                                         "0100110", "1011001"};
+  *data = new char *[str_vector.size()];
+  for (size_t i = 0; i < 5; ++i) {
+    (*data)[i] = new char[8];
+    strcpy((*data)[i], str_vector[i].c_str());
+  }
+  *size = 5;
+  return QDMI_SUCCESS;
 }
 
 int QDMI_control_initialize() { return QDMI_SUCCESS; }

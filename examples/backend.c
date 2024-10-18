@@ -238,66 +238,86 @@ int QDMI_control_submit_qasm(const char *qasm_string, int num_shots,
   *job = (QDMI_Job)malloc(sizeof(QDMI_Job_impl_t));
   // set job id to current time for demonstration purposes
   (*job)->id = (int)time(NULL);
-  printf("[QDMI] Submitted QASM job with id %d\n", (*job)->id);
   return QDMI_SUCCESS;
 }
 
 int QDMI_control_submit_qir_string(const char *qir_string, int num_shots,
                                    QDMI_Job *job) {
-  return QDMI_ERROR_INVALID_ARGUMENT;
+  *job = (QDMI_Job)malloc(sizeof(QDMI_Job_impl_t));
+  // set job id to current time for demonstration purposes
+  (*job)->id = (int)time(NULL);
+  return QDMI_SUCCESS;
 }
 
 int QDMI_control_submit_qir_module(const void *qir_module, int num_shots,
                                    QDMI_Job *job) {
-  return QDMI_ERROR_INVALID_ARGUMENT;
-}
-
-int QDMI_control_cancel(QDMI_Job job) {
-  printf("[QDMI] Cancelled job with id %d\n", job->id);
+  *job = (QDMI_Job)malloc(sizeof(QDMI_Job_impl_t));
+  // set job id to current time for demonstration purposes
+  (*job)->id = (int)time(NULL);
   return QDMI_SUCCESS;
 }
+
+int QDMI_control_cancel(QDMI_Job job) { return QDMI_SUCCESS; }
 
 int QDMI_control_check(QDMI_Job job, QDMI_Job_Status *status) {
   *status = QDMI_JOB_STATUS_DONE;
-  printf("[QDMI] Checked job with id %d\n", job->id);
   return QDMI_SUCCESS;
 }
 
-int QDMI_control_wait(QDMI_Job job) {
-  printf("[QDMI] Waiting for job with id %d\n", job->id);
-  return QDMI_SUCCESS;
+int QDMI_control_wait(QDMI_Job job) { return QDMI_SUCCESS; }
+
+// Comparison function for qsort
+int compare_results(const void *a, const void *b) {
+  return strcmp(*(char **)a, *(char **)b);
 }
 
 int QDMI_control_get_hist(QDMI_Job job, char ***data, int **counts, int *size) {
   char **raw_data = NULL;
   int raw_size = 0;
   QDMI_control_get_raw(job, &raw_data, &raw_size);
-  *data = (char **)malloc(sizeof(char *) * (unsigned long)raw_size);
-  *counts = (int *)malloc(sizeof(int) * (unsigned long)raw_size);
-  *size = 0;
-  for (int i = 0; i < raw_size; i++) {
-    // if data already contains the next measured state
-    int j = 0;
-    for (; j < *size; j++) {
-      if (strcmp(raw_data[i], (*data)[j]) == 0) {
-        (*counts)[j]++;
-        break;
-      }
+  // Sort the array
+  qsort((void *)raw_data, raw_size, sizeof(char *), compare_results);
+  // Count unique elements
+  int count = 1; // First element is always unique
+  for (int i = 1; i < raw_size; i++) {
+    if (strcmp(raw_data[i], raw_data[i - 1]) != 0) {
+      count++;
     }
-    // if data does not contain the next measured state
-    if (j == *size) {
-      (*data)[i] = raw_data[i];
-      (*counts)[i] = 1;
-      (*size)++;
+  }
+  *data = (char **)malloc(sizeof(char *) * (unsigned long)count);
+  *counts = (int *)malloc(sizeof(int) * (unsigned long)count);
+  *size = count;
+  int j = 0;
+  (*data)[j] = raw_data[0];
+  (*counts)[j] = 1;
+  for (int i = 1; i < raw_size; i++) {
+    // if next measured state is equivalent to the previous; note that the
+    // states are sorted
+    if (strcmp(raw_data[i], raw_data[i - 1]) == 0) {
+      (*counts)[j]++;
     }
+    // if next measured state is different to the previous; note that the states
+    // are sorted
+    (*data)[j] = raw_data[i];
+    (*counts)[j] = 1;
+    ++j;
   }
   return QDMI_SUCCESS;
 }
 
 int QDMI_control_get_raw(QDMI_Job job, char ***data, int *size) {
-  *data = (char *[]){"00000", "10001", "01000", "00010", "10001"};
+  *data = (char **)malloc(sizeof(char *) * 5);
+  (*data)[0] = (char *)malloc(sizeof(char) * 6);
+  strcpy((*data)[0], "00000");
+  (*data)[1] = (char *)malloc(sizeof(char) * 6);
+  strcpy((*data)[0], "10001");
+  (*data)[2] = (char *)malloc(sizeof(char) * 6);
+  strcpy((*data)[0], "01000");
+  (*data)[3] = (char *)malloc(sizeof(char) * 6);
+  strcpy((*data)[0], "00010");
+  (*data)[4] = (char *)malloc(sizeof(char) * 6);
+  strcpy((*data)[0], "10001");
   *size = 5;
-  printf("[QDMI] Retrieved raw data for job with id %d\n", job->id);
   return QDMI_SUCCESS;
 }
 
