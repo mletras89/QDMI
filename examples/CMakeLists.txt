@@ -4,11 +4,14 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # ------------------------------------------------------------------------------
 
-add_library(backend5 SHARED backend5.c)
-target_link_libraries(backend5 PRIVATE qdmi::qdmi)
+add_library(c_backend SHARED backend.c)
+target_link_libraries(c_backend PRIVATE qdmi::qdmi)
 
-# add CXX language support
+# add C++ language support
 enable_language(CXX)
 
-add_library(backend7 SHARED backend7.cpp)
-target_link_libraries(backend7 PRIVATE qdmi::qdmi)
+add_library(cxx_backend SHARED backend.cpp)
+target_link_libraries(cxx_backend PRIVATE qdmi::qdmi)
+
+add_library(tool SHARED tool.cpp)
+target_link_libraries(tool PRIVATE qdmi::qdmi)
