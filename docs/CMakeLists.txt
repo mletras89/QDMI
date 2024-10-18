@@ -62,6 +62,8 @@ add_custom_command(
           ${CMAKE_CURRENT_SOURCE_DIR}/header.html
           ${CMAKE_CURRENT_SOURCE_DIR}/layout.xml
           ${CMAKE_CURRENT_SOURCE_DIR}/style.css
+          ${CMAKE_CURRENT_SOURCE_DIR}/README.md
+          ${CMAKE_CURRENT_SOURCE_DIR}/.github/support.md
   COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_CONFIG_FILE_OUT}
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
   COMMENT "Generating API documentation with Doxygen"
