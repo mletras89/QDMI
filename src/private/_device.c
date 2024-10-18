@@ -14,6 +14,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #define LOAD_SYMBOL(device, symbol)                                            \
   {                                                                            \
+    (device)->symbol = NULL;                                                   \
     *(void **)(&((device)->symbol)) =                                          \
         dlsym((device)->lib_handle, #symbol "_dev");                           \
     if ((device)->symbol == NULL) {                                            \
@@ -35,6 +36,11 @@ int QDMI_device_open(const char *lib_name, QDMI_Device *device) {
     return QDMI_ERROR_LIB_NOT_FOUND;
   }
   // load the function symbols from the dynamic library
+
+  // this has to be the first symbol to be loaded because this method is used
+  // to close the device in case of any error.
+  LOAD_SYMBOL(*device, QDMI_control_finalize);
+
   LOAD_SYMBOL(*device, QDMI_query_device_property_string);
   LOAD_SYMBOL(*device, QDMI_query_device_property_double);
   LOAD_SYMBOL(*device, QDMI_query_device_property_int);
@@ -65,7 +71,6 @@ int QDMI_device_open(const char *lib_name, QDMI_Device *device) {
   LOAD_SYMBOL(*device, QDMI_control_get_hist);
   LOAD_SYMBOL(*device, QDMI_control_get_raw);
   LOAD_SYMBOL(*device, QDMI_control_initialize);
-  LOAD_SYMBOL(*device, QDMI_control_finalize);
 
   // initialize the next pointer to NULL
   (*device)->next = NULL;
@@ -74,8 +79,10 @@ int QDMI_device_open(const char *lib_name, QDMI_Device *device) {
 }
 
 void QDMI_device_close(QDMI_Device device) {
-  // finalize the device
-  device->QDMI_control_finalize();
+  // Check if QDMI_control_finalize is not NULL before calling it
+  if (device->QDMI_control_finalize != NULL) {
+    device->QDMI_control_finalize();
+  }
   // close the dynamic library
   dlclose(device->lib_handle);
   // free the memory allocated for the device
