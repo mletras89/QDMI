@@ -35,8 +35,8 @@ typedef struct QDMI_Device_impl_d *QDMI_Device;
  * @param device The device to query.
  * @param prop The property to query.
  * @param value The value of the property.
- * @return QDMI_SUCCESS if the property was queried successfully, an error code
- * otherwise.
+ * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
+ * code otherwise.
  */
 int QDMI_query_device_property_string(QDMI_Device device,
                                       QDMI_Device_Property prop, char **value);
@@ -46,8 +46,8 @@ int QDMI_query_device_property_string(QDMI_Device device,
  * @param device The device to query.
  * @param prop The property to query.
  * @param value The value of the property.
- * @return QDMI_SUCCESS if the property was queried successfully, an error code
- * otherwise.
+ * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
+ * code otherwise.
  */
 int QDMI_query_device_property_double(QDMI_Device device,
                                       QDMI_Device_Property prop, double *value);
@@ -57,8 +57,8 @@ int QDMI_query_device_property_double(QDMI_Device device,
  * @param device The device to query.
  * @param prop The property to query.
  * @param value The value of the property.
- * @return QDMI_SUCCESS if the property was queried successfully, an error code
- * otherwise.
+ * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
+ * code otherwise.
  */
 int QDMI_query_device_property_int(QDMI_Device device,
                                    QDMI_Device_Property prop, int *value);
@@ -69,8 +69,8 @@ int QDMI_query_device_property_int(QDMI_Device device,
  * @param prop The property to query.
  * @param values The values of the list.
  * @param size The size of the list.
- * @return QDMI_SUCCESS if the property was queried successfully, an error code
- * otherwise.
+ * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
+ * code otherwise.
  */
 int QDMI_query_device_property_string_list(QDMI_Device device,
                                            QDMI_Device_Property prop,
@@ -82,8 +82,8 @@ int QDMI_query_device_property_string_list(QDMI_Device device,
  * @param prop The property to query.
  * @param values The values of the list.
  * @param size The size of the list.
- * @return QDMI_SUCCESS if the property was queried successfully, an error code
- * otherwise.
+ * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
+ * code otherwise.
  */
 int QDMI_query_device_property_double_list(QDMI_Device device,
                                            QDMI_Device_Property prop,
@@ -95,8 +95,8 @@ int QDMI_query_device_property_double_list(QDMI_Device device,
  * @param prop The property to query.
  * @param values The values of the list.
  * @param size The size of the list.
- * @return QDMI_SUCCESS if the property was queried successfully, an error code
- * otherwise.
+ * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
+ * code otherwise.
  */
 int QDMI_query_device_property_int_list(QDMI_Device device,
                                         QDMI_Device_Property prop, int **values,
@@ -116,8 +116,8 @@ int QDMI_query_device_property_int_list(QDMI_Device device,
  * @param site The site for which to query the property.
  * @param prop The property to query.
  * @param value The value of the property.
- * @return QDMI_SUCCESS if the property was queried successfully, an error code
- * otherwise.
+ * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
+ * code otherwise.
  */
 int QDMI_query_site_property_string(QDMI_Device device, int site,
                                     QDMI_Site_Property prop, char **value);
@@ -128,8 +128,8 @@ int QDMI_query_site_property_string(QDMI_Device device, int site,
  * @param site The site for which to query the property.
  * @param prop The property to query.
  * @param value The value of the property.
- * @return QDMI_SUCCESS if the property was queried successfully, an error code
- * otherwise.
+ * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
+ * code otherwise.
  */
 int QDMI_query_site_property_double(QDMI_Device device, int site,
                                     QDMI_Site_Property prop, double *value);
@@ -140,8 +140,8 @@ int QDMI_query_site_property_double(QDMI_Device device, int site,
  * @param site The site for which to query the property.
  * @param prop The property to query.
  * @param value The value of the property.
- * @return QDMI_SUCCESS if the property was queried successfully, an error code
- * otherwise.
+ * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
+ * code otherwise.
  */
 int QDMI_query_site_property_int(QDMI_Device device, int site,
                                  QDMI_Site_Property prop, int *value);
@@ -153,8 +153,8 @@ int QDMI_query_site_property_int(QDMI_Device device, int site,
  * @param prop The property to query.
  * @param values The values of the list.
  * @param size The size of the list.
- * @return QDMI_SUCCESS if the property was queried successfully, an error code
- * otherwise.
+ * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
+ * code otherwise.
  */
 int QDMI_query_site_property_string_list(QDMI_Device device, int site,
                                          QDMI_Site_Property prop,
@@ -167,8 +167,8 @@ int QDMI_query_site_property_string_list(QDMI_Device device, int site,
  * @param prop The property to query.
  * @param values The values of the list.
  * @param size The size of the list.
- * @return QDMI_SUCCESS if the property was queried successfully, an error code
- * otherwise.
+ * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
+ * code otherwise.
  */
 int QDMI_query_site_property_double_list(QDMI_Device device, int site,
                                          QDMI_Site_Property prop,
@@ -181,8 +181,8 @@ int QDMI_query_site_property_double_list(QDMI_Device device, int site,
  * @param prop The property to query.
  * @param values The values of the list.
  * @param size The size of the list.
- * @return QDMI_SUCCESS if the property was queried successfully, an error code
- * otherwise.
+ * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
+ * code otherwise.
  */
 int QDMI_query_site_property_int_list(QDMI_Device device, int site,
                                       QDMI_Site_Property prop, int **values,
@@ -204,8 +204,8 @@ int QDMI_query_site_property_int_list(QDMI_Device device, int site,
  * @param num_sites The size of the sites list.
  * @param prop The property to query.
  * @param value The value of the property.
- * @return QDMI_SUCCESS if the property was queried successfully, an error code
- * otherwise.
+ * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
+ * code otherwise.
  */
 int QDMI_query_operation_property_string(QDMI_Device device,
                                          const char *operation, int *sites,
@@ -221,8 +221,8 @@ int QDMI_query_operation_property_string(QDMI_Device device,
  * @param num_sites The size of the sites list.
  * @param prop The property to query.
  * @param value The value of the property.
- * @return QDMI_SUCCESS if the property was queried successfully, an error code
- * otherwise.
+ * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
+ * code otherwise.
  */
 int QDMI_query_operation_property_double(QDMI_Device device,
                                          const char *operation, int *sites,
@@ -238,8 +238,8 @@ int QDMI_query_operation_property_double(QDMI_Device device,
  * @param num_sites The size of the sites list.
  * @param prop The property to query.
  * @param value The value of the property.
- * @return QDMI_SUCCESS if the property was queried successfully, an error code
- * otherwise.
+ * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
+ * code otherwise.
  */
 int QDMI_query_operation_property_int(QDMI_Device device, const char *operation,
                                       int *sites, int num_sites,
@@ -255,8 +255,8 @@ int QDMI_query_operation_property_int(QDMI_Device device, const char *operation,
  * @param prop The property to query.
  * @param values The values of the list.
  * @param size The size of the list.
- * @return QDMI_SUCCESS if the property was queried successfully, an error code
- * otherwise.
+ * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
+ * code otherwise.
  */
 int QDMI_query_operation_property_string_list(QDMI_Device device,
                                               const char *operation, int *sites,
@@ -273,8 +273,8 @@ int QDMI_query_operation_property_string_list(QDMI_Device device,
  * @param prop The property to query.
  * @param values The values of the list.
  * @param size The size of the list.
- * @return QDMI_SUCCESS if the property was queried successfully, an error code
- * otherwise.
+ * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
+ * code otherwise.
  */
 int QDMI_query_operation_property_double_list(QDMI_Device device,
                                               const char *operation, int *sites,
@@ -291,8 +291,8 @@ int QDMI_query_operation_property_double_list(QDMI_Device device,
  * @param prop The property to query.
  * @param values The values of the list.
  * @param size The size of the list.
- * @return QDMI_SUCCESS if the property was queried successfully, an error code
- * otherwise.
+ * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
+ * code otherwise.
  */
 int QDMI_query_operation_property_int_list(QDMI_Device device,
                                            const char *operation, int *sites,
