@@ -14,7 +14,8 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #define LOAD_SYMBOL(device, symbol)                                            \
   {                                                                            \
-    *(void **)(&((device)->symbol)) = dlsym((device)->lib_handle, #symbol);    \
+    *(void **)(&((device)->symbol)) =                                          \
+        dlsym((device)->lib_handle, #symbol "_dev");                           \
     if ((device)->symbol == NULL) {                                            \
       QDMI_device_close(device);                                               \
       return QDMI_ERROR_NOT_FOUND;                                             \

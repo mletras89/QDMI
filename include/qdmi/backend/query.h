@@ -29,7 +29,8 @@ extern "C" {
  * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
  * code otherwise.
  */
-int QDMI_query_device_property_string(QDMI_Device_Property prop, char **value);
+int QDMI_query_device_property_string_dev(QDMI_Device_Property prop,
+                                          char **value);
 
 /**
  * @brief Query a device property of type double.
@@ -38,7 +39,8 @@ int QDMI_query_device_property_string(QDMI_Device_Property prop, char **value);
  * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
  * code otherwise.
  */
-int QDMI_query_device_property_double(QDMI_Device_Property prop, double *value);
+int QDMI_query_device_property_double_dev(QDMI_Device_Property prop,
+                                          double *value);
 
 /**
  * @brief Query a device property of type int.
@@ -47,7 +49,7 @@ int QDMI_query_device_property_double(QDMI_Device_Property prop, double *value);
  * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
  * code otherwise.
  */
-int QDMI_query_device_property_int(QDMI_Device_Property prop, int *value);
+int QDMI_query_device_property_int_dev(QDMI_Device_Property prop, int *value);
 
 /**
  * @brief Query a device property of type string (char *) list.
@@ -57,8 +59,8 @@ int QDMI_query_device_property_int(QDMI_Device_Property prop, int *value);
  * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
  * code otherwise.
  */
-int QDMI_query_device_property_string_list(QDMI_Device_Property prop,
-                                           char ***values, int *size);
+int QDMI_query_device_property_string_list_dev(QDMI_Device_Property prop,
+                                               char ***values, int *size);
 
 /**
  * @brief Query a device property of type double list.
@@ -68,8 +70,8 @@ int QDMI_query_device_property_string_list(QDMI_Device_Property prop,
  * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
  * code otherwise.
  */
-int QDMI_query_device_property_double_list(QDMI_Device_Property prop,
-                                           double **values, int *size);
+int QDMI_query_device_property_double_list_dev(QDMI_Device_Property prop,
+                                               double **values, int *size);
 
 /**
  * @brief Query a device property of type int list.
@@ -79,8 +81,8 @@ int QDMI_query_device_property_double_list(QDMI_Device_Property prop,
  * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
  * code otherwise.
  */
-int QDMI_query_device_property_int_list(QDMI_Device_Property prop, int **values,
-                                        int *size);
+int QDMI_query_device_property_int_list_dev(QDMI_Device_Property prop,
+                                            int **values, int *size);
 
 /// @}
 
@@ -98,8 +100,8 @@ int QDMI_query_device_property_int_list(QDMI_Device_Property prop, int **values,
  * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
  * code otherwise.
  */
-int QDMI_query_site_property_string(int site, QDMI_Site_Property prop,
-                                    char **value);
+int QDMI_query_site_property_string_dev(int site, QDMI_Site_Property prop,
+                                        char **value);
 
 /**
  * @brief Query a site property of type double.
@@ -109,8 +111,8 @@ int QDMI_query_site_property_string(int site, QDMI_Site_Property prop,
  * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
  * code otherwise.
  */
-int QDMI_query_site_property_double(int site, QDMI_Site_Property prop,
-                                    double *value);
+int QDMI_query_site_property_double_dev(int site, QDMI_Site_Property prop,
+                                        double *value);
 
 /**
  * @brief Query a site property of type int.
@@ -120,7 +122,8 @@ int QDMI_query_site_property_double(int site, QDMI_Site_Property prop,
  * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
  * code otherwise.
  */
-int QDMI_query_site_property_int(int site, QDMI_Site_Property prop, int *value);
+int QDMI_query_site_property_int_dev(int site, QDMI_Site_Property prop,
+                                     int *value);
 
 /**
  * @brief Query a site property of type string (char *) list.
@@ -131,8 +134,8 @@ int QDMI_query_site_property_int(int site, QDMI_Site_Property prop, int *value);
  * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
  * code otherwise.
  */
-int QDMI_query_site_property_string_list(int site, QDMI_Site_Property prop,
-                                         char ***values, int *size);
+int QDMI_query_site_property_string_list_dev(int site, QDMI_Site_Property prop,
+                                             char ***values, int *size);
 
 /**
  * @brief Query a site property of type double list.
@@ -143,8 +146,8 @@ int QDMI_query_site_property_string_list(int site, QDMI_Site_Property prop,
  * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
  * code otherwise.
  */
-int QDMI_query_site_property_double_list(int site, QDMI_Site_Property prop,
-                                         double **values, int *size);
+int QDMI_query_site_property_double_list_dev(int site, QDMI_Site_Property prop,
+                                             double **values, int *size);
 
 /**
  * @brief Query a site property of type int list.
@@ -155,8 +158,8 @@ int QDMI_query_site_property_double_list(int site, QDMI_Site_Property prop,
  * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
  * code otherwise.
  */
-int QDMI_query_site_property_int_list(int site, QDMI_Site_Property prop,
-                                      int **values, int *size);
+int QDMI_query_site_property_int_list_dev(int site, QDMI_Site_Property prop,
+                                          int **values, int *size);
 
 ///@}
 
@@ -175,10 +178,10 @@ int QDMI_query_site_property_int_list(int site, QDMI_Site_Property prop,
  * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
  * code otherwise.
  */
-int QDMI_query_operation_property_string(const char *operation,
-                                         const int *sites, int num_sites,
-                                         QDMI_Operation_Property prop,
-                                         char **value);
+int QDMI_query_operation_property_string_dev(const char *operation,
+                                             const int *sites, int num_sites,
+                                             QDMI_Operation_Property prop,
+                                             char **value);
 
 /**
  * @brief Query an operation property at given sites of type double.
@@ -190,10 +193,10 @@ int QDMI_query_operation_property_string(const char *operation,
  * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
  * code otherwise.
  */
-int QDMI_query_operation_property_double(const char *operation,
-                                         const int *sites, int num_sites,
-                                         QDMI_Operation_Property prop,
-                                         double *value);
+int QDMI_query_operation_property_double_dev(const char *operation,
+                                             const int *sites, int num_sites,
+                                             QDMI_Operation_Property prop,
+                                             double *value);
 
 /**
  * @brief Query an operation property at given sites of type int.
@@ -205,9 +208,10 @@ int QDMI_query_operation_property_double(const char *operation,
  * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
  * code otherwise.
  */
-int QDMI_query_operation_property_int(const char *operation, const int *sites,
-                                      int num_sites,
-                                      QDMI_Operation_Property prop, int *value);
+int QDMI_query_operation_property_int_dev(const char *operation,
+                                          const int *sites, int num_sites,
+                                          QDMI_Operation_Property prop,
+                                          int *value);
 
 /**
  * @brief Query an operation property at given sites of type string (char *)
@@ -221,10 +225,11 @@ int QDMI_query_operation_property_int(const char *operation, const int *sites,
  * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
  * code otherwise.
  */
-int QDMI_query_operation_property_string_list(const char *operation,
-                                              const int *sites, int num_sites,
-                                              QDMI_Operation_Property prop,
-                                              char ***values, int *size);
+int QDMI_query_operation_property_string_list_dev(const char *operation,
+                                                  const int *sites,
+                                                  int num_sites,
+                                                  QDMI_Operation_Property prop,
+                                                  char ***values, int *size);
 
 /**
  * @brief Query an operation property at given sites of type double list.
@@ -237,10 +242,11 @@ int QDMI_query_operation_property_string_list(const char *operation,
  * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
  * code otherwise.
  */
-int QDMI_query_operation_property_double_list(const char *operation,
-                                              const int *sites, int num_sites,
-                                              QDMI_Operation_Property prop,
-                                              double **values, int *size);
+int QDMI_query_operation_property_double_list_dev(const char *operation,
+                                                  const int *sites,
+                                                  int num_sites,
+                                                  QDMI_Operation_Property prop,
+                                                  double **values, int *size);
 
 /**
  * @brief Query an operation property at given sites of type int list.
@@ -253,10 +259,10 @@ int QDMI_query_operation_property_double_list(const char *operation,
  * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
  * code otherwise.
  */
-int QDMI_query_operation_property_int_list(const char *operation,
-                                           const int *sites, int num_sites,
-                                           QDMI_Operation_Property prop,
-                                           int **values, int *size);
+int QDMI_query_operation_property_int_list_dev(const char *operation,
+                                               const int *sites, int num_sites,
+                                               QDMI_Operation_Property prop,
+                                               int **values, int *size);
 
 /// @}
 

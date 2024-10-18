@@ -20,8 +20,8 @@ typedef struct QDMI_Job_impl_d {
   int id;
 } QDMI_Job_impl_t;
 
-int QDMI_query_device_property_string(const QDMI_Device_Property prop,
-                                      char **value) {
+int QDMI_query_device_property_string_dev(const QDMI_Device_Property prop,
+                                          char **value) {
   if (prop == QDMI_NAME) {
     char *name = "Backend with 5 qubits";
     *value = (char *)malloc(strlen(name) + 1);
@@ -43,8 +43,8 @@ int QDMI_query_device_property_string(const QDMI_Device_Property prop,
   return QDMI_ERROR_INVALID_ARGUMENT;
 }
 
-int QDMI_query_device_property_double(const QDMI_Device_Property prop,
-                                      double *value) {
+int QDMI_query_device_property_double_dev(const QDMI_Device_Property prop,
+                                          double *value) {
   if (prop == QDMI_AVG_T1_TIME) {
     *value = 1000.0;
     return QDMI_SUCCESS;
@@ -56,8 +56,8 @@ int QDMI_query_device_property_double(const QDMI_Device_Property prop,
   return QDMI_ERROR_INVALID_ARGUMENT;
 }
 
-int QDMI_query_device_property_int(const QDMI_Device_Property prop,
-                                   int *value) {
+int QDMI_query_device_property_int_dev(const QDMI_Device_Property prop,
+                                       int *value) {
   if (prop == QDMI_NUM_QUBITS) {
     *value = 5;
     return QDMI_SUCCESS;
@@ -65,8 +65,8 @@ int QDMI_query_device_property_int(const QDMI_Device_Property prop,
   return QDMI_ERROR_INVALID_ARGUMENT;
 }
 
-int QDMI_query_device_property_string_list(const QDMI_Device_Property prop,
-                                           char ***value, int *size) {
+int QDMI_query_device_property_string_list_dev(const QDMI_Device_Property prop,
+                                               char ***value, int *size) {
   if (prop == QDMI_GATE_SET) {
     *value = (char **)malloc(sizeof(char *) * 4);
     for (int i = 0; i < 4; i++) {
@@ -82,13 +82,13 @@ int QDMI_query_device_property_string_list(const QDMI_Device_Property prop,
   return QDMI_ERROR_INVALID_ARGUMENT;
 }
 
-int QDMI_query_device_property_double_list(const QDMI_Device_Property prop,
-                                           double **value, int *size) {
+int QDMI_query_device_property_double_list_dev(const QDMI_Device_Property prop,
+                                               double **value, int *size) {
   return QDMI_ERROR_INVALID_ARGUMENT;
 }
 
-int QDMI_query_device_property_int_list(const QDMI_Device_Property prop,
-                                        int **value, int *size) {
+int QDMI_query_device_property_int_list_dev(const QDMI_Device_Property prop,
+                                            int **value, int *size) {
   if (prop == QDMI_COUPLING_MAP) {
     *size = 10;
     // This defines a circular coupling map, i.e., qubit 0 is connected to 1,
@@ -99,15 +99,15 @@ int QDMI_query_device_property_int_list(const QDMI_Device_Property prop,
   return QDMI_ERROR_INVALID_ARGUMENT;
 }
 
-int QDMI_query_site_property_string(const int site,
-                                    const QDMI_Site_Property prop,
-                                    char **value) {
+int QDMI_query_site_property_string_dev(const int site,
+                                        const QDMI_Site_Property prop,
+                                        char **value) {
   return QDMI_ERROR_INVALID_ARGUMENT;
 }
 
-int QDMI_query_site_property_double(const int site,
-                                    const QDMI_Site_Property prop,
-                                    double *value) {
+int QDMI_query_site_property_double_dev(const int site,
+                                        const QDMI_Site_Property prop,
+                                        double *value) {
   if (prop == QDMI_T1_TIME) {
     // One could also specify the T1 for each qubit individually.
     if (site >= 0 && site < 5) {
@@ -124,40 +124,43 @@ int QDMI_query_site_property_double(const int site,
   return QDMI_ERROR_INVALID_ARGUMENT;
 }
 
-int QDMI_query_site_property_int(const int site, const QDMI_Site_Property prop,
-                                 int *value) {
+int QDMI_query_site_property_int_dev(const int site,
+                                     const QDMI_Site_Property prop,
+                                     int *value) {
   return QDMI_ERROR_INVALID_ARGUMENT;
 }
 
-int QDMI_query_site_property_string_list(const int site,
-                                         const QDMI_Site_Property prop,
-                                         char ***value, int *size) {
+int QDMI_query_site_property_string_list_dev(const int site,
+                                             const QDMI_Site_Property prop,
+                                             char ***value, int *size) {
   return QDMI_ERROR_INVALID_ARGUMENT;
 }
 
-int QDMI_query_site_property_double_list(const int site,
-                                         const QDMI_Site_Property prop,
-                                         double **value, int *size) {
+int QDMI_query_site_property_double_list_dev(const int site,
+                                             const QDMI_Site_Property prop,
+                                             double **value, int *size) {
   return QDMI_ERROR_INVALID_ARGUMENT;
 }
 
-int QDMI_query_site_property_int_list(const int site,
-                                      const QDMI_Site_Property prop,
-                                      int **value, int *size) {
+int QDMI_query_site_property_int_list_dev(const int site,
+                                          const QDMI_Site_Property prop,
+                                          int **value, int *size) {
   return QDMI_ERROR_INVALID_ARGUMENT;
 }
 
-int QDMI_query_operation_property_string(const char *operation,
-                                         const int *sites, const int num_sites,
-                                         const QDMI_Operation_Property prop,
-                                         char **value) {
+int QDMI_query_operation_property_string_dev(const char *operation,
+                                             const int *sites,
+                                             const int num_sites,
+                                             const QDMI_Operation_Property prop,
+                                             char **value) {
   return QDMI_ERROR_INVALID_ARGUMENT;
 }
 
-int QDMI_query_operation_property_double(const char *operation,
-                                         const int *sites, const int num_sites,
-                                         const QDMI_Operation_Property prop,
-                                         double *value) {
+int QDMI_query_operation_property_double_dev(const char *operation,
+                                             const int *sites,
+                                             const int num_sites,
+                                             const QDMI_Operation_Property prop,
+                                             double *value) {
   if (prop == QDMI_OPERATION_DURATION) {
     // One could also specify the duration depending on the site, see fidelity.
     if (strcmp(operation, "CZ") == 0) {
@@ -206,75 +209,74 @@ int QDMI_query_operation_property_double(const char *operation,
   return QDMI_ERROR_INVALID_ARGUMENT;
 }
 
-int QDMI_query_operation_property_int(const char *operation, const int *sites,
-                                      const int num_sites,
-                                      const QDMI_Operation_Property prop,
-                                      int *value) {
+int QDMI_query_operation_property_int_dev(const char *operation,
+                                          const int *sites, const int num_sites,
+                                          const QDMI_Operation_Property prop,
+                                          int *value) {
   return QDMI_ERROR_INVALID_ARGUMENT;
 }
 
-int QDMI_query_operation_property_string_list(
+int QDMI_query_operation_property_string_list_dev(
     const char *operation, const int *sites, const int num_sites,
     const QDMI_Operation_Property prop, char ***value, int *size) {
   return QDMI_ERROR_INVALID_ARGUMENT;
 }
 
-int QDMI_query_operation_property_double_list(
+int QDMI_query_operation_property_double_list_dev(
     const char *operation, const int *sites, const int num_sites,
     const QDMI_Operation_Property prop, double **value, int *size) {
   return QDMI_ERROR_INVALID_ARGUMENT;
 }
 
-int QDMI_query_operation_property_int_list(const char *operation,
-                                           const int *sites,
-                                           const int num_sites,
-                                           const QDMI_Operation_Property prop,
-                                           int **value, int *size) {
+int QDMI_query_operation_property_int_list_dev(
+    const char *operation, const int *sites, const int num_sites,
+    const QDMI_Operation_Property prop, int **value, int *size) {
   return QDMI_ERROR_INVALID_ARGUMENT;
 }
 
-int QDMI_control_submit_qasm(const char *qasm_string, int num_shots,
-                             QDMI_Job *job) {
+int QDMI_control_submit_qasm_dev(const char *qasm_string, int num_shots,
+                                 QDMI_Job *job) {
   *job = (QDMI_Job)malloc(sizeof(QDMI_Job_impl_t));
   // set job id to current time for demonstration purposes
   (*job)->id = (int)time(NULL);
   return QDMI_SUCCESS;
 }
 
-int QDMI_control_submit_qir_string(const char *qir_string, int num_shots,
-                                   QDMI_Job *job) {
+int QDMI_control_submit_qir_string_dev(const char *qir_string, int num_shots,
+                                       QDMI_Job *job) {
   *job = (QDMI_Job)malloc(sizeof(QDMI_Job_impl_t));
   // set job id to current time for demonstration purposes
   (*job)->id = (int)time(NULL);
   return QDMI_SUCCESS;
 }
 
-int QDMI_control_submit_qir_module(const void *qir_module, int num_shots,
-                                   QDMI_Job *job) {
+int QDMI_control_submit_qir_module_dev(const void *qir_module, int num_shots,
+                                       QDMI_Job *job) {
   *job = (QDMI_Job)malloc(sizeof(QDMI_Job_impl_t));
   // set job id to current time for demonstration purposes
   (*job)->id = (int)time(NULL);
   return QDMI_SUCCESS;
 }
 
-int QDMI_control_cancel(QDMI_Job job) { return QDMI_SUCCESS; }
+int QDMI_control_cancel_dev(QDMI_Job job) { return QDMI_SUCCESS; }
 
-int QDMI_control_check(QDMI_Job job, QDMI_Job_Status *status) {
+int QDMI_control_check_dev(QDMI_Job job, QDMI_Job_Status *status) {
   *status = QDMI_JOB_STATUS_DONE;
   return QDMI_SUCCESS;
 }
 
-int QDMI_control_wait(QDMI_Job job) { return QDMI_SUCCESS; }
+int QDMI_control_wait_dev(QDMI_Job job) { return QDMI_SUCCESS; }
 
 // Comparison function for qsort
 int compare_results(const void *a, const void *b) {
   return strcmp(*(char **)a, *(char **)b);
 }
 
-int QDMI_control_get_hist(QDMI_Job job, char ***data, int **counts, int *size) {
+int QDMI_control_get_hist_dev(QDMI_Job job, char ***data, int **counts,
+                              int *size) {
   char **raw_data = NULL;
   int raw_size = 0;
-  QDMI_control_get_raw(job, &raw_data, &raw_size);
+  QDMI_control_get_raw_dev(job, &raw_data, &raw_size);
   // Sort the array
   qsort((void *)raw_data, raw_size, sizeof(char *), compare_results);
   // Count unique elements
@@ -305,7 +307,7 @@ int QDMI_control_get_hist(QDMI_Job job, char ***data, int **counts, int *size) {
   return QDMI_SUCCESS;
 }
 
-int QDMI_control_get_raw(QDMI_Job job, char ***data, int *size) {
+int QDMI_control_get_raw_dev(QDMI_Job job, char ***data, int *size) {
   *data = (char **)malloc(sizeof(char *) * 5);
   (*data)[0] = (char *)malloc(sizeof(char) * 6);
   strcpy((*data)[0], "00000");
@@ -321,6 +323,6 @@ int QDMI_control_get_raw(QDMI_Job job, char ***data, int *size) {
   return QDMI_SUCCESS;
 }
 
-int QDMI_control_initialize(void) { return QDMI_SUCCESS; }
+int QDMI_control_initialize_dev(void) { return QDMI_SUCCESS; }
 
-int QDMI_control_finalize(void) { return QDMI_SUCCESS; }
+int QDMI_control_finalize_dev(void) { return QDMI_SUCCESS; }

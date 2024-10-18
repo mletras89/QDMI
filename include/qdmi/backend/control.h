@@ -10,9 +10,9 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  * @details
  * Backend implementations are expected to provide **at least one** of the
  * submission functions
- * - @ref QDMI_control_submit_qir_module (preferred)
- * - @ref QDMI_control_submit_qir_string
- * - @ref QDMI_control_submit_qasm
+ * - @ref QDMI_control_submit_qir_module_dev (preferred)
+ * - @ref QDMI_control_submit_qir_string_dev
+ * - @ref QDMI_control_submit_qasm_dev
  *
  * For all of these, the remaining two can be implemented via simple
  * conversions.
@@ -50,8 +50,8 @@ typedef struct QDMI_Job_impl_d *QDMI_Job;
  * @return @ref QDMI_SUCCESS if the job was successfully submitted,
  * otherwise an error code.
  */
-int QDMI_control_submit_qasm(const char *qasm_string, int num_shots,
-                             QDMI_Job *job);
+int QDMI_control_submit_qasm_dev(const char *qasm_string, int num_shots,
+                                 QDMI_Job *job);
 
 /**
  * @brief Submit a QIR string to the device.
@@ -64,8 +64,8 @@ int QDMI_control_submit_qasm(const char *qasm_string, int num_shots,
  * @return @ref QDMI_SUCCESS if the job was successfully submitted,
  * otherwise an error code.
  */
-int QDMI_control_submit_qir_string(const char *qir_string, int num_shots,
-                                   QDMI_Job *job);
+int QDMI_control_submit_qir_string_dev(const char *qir_string, int num_shots,
+                                       QDMI_Job *job);
 
 /**
  * @brief Submit a QIR module to the device.
@@ -78,8 +78,8 @@ int QDMI_control_submit_qir_string(const char *qir_string, int num_shots,
  * @return @ref QDMI_SUCCESS if the job was successfully submitted,
  * otherwise an error code.
  */
-int QDMI_control_submit_qir_module(const void *qir_module, int num_shots,
-                                   QDMI_Job *job);
+int QDMI_control_submit_qir_module_dev(const void *qir_module, int num_shots,
+                                       QDMI_Job *job);
 
 /**
  * @brief Cancel an already submitted job.
@@ -88,7 +88,7 @@ int QDMI_control_submit_qir_module(const void *qir_module, int num_shots,
  * @return @ref QDMI_SUCCESS if the job was successfully cancelled,
  * otherwise an error code.
  */
-int QDMI_control_cancel(QDMI_Job job);
+int QDMI_control_cancel_dev(QDMI_Job job);
 
 /**
  * @brief Check the status of a job.
@@ -97,7 +97,7 @@ int QDMI_control_cancel(QDMI_Job job);
  * @return @ref QDMI_SUCCESS if the job status was successfully checked,
  * otherwise an error code.
  */
-int QDMI_control_check(QDMI_Job job, QDMI_Job_Status *status);
+int QDMI_control_check_dev(QDMI_Job job, QDMI_Job_Status *status);
 
 /**
  * @brief Wait for a job to finish.
@@ -105,7 +105,7 @@ int QDMI_control_check(QDMI_Job job, QDMI_Job_Status *status);
  * @return @ref QDMI_SUCCESS if the job is finished, otherwise an error
  * code when the waiting failed.
  */
-int QDMI_control_wait(QDMI_Job job);
+int QDMI_control_wait_dev(QDMI_Job job);
 
 /// @}
 
@@ -122,16 +122,17 @@ int QDMI_control_wait(QDMI_Job job);
  * can be retrieved from the second list at the same index. The keys are the
  * respective measurement outcomes and the values are the number of times the
  * outcome was measured. Pairs for which the value is 0 are not included.
- * For the format of the keys, see also \ref QDMI_control_get_raw.
+ * For the format of the keys, see also \ref QDMI_control_get_raw_dev.
  * @param job The job to retrieve the results from.
  * @param data The list of keys.
  * @param counts The list of values.
  * @param size The size, i.e., the number of elements of each list.
  * @return @ref QDMI_SUCCESS if the results were successfully retrieved,
  * otherwise an error code.
- * @see QDMI_control_get_raw
+ * @see QDMI_control_get_raw_dev
  */
-int QDMI_control_get_hist(QDMI_Job job, char ***data, int **counts, int *size);
+int QDMI_control_get_hist_dev(QDMI_Job job, char ***data, int **counts,
+                              int *size);
 
 /**
  * @brief Retrieve the raw measurement results of a job.
@@ -147,7 +148,7 @@ int QDMI_control_get_hist(QDMI_Job job, char ***data, int **counts, int *size);
  * @return @ref QDMI_SUCCESS if the results were successfully retrieved,
  * otherwise an error code.
  */
-int QDMI_control_get_raw(QDMI_Job job, char ***data, int *size);
+int QDMI_control_get_raw_dev(QDMI_Job job, char ***data, int *size);
 
 /// @}
 
@@ -163,7 +164,7 @@ int QDMI_control_get_raw(QDMI_Job job, char ***data, int *size);
  * @return @ref QDMI_SUCCESS if the initialization was successful,
  * otherwise an error code.
  */
-int QDMI_control_initialize(void);
+int QDMI_control_initialize_dev(void);
 
 /**
  * @brief Finalize a device.
@@ -173,7 +174,7 @@ int QDMI_control_initialize(void);
  * @return @ref QDMI_SUCCESS if the initialization was successful,
  * otherwise an error code.
  */
-int QDMI_control_finalize(void);
+int QDMI_control_finalize_dev(void);
 
 /// @}
 
