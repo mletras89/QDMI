@@ -12,10 +12,10 @@ implementations.
 
 <!-- Include the entire file. -->
 
-\include examples/backend5.c
+\include examples/backend.c
 
 ## Implementing a Backend using C++ {#cxx-backend}
 
 <!-- Include the entire file. -->
 
-\include examples/backend7.cpp
+\include examples/backend.cpp
