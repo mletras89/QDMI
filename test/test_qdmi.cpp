@@ -94,14 +94,14 @@ TEST_F(QDMITest, QueryDeviceVersion) {
   char *value = nullptr;
   QDMI_session_open_device(session, c_backend_name.c_str(), &device);
   QDMI_query_device_property_string(device, QDMI_DEVICE_VERSION, &value);
-  ASSERT_STREQ(value, "0.0.1");
+  ASSERT_STREQ(value, "0.1.0");
 }
 
 TEST_F(QDMITest, QueryDeviceLibraryVersion) {
   char *value = nullptr;
   QDMI_session_open_device(session, c_backend_name.c_str(), &device);
   QDMI_query_device_property_string(device, QDMI_LIBRARY_VERSION, &value);
-  ASSERT_STREQ(value, "0.1.0");
+  ASSERT_STREQ(value, "0.2.0");
 }
 
 TEST_F(QDMITest, QueryAvgT1Time) {
@@ -121,7 +121,7 @@ TEST_F(QDMITest, QueryAvgT2Time) {
 TEST_F(QDMITest, QueryGateSet) {
   char **gate_set = nullptr;
   int num_gates = 0;
-  const std::array<std::string, 4> value = {"CZ", "RX", "RY", "RZ"};
+  const std::array<std::string, 4> value = {"cz", "rx", "ry", "rz"};
   QDMI_session_open_device(session, c_backend_name.c_str(), &device);
   QDMI_query_device_property_string_list(device, QDMI_GATE_SET, &gate_set,
                                          &num_gates);

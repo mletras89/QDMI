@@ -31,13 +31,13 @@ int QDMI_query_device_property_string_dev(const QDMI_Device_Property prop,
     return QDMI_SUCCESS;
   }
   if (prop == QDMI_DEVICE_VERSION) {
-    const std::string version("0.0.1");
+    const std::string version("0.1.0");
     *value = new char[version.length() + 1];
     strcpy(*value, version.c_str());
     return QDMI_SUCCESS;
   }
   if (prop == QDMI_LIBRARY_VERSION) {
-    const std::string version("0.1.0");
+    const std::string version("0.2.0");
     *value = new char[version.length() + 1];
     strcpy(*value, version.c_str());
     return QDMI_SUCCESS;
