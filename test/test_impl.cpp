@@ -9,59 +9,233 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  * functions.
  * @details It calls all the functions in the backend interface to ensure that
  * they are implemented. During linking, when a function is not implemented this
- * will raise an error.
- * @note This file is not meant to be ever executed, only linked.
+ * will raise an error. Additionally, when executed, the tests check that no
+ * function returns QDMI_ERROR_NOT_IMPLEMENTED.
  */
 
-#include "qdmi/backend.h"
+#include "qdmi/interface.h"
 
 #include <cstddef>
+#include <gtest/gtest.h>
+#include <string>
 
-typedef struct QDMI_Job_impl_d {
-} QDMI_Job_impl_t;
+constexpr const char *Shared_library_file_extension() {
+#if defined(_WIN32)
+  return ".dll";
+#elif defined(__APPLE__)
+  return ".dylib";
+#else
+  return ".so";
+#endif
+}
 
-int main() {
-  // query interface
-  QDMI_query_device_property_string(QDMI_DEVICE_PROPERTY_MAX, nullptr);
-  QDMI_query_device_property_double(QDMI_DEVICE_PROPERTY_MAX, nullptr);
-  QDMI_query_device_property_int(QDMI_DEVICE_PROPERTY_MAX, nullptr);
-  QDMI_query_device_property_string_list(QDMI_DEVICE_PROPERTY_MAX, nullptr,
-                                         nullptr);
-  QDMI_query_device_property_double_list(QDMI_DEVICE_PROPERTY_MAX, nullptr,
-                                         nullptr);
-  QDMI_query_device_property_int_list(QDMI_DEVICE_PROPERTY_MAX, nullptr,
-                                      nullptr);
-  QDMI_query_site_property_string(0, QDMI_SITE_PROPERTY_MAX, nullptr);
-  QDMI_query_site_property_double(0, QDMI_SITE_PROPERTY_MAX, nullptr);
-  QDMI_query_site_property_int(0, QDMI_SITE_PROPERTY_MAX, nullptr);
-  QDMI_query_site_property_string_list(0, QDMI_SITE_PROPERTY_MAX, nullptr,
-                                       nullptr);
-  QDMI_query_site_property_double_list(0, QDMI_SITE_PROPERTY_MAX, nullptr,
-                                       nullptr);
-  QDMI_query_site_property_int_list(0, QDMI_SITE_PROPERTY_MAX, nullptr,
-                                    nullptr);
-  QDMI_query_operation_at_site_property_string(
-      nullptr, nullptr, 0, QDMI_OPERATION_PROPERTY_MAX, nullptr);
-  QDMI_query_operation_at_site_property_double(
-      nullptr, nullptr, 0, QDMI_OPERATION_PROPERTY_MAX, nullptr);
-  QDMI_query_operation_at_site_property_int(
-      nullptr, nullptr, 0, QDMI_OPERATION_PROPERTY_MAX, nullptr);
-  QDMI_query_operation_at_site_property_string_list(
-      nullptr, nullptr, 0, QDMI_OPERATION_PROPERTY_MAX, nullptr, nullptr);
-  QDMI_query_operation_at_site_property_double_list(
-      nullptr, nullptr, 0, QDMI_OPERATION_PROPERTY_MAX, nullptr, nullptr);
-  QDMI_query_operation_at_site_property_int_list(
-      nullptr, nullptr, 0, QDMI_OPERATION_PROPERTY_MAX, nullptr, nullptr);
-  // control interface
-  QDMI_control_submit_qasm(nullptr, 0, nullptr);
-  QDMI_control_submit_qir_string(nullptr, 0, nullptr);
-  QDMI_control_submit_qir_module(nullptr, 0, nullptr);
-  QDMI_control_cancel(nullptr);
-  QDMI_control_check(nullptr, nullptr);
-  QDMI_control_wait(nullptr);
-  QDMI_control_get_hist(nullptr, nullptr, nullptr, nullptr);
-  QDMI_control_get_raw(nullptr, nullptr, nullptr);
-  QDMI_control_initialize();
-  QDMI_control_finalize();
-  QDMI_control_calibrate();
+class QDMIImplementationTest : public ::testing::TestWithParam<std::string> {
+protected:
+  void SetUp() override {
+    ASSERT_TRUE(QDMI_is_Success(QDMI_session_alloc(&session)))
+        << "Failed to allocate session";
+    backend_name = GetParam() + Shared_library_file_extension();
+    ASSERT_TRUE(QDMI_is_Success(
+        QDMI_session_open_device(session, backend_name.c_str(), &device)))
+        << "Failed to open device";
+  }
+
+  void TearDown() override { QDMI_session_free(session); }
+
+  QDMI_Session session = nullptr;
+  QDMI_Device device = nullptr;
+  std::string backend_name;
+};
+
+TEST_P(QDMIImplementationTest, QueryDevicePropertyStringImplemented) {
+  ASSERT_EQ(QDMI_query_device_property_string(device, QDMI_DEVICE_PROPERTY_MAX,
+                                              nullptr),
+            QDMI_ERROR_INVALID_ARGUMENT);
+}
+
+TEST_P(QDMIImplementationTest, QueryDevicePropertyDoubleImplemented) {
+  ASSERT_EQ(QDMI_query_device_property_double(device, QDMI_DEVICE_PROPERTY_MAX,
+                                              nullptr),
+            QDMI_ERROR_INVALID_ARGUMENT);
+}
+
+TEST_P(QDMIImplementationTest, QueryDevicePropertyIntImplemented) {
+  ASSERT_EQ(
+      QDMI_query_device_property_int(device, QDMI_DEVICE_PROPERTY_MAX, nullptr),
+      QDMI_ERROR_INVALID_ARGUMENT);
+}
+
+TEST_P(QDMIImplementationTest, QueryDevicePropertyStringListImplemented) {
+  ASSERT_EQ(QDMI_query_device_property_string_list(
+                device, QDMI_DEVICE_PROPERTY_MAX, nullptr, nullptr),
+            QDMI_ERROR_INVALID_ARGUMENT);
+}
+
+TEST_P(QDMIImplementationTest, QueryDevicePropertyDoubleListImplemented) {
+  ASSERT_EQ(QDMI_query_device_property_double_list(
+                device, QDMI_DEVICE_PROPERTY_MAX, nullptr, nullptr),
+            QDMI_ERROR_INVALID_ARGUMENT);
+}
+
+TEST_P(QDMIImplementationTest, QueryDevicePropertyIntListImplemented) {
+  ASSERT_EQ(QDMI_query_device_property_int_list(
+                device, QDMI_DEVICE_PROPERTY_MAX, nullptr, nullptr),
+            QDMI_ERROR_INVALID_ARGUMENT);
+}
+
+TEST_P(QDMIImplementationTest, QuerySitePropertyStringImplemented) {
+  ASSERT_EQ(QDMI_query_site_property_string(device, 0, QDMI_SITE_PROPERTY_MAX,
+                                            nullptr),
+            QDMI_ERROR_INVALID_ARGUMENT);
+}
+
+TEST_P(QDMIImplementationTest, QuerySitePropertyDoubleImplemented) {
+  ASSERT_EQ(QDMI_query_site_property_double(device, 0, QDMI_SITE_PROPERTY_MAX,
+                                            nullptr),
+            QDMI_ERROR_INVALID_ARGUMENT);
+}
+
+TEST_P(QDMIImplementationTest, QuerySitePropertyIntImplemented) {
+  ASSERT_EQ(
+      QDMI_query_site_property_int(device, 0, QDMI_SITE_PROPERTY_MAX, nullptr),
+      QDMI_ERROR_INVALID_ARGUMENT);
+}
+
+TEST_P(QDMIImplementationTest, QuerySitePropertyStringListImplemented) {
+  ASSERT_EQ(QDMI_query_site_property_string_list(
+                device, 0, QDMI_SITE_PROPERTY_MAX, nullptr, nullptr),
+            QDMI_ERROR_INVALID_ARGUMENT);
+}
+
+TEST_P(QDMIImplementationTest, QuerySitePropertyDoubleListImplemented) {
+  ASSERT_EQ(QDMI_query_site_property_double_list(
+                device, 0, QDMI_SITE_PROPERTY_MAX, nullptr, nullptr),
+            QDMI_ERROR_INVALID_ARGUMENT);
+}
+
+TEST_P(QDMIImplementationTest, QuerySitePropertyIntListImplemented) {
+  ASSERT_EQ(QDMI_query_site_property_int_list(device, 0, QDMI_SITE_PROPERTY_MAX,
+                                              nullptr, nullptr),
+            QDMI_ERROR_INVALID_ARGUMENT);
+}
+
+TEST_P(QDMIImplementationTest, QueryOperationAtSitePropertyStringImplemented) {
+  ASSERT_EQ(QDMI_query_operation_property_string(device, nullptr, nullptr, 0,
+                                                 QDMI_OPERATION_PROPERTY_MAX,
+                                                 nullptr),
+            QDMI_ERROR_INVALID_ARGUMENT);
+}
+
+TEST_P(QDMIImplementationTest, QueryOperationAtSitePropertyDoubleImplemented) {
+  ASSERT_EQ(QDMI_query_operation_property_double(device, nullptr, nullptr, 0,
+                                                 QDMI_OPERATION_PROPERTY_MAX,
+                                                 nullptr),
+            QDMI_ERROR_INVALID_ARGUMENT);
+}
+
+TEST_P(QDMIImplementationTest, QueryOperationAtSitePropertyIntImplemented) {
+  ASSERT_EQ(QDMI_query_operation_property_int(device, nullptr, nullptr, 0,
+                                              QDMI_OPERATION_PROPERTY_MAX,
+                                              nullptr),
+            QDMI_ERROR_INVALID_ARGUMENT);
+}
+
+TEST_P(QDMIImplementationTest,
+       QueryOperationAtSitePropertyStringListImplemented) {
+  ASSERT_EQ(QDMI_query_operation_property_string_list(
+                device, nullptr, nullptr, 0, QDMI_OPERATION_PROPERTY_MAX,
+                nullptr, nullptr),
+            QDMI_ERROR_INVALID_ARGUMENT);
+}
+
+TEST_P(QDMIImplementationTest,
+       QueryOperationAtSitePropertyDoubleListImplemented) {
+  ASSERT_EQ(QDMI_query_operation_property_double_list(
+                device, nullptr, nullptr, 0, QDMI_OPERATION_PROPERTY_MAX,
+                nullptr, nullptr),
+            QDMI_ERROR_INVALID_ARGUMENT);
+}
+
+TEST_P(QDMIImplementationTest, QueryOperationAtSitePropertyIntListImplemented) {
+  ASSERT_EQ(QDMI_query_operation_property_int_list(device, nullptr, nullptr, 0,
+                                                   QDMI_OPERATION_PROPERTY_MAX,
+                                                   nullptr, nullptr),
+            QDMI_ERROR_INVALID_ARGUMENT);
+}
+
+TEST_P(QDMIImplementationTest, DISABLED_ControlSubmitQasmImplemented) {
+  // Only check for definition of function while linking, not executing it.
+  // NOTE: GTEST_SKIP() does not work because this renders the following line as
+  // dead code.
+  QDMI_control_submit_qasm(device, nullptr, 0, nullptr);
+}
+
+TEST_P(QDMIImplementationTest, DISABLED_ControlSubmitQirStringImplemented) {
+  // Only check for definition of function while linking, not executing it.
+  // NOTE: GTEST_SKIP() does not work because this renders the following line as
+  // dead code.
+  QDMI_control_submit_qir_string(device, nullptr, 0, nullptr);
+}
+
+TEST_P(QDMIImplementationTest, DISABLED_ControlSubmitQirModuleImplemented) {
+  // Only check for definition of function while linking, not executing it.
+  // NOTE: GTEST_SKIP() does not work because this renders the following line as
+  // dead code.
+  QDMI_control_submit_qir_module(device, nullptr, 0, nullptr);
+}
+
+TEST_P(QDMIImplementationTest, DISABLED_ControlCancelImplemented) {
+  // Only check for definition of function while linking, not executing it.
+  // NOTE: GTEST_SKIP() does not work because this renders the following line as
+  // dead code.
+  QDMI_control_cancel(device, nullptr);
+}
+
+TEST_P(QDMIImplementationTest, DISABLED_ControlCheckImplemented) {
+  // Only check for definition of function while linking, not executing it.
+  // NOTE: GTEST_SKIP() does not work because this renders the following line as
+  // dead code.
+  QDMI_control_check(device, nullptr, nullptr);
+}
+
+TEST_P(QDMIImplementationTest, DISABLED_ControlWaitImplemented) {
+  // Only check for definition of function while linking, not executing it.
+  // NOTE: GTEST_SKIP() does not work because this renders the following line as
+  // dead code.
+  QDMI_control_wait(device, nullptr);
+}
+
+TEST_P(QDMIImplementationTest, DISABLED_ControlGetHistImplemented) {
+  // Only check for definition of function while linking, not executing it.
+  // NOTE: GTEST_SKIP() does not work because this renders the following line as
+  // dead code.
+  QDMI_control_get_hist(device, nullptr, nullptr, nullptr, nullptr);
+}
+
+TEST_P(QDMIImplementationTest, DISABLED_ControlGetRawImplemented) {
+  // Only check for definition of function while linking, not executing it.
+  // NOTE: GTEST_SKIP() does not work because this renders the following line as
+  // dead code.
+  QDMI_control_get_raw(device, nullptr, nullptr, nullptr);
+}
+
+TEST_P(QDMIImplementationTest, DISABLED_ControlInitializeImplemented) {
+  // Only check for definition of function while linking, not executing it.
+  // NOTE: GTEST_SKIP() does not work because this renders the following line as
+  // dead code.
+  QDMI_control_initialize(device);
+}
+
+TEST_P(QDMIImplementationTest, DISABLED_ControlFinalizeImplemented) {
+  // Only check for definition of function while linking, not executing it.
+  // NOTE: GTEST_SKIP() does not work because this renders the following line as
+  // dead code.
+  QDMI_control_finalize(device);
+}
+
+TEST_P(QDMIImplementationTest, DISABLED_ControlCalibrateImplemented) {
+  // Only check for definition of function while linking, not executing it.
+  // NOTE: GTEST_SKIP() does not work because this renders the following line as
+  // dead code.
+  QDMI_control_calibrate(device);
 }

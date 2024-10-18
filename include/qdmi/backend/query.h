@@ -175,11 +175,10 @@ int QDMI_query_site_property_int_list(int site, QDMI_Site_Property prop,
  * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
  * code otherwise.
  */
-int QDMI_query_operation_at_site_property_string(const char *operation,
-                                                 const int *sites,
-                                                 int num_sites,
-                                                 QDMI_Operation_Property prop,
-                                                 char **value);
+int QDMI_query_operation_property_string(const char *operation,
+                                         const int *sites, int num_sites,
+                                         QDMI_Operation_Property prop,
+                                         char **value);
 
 /**
  * @brief Query an operation property at given sites of type double.
@@ -191,11 +190,10 @@ int QDMI_query_operation_at_site_property_string(const char *operation,
  * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
  * code otherwise.
  */
-int QDMI_query_operation_at_site_property_double(const char *operation,
-                                                 const int *sites,
-                                                 int num_sites,
-                                                 QDMI_Operation_Property prop,
-                                                 double *value);
+int QDMI_query_operation_property_double(const char *operation,
+                                         const int *sites, int num_sites,
+                                         QDMI_Operation_Property prop,
+                                         double *value);
 
 /**
  * @brief Query an operation property at given sites of type int.
@@ -207,10 +205,9 @@ int QDMI_query_operation_at_site_property_double(const char *operation,
  * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
  * code otherwise.
  */
-int QDMI_query_operation_at_site_property_int(const char *operation,
-                                              const int *sites, int num_sites,
-                                              QDMI_Operation_Property prop,
-                                              int *value);
+int QDMI_query_operation_property_int(const char *operation, const int *sites,
+                                      int num_sites,
+                                      QDMI_Operation_Property prop, int *value);
 
 /**
  * @brief Query an operation property at given sites of type string (char *)
@@ -224,9 +221,10 @@ int QDMI_query_operation_at_site_property_int(const char *operation,
  * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
  * code otherwise.
  */
-int QDMI_query_operation_at_site_property_string_list(
-    const char *operation, const int *sites, int num_sites,
-    QDMI_Operation_Property prop, char ***values, int *size);
+int QDMI_query_operation_property_string_list(const char *operation,
+                                              const int *sites, int num_sites,
+                                              QDMI_Operation_Property prop,
+                                              char ***values, int *size);
 
 /**
  * @brief Query an operation property at given sites of type double list.
@@ -239,9 +237,10 @@ int QDMI_query_operation_at_site_property_string_list(
  * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
  * code otherwise.
  */
-int QDMI_query_operation_at_site_property_double_list(
-    const char *operation, const int *sites, int num_sites,
-    QDMI_Operation_Property prop, double **values, int *size);
+int QDMI_query_operation_property_double_list(const char *operation,
+                                              const int *sites, int num_sites,
+                                              QDMI_Operation_Property prop,
+                                              double **values, int *size);
 
 /**
  * @brief Query an operation property at given sites of type int list.
@@ -254,11 +253,10 @@ int QDMI_query_operation_at_site_property_double_list(
  * @return @ref QDMI_SUCCESS if the property was queried successfully, an error
  * code otherwise.
  */
-int QDMI_query_operation_at_site_property_int_list(const char *operation,
-                                                   const int *sites,
-                                                   int num_sites,
-                                                   QDMI_Operation_Property prop,
-                                                   int **values, int *size);
+int QDMI_query_operation_property_int_list(const char *operation,
+                                           const int *sites, int num_sites,
+                                           QDMI_Operation_Property prop,
+                                           int **values, int *size);
 
 /// @}
 

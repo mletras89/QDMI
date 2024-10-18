@@ -182,6 +182,27 @@ int QDMI_control_get_raw(QDMI_Device dev, QDMI_Job job, char ***data,
  * @{
  */
 
+/**
+ * @brief Initialize a device.
+ * @details A device can expect that this function is called once in the
+ * beginning before any other functions are invoked on that device.
+ * @param dev The device to initialize.
+ * @return @ref QDMI_SUCCESS if the initialization was successful,
+ * otherwise an error code.
+ */
+int QDMI_control_initialize(QDMI_Device dev);
+
+/**
+ * @brief Finalize a device.
+ * @details A device can expect that this function is called once at the end of
+ * a session and no other functions are invoked on that device after that
+ * anymore.
+ * @param dev The device to initialize.
+ * @return @ref QDMI_SUCCESS if the initialization was successful,
+ * otherwise an error code.
+ */
+int QDMI_control_finalize(QDMI_Device dev);
+
 // TODO: should we remove this for the first version and create a tracking issue
 // for properly designing the interface for calibration? I have a feeling that
 // this should become a separate component next to query and control
