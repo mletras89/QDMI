@@ -40,7 +40,7 @@ int QDMI_query_device_property_string(const QDMI_Device_Property prop,
     strcpy(*value, version);
     return QDMI_SUCCESS;
   }
-  return QDMI_ERROR_NOT_IMPLEMENTED;
+  return QDMI_ERROR_INVALID_ARGUMENT;
 }
 
 int QDMI_query_device_property_double(const QDMI_Device_Property prop,

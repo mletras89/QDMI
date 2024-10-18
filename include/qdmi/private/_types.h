@@ -128,9 +128,6 @@ typedef int (*QDMI_control_calibrate_t)(void);
 typedef struct QDMI_Device_impl_d {
   void *lib_handle; /**< The dlopen handle to the dynamic library. */
 
-  // TODO Is `code` the right way to go? Or is \ref better. Problem function
-  // exists in backend.h and interface.h?
-
   /// Function pointer to the @code QDMI_query_device_property_string @endcode
   /// function.
   QDMI_query_device_property_string_t QDMI_query_device_property_string;

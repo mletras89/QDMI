@@ -18,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  * @details This structure can, e.g., be used to store the job id.
  */
 typedef struct QDMI_Job_impl_d {
+  int id;
 } QDMI_Job_impl_t;
 
 int QDMI_query_device_property_string(const QDMI_Device_Property prop,

@@ -45,7 +45,7 @@ add_executable(qdmi_test test_qdmi.cpp)
 # link the Google test infrastructure to the test executable.
 target_link_libraries(
   qdmi_test PRIVATE gtest_main qdmi::qdmi_implementation_test qdmi::qdmi
-                    qdmi::project_warnings)
+                    qdmi::project_warnings tool)
 
 # discover tests
 gtest_discover_tests(

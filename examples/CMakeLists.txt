@@ -22,5 +22,5 @@ target_link_libraries(cxx_backend PRIVATE qdmi::qdmi)
 # NOTE: If you change the target name, the name of the shared library will also
 # change. Hence, in the test you have to adopt the name of the shared library
 # accordingly.
-add_library(tool SHARED tool.cpp)
+add_library(tool SHARED tool.cpp tool.hpp)
 target_link_libraries(tool PRIVATE qdmi::qdmi)

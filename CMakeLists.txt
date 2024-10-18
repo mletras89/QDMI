@@ -49,8 +49,14 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS
     CACHE BOOL "Export compile commands" FORCE)
 
 # Require C standard
-set_property(GLOBAL PROPERTY CMAKE_C_STANDARD_REQUIRED ON)
-set_property(GLOBAL PROPERTY C_EXTENSIONS OFF)
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED True)
+set(CMAKE_C_EXTENSIONS False)
+
+# Require C++ standard
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_EXTENSIONS False)
 
 include(cmake/ExternalDependencies.cmake)
 

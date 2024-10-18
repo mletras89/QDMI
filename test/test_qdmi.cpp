@@ -6,6 +6,8 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include "qdmi/interface.h"
 #include "test_impl.hpp"
+// TODO is that fine to include the header this way?
+#include "../examples/tool.hpp"
 
 #include <array>
 #include <cstdlib>
@@ -13,7 +15,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <string>
 
 // Instantiate the test suite with different parameters
-INSTANTIATE_TEST_SUITE_P(QDMIExampleBackends,    // Custom instantiation name
+INSTANTIATE_TEST_SUITE_P(QDMIMyCBackend,         // Custom instantiation name
                          QDMIImplementationTest, // Test suite name
                          // Parameters to test with
                          ::testing::Values("../examples/libc_backend",
@@ -129,18 +131,15 @@ TEST_F(QDMITest, QueryGateSet) {
   }
 }
 
-TEST_F(QDMITest, QueryDeviceNotImplemented) {
+TEST_F(QDMITest, ToolCompile) {
   QDMI_session_open_device(session, c_backend_name.c_str(), &device);
-  ASSERT_EQ(QDMI_query_device_property_string(device, QDMI_DEVICE_PROPERTY_MAX,
-                                              nullptr),
-            QDMI_ERROR_INVALID_ARGUMENT);
-  ASSERT_EQ(QDMI_query_device_property_double(device, QDMI_DEVICE_PROPERTY_MAX,
-                                              nullptr),
-            QDMI_ERROR_INVALID_ARGUMENT);
-  ASSERT_EQ(
-      QDMI_query_device_property_int(device, QDMI_DEVICE_PROPERTY_MAX, nullptr),
-      QDMI_ERROR_INVALID_ARGUMENT);
-  ASSERT_EQ(QDMI_query_device_property_string_list(
-                device, QDMI_DEVICE_PROPERTY_MAX, nullptr, nullptr),
-            QDMI_ERROR_INVALID_ARGUMENT);
+  Tool tool(device);
+  const std::string input = "qreg q[2];\n"
+                            "h q[0];\n"
+                            "cx q[0], q[1];\n";
+  const std::string expected = "qreg q[5];\n"
+                               "h q[0];\n"
+                               "cx q[0], q[1];\n";
+  const std::string actual = tool.compile(input);
+  ASSERT_EQ(actual, expected);
 }
