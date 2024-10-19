@@ -16,31 +16,27 @@ extern "C" {
 
 /// Enum of the device properties that can be queried.
 enum QDMI_DEVICE_PROPERTY_T {
-  QDMI_NAME = 0, /**< @code char* @endcode (string) The name of the device. */
-  QDMI_DEVICE_VERSION =
-      1, /**< @code char* @endcode (string) The version of the device. */
+  QDMI_NAME = 0,           /**< `char*` (string) The name of the device. */
+  QDMI_DEVICE_VERSION = 1, /**< `char*` (string) The version of the device. */
   QDMI_LIBRARY_VERSION =
-      2, /**< @code char* @endcode (string) The implemented version of QDMI. */
-  QDMI_NUM_QUBITS =
-      3, /**< @code int @endcode The number of qubits in the device. */
+      2,               /**< `char*` (string) The implemented version of QDMI. */
+  QDMI_NUM_QUBITS = 3, /**< `int` The number of qubits in the device. */
   QDMI_DEVICE_STATUS =
-      4, /**< @code int @endcode The @ref QDMI_Device_Status of the device. */
-  QDMI_AVG_T1_TIME =
-      5, /**< @code double @endcode The average T1 time of a qubit in µs. */
-  QDMI_AVG_T2_TIME =
-      6, /**< @code double @endcode The average T2 time of a qubit in µs. */
+      4,                /**< `int` The @ref QDMI_Device_Status of the device. */
+  QDMI_AVG_T1_TIME = 5, /**< `double` The average T1 time of a qubit in µs. */
+  QDMI_AVG_T2_TIME = 6, /**< `double` The average T2 time of a qubit in µs. */
   /**
-   * @brief @code int* @endcode (int list) The coupling map of the device.
+   * @brief `int*` (int list) The coupling map of the device.
    * @details The returned list contains pairs of qubits that are coupled. The
    * pairs in the list are flattened such that the first qubit of the pair is at
    * index 2n and the second qubit is at index 2n+1. For example, a 2-qubit
-   * device with a coupling map of (0, 1) would return @code {0, 1} @endcode. A
+   * device with a coupling map of (0, 1) would return `{0, 1}`. A
    * 3-qubit device with a coupling map of (0, 1), (1, 2) would return
-   * @code {0, 1, 1, 2} @endcode.
+   * `{0, 1, 1, 2}`.
    */
   QDMI_COUPLING_MAP = 7,
   /**
-   * @brief @code char** @endcode (string list) The set of gates supported by
+   * @brief `char**` (string list) The set of gates supported by
    * the device.
    * @details The returned list contains the names of the gates supported by the
    * device.
@@ -80,8 +76,8 @@ typedef enum QDMI_DEVICE_STATUS_T QDMI_Device_Status;
 
 /// Enum of the site properties that can be queried.
 enum QDMI_SITE_PROPERTY_T {
-  QDMI_T1_TIME = 0, /**< @code double @endcode The T1 time of a site in µs. */
-  QDMI_T2_TIME = 1, /**< @code double @endcode The T2 time of a site in µs. */
+  QDMI_T1_TIME = 0, /**< `double` The T1 time of a site in µs. */
+  QDMI_T2_TIME = 1, /**< `double` The T2 time of a site in µs. */
   /**
    * @brief The maximum value of the enum.
    * @details This value can be used for bounds checks by the backends.
@@ -97,11 +93,11 @@ typedef enum QDMI_SITE_PROPERTY_T QDMI_Site_Property;
 /// Enum of the operation properties that can be queried.
 enum QDMI_OPERATION_PROPERTY_T {
   /**
-   * @brief @code double @endcode The duration of an operation in µs.
+   * @brief `double` The duration of an operation in µs.
    */
   QDMI_OPERATION_DURATION = 0,
   /**
-   * @brief @code double @endcode The fidelity of an operation.
+   * @brief `double` The fidelity of an operation.
    */
   QDMI_OPERATION_FIDELITY = 1,
   /**
