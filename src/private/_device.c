@@ -15,8 +15,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #define LOAD_SYMBOL(device, symbol)                                            \
   {                                                                            \
     (device)->symbol = NULL;                                                   \
-    *(void **)(&((device)->symbol)) =                                          \
-        dlsym((device)->lib_handle, #symbol "_dev");                           \
+    *(void **)(&((device)->symbol)) = dlsym((device)->lib_handle, #symbol);    \
     if ((device)->symbol == NULL) {                                            \
       QDMI_device_close(device);                                               \
       return QDMI_ERROR_NOT_FOUND;                                             \
@@ -39,39 +38,39 @@ int QDMI_device_open(const char *lib_name, QDMI_Device *device) {
 
   // this has to be the first symbol to be loaded because this method is used
   // to close the device in case of any error.
-  LOAD_SYMBOL(*device, QDMI_control_finalize);
+  LOAD_SYMBOL(*device, QDMI_control_finalize_dev);
 
-  LOAD_SYMBOL(*device, QDMI_query_device_property_string);
-  LOAD_SYMBOL(*device, QDMI_query_device_property_double);
-  LOAD_SYMBOL(*device, QDMI_query_device_property_int);
-  LOAD_SYMBOL(*device, QDMI_query_device_property_string_list);
-  LOAD_SYMBOL(*device, QDMI_query_device_property_double_list);
-  LOAD_SYMBOL(*device, QDMI_query_device_property_int_list);
+  LOAD_SYMBOL(*device, QDMI_query_device_property_string_dev);
+  LOAD_SYMBOL(*device, QDMI_query_device_property_double_dev);
+  LOAD_SYMBOL(*device, QDMI_query_device_property_int_dev);
+  LOAD_SYMBOL(*device, QDMI_query_device_property_string_list_dev);
+  LOAD_SYMBOL(*device, QDMI_query_device_property_double_list_dev);
+  LOAD_SYMBOL(*device, QDMI_query_device_property_int_list_dev);
 
-  LOAD_SYMBOL(*device, QDMI_query_site_property_string);
-  LOAD_SYMBOL(*device, QDMI_query_site_property_double);
-  LOAD_SYMBOL(*device, QDMI_query_site_property_int);
-  LOAD_SYMBOL(*device, QDMI_query_site_property_string_list);
-  LOAD_SYMBOL(*device, QDMI_query_site_property_double_list);
-  LOAD_SYMBOL(*device, QDMI_query_site_property_int_list);
+  LOAD_SYMBOL(*device, QDMI_query_site_property_string_dev);
+  LOAD_SYMBOL(*device, QDMI_query_site_property_double_dev);
+  LOAD_SYMBOL(*device, QDMI_query_site_property_int_dev);
+  LOAD_SYMBOL(*device, QDMI_query_site_property_string_list_dev);
+  LOAD_SYMBOL(*device, QDMI_query_site_property_double_list_dev);
+  LOAD_SYMBOL(*device, QDMI_query_site_property_int_list_dev);
 
-  LOAD_SYMBOL(*device, QDMI_query_operation_property_string);
-  LOAD_SYMBOL(*device, QDMI_query_operation_property_double);
-  LOAD_SYMBOL(*device, QDMI_query_operation_property_int);
-  LOAD_SYMBOL(*device, QDMI_query_operation_property_string_list);
-  LOAD_SYMBOL(*device, QDMI_query_operation_property_double_list);
-  LOAD_SYMBOL(*device, QDMI_query_operation_property_int_list);
+  LOAD_SYMBOL(*device, QDMI_query_operation_property_string_dev);
+  LOAD_SYMBOL(*device, QDMI_query_operation_property_double_dev);
+  LOAD_SYMBOL(*device, QDMI_query_operation_property_int_dev);
+  LOAD_SYMBOL(*device, QDMI_query_operation_property_string_list_dev);
+  LOAD_SYMBOL(*device, QDMI_query_operation_property_double_list_dev);
+  LOAD_SYMBOL(*device, QDMI_query_operation_property_int_list_dev);
 
-  LOAD_SYMBOL(*device, QDMI_control_submit_qasm);
-  LOAD_SYMBOL(*device, QDMI_control_submit_qir_string);
-  LOAD_SYMBOL(*device, QDMI_control_submit_qir_module);
-  LOAD_SYMBOL(*device, QDMI_control_cancel);
-  LOAD_SYMBOL(*device, QDMI_control_check);
-  LOAD_SYMBOL(*device, QDMI_control_wait);
-  LOAD_SYMBOL(*device, QDMI_control_get_hist);
-  LOAD_SYMBOL(*device, QDMI_control_get_raw);
-  LOAD_SYMBOL(*device, QDMI_control_free_job);
-  LOAD_SYMBOL(*device, QDMI_control_initialize);
+  LOAD_SYMBOL(*device, QDMI_control_submit_qasm_dev);
+  LOAD_SYMBOL(*device, QDMI_control_submit_qir_string_dev);
+  LOAD_SYMBOL(*device, QDMI_control_submit_qir_module_dev);
+  LOAD_SYMBOL(*device, QDMI_control_cancel_dev);
+  LOAD_SYMBOL(*device, QDMI_control_check_dev);
+  LOAD_SYMBOL(*device, QDMI_control_wait_dev);
+  LOAD_SYMBOL(*device, QDMI_control_get_hist_dev);
+  LOAD_SYMBOL(*device, QDMI_control_get_raw_dev);
+  LOAD_SYMBOL(*device, QDMI_control_free_job_dev);
+  LOAD_SYMBOL(*device, QDMI_control_initialize_dev);
 
   // initialize the next pointer to NULL
   (*device)->next = NULL;
@@ -81,8 +80,8 @@ int QDMI_device_open(const char *lib_name, QDMI_Device *device) {
 
 void QDMI_device_close(QDMI_Device device) {
   // Check if QDMI_control_finalize is not NULL before calling it
-  if (device->QDMI_control_finalize != NULL) {
-    device->QDMI_control_finalize();
+  if (device->QDMI_control_finalize_dev != NULL) {
+    device->QDMI_control_finalize_dev();
   }
   // close the dynamic library
   dlclose(device->lib_handle);

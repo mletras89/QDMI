@@ -9,49 +9,49 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 int QDMI_control_submit_qasm(QDMI_Device dev, const char *qasm_string,
                              int num_shots, QDMI_Job *job) {
-  return dev->QDMI_control_submit_qasm(qasm_string, num_shots, job);
+  return dev->QDMI_control_submit_qasm_dev(qasm_string, num_shots, job);
 }
 
 int QDMI_control_submit_qir_string(QDMI_Device dev, const char *qir_string,
                                    int num_shots, QDMI_Job *job) {
-  return dev->QDMI_control_submit_qir_string(qir_string, num_shots, job);
+  return dev->QDMI_control_submit_qir_string_dev(qir_string, num_shots, job);
 }
 
 int QDMI_control_submit_qir_module(QDMI_Device dev, const void *qir_module,
                                    int num_shots, QDMI_Job *job) {
-  return dev->QDMI_control_submit_qir_module(qir_module, num_shots, job);
+  return dev->QDMI_control_submit_qir_module_dev(qir_module, num_shots, job);
 }
 
 int QDMI_control_cancel(QDMI_Device dev, QDMI_Job job) {
-  return dev->QDMI_control_cancel(job);
+  return dev->QDMI_control_cancel_dev(job);
 }
 
 int QDMI_control_check(QDMI_Device dev, QDMI_Job job, QDMI_Job_Status *status) {
-  return dev->QDMI_control_check(job, status);
+  return dev->QDMI_control_check_dev(job, status);
 }
 
 int QDMI_control_wait(QDMI_Device dev, QDMI_Job job) {
-  return dev->QDMI_control_wait(job);
+  return dev->QDMI_control_wait_dev(job);
 }
 
 int QDMI_control_get_hist(QDMI_Device dev, QDMI_Job job, char ***data,
                           int **counts, int *size) {
-  return dev->QDMI_control_get_hist(job, data, counts, size);
+  return dev->QDMI_control_get_hist_dev(job, data, counts, size);
 }
 
 int QDMI_control_get_raw(QDMI_Device dev, QDMI_Job job, char ***data,
                          int *size) {
-  return dev->QDMI_control_get_raw(job, data, size);
+  return dev->QDMI_control_get_raw_dev(job, data, size);
 }
 
 void QDMI_control_free_job(QDMI_Device dev, QDMI_Job job) {
-  dev->QDMI_control_free_job(job);
+  dev->QDMI_control_free_job_dev(job);
 }
 
 int QDMI_control_initialize(QDMI_Device dev) {
-  return dev->QDMI_control_initialize();
+  return dev->QDMI_control_initialize_dev();
 }
 
 int QDMI_control_finalize(QDMI_Device dev) {
-  return dev->QDMI_control_finalize();
+  return dev->QDMI_control_finalize_dev();
 }

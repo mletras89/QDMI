@@ -23,103 +23,98 @@ extern "C" {
  */
 typedef struct QDMI_Job_impl_d *QDMI_Job;
 
-typedef int (*QDMI_query_device_property_string_t)(QDMI_Device_Property prop,
-                                                   char **value);
+typedef int (*QDMI_query_device_property_string_dev_t)(
+    QDMI_Device_Property prop, char **value);
 
-typedef int (*QDMI_query_device_property_double_t)(QDMI_Device_Property prop,
-                                                   double *value);
+typedef int (*QDMI_query_device_property_double_dev_t)(
+    QDMI_Device_Property prop, double *value);
 
-typedef int (*QDMI_query_device_property_int_t)(QDMI_Device_Property prop,
-                                                int *value);
+typedef int (*QDMI_query_device_property_int_dev_t)(QDMI_Device_Property prop,
+                                                    int *value);
 
-typedef int (*QDMI_query_device_property_string_list_t)(
+typedef int (*QDMI_query_device_property_string_list_dev_t)(
     QDMI_Device_Property prop, char ***value, int *size);
 
-typedef int (*QDMI_query_device_property_double_list_t)(
+typedef int (*QDMI_query_device_property_double_list_dev_t)(
     QDMI_Device_Property prop, double **value, int *size);
 
-typedef int (*QDMI_query_device_property_int_list_t)(QDMI_Device_Property prop,
-                                                     int **value, int *size);
+typedef int (*QDMI_query_device_property_int_list_dev_t)(
+    QDMI_Device_Property prop, int **value, int *size);
 
-typedef int (*QDMI_query_site_property_string_t)(int site,
-                                                 QDMI_Site_Property prop,
-                                                 char **value);
+typedef int (*QDMI_query_site_property_string_dev_t)(int site,
+                                                     QDMI_Site_Property prop,
+                                                     char **value);
 
-typedef int (*QDMI_query_site_property_double_t)(int site,
-                                                 QDMI_Site_Property prop,
-                                                 double *value);
+typedef int (*QDMI_query_site_property_double_dev_t)(int site,
+                                                     QDMI_Site_Property prop,
+                                                     double *value);
 
-typedef int (*QDMI_query_site_property_int_t)(int site, QDMI_Site_Property prop,
-                                              int *value);
+typedef int (*QDMI_query_site_property_int_dev_t)(int site,
+                                                  QDMI_Site_Property prop,
+                                                  int *value);
 
-typedef int (*QDMI_query_site_property_string_list_t)(int site,
-                                                      QDMI_Site_Property prop,
-                                                      char ***value, int *size);
+typedef int (*QDMI_query_site_property_string_list_dev_t)(
+    int site, QDMI_Site_Property prop, char ***value, int *size);
 
-typedef int (*QDMI_query_site_property_double_list_t)(int site,
-                                                      QDMI_Site_Property prop,
-                                                      double **value,
-                                                      int *size);
+typedef int (*QDMI_query_site_property_double_list_dev_t)(
+    int site, QDMI_Site_Property prop, double **value, int *size);
 
-typedef int (*QDMI_query_site_property_int_list_t)(int site,
-                                                   QDMI_Site_Property prop,
-                                                   int **value, int *size);
+typedef int (*QDMI_query_site_property_int_list_dev_t)(int site,
+                                                       QDMI_Site_Property prop,
+                                                       int **value, int *size);
 
-typedef int (*QDMI_query_operation_property_string_t)(const char *operation,
-                                                      const int *sites,
-                                                      int num_sites,
-                                                      QDMI_Device_Property prop,
-                                                      char **value);
+typedef int (*QDMI_query_operation_property_string_dev_t)(
+    const char *operation, const int *sites, int num_sites,
+    QDMI_Device_Property prop, char **value);
 
-typedef int (*QDMI_query_operation_property_double_t)(const char *operation,
-                                                      const int *sites,
-                                                      int num_sites,
-                                                      QDMI_Device_Property prop,
-                                                      double *value);
+typedef int (*QDMI_query_operation_property_double_dev_t)(
+    const char *operation, const int *sites, int num_sites,
+    QDMI_Device_Property prop, double *value);
 
-typedef int (*QDMI_query_operation_property_int_t)(const char *operation,
-                                                   const int *sites,
-                                                   int num_sites,
-                                                   QDMI_Device_Property prop,
-                                                   int *value);
+typedef int (*QDMI_query_operation_property_int_dev_t)(
+    const char *operation, const int *sites, int num_sites,
+    QDMI_Device_Property prop, int *value);
 
-typedef int (*QDMI_query_operation_property_string_list_t)(
+typedef int (*QDMI_query_operation_property_string_list_dev_t)(
     const char *operation, const int *sites, int num_sites,
     QDMI_Device_Property prop, char ***value, int *size);
 
-typedef int (*QDMI_query_operation_property_double_list_t)(
+typedef int (*QDMI_query_operation_property_double_list_dev_t)(
     const char *operation, const int *sites, int num_sites,
     QDMI_Device_Property prop, double **value, int *size);
 
-typedef int (*QDMI_query_operation_property_int_list_t)(
+typedef int (*QDMI_query_operation_property_int_list_dev_t)(
     const char *operation, const int *sites, int num_sites,
     QDMI_Device_Property prop, int **value, int *size);
 
-typedef int (*QDMI_control_submit_qasm_t)(const char *qasm_string,
-                                          int num_shots, QDMI_Job *job);
+typedef int (*QDMI_control_submit_qasm_dev_t)(const char *qasm_string,
+                                              int num_shots, QDMI_Job *job);
 
-typedef int (*QDMI_control_submit_qir_string_t)(const char *qir_string,
-                                                int num_shots, QDMI_Job *job);
+typedef int (*QDMI_control_submit_qir_string_dev_t)(const char *qir_string,
+                                                    int num_shots,
+                                                    QDMI_Job *job);
 
-typedef int (*QDMI_control_submit_qir_module_t)(const void *qir_module,
-                                                int num_shots, QDMI_Job *job);
+typedef int (*QDMI_control_submit_qir_module_dev_t)(const void *qir_module,
+                                                    int num_shots,
+                                                    QDMI_Job *job);
 
-typedef int (*QDMI_control_cancel_t)(QDMI_Job job);
+typedef int (*QDMI_control_cancel_dev_t)(QDMI_Job job);
 
-typedef int (*QDMI_control_check_t)(QDMI_Job job, QDMI_Job_Status *status);
+typedef int (*QDMI_control_check_dev_t)(QDMI_Job job, QDMI_Job_Status *status);
 
-typedef int (*QDMI_control_wait_t)(QDMI_Job job);
+typedef int (*QDMI_control_wait_dev_t)(QDMI_Job job);
 
-typedef int (*QDMI_control_get_hist_t)(QDMI_Job job, char ***data, int **counts,
-                                       int *size);
+typedef int (*QDMI_control_get_hist_dev_t)(QDMI_Job job, char ***data,
+                                           int **counts, int *size);
 
-typedef int (*QDMI_control_get_raw_t)(QDMI_Job job, char ***data, int *size);
+typedef int (*QDMI_control_get_raw_dev_t)(QDMI_Job job, char ***data,
+                                          int *size);
 
-typedef void (*QDMI_control_free_job_t)(QDMI_Job job);
+typedef void (*QDMI_control_free_job_dev_t)(QDMI_Job job);
 
-typedef int (*QDMI_control_initialize_t)(void);
+typedef int (*QDMI_control_initialize_dev_t)(void);
 
-typedef int (*QDMI_control_finalize_t)(void);
+typedef int (*QDMI_control_finalize_dev_t)(void);
 
 /**
  * @brief Definition of the QDMI Device.
@@ -127,93 +122,78 @@ typedef int (*QDMI_control_finalize_t)(void);
 typedef struct QDMI_Device_impl_d {
   void *lib_handle; /**< The dlopen handle to the dynamic library. */
 
-  /// Function pointer to the @code QDMI_query_device_property_string @endcode
-  /// function.
-  QDMI_query_device_property_string_t QDMI_query_device_property_string;
-  /// Function pointer to the @code QDMI_query_device_property_double @endcode
-  /// function.
-  QDMI_query_device_property_double_t QDMI_query_device_property_double;
-  /// Function pointer to the @code QDMI_query_device_property_int @endcode
-  /// function.
-  QDMI_query_device_property_int_t QDMI_query_device_property_int;
-  /// Function pointer to the @code
-  /// QDMI_query_device_property_string_list @endcode function.
-  QDMI_query_device_property_string_list_t
-      QDMI_query_device_property_string_list;
-  /// Function pointer to the @code
-  /// QDMI_query_device_property_double_list @endcode function.
-  QDMI_query_device_property_double_list_t
-      QDMI_query_device_property_double_list;
-  /// Function pointer to the @code
-  /// QDMI_query_device_property_int_list @endcode function.
-  QDMI_query_device_property_int_list_t QDMI_query_device_property_int_list;
+  /// Function pointer to @ref QDMI_query_device_property_string_dev.
+  QDMI_query_device_property_string_dev_t QDMI_query_device_property_string_dev;
+  /// Function pointer to @ref QDMI_query_device_property_double_dev.
+  QDMI_query_device_property_double_dev_t QDMI_query_device_property_double_dev;
+  /// Function pointer to @ref QDMI_query_device_property_int_dev.
+  QDMI_query_device_property_int_dev_t QDMI_query_device_property_int_dev;
+  /// Function pointer to @ref QDMI_query_device_property_string_list_dev.
+  QDMI_query_device_property_string_list_dev_t
+      QDMI_query_device_property_string_list_dev;
+  /// Function pointer to @ref QDMI_query_device_property_double_list_dev.
+  QDMI_query_device_property_double_list_dev_t
+      QDMI_query_device_property_double_list_dev;
+  /// Function pointer to @ref QDMI_query_device_property_int_list_dev.
+  QDMI_query_device_property_int_list_dev_t
+      QDMI_query_device_property_int_list_dev;
 
-  /// Function pointer to the @code QDMI_query_site_property_string @endcode
-  /// function.
-  QDMI_query_site_property_string_t QDMI_query_site_property_string;
-  /// Function pointer to the @code QDMI_query_site_property_double @endcode
-  /// function.
-  QDMI_query_site_property_double_t QDMI_query_site_property_double;
-  /// Function pointer to the @code QDMI_query_site_property_int @endcode
-  /// function.
-  QDMI_query_site_property_int_t QDMI_query_site_property_int;
+  /// Function pointer to @ref QDMI_query_site_property_string_dev.
+  QDMI_query_site_property_string_dev_t QDMI_query_site_property_string_dev;
+  /// Function pointer to @ref QDMI_query_site_property_double_dev.
+  QDMI_query_site_property_double_dev_t QDMI_query_site_property_double_dev;
+  /// Function pointer to @ref QDMI_query_site_property_int_dev.
+  QDMI_query_site_property_int_dev_t QDMI_query_site_property_int_dev;
 
-  /// Function pointer to the @code QDMI_query_site_property_string_list
-  /// @endcode function.
-  QDMI_query_site_property_string_list_t QDMI_query_site_property_string_list;
-  /// Function pointer to the @code
-  /// QDMI_query_site_property_double_list @endcode function.
-  QDMI_query_site_property_double_list_t QDMI_query_site_property_double_list;
-  /// Function pointer to the @code QDMI_query_site_property_int_list @endcode
-  /// function.
-  QDMI_query_site_property_int_list_t QDMI_query_site_property_int_list;
+  /// Function pointer to @ref QDMI_query_site_property_string_list_dev.
+  QDMI_query_site_property_string_list_dev_t
+      QDMI_query_site_property_string_list_dev;
+  /// Function pointer to @ref QDMI_query_site_property_double_list_dev.
+  QDMI_query_site_property_double_list_dev_t
+      QDMI_query_site_property_double_list_dev;
+  /// Function pointer to @ref QDMI_query_site_property_int_list_dev.
+  QDMI_query_site_property_int_list_dev_t QDMI_query_site_property_int_list_dev;
 
-  /// Function pointer to the @code
-  /// QDMI_query_operation_property_string @endcode function.
-  QDMI_query_operation_property_string_t QDMI_query_operation_property_string;
-  /// Function pointer to the @code
-  /// QDMI_query_operation_property_double @endcode function.
-  QDMI_query_operation_property_double_t QDMI_query_operation_property_double;
-  /// Function pointer to the @code
-  /// QDMI_query_operation_property_int @endcode function.
-  QDMI_query_operation_property_int_t QDMI_query_operation_property_int;
-  /// Function pointer to the @code
-  /// QDMI_query_operation_property_string_list @endcode function.
-  QDMI_query_operation_property_string_list_t
-      QDMI_query_operation_property_string_list;
-  /// Function pointer to the @code
-  /// QDMI_query_operation_property_double_list @endcode function.
-  QDMI_query_operation_property_double_list_t
-      QDMI_query_operation_property_double_list;
-  /// Function pointer to the @code
-  /// QDMI_query_operation_property_int_list @endcode function.
-  QDMI_query_operation_property_int_list_t
-      QDMI_query_operation_property_int_list;
+  /// Function pointer to @ref QDMI_query_operation_property_string_dev.
+  QDMI_query_operation_property_string_dev_t
+      QDMI_query_operation_property_string_dev;
+  /// Function pointer to @ref QDMI_query_operation_property_double_dev.
+  QDMI_query_operation_property_double_dev_t
+      QDMI_query_operation_property_double_dev;
+  /// Function pointer to @ref QDMI_query_operation_property_int_dev.
+  QDMI_query_operation_property_int_dev_t QDMI_query_operation_property_int_dev;
+  /// Function pointer to @ref QDMI_query_operation_property_string_list_dev.
+  QDMI_query_operation_property_string_list_dev_t
+      QDMI_query_operation_property_string_list_dev;
+  /// Function pointer to @ref QDMI_query_operation_property_double_list_dev.
+  QDMI_query_operation_property_double_list_dev_t
+      QDMI_query_operation_property_double_list_dev;
+  /// Function pointer to @ref QDMI_query_operation_property_int_list_dev.
+  QDMI_query_operation_property_int_list_dev_t
+      QDMI_query_operation_property_int_list_dev;
 
-  /// Function pointer to the @code QDMI_control_submit_qasm @endcode function.
-  QDMI_control_submit_qasm_t QDMI_control_submit_qasm;
-  /// Function pointer to the @code QDMI_control_submit_qir_string @endcode
-  /// function.
-  QDMI_control_submit_qir_string_t QDMI_control_submit_qir_string;
-  /// Function pointer to the @code QDMI_control_submit_qir_module @endcode
-  /// function.
-  QDMI_control_submit_qir_module_t QDMI_control_submit_qir_module;
-  /// Function pointer to the @code QDMI_control_cancel @endcode function.
-  QDMI_control_cancel_t QDMI_control_cancel;
-  /// Function pointer to the @code QDMI_control_check @endcode function.
-  QDMI_control_check_t QDMI_control_check;
-  /// Function pointer to the @code QDMI_control_wait @endcode function.
-  QDMI_control_wait_t QDMI_control_wait;
-  /// Function pointer to the @code QDMI_control_get_hist @endcode function.
-  QDMI_control_get_hist_t QDMI_control_get_hist;
-  /// Function pointer to the @code QDMI_control_get_raw @endcode function.
-  QDMI_control_get_raw_t QDMI_control_get_raw;
-  /// Function pointer to the @code QDMI_control_free_job @endcode function.
-  QDMI_control_free_job_t QDMI_control_free_job;
-  /// Function pointer to the @code QDMI_control_initialize @endcode function.
-  QDMI_control_initialize_t QDMI_control_initialize;
-  /// Function pointer to the @code QDMI_control_finalize @endcode function.
-  QDMI_control_finalize_t QDMI_control_finalize;
+  /// Function pointer to @ref QDMI_control_submit_qasm_dev.
+  QDMI_control_submit_qasm_dev_t QDMI_control_submit_qasm_dev;
+  /// Function pointer to @ref QDMI_control_submit_qir_string_dev.
+  QDMI_control_submit_qir_string_dev_t QDMI_control_submit_qir_string_dev;
+  /// Function pointer to @ref QDMI_control_submit_qir_module_dev.
+  QDMI_control_submit_qir_module_dev_t QDMI_control_submit_qir_module_dev;
+  /// Function pointer to @ref QDMI_control_cancel_dev.
+  QDMI_control_cancel_dev_t QDMI_control_cancel_dev;
+  /// Function pointer to @ref QDMI_control_check_dev.
+  QDMI_control_check_dev_t QDMI_control_check_dev;
+  /// Function pointer to @ref QDMI_control_wait_dev.
+  QDMI_control_wait_dev_t QDMI_control_wait_dev;
+  /// Function pointer to @ref QDMI_control_get_hist_dev.
+  QDMI_control_get_hist_dev_t QDMI_control_get_hist_dev;
+  /// Function pointer to @ref QDMI_control_get_raw_dev.
+  QDMI_control_get_raw_dev_t QDMI_control_get_raw_dev;
+  /// Function pointer to @ref QDMI_control_free_job_dev.
+  QDMI_control_free_job_dev_t QDMI_control_free_job_dev;
+  /// Function pointer to @ref QDMI_control_initialize_dev.
+  QDMI_control_initialize_dev_t QDMI_control_initialize_dev;
+  /// Function pointer to @ref QDMI_control_finalize_dev.
+  QDMI_control_finalize_dev_t QDMI_control_finalize_dev;
 
   struct QDMI_Device_impl_d *next; /**< Pointer to the next device. */
 } QDMI_Device_impl_t;
