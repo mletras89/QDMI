@@ -30,7 +30,7 @@ int QDMI_device_open(const char *lib_name, QDMI_Device *device) {
     return QDMI_ERROR_OUT_OF_MEM;
   }
   // open the dynamic library at the location passed in `lib_name`
-  (*device)->lib_handle = dlopen(lib_name, RTLD_NOW);
+  (*device)->lib_handle = dlopen(lib_name, RTLD_NOW | RTLD_LOCAL);
   if ((*device)->lib_handle == NULL) {
     free(*device);
     return QDMI_ERROR_LIB_NOT_FOUND;
