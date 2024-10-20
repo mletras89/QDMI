@@ -17,6 +17,9 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <string.h>
 #include <time.h>
 
+/// Global variable to store the status of the device
+QDMI_Device_Status device_status = QDMI_DEVICE_OFFLINE;
+
 typedef struct QDMI_Job_impl_d {
   int id;
   QDMI_Job_Status status;
@@ -66,7 +69,7 @@ int QDMI_query_device_property_int_dev(const QDMI_Device_Property prop,
     return QDMI_SUCCESS;
   }
   if (prop == QDMI_DEVICE_STATUS) {
-    *value = QDMI_DEVICE_IDLE;
+    *value = device_status;
     return QDMI_SUCCESS;
   }
   return QDMI_ERROR_INVALID_ARGUMENT;
@@ -267,39 +270,57 @@ int QDMI_query_operation_property_int_list_dev(
 
 int QDMI_control_submit_qasm_dev(const char *qasm_string, int num_shots,
                                  QDMI_Job *job) {
+  if (device_status != QDMI_DEVICE_IDLE) {
+    return QDMI_ERROR_FATAL;
+  }
+
+  device_status = QDMI_DEVICE_BUSY;
   *job = (QDMI_Job)malloc(sizeof(QDMI_Job_impl_t));
   // set job id to current time for demonstration purposes
   (*job)->id = rand();
   (*job)->num_shots = num_shots;
+  (*job)->status = QDMI_JOB_STATUS_SUBMITTED;
   // here, the actual submission of the problem to the backend would happen
-
-  // set job status to done for demonstration purposes
+  // ...
+  // set job status to running for demonstration purposes
   (*job)->status = QDMI_JOB_STATUS_RUNNING;
   return QDMI_SUCCESS;
 }
 
 int QDMI_control_submit_qir_string_dev(const char *qir_string, int num_shots,
                                        QDMI_Job *job) {
+  if (device_status != QDMI_DEVICE_IDLE) {
+    return QDMI_ERROR_FATAL;
+  }
+
+  device_status = QDMI_DEVICE_BUSY;
   *job = (QDMI_Job)malloc(sizeof(QDMI_Job_impl_t));
   // set job id to current time for demonstration purposes
   (*job)->id = rand();
   (*job)->num_shots = num_shots;
+  (*job)->status = QDMI_JOB_STATUS_SUBMITTED;
   // here, the actual submission of the problem to the backend would happen
-
-  // set job status to done for demonstration purposes
+  // ...
+  // set job status to running for demonstration purposes
   (*job)->status = QDMI_JOB_STATUS_RUNNING;
   return QDMI_SUCCESS;
 }
 
 int QDMI_control_submit_qir_module_dev(const void *qir_module, int num_shots,
                                        QDMI_Job *job) {
+  if (device_status != QDMI_DEVICE_IDLE) {
+    return QDMI_ERROR_FATAL;
+  }
+
+  device_status = QDMI_DEVICE_BUSY;
   *job = (QDMI_Job)malloc(sizeof(QDMI_Job_impl_t));
   // set job id to current time for demonstration purposes
   (*job)->id = rand();
   (*job)->num_shots = num_shots;
+  (*job)->status = QDMI_JOB_STATUS_SUBMITTED;
   // here, the actual submission of the problem to the backend would happen
-
-  // set job status to done for demonstration purposes
+  // ...
+  // set job status to running for demonstration purposes
   (*job)->status = QDMI_JOB_STATUS_RUNNING;
   return QDMI_SUCCESS;
 }
@@ -311,6 +332,7 @@ int QDMI_control_cancel_dev(QDMI_Job job) {
   }
 
   job->status = QDMI_JOB_STATUS_CANCELLED;
+  device_status = QDMI_DEVICE_IDLE;
   return QDMI_SUCCESS;
 }
 
@@ -322,11 +344,12 @@ int QDMI_control_check_dev(QDMI_Job job, QDMI_Job_Status *status) {
 int QDMI_control_wait_dev(QDMI_Job job) {
   // in a real implementation, this would wait for the job to finish
   job->status = QDMI_JOB_STATUS_DONE;
+  device_status = QDMI_DEVICE_IDLE;
   return QDMI_SUCCESS;
 }
 
 // Comparison function for qsort
-int compare_results(const void *a, const void *b) {
+int Compare_results(const void *a, const void *b) {
   return strcmp(*(char **)a, *(char **)b);
 }
 
@@ -341,7 +364,7 @@ int QDMI_control_get_hist_dev(QDMI_Job job, char ***data, int **counts,
   QDMI_control_get_raw_dev(job, &raw_data, &raw_size);
   assert(raw_size == job->num_shots);
   // Sort the array
-  qsort((void *)raw_data, raw_size, sizeof(char *), compare_results);
+  qsort((void *)raw_data, raw_size, sizeof(char *), Compare_results);
   // Count unique elements
   int count = 1; // First element is always unique
   for (int i = 1; i < raw_size; i++) {
@@ -397,6 +420,12 @@ void QDMI_control_free_job_dev(QDMI_Job job) {
   free(job);
 }
 
-int QDMI_control_initialize_dev(void) { return QDMI_SUCCESS; }
+int QDMI_control_initialize_dev(void) {
+  device_status = QDMI_DEVICE_IDLE;
+  return QDMI_SUCCESS;
+}
 
-int QDMI_control_finalize_dev(void) { return QDMI_SUCCESS; }
+int QDMI_control_finalize_dev(void) {
+  device_status = QDMI_DEVICE_OFFLINE;
+  return QDMI_SUCCESS;
+}
