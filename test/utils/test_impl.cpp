@@ -145,15 +145,21 @@ TEST_P(QDMIImplementationTest, QueryOperationPropertyIntListImplemented) {
             QDMI_ERROR_INVALID_ARGUMENT);
 }
 
+std::string Get_test_circuit() {
+  return "OPENQASM 2.0;\n"
+         "include \"qelib1.inc\";\n"
+         "qreg q[2];\n"
+         "creg c[2];\n"
+         "h q[0];\n"
+         "cx q[0], q[1];\n"
+         "measure q -> c;\n";
+}
+
 TEST_P(QDMIImplementationTest, ControlSubmitQasmImplemented) {
   QDMI_Job job = nullptr;
-  const std::string qasm_string = "OPENQASM 2.0;\n"
-                                  "include \"qelib1.inc\";\n"
-                                  "qreg q[2];\n"
-                                  "h q[0];\n"
-                                  "cx q[0], q[1];\n";
-  ASSERT_NE(QDMI_control_submit_qasm(device, qasm_string.c_str(), 10, &job),
-            QDMI_ERROR_NOT_IMPLEMENTED);
+  ASSERT_NE(
+      QDMI_control_submit_qasm(device, Get_test_circuit().c_str(), 10, &job),
+      QDMI_ERROR_NOT_IMPLEMENTED);
   QDMI_control_free_job(device, job);
 }
 
@@ -242,16 +248,6 @@ TEST_P(QDMIImplementationTest, ControlSubmitQirModuleImplemented) {
   ASSERT_NE(QDMI_control_submit_qir_module(device, qir_module, 0, &job),
             QDMI_ERROR_NOT_IMPLEMENTED);
   QDMI_control_free_job(device, job);
-}
-
-std::string Get_test_circuit() {
-  return "OPENQASM 2.0;\n"
-         "include \"qelib1.inc\";\n"
-         "qreg q[2];\n"
-         "creg c[2];\n"
-         "h q[0];\n"
-         "cx q[0], q[1];\n"
-         "measure q -> c;\n";
 }
 
 TEST_P(QDMIImplementationTest, ControlCancelImplemented) {
