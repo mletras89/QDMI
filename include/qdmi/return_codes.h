@@ -18,15 +18,16 @@ extern "C" {
  * @brief Status codes returned by the API.
  */
 enum QDMI_STATUS {
-  QDMI_WARN_GENERAL = 1,
-  QDMI_SUCCESS = 0, /**< The operation was successful. */
-  QDMI_ERROR_FATAL = -1,
-  QDMI_ERROR_OUT_OF_MEM = -2,
-  QDMI_ERROR_NOT_IMPLEMENTED = -3,
-  QDMI_ERROR_LIB_NOT_FOUND = -4,
-  QDMI_ERROR_NOT_FOUND = -5,
-  QDMI_ERROR_OUT_OF_RANGE = -6,
-  QDMI_ERROR_INVALID_ARGUMENT = -7
+  QDMI_WARN_GENERAL = 1,             /**< A general warning. */
+  QDMI_SUCCESS = 0,                  /**< The operation was successful. */
+  QDMI_ERROR_FATAL = -1,             /**< A fatal error. */
+  QDMI_ERROR_OUT_OF_MEM = -2,        /**< Out of memory. */
+  QDMI_ERROR_NOT_IMPLEMENTED = -3,   /**< Not implemented. */
+  QDMI_ERROR_LIB_NOT_FOUND = -4,     /**< Library not found. */
+  QDMI_ERROR_NOT_FOUND = -5,         /**< Element not found. */
+  QDMI_ERROR_OUT_OF_RANGE = -6,      /**< Out of range. */
+  QDMI_ERROR_INVALID_ARGUMENT = -7,  /**< Invalid argument. */
+  QDMI_ERROR_PERMISSION_DENIED = -8, /**< Permission denied. */
 };
 
 /**

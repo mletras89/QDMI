@@ -43,12 +43,13 @@ void QDMI_session_free(QDMI_Session session);
  * @param session the session.
  * @param lib_name the name of the library that contains the dynamic library of
  * a device.
+ * @param mode the mode in which the device is opened.
  * @param device the device that is opened and attached.
  * @return @ref QDMI_SUCCESS if the device was added successfully, an error code
  * otherwise.
  */
 int QDMI_session_open_device(QDMI_Session session, const char *lib_name,
-                             QDMI_Device *device);
+                             QDMI_Device_Mode mode, QDMI_Device *device);
 
 /**
  * @brief Close and detach a device from a QDMI session.

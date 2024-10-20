@@ -122,6 +122,8 @@ typedef int (*QDMI_control_finalize_dev_t)(void);
 typedef struct QDMI_Device_impl_d {
   void *lib_handle; /**< The dlopen handle to the dynamic library. */
 
+  QDMI_Device_Mode mode; /**< The mode in which the device was opened. */
+
   /// Function pointer to @ref QDMI_query_device_property_string_dev.
   QDMI_query_device_property_string_dev_t QDMI_query_device_property_string_dev;
   /// Function pointer to @ref QDMI_query_device_property_double_dev.

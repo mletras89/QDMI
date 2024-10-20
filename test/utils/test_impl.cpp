@@ -24,8 +24,8 @@ void QDMIImplementationTest::SetUp() {
   ASSERT_TRUE(QDMI_is_Success(QDMI_session_alloc(&session)))
       << "Failed to allocate session";
   backend_name = GetParam() + Shared_library_file_extension();
-  ASSERT_TRUE(QDMI_is_Success(
-      QDMI_session_open_device(session, backend_name.c_str(), &device)))
+  ASSERT_TRUE(QDMI_is_Success(QDMI_session_open_device(
+      session, backend_name.c_str(), QDMI_DEVICE_MODE_READ_WRITE, &device)))
       << "Failed to open device";
 }
 

@@ -12,7 +12,8 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #pragma once
 
-#include "qdmi/interface/query.h"
+#include "_types.h"
+#include "qdmi/properties.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -21,11 +22,13 @@ extern "C" {
 /**
  * @brief Open a device.
  * @param lib_name The name of the dynamic library to open.
+ * @param mode The mode in which to open the device.
  * @param device The device to open.
  * @return QDMI_SUCCESS if the device was opened successfully, an error code
  * otherwise.
  */
-int QDMI_device_open(const char *lib_name, QDMI_Device *device);
+int QDMI_device_open(const char *lib_name, QDMI_Device_Mode mode,
+                     QDMI_Device *device);
 
 /**
  * @brief Close a device.

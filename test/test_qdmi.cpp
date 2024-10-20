@@ -53,24 +53,34 @@ protected:
 };
 
 TEST_F(QDMITest, OpenDevice) {
-  ASSERT_TRUE(QDMI_is_Success(
-      QDMI_session_open_device(session, c_backend_name.c_str(), &device)))
+  ASSERT_TRUE(QDMI_is_Success(QDMI_session_open_device(
+      session, c_backend_name.c_str(), QDMI_DEVICE_MODE_READ_WRITE, &device)))
       << "Failed to open device";
 }
 
 TEST_F(QDMITest, OpenMultipleDevices) {
-  ASSERT_TRUE(QDMI_is_Success(
-      QDMI_session_open_device(session, c_backend_name.c_str(), &device)))
+  ASSERT_TRUE(QDMI_is_Success(QDMI_session_open_device(
+      session, c_backend_name.c_str(), QDMI_DEVICE_MODE_READ_WRITE, &device)))
       << "Failed to open first device";
   QDMI_Device device2 = nullptr;
   ASSERT_TRUE(QDMI_is_Success(
-      QDMI_session_open_device(session, cxx_backend_name.c_str(), &device2)))
+      QDMI_session_open_device(session, cxx_backend_name.c_str(),
+                               QDMI_DEVICE_MODE_READ_WRITE, &device2)))
       << "Failed to open second device";
 }
 
+TEST_F(QDMITest, OpenDeviceReadOnly) {
+  ASSERT_TRUE(QDMI_is_Success(QDMI_session_open_device(
+      session, c_backend_name.c_str(), QDMI_DEVICE_MODE_READ_ONLY, &device)))
+      << "Failed to open first device";
+  QDMI_Job job = nullptr;
+  ASSERT_EQ(QDMI_control_submit_qasm(device, "OPENQASM 2.0;", 1, &job),
+            QDMI_ERROR_PERMISSION_DENIED);
+}
+
 TEST_F(QDMITest, QueryNumQubits5) {
-  ASSERT_TRUE(QDMI_is_Success(
-      QDMI_session_open_device(session, c_backend_name.c_str(), &device)))
+  ASSERT_TRUE(QDMI_is_Success(QDMI_session_open_device(
+      session, c_backend_name.c_str(), QDMI_DEVICE_MODE_READ_WRITE, &device)))
       << "Failed to open device";
   int num_qubits = 0;
   ASSERT_TRUE(QDMI_is_Success(
@@ -80,8 +90,8 @@ TEST_F(QDMITest, QueryNumQubits5) {
 }
 
 TEST_F(QDMITest, QueryNumQubits7) {
-  ASSERT_TRUE(QDMI_is_Success(
-      QDMI_session_open_device(session, cxx_backend_name.c_str(), &device)))
+  ASSERT_TRUE(QDMI_is_Success(QDMI_session_open_device(
+      session, cxx_backend_name.c_str(), QDMI_DEVICE_MODE_READ_WRITE, &device)))
       << "Failed to open device";
   int num_qubits = 0;
   ASSERT_TRUE(QDMI_is_Success(
@@ -92,42 +102,48 @@ TEST_F(QDMITest, QueryNumQubits7) {
 
 TEST_F(QDMITest, QueryDeviceName) {
   char *value = nullptr;
-  QDMI_session_open_device(session, c_backend_name.c_str(), &device);
+  QDMI_session_open_device(session, c_backend_name.c_str(),
+                           QDMI_DEVICE_MODE_READ_WRITE, &device);
   QDMI_query_device_property_string(device, QDMI_NAME, &value);
   ASSERT_STREQ(value, "Backend with 5 qubits");
 }
 
 TEST_F(QDMITest, QueryDeviceName7) {
   char *value = nullptr;
-  QDMI_session_open_device(session, cxx_backend_name.c_str(), &device);
+  QDMI_session_open_device(session, cxx_backend_name.c_str(),
+                           QDMI_DEVICE_MODE_READ_WRITE, &device);
   QDMI_query_device_property_string(device, QDMI_NAME, &value);
   ASSERT_STREQ(value, "Backend with 7 qubits");
 }
 
 TEST_F(QDMITest, QueryDeviceVersion) {
   char *value = nullptr;
-  QDMI_session_open_device(session, c_backend_name.c_str(), &device);
+  QDMI_session_open_device(session, c_backend_name.c_str(),
+                           QDMI_DEVICE_MODE_READ_WRITE, &device);
   QDMI_query_device_property_string(device, QDMI_DEVICE_VERSION, &value);
   ASSERT_STREQ(value, "0.1.0");
 }
 
 TEST_F(QDMITest, QueryDeviceLibraryVersion) {
   char *value = nullptr;
-  QDMI_session_open_device(session, c_backend_name.c_str(), &device);
+  QDMI_session_open_device(session, c_backend_name.c_str(),
+                           QDMI_DEVICE_MODE_READ_WRITE, &device);
   QDMI_query_device_property_string(device, QDMI_LIBRARY_VERSION, &value);
   ASSERT_STREQ(value, "0.2.0");
 }
 
 TEST_F(QDMITest, QueryAvgT1Time) {
   double value = 0;
-  QDMI_session_open_device(session, c_backend_name.c_str(), &device);
+  QDMI_session_open_device(session, c_backend_name.c_str(),
+                           QDMI_DEVICE_MODE_READ_WRITE, &device);
   QDMI_query_device_property_double(device, QDMI_AVG_T1_TIME, &value);
   ASSERT_DOUBLE_EQ(value, 1000);
 }
 
 TEST_F(QDMITest, QueryAvgT2Time) {
   double value = 0;
-  QDMI_session_open_device(session, c_backend_name.c_str(), &device);
+  QDMI_session_open_device(session, c_backend_name.c_str(),
+                           QDMI_DEVICE_MODE_READ_WRITE, &device);
   QDMI_query_device_property_double(device, QDMI_AVG_T2_TIME, &value);
   ASSERT_DOUBLE_EQ(value, 100000);
 }
@@ -136,7 +152,8 @@ TEST_F(QDMITest, QueryGateSet) {
   char **gate_set = nullptr;
   int num_gates = 0;
   const std::array<std::string, 4> value = {"cz", "rx", "ry", "rz"};
-  QDMI_session_open_device(session, c_backend_name.c_str(), &device);
+  QDMI_session_open_device(session, c_backend_name.c_str(),
+                           QDMI_DEVICE_MODE_READ_WRITE, &device);
   QDMI_query_device_property_string_list(device, QDMI_GATE_SET, &gate_set,
                                          &num_gates);
   for (std::size_t i = 0; i < static_cast<std::size_t>(num_gates); i++) {
@@ -145,7 +162,8 @@ TEST_F(QDMITest, QueryGateSet) {
 }
 
 TEST_F(QDMITest, ToolCompile) {
-  QDMI_session_open_device(session, c_backend_name.c_str(), &device);
+  QDMI_session_open_device(session, c_backend_name.c_str(),
+                           QDMI_DEVICE_MODE_READ_WRITE, &device);
   Tool tool(device);
   const std::string input = "OPENQASM 2.0;\n"
                             "include \"qelib1.inc\";\n"

@@ -127,6 +127,24 @@ enum QDMI_JOB_STATUS_T {
 /// Type of the device status.
 typedef enum QDMI_JOB_STATUS_T QDMI_Job_Status;
 
+// TODO: By now, I do not know whether the name `properties.h` for the file is
+// fitting anymore. It might be better to rename it to `enums.h` or `types.h` or
+// something similar. Then, one could also include the return_codes directly.
+/**
+ * @brief Enum of the device properties that can be queried.
+ * @note The values of this enum are meant to be used as bitflags. Hence, their
+ * values must be powers of 2.
+ */
+enum QDMI_DEVICE_MODE_T {
+  /// To open the device in read-only mode.
+  QDMI_DEVICE_MODE_READ_ONLY = 0,
+  /// To open the device in read-write mode.
+  QDMI_DEVICE_MODE_READ_WRITE = 1,
+};
+
+/// Type of the device mode used in opening a device.
+typedef enum QDMI_DEVICE_MODE_T QDMI_Device_Mode;
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

@@ -7,6 +7,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include "_device.h"
 
 #include "_types.h"
+#include "qdmi/properties.h"
 #include "qdmi/return_codes.h"
 
 #include <dlfcn.h>
@@ -22,12 +23,14 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
     }                                                                          \
   }
 
-int QDMI_device_open(const char *lib_name, QDMI_Device *device) {
+int QDMI_device_open(const char *lib_name, QDMI_Device_Mode mode,
+                     QDMI_Device *device) {
   // allocate memory for the device
   *device = (QDMI_Device)malloc(sizeof(QDMI_Device_impl_t));
   if (*device == NULL) {
     return QDMI_ERROR_OUT_OF_MEM;
   }
+  (*device)->mode = mode;
   // open the dynamic library at the location passed in `lib_name`
   (*device)->lib_handle = dlopen(lib_name, RTLD_NOW | RTLD_LOCAL);
   if ((*device)->lib_handle == NULL) {
