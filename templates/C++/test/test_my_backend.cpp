@@ -50,13 +50,14 @@ protected:
 };
 
 TEST_F(QDMITest, OpenDevice) {
-  ASSERT_TRUE(QDMI_is_Success(
-      QDMI_session_open_device(session, my_backend_name.c_str(), &device)))
+  ASSERT_TRUE(QDMI_is_Success(QDMI_session_open_device(
+      session, my_backend_name.c_str(), QDMI_DEVICE_MODE_READ_WRITE, &device)))
       << "Failed to open device";
 }
 
 TEST_F(QDMITest, QueryNumQubits) {
-  QDMI_session_open_device(session, my_backend_name.c_str(), &device);
+  QDMI_session_open_device(session, my_backend_name.c_str(),
+                           QDMI_DEVICE_MODE_READ_WRITE, &device);
   int num_qubits = 0;
   ASSERT_TRUE(QDMI_is_Success(
       QDMI_query_device_property_int(device, QDMI_NUM_QUBITS, &num_qubits)))

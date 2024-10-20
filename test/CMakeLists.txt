@@ -59,8 +59,7 @@ add_dependencies(qdmi_test qdmi::c_backend qdmi::cxx_backend)
 # whenever qdmi_test is built. Those targets ensure that the respective backends
 # implement all interface functions.
 add_dependencies(qdmi_test qdmi_test_c_backend_defs qdmi_test_cxx_backend_defs)
-# ensure my_qdmi_test_c_backend_defs my_qdmi_test_cxx_backend_defs are built
-# whenever qdmi_test is built. Those targets ensure that there is no compilation
-# error in the templates provided with QDMI.
-add_dependencies(qdmi_test qdmi_test_my_c_backend_defs
-                 qdmi_test_my_cxx_backend_defs)
+# ensure my_c_backend_test and my_cxx_backend_test are built whenever qdmi_test
+# is built. Those targets ensure that there is no compilation error in the
+# templates provided with QDMI and their tests.
+add_dependencies(qdmi_test my_c_backend_test my_cxx_backend_test)
