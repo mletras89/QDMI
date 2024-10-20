@@ -101,3 +101,42 @@ Another example is the coupling map which is represented as a list of pairs of i
   \until }
 </div>
 <!-- prettier-ignore-end -->
+
+### Complex Properties {#backend-complex}
+
+The properties that are returned by @ref QDMI_query_operation_property_double_dev may depend on the
+actual site. Hence, the implementation of those functions can be more complex. In the following
+example, we demonstrate how varying fidelities of two-qubit gates can be returned.
+
+<!-- prettier-ignore-start -->
+<div class="tabbed">
+- <b class="tab-title">C</b>
+  \dontinclude backend.c
+  \skip QDMI_query_operation_property_double_dev
+  \until DOXYGEN END OF QDMI_query_operation_property_double_dev
+- <b class="tab-title">C++</b>
+  \dontinclude backend.cpp
+  \skip pair_hash
+  \until DOXYGEN END OF QDMI_query_operation_property_double_dev
+</div>
+<!-- prettier-ignore-end -->
+
+### Submitting a Job {#backend-submit}
+
+One crucial part of QDMI is, that it allows to submit a job to the backend for execution. The
+following example provides a mock implementation of the @ref QDMI_control_submit_qasm_dev function.
+
+<!-- prettier-ignore-start -->
+<div class="tabbed">
+- <b class="tab-title">C</b>
+  \dontinclude backend.c
+  \skip QDMI_control_submit_qasm_dev
+  \until QDMI_SUCCESS
+  \until }
+- <b class="tab-title">C++</b>
+  \dontinclude backend.cpp
+  \skip QDMI_control_submit_qasm_dev
+  \until QDMI_SUCCESS
+  \until }
+</div>
+<!-- prettier-ignore-end -->

@@ -241,7 +241,7 @@ int QDMI_query_operation_property_double_dev(const char *operation,
     }
   }
   return QDMI_ERROR_INVALID_ARGUMENT;
-}
+} /// [DOXYGEN END OF QDMI_query_operation_property_double_dev]
 
 int QDMI_query_operation_property_int_dev(const char *operation,
                                           const int *sites, const int num_sites,
