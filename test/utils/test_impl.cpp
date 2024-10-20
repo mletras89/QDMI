@@ -154,6 +154,7 @@ TEST_P(QDMIImplementationTest, ControlSubmitQasmImplemented) {
                                   "cx q[0], q[1];\n";
   ASSERT_NE(QDMI_control_submit_qasm(device, qasm_string.c_str(), 10, &job),
             QDMI_ERROR_NOT_IMPLEMENTED);
+  QDMI_control_free_job(device, job);
 }
 
 TEST_P(QDMIImplementationTest, ControlSubmitQirStringImplemented) {
@@ -232,11 +233,13 @@ attributes #1 = { "irreversible" }
   ASSERT_NE(
       QDMI_control_submit_qir_string(device, qir_string.c_str(), 10, &job),
       QDMI_ERROR_NOT_IMPLEMENTED);
+  QDMI_control_free_job(device, job);
 }
 
 TEST_P(QDMIImplementationTest, DISABLED_ControlSubmitQirModuleImplemented) {
   ASSERT_NE(QDMI_control_submit_qir_module(device, nullptr, 0, nullptr),
             QDMI_ERROR_NOT_IMPLEMENTED);
+  QDMI_control_free_job(device, job);
 }
 
 TEST_P(QDMIImplementationTest, ControlCancelImplemented) {
@@ -249,6 +252,7 @@ TEST_P(QDMIImplementationTest, ControlCancelImplemented) {
   ASSERT_NE(QDMI_control_submit_qasm(device, qasm_string.c_str(), 10, &job),
             QDMI_ERROR_NOT_IMPLEMENTED);
   ASSERT_NE(QDMI_control_cancel(device, job), QDMI_ERROR_NOT_IMPLEMENTED);
+  QDMI_control_free_job(device, job);
 }
 
 TEST_P(QDMIImplementationTest, ControlCheckImplemented) {
@@ -263,6 +267,7 @@ TEST_P(QDMIImplementationTest, ControlCheckImplemented) {
             QDMI_ERROR_NOT_IMPLEMENTED);
   ASSERT_NE(QDMI_control_check(device, job, &status),
             QDMI_ERROR_NOT_IMPLEMENTED);
+  QDMI_control_free_job(device, job);
 }
 
 TEST_P(QDMIImplementationTest, ControlWaitImplemented) {
@@ -275,6 +280,7 @@ TEST_P(QDMIImplementationTest, ControlWaitImplemented) {
   ASSERT_NE(QDMI_control_submit_qasm(device, qasm_string.c_str(), 10, &job),
             QDMI_ERROR_NOT_IMPLEMENTED);
   ASSERT_NE(QDMI_control_wait(device, job), QDMI_ERROR_NOT_IMPLEMENTED);
+  QDMI_control_free_job(device, job);
 }
 
 TEST_P(QDMIImplementationTest, ControlGetHistImplemented) {
@@ -291,6 +297,7 @@ TEST_P(QDMIImplementationTest, ControlGetHistImplemented) {
             QDMI_ERROR_NOT_IMPLEMENTED);
   ASSERT_NE(QDMI_control_get_hist(device, job, &data, &counts, &size),
             QDMI_ERROR_NOT_IMPLEMENTED);
+  QDMI_control_free_job(device, job);
 }
 
 TEST_P(QDMIImplementationTest, ControlGetRawImplemented) {
@@ -306,6 +313,7 @@ TEST_P(QDMIImplementationTest, ControlGetRawImplemented) {
             QDMI_ERROR_NOT_IMPLEMENTED);
   ASSERT_NE(QDMI_control_get_raw(device, job, &data, &size),
             QDMI_ERROR_NOT_IMPLEMENTED);
+  QDMI_control_free_job(device, job);
 }
 
 TEST_P(QDMIImplementationTest, ControlInitializeImplemented) {
