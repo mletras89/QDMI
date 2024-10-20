@@ -26,6 +26,7 @@ struct QDMI_Job_impl_d {
   QDMI_Job_Status status = QDMI_JOB_STATUS_SUBMITTED;
   int num_shots = 0;
   std::vector<std::string> data;
+  std::bernoulli_distribution binary_dist{0.5};
 };
 
 struct QDMI_Device_State {
@@ -336,6 +337,12 @@ int QDMI_control_cancel_dev(QDMI_Job job) {
 }
 
 int QDMI_control_check_dev(QDMI_Job job, QDMI_Job_Status *status) {
+  // randomly decide whether job is done or not
+  if (job->status == QDMI_JOB_STATUS_SUBMITTED) {
+    job->status = job->binary_dist(device_state.gen)
+                      ? QDMI_JOB_STATUS_DONE
+                      : QDMI_JOB_STATUS_SUBMITTED;
+  }
   *status = job->status;
   return QDMI_SUCCESS;
 }
