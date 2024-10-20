@@ -236,21 +236,29 @@ attributes #1 = { "irreversible" }
   QDMI_control_free_job(device, job);
 }
 
-TEST_P(QDMIImplementationTest, DISABLED_ControlSubmitQirModuleImplemented) {
-  ASSERT_NE(QDMI_control_submit_qir_module(device, nullptr, 0, nullptr),
+TEST_P(QDMIImplementationTest, ControlSubmitQirModuleImplemented) {
+  QDMI_Job job = nullptr;
+  void *qir_module = nullptr;
+  ASSERT_NE(QDMI_control_submit_qir_module(device, qir_module, 0, &job),
             QDMI_ERROR_NOT_IMPLEMENTED);
   QDMI_control_free_job(device, job);
 }
 
+std::string Get_test_circuit() {
+  return "OPENQASM 2.0;\n"
+         "include \"qelib1.inc\";\n"
+         "qreg q[2];\n"
+         "creg c[2];\n"
+         "h q[0];\n"
+         "cx q[0], q[1];\n"
+         "measure q -> c;\n";
+}
+
 TEST_P(QDMIImplementationTest, ControlCancelImplemented) {
   QDMI_Job job = nullptr;
-  const std::string qasm_string = "OPENQASM 2.0;\n"
-                                  "include \"qelib1.inc\";\n"
-                                  "qreg q[2];\n"
-                                  "h q[0];\n"
-                                  "cx q[0], q[1];\n";
-  ASSERT_NE(QDMI_control_submit_qasm(device, qasm_string.c_str(), 10, &job),
-            QDMI_ERROR_NOT_IMPLEMENTED);
+  ASSERT_NE(
+      QDMI_control_submit_qasm(device, Get_test_circuit().c_str(), 10, &job),
+      QDMI_ERROR_NOT_IMPLEMENTED);
   ASSERT_NE(QDMI_control_cancel(device, job), QDMI_ERROR_NOT_IMPLEMENTED);
   QDMI_control_free_job(device, job);
 }
@@ -258,13 +266,9 @@ TEST_P(QDMIImplementationTest, ControlCancelImplemented) {
 TEST_P(QDMIImplementationTest, ControlCheckImplemented) {
   QDMI_Job job = nullptr;
   QDMI_Job_Status status = QDMI_JOB_STATUS_RUNNING;
-  const std::string qasm_string = "OPENQASM 2.0;\n"
-                                  "include \"qelib1.inc\";\n"
-                                  "qreg q[2];\n"
-                                  "h q[0];\n"
-                                  "cx q[0], q[1];\n";
-  ASSERT_NE(QDMI_control_submit_qasm(device, qasm_string.c_str(), 10, &job),
-            QDMI_ERROR_NOT_IMPLEMENTED);
+  ASSERT_NE(
+      QDMI_control_submit_qasm(device, Get_test_circuit().c_str(), 10, &job),
+      QDMI_ERROR_NOT_IMPLEMENTED);
   ASSERT_NE(QDMI_control_check(device, job, &status),
             QDMI_ERROR_NOT_IMPLEMENTED);
   QDMI_control_free_job(device, job);
@@ -272,13 +276,9 @@ TEST_P(QDMIImplementationTest, ControlCheckImplemented) {
 
 TEST_P(QDMIImplementationTest, ControlWaitImplemented) {
   QDMI_Job job = nullptr;
-  const std::string qasm_string = "OPENQASM 2.0;\n"
-                                  "include \"qelib1.inc\";\n"
-                                  "qreg q[2];\n"
-                                  "h q[0];\n"
-                                  "cx q[0], q[1];\n";
-  ASSERT_NE(QDMI_control_submit_qasm(device, qasm_string.c_str(), 10, &job),
-            QDMI_ERROR_NOT_IMPLEMENTED);
+  ASSERT_NE(
+      QDMI_control_submit_qasm(device, Get_test_circuit().c_str(), 10, &job),
+      QDMI_ERROR_NOT_IMPLEMENTED);
   ASSERT_NE(QDMI_control_wait(device, job), QDMI_ERROR_NOT_IMPLEMENTED);
   QDMI_control_free_job(device, job);
 }
@@ -288,13 +288,9 @@ TEST_P(QDMIImplementationTest, ControlGetHistImplemented) {
   char **data = nullptr;
   int *counts = nullptr;
   int size = 0;
-  const std::string qasm_string = "OPENQASM 2.0;\n"
-                                  "include \"qelib1.inc\";\n"
-                                  "qreg q[2];\n"
-                                  "h q[0];\n"
-                                  "cx q[0], q[1];\n";
-  ASSERT_NE(QDMI_control_submit_qasm(device, qasm_string.c_str(), 10, &job),
-            QDMI_ERROR_NOT_IMPLEMENTED);
+  ASSERT_NE(
+      QDMI_control_submit_qasm(device, Get_test_circuit().c_str(), 10, &job),
+      QDMI_ERROR_NOT_IMPLEMENTED);
   ASSERT_NE(QDMI_control_get_hist(device, job, &data, &counts, &size),
             QDMI_ERROR_NOT_IMPLEMENTED);
   QDMI_control_free_job(device, job);
@@ -304,13 +300,9 @@ TEST_P(QDMIImplementationTest, ControlGetRawImplemented) {
   QDMI_Job job = nullptr;
   char **data = nullptr;
   int size = 0;
-  const std::string qasm_string = "OPENQASM 2.0;\n"
-                                  "include \"qelib1.inc\";\n"
-                                  "qreg q[2];\n"
-                                  "h q[0];\n"
-                                  "cx q[0], q[1];\n";
-  ASSERT_NE(QDMI_control_submit_qasm(device, qasm_string.c_str(), 10, &job),
-            QDMI_ERROR_NOT_IMPLEMENTED);
+  ASSERT_NE(
+      QDMI_control_submit_qasm(device, Get_test_circuit().c_str(), 10, &job),
+      QDMI_ERROR_NOT_IMPLEMENTED);
   ASSERT_NE(QDMI_control_get_raw(device, job, &data, &size),
             QDMI_ERROR_NOT_IMPLEMENTED);
   QDMI_control_free_job(device, job);
