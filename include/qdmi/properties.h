@@ -114,12 +114,14 @@ typedef enum QDMI_OPERATION_PROPERTY_T QDMI_Operation_Property;
 
 /// Enum of the device properties that can be queried.
 enum QDMI_JOB_STATUS_T {
+  QDMI_JOB_STATUS_SUBMITTED =
+      0, /**< The job was submitted and is waiting to be executed */
   QDMI_JOB_STATUS_DONE =
-      0, /**< The job is done, and the result can be retrieved. */
+      1, /**< The job is done, and the result can be retrieved. */
   QDMI_JOB_STATUS_RUNNING =
-      1, /**< The job is running, and the result is not yet available. */
+      2, /**< The job is running, and the result is not yet available. */
   QDMI_JOB_STATUS_CANCELLED =
-      2 /**< The job was cancelled and the result is not available. */
+      3 /**< The job was cancelled and the result is not available. */
 };
 
 /// Type of the device status.
