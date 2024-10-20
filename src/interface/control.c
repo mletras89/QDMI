@@ -75,11 +75,3 @@ void QDMI_control_free_job(QDMI_Device dev, QDMI_Job job) {
     dev->QDMI_control_free_job_dev(job);
   }
 }
-
-int QDMI_control_initialize(QDMI_Device dev) {
-  return dev->QDMI_control_initialize_dev();
-}
-
-int QDMI_control_finalize(QDMI_Device dev) {
-  return dev->QDMI_control_finalize_dev();
-}

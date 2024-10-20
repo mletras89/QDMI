@@ -197,34 +197,6 @@ void QDMI_control_free_job(QDMI_Device dev, QDMI_Job job);
 
 /// @}
 
-/** @name General Control Interface
- * Functions related to general control of the device.
- * @{
- */
-
-/**
- * @brief Initialize a device.
- * @details A device can expect that this function is called once in the
- * beginning before any other functions are invoked on that device.
- * @param dev The device to initialize.
- * @return @ref QDMI_SUCCESS if the initialization was successful,
- * otherwise an error code.
- */
-int QDMI_control_initialize(QDMI_Device dev);
-
-/**
- * @brief Finalize a device.
- * @details A device can expect that this function is called once at the end of
- * a session and no other functions are invoked on that device after that
- * anymore.
- * @param dev The device to initialize.
- * @return @ref QDMI_SUCCESS if the initialization was successful,
- * otherwise an error code.
- */
-int QDMI_control_finalize(QDMI_Device dev);
-
-/// @}
-
 #ifdef __cplusplus
 } // extern "C"
 #endif
