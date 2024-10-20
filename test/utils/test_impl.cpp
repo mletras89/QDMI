@@ -335,3 +335,33 @@ TEST_P(QDMIImplementationTest, QueryDeviceLibraryVersionImplemented) {
   ASSERT_NE(version, nullptr) << "Devices must provide a QDMI library version";
   free(version);
 }
+
+TEST_P(QDMIImplementationTest, ControlDeviceModeReadOnly) {
+  // First close currently open device
+  ASSERT_TRUE(QDMI_is_Success(QDMI_session_close_device(session, device)));
+  // Then reopen device in read-only mode
+  backend_name = GetParam() + Shared_library_file_extension();
+  ASSERT_TRUE(QDMI_is_Success(QDMI_session_open_device(
+      session, backend_name.c_str(), QDMI_DEVICE_MODE_READ_ONLY, &device)))
+      << "Failed to open device in read-only mode";
+  QDMI_Job job;
+  ASSERT_EQ(
+      QDMI_control_submit_qasm(device, Get_test_circuit().c_str(), 10, &job),
+      QDMI_ERROR_PERMISSION_DENIED);
+  ASSERT_EQ(QDMI_control_submit_qir_string(device, "", 10, &job),
+            QDMI_ERROR_PERMISSION_DENIED);
+  ASSERT_EQ(QDMI_control_submit_qir_module(device, nullptr, 10, &job),
+            QDMI_ERROR_PERMISSION_DENIED);
+  EXPECT_EQ(QDMI_control_cancel(device, job), QDMI_ERROR_PERMISSION_DENIED);
+  QDMI_Job_Status status;
+  EXPECT_EQ(QDMI_control_check(device, job, &status),
+            QDMI_ERROR_PERMISSION_DENIED);
+  EXPECT_EQ(QDMI_control_wait(device, job), QDMI_ERROR_PERMISSION_DENIED);
+  char **data;
+  int *counts;
+  int size;
+  EXPECT_EQ(QDMI_control_get_hist(device, job, &data, &counts, &size),
+            QDMI_ERROR_PERMISSION_DENIED);
+  EXPECT_EQ(QDMI_control_get_raw(device, job, &data, &size),
+            QDMI_ERROR_PERMISSION_DENIED);
+}
