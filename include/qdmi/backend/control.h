@@ -20,9 +20,15 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 // todo: it would be nice to show an example of this in the documentation
 
 // todo: add a note to all the functions that allocate memory that the
-// implementations
-//  of the methods are expected to allocate memory for the output parameters and
-//  the caller is responsible for freeing the memory
+//  implementations of the methods are expected to allocate memory for the
+//  output parameters and the caller is responsible for freeing the memory
+
+// todo: we should probably add the possible return values, i.e., error codes to
+//  the documentation of the functions. Otherwise, consumers don't know what to
+//  check for and impplementations don't know what to return.
+
+// todo: the submission functions should probably state that it is up to the
+//  backend implementation whether the submission is blocking or non-blocking.
 
 #pragma once
 

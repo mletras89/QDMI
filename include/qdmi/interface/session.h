@@ -16,6 +16,10 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 extern "C" {
 #endif
 
+// todo: we should probably add the possible return values, i.e., error codes to
+//  the documentation of the functions. Otherwise, consumers don't know what to
+//  check for and impplementations don't know what to return.
+
 /**
  * @brief Opaque type for a QDMI session.
  * @details A sessions handles a list of QDMI devices.

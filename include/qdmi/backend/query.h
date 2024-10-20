@@ -23,8 +23,20 @@ extern "C" {
  */
 
 // todo: add a note to all the string methods that states that the
-// implementation should allocate memory for the string and the caller is
-// responsible for freeing it.
+//  implementation should allocate memory for the string and the caller is
+//  responsible for freeing it.
+
+// todo: we should probably add the possible return values, i.e., error codes to
+//  the documentation of the functions. Otherwise, consumers don't know what to
+//  check for and implementations don't know what to return.
+
+// todo: we should think about whether the site query functions should be used
+//  for querying average values over all sites. Right now there is a separate
+//  device property for the average T1 and T2 times. At the same time, there is
+//  the convention that querying operation properties with no sites specified
+//  should return global information. To avoid the two different ways, we should
+//  probably use the site query functions for querying average values over all
+//  sites and drop the respective device properties.
 
 /**
  * @brief Query a device property of type string (char *).
