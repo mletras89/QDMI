@@ -12,7 +12,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include "qdmi/backend.h"
 
-#include <algorithm>
+#include <cassert>
 #include <cstring>
 #include <limits>
 #include <random>
@@ -263,6 +263,25 @@ int QDMI_query_operation_property_int_dev(const char *operation,
                                           const int *sites, const int num_sites,
                                           const QDMI_Operation_Property prop,
                                           int *value) {
+  if (prop == QDMI_OPERATION_NUM_QUBITS) {
+    if (operation == nullptr) {
+      return QDMI_ERROR_INVALID_ARGUMENT;
+    }
+
+    assert(num_sites == 0);
+    assert(sites == nullptr);
+
+    const std::string op(operation);
+    if (op == "cz") {
+      *value = 2;
+      return QDMI_SUCCESS;
+    }
+    if (op == "rx" || op == "ry" || op == "rz") {
+      *value = 1;
+      return QDMI_SUCCESS;
+    }
+    return QDMI_ERROR_INVALID_ARGUMENT;
+  }
   return QDMI_ERROR_INVALID_ARGUMENT;
 }
 

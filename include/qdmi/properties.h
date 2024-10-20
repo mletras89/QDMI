@@ -92,21 +92,23 @@ typedef enum QDMI_SITE_PROPERTY_T QDMI_Site_Property;
 
 /// Enum of the operation properties that can be queried.
 enum QDMI_OPERATION_PROPERTY_T {
+  /// `int` The number of qubits in the operation.
+  QDMI_OPERATION_NUM_QUBITS = 0,
   /**
    * @brief `double` The duration of an operation in µs.
    */
-  QDMI_OPERATION_DURATION = 0,
+  QDMI_OPERATION_DURATION = 1,
   /**
    * @brief `double` The fidelity of an operation.
    */
-  QDMI_OPERATION_FIDELITY = 1,
+  QDMI_OPERATION_FIDELITY = 2,
   /**
    * @brief The maximum value of the enum.
    * @details This value can be used for bounds checks by the backends.
    * @note This value should always be updated to be the last and maximum value
    * of the enum.
    */
-  QDMI_OPERATION_PROPERTY_MAX = 2
+  QDMI_OPERATION_PROPERTY_MAX = 3
 };
 
 /// Type of the operation properties.

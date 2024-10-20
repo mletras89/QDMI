@@ -247,6 +247,22 @@ int QDMI_query_operation_property_int_dev(const char *operation,
                                           const int *sites, const int num_sites,
                                           const QDMI_Operation_Property prop,
                                           int *value) {
+  if (prop == QDMI_OPERATION_NUM_QUBITS) {
+    if (operation == NULL) {
+      return QDMI_ERROR_INVALID_ARGUMENT;
+    }
+    assert(sites == NULL);
+    assert(num_sites == 0);
+    if (strcmp(operation, "cz") == 0) {
+      *value = 2;
+      return QDMI_SUCCESS;
+    }
+    if (strcmp(operation, "rx") == 0 || strcmp(operation, "ry") == 0 ||
+        strcmp(operation, "rz") == 0) {
+      *value = 1;
+      return QDMI_SUCCESS;
+    }
+  }
   return QDMI_ERROR_INVALID_ARGUMENT;
 }
 
