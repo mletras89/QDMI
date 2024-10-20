@@ -12,24 +12,20 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #pragma once
 
+#include "fomac.hpp"
 #include "qdmi/interface.h"
 
 #include <string>
-#include <utility>
-#include <vector>
 
 class Tool {
 private:
   QDMI_Device device;
+  FoMaC fomac;
 
 public:
-  explicit Tool(QDMI_Device dev) : device(dev) {}
+  explicit Tool(QDMI_Device dev) : device(dev), fomac(dev) {}
 
 private:
-  int get_device_num_qubits();
-
-  std::vector<std::pair<int, int>> get_device_coupling_map();
-
   static std::string replace_all_occurrences(std::string str,
                                              const std::string &from,
                                              const std::string &to);

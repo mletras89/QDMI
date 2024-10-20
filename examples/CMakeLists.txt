@@ -24,10 +24,15 @@ add_library(cxx_backend SHARED backend.cpp)
 target_link_libraries(cxx_backend PRIVATE qdmi::qdmi)
 add_library(qdmi::cxx_backend ALIAS cxx_backend)
 
-# NOTE: If you change the target name, the name of the shared library will also
-# change. Hence, in the test you have to adopt the name of the shared library
-# accordingly.
+add_library(fomac SHARED fomac.cpp fomac.hpp)
+target_link_libraries(fomac PRIVATE qdmi::qdmi)
+target_include_directories(fomac PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+add_library(qdmi::fomac ALIAS fomac)
+
 add_library(tool SHARED tool.cpp tool.hpp)
-target_link_libraries(tool PRIVATE qdmi::qdmi)
+target_link_libraries(
+  tool
+  PRIVATE qdmi::qdmi
+  PUBLIC qdmi::fomac)
 target_include_directories(tool PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 add_library(qdmi::tool ALIAS tool)
