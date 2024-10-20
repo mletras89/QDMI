@@ -14,11 +14,25 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <string>
 
 // Instantiate the test suite with different parameters
-INSTANTIATE_TEST_SUITE_P(QDMIBackend,            // Custom instantiation name
-                         QDMIImplementationTest, // Test suite name
-                         // Parameters to test with
-                         ::testing::Values("../examples/libc_backend",
-                                           "../examples/libcxx_backend"));
+INSTANTIATE_TEST_SUITE_P(
+    QDMIBackend,            // Custom instantiation name
+    QDMIImplementationTest, // Test suite name
+    // Parameters to test with
+    ::testing::Values("../examples/libc_backend", "../examples/libcxx_backend"),
+    [](const testing::TestParamInfo<std::string> &inf) {
+      // Extract the last part of the file path
+      const size_t pos = inf.param.find_last_of("/\\");
+      std::string filename =
+          (pos == std::string::npos) ? inf.param : inf.param.substr(pos + 1);
+
+      // Strip the 'lib' prefix if it exists
+      const std::string prefix = "lib";
+      if (filename.compare(0, prefix.size(), prefix) == 0) {
+        filename = filename.substr(prefix.size());
+      }
+
+      return filename;
+    });
 
 class QDMITest : public ::testing::Test {
 protected:
