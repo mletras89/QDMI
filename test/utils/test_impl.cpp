@@ -315,3 +315,27 @@ TEST_P(QDMIImplementationTest, ControlInitializeImplemented) {
 TEST_P(QDMIImplementationTest, ControlFinalizeImplemented) {
   ASSERT_NE(QDMI_control_finalize(device), QDMI_ERROR_NOT_IMPLEMENTED);
 }
+
+TEST_P(QDMIImplementationTest, QueryDeviceNameImplemented) {
+  char *name = nullptr;
+  ASSERT_TRUE(QDMI_is_Success(
+      QDMI_query_device_property_string(device, QDMI_NAME, &name)));
+  ASSERT_NE(name, nullptr) << "Devices must provide a name";
+  free(name);
+}
+
+TEST_P(QDMIImplementationTest, QueryDeviceVersionImplemented) {
+  char *version = nullptr;
+  ASSERT_TRUE(QDMI_is_Success(QDMI_query_device_property_string(
+      device, QDMI_DEVICE_VERSION, &version)));
+  ASSERT_NE(version, nullptr) << "Devices must provide a version";
+  free(version);
+}
+
+TEST_P(QDMIImplementationTest, QueryDeviceLibraryVersionImplemented) {
+  char *version = nullptr;
+  ASSERT_TRUE(QDMI_is_Success(QDMI_query_device_property_string(
+      device, QDMI_LIBRARY_VERSION, &version)));
+  ASSERT_NE(version, nullptr) << "Devices must provide a QDMI library version";
+  free(version);
+}
