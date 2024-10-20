@@ -29,6 +29,11 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  * @see qdmi/backend/control.h for the backend interface.
  */
 // todo: it would be nice to show an example of this in the documentation
+
+// todo: add a note to all the functions that allocate memory that the memory
+// for the output parameters is allocated by the implementations of the methods
+// and the caller is responsible for freeing the memory.
+
 #pragma once
 
 #include "qdmi/properties.h"

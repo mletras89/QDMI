@@ -19,6 +19,11 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  */
 // todo: it would be nice to show an example of this in the documentation
 
+// todo: add a note to all the functions that allocate memory that the
+// implementations
+//  of the methods are expected to allocate memory for the output parameters and
+//  the caller is responsible for freeing the memory
+
 #pragma once
 
 #include "qdmi/properties.h"

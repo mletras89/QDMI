@@ -22,6 +22,10 @@ extern "C" {
  * @{
  */
 
+// todo: add a note to all the string methods that states that the
+// implementation should allocate memory for the string and the caller is
+// responsible for freeing it.
+
 /**
  * @brief Query a device property of type string (char *).
  * @param prop The property to query.

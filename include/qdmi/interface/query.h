@@ -28,6 +28,10 @@ typedef struct QDMI_Device_impl_d *QDMI_Device;
  * @{
  */
 
+// todo: add a note to all the string function that the backend is responsible
+// for allocating the memory of the returned string and the caller is
+// responsible for freeing the memory of the returned string
+
 /**
  * @brief Query a device property of type string (char *).
  * @param device The device to query.
