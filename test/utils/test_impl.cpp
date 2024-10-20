@@ -15,7 +15,6 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include "test_impl.hpp"
 
-#include "private/_device.h"
 #include "qdmi/interface.h"
 
 #include <gtest/gtest.h>
@@ -303,14 +302,6 @@ TEST_P(QDMIImplementationTest, ControlGetRawImplemented) {
   ASSERT_NE(QDMI_control_get_raw(device, job, &data, &size),
             QDMI_ERROR_NOT_IMPLEMENTED);
   QDMI_control_free_job(device, job);
-}
-
-TEST_P(QDMIImplementationTest, ControlInitializeImplemented) {
-  ASSERT_NE(device->QDMI_control_initialize_dev(), QDMI_ERROR_NOT_IMPLEMENTED);
-}
-
-TEST_P(QDMIImplementationTest, ControlFinalizeImplemented) {
-  ASSERT_NE(device->QDMI_control_finalize_dev(), QDMI_ERROR_NOT_IMPLEMENTED);
 }
 
 TEST_P(QDMIImplementationTest, QueryDeviceNameImplemented) {
