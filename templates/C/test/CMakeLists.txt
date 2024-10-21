@@ -31,7 +31,7 @@ add_executable(my_c_device_test test_my_device.cpp)
 
 # link the Google test infrastructure to the test executable.
 target_link_libraries(
-  my_c_device_test PRIVATE gtest_main qdmi::qdmi qdmi::test_impl
+  my_c_device_test PRIVATE gtest_main qdmi::qdmi qdmi::test_impl qdmi::driver
                            qdmi::project_warnings)
 
 # discover tests

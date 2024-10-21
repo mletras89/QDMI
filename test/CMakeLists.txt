@@ -23,14 +23,15 @@ add_subdirectory(utils)
 #
 # NOTE: This executable is not meant to be ever executed, only linked.
 add_executable(qdmi_test_c_device_defs utils/test_defs.cpp)
-target_link_libraries(qdmi_test_c_device_defs PRIVATE qdmi::qdmi qdmi::c_device
-                                                      qdmi::project_warnings)
+target_link_libraries(
+  qdmi_test_c_device_defs PRIVATE qdmi::qdmi qdmi::c_device qdmi::driver
+                                  qdmi::project_warnings)
 
 # test that a device implementation implements all functions NOTE: This
 # executable is not meant to be ever executed, only linked.
 add_executable(qdmi_test_cxx_device_defs utils/test_defs.cpp)
 target_link_libraries(
-  qdmi_test_cxx_device_defs PRIVATE qdmi::qdmi qdmi::cxx_device
+  qdmi_test_cxx_device_defs PRIVATE qdmi::qdmi qdmi::cxx_device qdmi::driver
                                     qdmi::project_warnings)
 
 # ------------------------------------------------------------------------------
@@ -42,8 +43,14 @@ add_executable(qdmi_test test_qdmi.cpp)
 
 # link the Google test infrastructure to the test executable.
 target_link_libraries(
-  qdmi_test PRIVATE qdmi::qdmi qdmi::test_impl qdmi::tool qdmi::fomac
-                    qdmi::project_warnings gtest_main)
+  qdmi_test
+  PRIVATE qdmi::qdmi
+          qdmi::test_impl
+          qdmi::tool
+          qdmi::fomac
+          qdmi::driver
+          qdmi::project_warnings
+          gtest_main)
 
 # discover tests
 gtest_discover_tests(

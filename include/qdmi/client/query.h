@@ -280,8 +280,8 @@ int QDMI_query_site_property_int_list(QDMI_Device device, int site,
  * property.
  */
 int QDMI_query_operation_property_string(QDMI_Device device,
-                                         const char *operation, int *sites,
-                                         int num_sites,
+                                         const char *operation,
+                                         const int *sites, int num_sites,
                                          QDMI_Operation_Property prop,
                                          char **value);
 
@@ -306,8 +306,8 @@ int QDMI_query_operation_property_string(QDMI_Device device,
  * property.
  */
 int QDMI_query_operation_property_double(QDMI_Device device,
-                                         const char *operation, int *sites,
-                                         int num_sites,
+                                         const char *operation,
+                                         const int *sites, int num_sites,
                                          QDMI_Operation_Property prop,
                                          double *value);
 
@@ -332,7 +332,7 @@ int QDMI_query_operation_property_double(QDMI_Device device,
  * property.
  */
 int QDMI_query_operation_property_int(QDMI_Device device, const char *operation,
-                                      int *sites, int num_sites,
+                                      const int *sites, int num_sites,
                                       QDMI_Operation_Property prop, int *value);
 
 /**
@@ -358,8 +358,8 @@ int QDMI_query_operation_property_int(QDMI_Device device, const char *operation,
  * property.
  */
 int QDMI_query_operation_property_string_list(QDMI_Device device,
-                                              const char *operation, int *sites,
-                                              int num_sites,
+                                              const char *operation,
+                                              const int *sites, int num_sites,
                                               QDMI_Operation_Property prop,
                                               char ***values, int *size);
 
@@ -385,8 +385,8 @@ int QDMI_query_operation_property_string_list(QDMI_Device device,
  * property.
  */
 int QDMI_query_operation_property_double_list(QDMI_Device device,
-                                              const char *operation, int *sites,
-                                              int num_sites,
+                                              const char *operation,
+                                              const int *sites, int num_sites,
                                               QDMI_Operation_Property prop,
                                               double **values, int *size);
 
@@ -412,8 +412,8 @@ int QDMI_query_operation_property_double_list(QDMI_Device device,
  * property.
  */
 int QDMI_query_operation_property_int_list(QDMI_Device device,
-                                           const char *operation, int *sites,
-                                           int num_sites,
+                                           const char *operation,
+                                           const int *sites, int num_sites,
                                            QDMI_Operation_Property prop,
                                            int **values, int *size);
 
