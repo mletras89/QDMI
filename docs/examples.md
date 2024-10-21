@@ -33,13 +33,11 @@ C++.
 - <b class="tab-title">C</b>
   \dontinclude backend.c
   \skip QDMI_query_device_property_string_dev
-  \until QDMI_ERROR_INVALID_ARGUMENT
-  \until }
+  \until DOXYGEN FUNCTION END
 - <b class="tab-title">C++</b>
   \dontinclude backend.cpp
   \skip QDMI_query_device_property_string_dev
-  \until QDMI_ERROR_INVALID_ARGUMENT
-  \until }
+  \until DOXYGEN FUNCTION END
 </div>
 <!-- prettier-ignore-end -->
 
@@ -53,14 +51,12 @@ Following two examples for returning `double` and `int` properties.
   \dontinclude backend.c
   \skip QDMI_query_device_property_double_dev
   \until QDMI_query_device_property_int_dev
-  \until QDMI_ERROR_INVALID_ARGUMENT
-  \until }
+  \until DOXYGEN FUNCTION END
 - <b class="tab-title">C++</b>
   \dontinclude backend.cpp
   \skip QDMI_query_device_property_double_dev
   \until QDMI_query_device_property_int_dev
-  \until QDMI_ERROR_INVALID_ARGUMENT
-  \until }
+  \until DOXYGEN FUNCTION END
 </div>
 <!-- prettier-ignore-end -->
 
@@ -75,13 +71,11 @@ language.
 - <b class="tab-title">C</b>
   \dontinclude backend.c
   \skip QDMI_query_device_property_string_list_dev
-  \until QDMI_ERROR_INVALID_ARGUMENT
-  \until }
+  \until DOXYGEN FUNCTION END
 - <b class="tab-title">C++</b>
   \dontinclude backend.cpp
   \skip QDMI_query_device_property_string_list_dev
-  \until QDMI_ERROR_INVALID_ARGUMENT
-  \until }
+  \until DOXYGEN FUNCTION END
 </div>
 <!-- prettier-ignore-end -->
 
@@ -92,13 +86,11 @@ Another example is the coupling map which is represented as a list of pairs of i
 - <b class="tab-title">C</b>
   \dontinclude backend.c
   \skip QDMI_query_device_property_int_list_dev
-  \until QDMI_ERROR_INVALID_ARGUMENT
-  \until }
+  \until DOXYGEN FUNCTION END
 - <b class="tab-title">C++</b>
   \dontinclude backend.cpp
   \skip QDMI_query_device_property_int_list_dev
-  \until QDMI_ERROR_INVALID_ARGUMENT
-  \until }
+  \until DOXYGEN FUNCTION END
 </div>
 <!-- prettier-ignore-end -->
 
@@ -113,11 +105,11 @@ example, we demonstrate how varying fidelities of two-qubit gates can be returne
 - <b class="tab-title">C</b>
   \dontinclude backend.c
   \skip QDMI_query_operation_property_double_dev
-  \until DOXYGEN END OF QDMI_query_operation_property_double_dev
+  \until DOXYGEN FUNCTION END
 - <b class="tab-title">C++</b>
   \dontinclude backend.cpp
   \skip pair_hash
-  \until DOXYGEN END OF QDMI_query_operation_property_double_dev
+  \until DOXYGEN FUNCTION END
 </div>
 <!-- prettier-ignore-end -->
 
@@ -131,12 +123,10 @@ following example provides a mock implementation of the @ref QDMI_control_submit
 - <b class="tab-title">C</b>
   \dontinclude backend.c
   \skip QDMI_control_submit_qasm_dev
-  \until QDMI_SUCCESS
-  \until }
+  \until DOXYGEN FUNCTION END
 - <b class="tab-title">C++</b>
   \dontinclude backend.cpp
   \skip QDMI_control_submit_qasm_dev
-  \until QDMI_SUCCESS
-  \until }
+  \until DOXYGEN FUNCTION END
 </div>
 <!-- prettier-ignore-end -->

@@ -24,7 +24,7 @@ int FoMaC::query_num_qubits() const {
   int num_qubits = 0;
   const int ret =
       QDMI_query_device_property_int(device, QDMI_NUM_QUBITS, &num_qubits);
-  assert(QDMI_is_Success(ret));
+  assert(ret == QDMI_SUCCESS);
   return num_qubits;
 }
 
@@ -33,7 +33,7 @@ std::vector<std::string> FoMaC::query_gate_set() const {
   int num_gates = 0;
   const int ret = QDMI_query_device_property_string_list(device, QDMI_GATE_SET,
                                                          &gate_set, &num_gates);
-  assert(QDMI_is_Success(ret));
+  assert(ret == QDMI_SUCCESS);
   std::vector<std::string> gates;
   gates.reserve(static_cast<size_t>(num_gates));
   for (int i = 0; i < num_gates; i++) {
@@ -51,7 +51,7 @@ std::vector<std::pair<int, int>> FoMaC::query_coupling_map() const {
   int num_couplings = 0;
   const int ret = QDMI_query_device_property_int_list(
       device, QDMI_COUPLING_MAP, &coupling_map, &num_couplings);
-  assert(QDMI_is_Success(ret));
+  assert(ret == QDMI_SUCCESS);
   assert(num_couplings % 2 == 0);
 
   const auto num_qubits = query_num_qubits();
@@ -70,6 +70,6 @@ int FoMaC::query_gate_num_qubits(const std::string &gate) const {
   int num_qubits = 0;
   const int ret = QDMI_query_operation_property_int(
       device, gate.c_str(), nullptr, 0, QDMI_OPERATION_NUM_QUBITS, &num_qubits);
-  assert(QDMI_is_Success(ret));
+  assert(ret == QDMI_SUCCESS);
   return num_qubits;
 }

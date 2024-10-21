@@ -27,14 +27,14 @@ struct QDMI_Job_impl_d {
   int num_shots = 0;
   std::vector<std::string> data;
   std::bernoulli_distribution binary_dist{0.5};
-};
+}; /// [DOXYGEN FUNCTION END]
 
 struct QDMI_Device_State {
   QDMI_Device_Status status = QDMI_DEVICE_OFFLINE;
   std::random_device rd;
   std::mt19937 gen;
   std::uniform_int_distribution<> dis;
-};
+}; /// [DOXYGEN FUNCTION END]
 
 QDMI_Device_State device_state;
 
@@ -59,7 +59,7 @@ int QDMI_query_device_property_string_dev(const QDMI_Device_Property prop,
     return QDMI_SUCCESS;
   }
   return QDMI_ERROR_INVALID_ARGUMENT;
-}
+} /// [DOXYGEN FUNCTION END]
 
 int QDMI_query_device_property_double_dev(const QDMI_Device_Property prop,
                                           double *value) {
@@ -72,7 +72,7 @@ int QDMI_query_device_property_double_dev(const QDMI_Device_Property prop,
     return QDMI_SUCCESS;
   }
   return QDMI_ERROR_INVALID_ARGUMENT;
-}
+} /// [DOXYGEN FUNCTION END]
 
 int QDMI_query_device_property_int_dev(const QDMI_Device_Property prop,
                                        int *value) {
@@ -85,7 +85,7 @@ int QDMI_query_device_property_int_dev(const QDMI_Device_Property prop,
     return QDMI_SUCCESS;
   }
   return QDMI_ERROR_INVALID_ARGUMENT;
-}
+} /// [DOXYGEN FUNCTION END]
 
 int QDMI_query_device_property_string_list_dev(const QDMI_Device_Property prop,
                                                char ***value, int *size) {
@@ -100,12 +100,12 @@ int QDMI_query_device_property_string_list_dev(const QDMI_Device_Property prop,
     return QDMI_SUCCESS;
   }
   return QDMI_ERROR_INVALID_ARGUMENT;
-}
+} /// [DOXYGEN FUNCTION END]
 
 int QDMI_query_device_property_double_list_dev(const QDMI_Device_Property prop,
                                                double **value, int *size) {
   return QDMI_ERROR_INVALID_ARGUMENT;
-}
+} /// [DOXYGEN FUNCTION END]
 
 int QDMI_query_device_property_int_list_dev(const QDMI_Device_Property prop,
                                             int **value, int *size) {
@@ -121,13 +121,13 @@ int QDMI_query_device_property_int_list_dev(const QDMI_Device_Property prop,
     return QDMI_SUCCESS;
   }
   return QDMI_ERROR_INVALID_ARGUMENT;
-}
+} /// [DOXYGEN FUNCTION END]
 
 int QDMI_query_site_property_string_dev(const int site,
                                         const QDMI_Site_Property prop,
                                         char **value) {
   return QDMI_ERROR_INVALID_ARGUMENT;
-}
+} /// [DOXYGEN FUNCTION END]
 
 int QDMI_query_site_property_double_dev(const int site,
                                         const QDMI_Site_Property prop,
@@ -148,31 +148,31 @@ int QDMI_query_site_property_double_dev(const int site,
     return QDMI_SUCCESS;
   }
   return QDMI_ERROR_INVALID_ARGUMENT;
-}
+} /// [DOXYGEN FUNCTION END]
 
 int QDMI_query_site_property_int_dev(const int site,
                                      const QDMI_Site_Property prop,
                                      int *value) {
   return QDMI_ERROR_INVALID_ARGUMENT;
-}
+} /// [DOXYGEN FUNCTION END]
 
 int QDMI_query_site_property_string_list_dev(const int site,
                                              const QDMI_Site_Property prop,
                                              char ***value, int *size) {
   return QDMI_ERROR_INVALID_ARGUMENT;
-}
+} /// [DOXYGEN FUNCTION END]
 
 int QDMI_query_site_property_double_list_dev(const int site,
                                              const QDMI_Site_Property prop,
                                              double **value, int *size) {
   return QDMI_ERROR_INVALID_ARGUMENT;
-}
+} /// [DOXYGEN FUNCTION END]
 
 int QDMI_query_site_property_int_list_dev(const int site,
                                           const QDMI_Site_Property prop,
                                           int **value, int *size) {
   return QDMI_ERROR_INVALID_ARGUMENT;
-}
+} /// [DOXYGEN FUNCTION END]
 
 int QDMI_query_operation_property_string_dev(const char *operation,
                                              const int *sites,
@@ -180,7 +180,7 @@ int QDMI_query_operation_property_string_dev(const char *operation,
                                              const QDMI_Operation_Property prop,
                                              char **value) {
   return QDMI_ERROR_INVALID_ARGUMENT;
-}
+} /// [DOXYGEN FUNCTION END]
 
 struct pair_hash {
   template <class T1, class T2>
@@ -189,7 +189,7 @@ struct pair_hash {
     auto hash2 = std::hash<T2>{}(p.second);
     return hash1 ^ hash2;
   }
-};
+}; /// [DOXYGEN FUNCTION END]
 
 int QDMI_query_operation_property_double_dev(const char *operation,
                                              const int *sites,
@@ -257,7 +257,7 @@ int QDMI_query_operation_property_double_dev(const char *operation,
     return QDMI_ERROR_INVALID_ARGUMENT;
   }
   return QDMI_ERROR_INVALID_ARGUMENT;
-} /// [DOXYGEN END OF QDMI_query_operation_property_double_dev]
+} /// [DOXYGEN FUNCTION END]
 
 int QDMI_query_operation_property_int_dev(const char *operation,
                                           const int *sites, const int num_sites,
@@ -283,25 +283,25 @@ int QDMI_query_operation_property_int_dev(const char *operation,
     return QDMI_ERROR_INVALID_ARGUMENT;
   }
   return QDMI_ERROR_INVALID_ARGUMENT;
-}
+} /// [DOXYGEN FUNCTION END]
 
 int QDMI_query_operation_property_string_list_dev(
     const char *operation, const int *sites, const int num_sites,
     const QDMI_Operation_Property prop, char ***value, int *size) {
   return QDMI_ERROR_INVALID_ARGUMENT;
-}
+} /// [DOXYGEN FUNCTION END]
 
 int QDMI_query_operation_property_double_list_dev(
     const char *operation, const int *sites, const int num_sites,
     const QDMI_Operation_Property prop, double **value, int *size) {
   return QDMI_ERROR_INVALID_ARGUMENT;
-}
+} /// [DOXYGEN FUNCTION END]
 
 int QDMI_query_operation_property_int_list_dev(
     const char *operation, const int *sites, const int num_sites,
     const QDMI_Operation_Property prop, int **value, int *size) {
   return QDMI_ERROR_INVALID_ARGUMENT;
-}
+} /// [DOXYGEN FUNCTION END]
 
 int QDMI_control_submit_qasm_dev(const char *qasm_string, int num_shots,
                                  QDMI_Job *job) {
@@ -315,7 +315,7 @@ int QDMI_control_submit_qasm_dev(const char *qasm_string, int num_shots,
   (*job)->num_shots = num_shots;
   (*job)->status = QDMI_JOB_STATUS_SUBMITTED;
   return QDMI_SUCCESS;
-}
+} /// [DOXYGEN FUNCTION END]
 
 int QDMI_control_submit_qir_string_dev(const char *qir_string, int num_shots,
                                        QDMI_Job *job) {
@@ -329,7 +329,7 @@ int QDMI_control_submit_qir_string_dev(const char *qir_string, int num_shots,
   (*job)->num_shots = num_shots;
   (*job)->status = QDMI_JOB_STATUS_SUBMITTED;
   return QDMI_SUCCESS;
-}
+} /// [DOXYGEN FUNCTION END]
 
 int QDMI_control_submit_qir_module_dev(const void *qir_module, int num_shots,
                                        QDMI_Job *job) {
@@ -343,7 +343,7 @@ int QDMI_control_submit_qir_module_dev(const void *qir_module, int num_shots,
   (*job)->num_shots = num_shots;
   (*job)->status = QDMI_JOB_STATUS_SUBMITTED;
   return QDMI_SUCCESS;
-}
+} /// [DOXYGEN FUNCTION END]
 
 int QDMI_control_cancel_dev(QDMI_Job job) {
   if (job->status == QDMI_JOB_STATUS_DONE) {
@@ -353,7 +353,7 @@ int QDMI_control_cancel_dev(QDMI_Job job) {
   job->status = QDMI_JOB_STATUS_CANCELLED;
   device_state.status = QDMI_DEVICE_IDLE;
   return QDMI_SUCCESS;
-}
+} /// [DOXYGEN FUNCTION END]
 
 int QDMI_control_check_dev(QDMI_Job job, QDMI_Job_Status *status) {
   // randomly decide whether job is done or not
@@ -364,13 +364,13 @@ int QDMI_control_check_dev(QDMI_Job job, QDMI_Job_Status *status) {
   }
   *status = job->status;
   return QDMI_SUCCESS;
-}
+} /// [DOXYGEN FUNCTION END]
 
 int QDMI_control_wait_dev(QDMI_Job job) {
   job->status = QDMI_JOB_STATUS_DONE;
   device_state.status = QDMI_DEVICE_IDLE;
   return QDMI_SUCCESS;
-}
+} /// [DOXYGEN FUNCTION END]
 
 int QDMI_control_get_hist_dev(QDMI_Job job, char ***data, int **counts,
                               int *size) {
@@ -400,7 +400,7 @@ int QDMI_control_get_hist_dev(QDMI_Job job, char ***data, int **counts,
     ++i;
   }
   return QDMI_SUCCESS;
-}
+} /// [DOXYGEN FUNCTION END]
 
 int QDMI_control_get_raw_dev(QDMI_Job job, char ***data, int *size) {
   if (job->status != QDMI_JOB_STATUS_DONE) {
@@ -424,7 +424,7 @@ int QDMI_control_get_raw_dev(QDMI_Job job, char ***data, int *size) {
     std::strcpy((*data)[i], bitstring.c_str());
   }
   return QDMI_SUCCESS;
-}
+} /// [DOXYGEN FUNCTION END]
 
 void QDMI_control_free_job_dev(QDMI_Job job) { delete job; }
 
@@ -434,9 +434,9 @@ int QDMI_control_initialize_dev() {
   device_state.dis =
       std::uniform_int_distribution<>(0, std::numeric_limits<int>::max());
   return QDMI_SUCCESS;
-}
+} /// [DOXYGEN FUNCTION END]
 
 int QDMI_control_finalize_dev() {
   device_state.status = QDMI_DEVICE_OFFLINE;
   return QDMI_SUCCESS;
-}
+} /// [DOXYGEN FUNCTION END]
