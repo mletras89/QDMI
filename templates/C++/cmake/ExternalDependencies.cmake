@@ -9,9 +9,9 @@ include(CMakeDependentOption)
 set(FETCH_PACKAGES "")
 
 if(TARGET qdmi::qdmi)
-  message(STATUS "Backend template: QDMI is already available.")
+  message(STATUS "Device template: QDMI is already available.")
 else()
-  message(STATUS "Backend template: QDMI will be included via FetchContent")
+  message(STATUS "Device template: QDMI will be included via FetchContent")
   # cmake-format: off
   set(QDMI_VERSION 0.2.0
           CACHE STRING "QDMI version")

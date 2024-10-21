@@ -5,22 +5,19 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
 /** @file
- * @brief A template of a backend implementation in C.
+ * @brief A template of a device implementation in C.
  * @details In the end, all QDMI_ERROR_NOT_IMPLEMENTED return codes should be
  * replaced by QDMI_ERROR_NOT_IMPLEMENTED return codes.
  * For the documentation of the functions, see the official documentation.
  */
 
-#include "qdmi/backend.h"
-
-#include <stdlib.h>
+#include "qdmi/device.h"
 
 /**
  * @brief Implementation of the QDMI_Job structure.
  * @details This structure can, e.g., be used to store the job id.
  */
 typedef struct QDMI_Job_impl_d {
-  int id;
 } QDMI_Job_impl_t;
 
 int QDMI_query_device_property_string_dev(const QDMI_Device_Property prop,
@@ -162,7 +159,7 @@ int QDMI_control_get_raw_dev(QDMI_Job job, char ***data, int *size) {
   return QDMI_ERROR_NOT_IMPLEMENTED;
 }
 
-void QDMI_control_free_job_dev(QDMI_Job job) { free(job); }
+void QDMI_control_free_job_dev(QDMI_Job job) { delete job; }
 
 int QDMI_control_initialize_dev(void) { return QDMI_ERROR_NOT_IMPLEMENTED; }
 

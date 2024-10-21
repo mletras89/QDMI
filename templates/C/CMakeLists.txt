@@ -8,10 +8,10 @@
 cmake_minimum_required(VERSION 3.19...3.30)
 
 project(
-  MyBackend
+  MyDevice
   LANGUAGES C
   VERSION 0.0.1
-  DESCRIPTION "My QDMI C Backend Implementation")
+  DESCRIPTION "My QDMI C Device Implementation")
 
 # make scripts available to cmake
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")

@@ -28,7 +28,7 @@ typedef struct QDMI_Device_impl_d *QDMI_Device;
  * @{
  */
 
-// todo: add a note to all the string function that the backend is responsible
+// todo: add a note to all the string function that the device is responsible
 //  for allocating the memory of the returned string and the caller is
 //  responsible for freeing the memory of the returned string
 

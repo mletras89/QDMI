@@ -15,7 +15,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  * - @ref QDMI_control_submit_qir_string
  * - @ref QDMI_control_submit_qasm
  *
- * is implemented by the backend. Assuming the computation is generally
+ * is implemented by the device. Assuming the computation is generally
  * available as a QIR module, a reasonable strategy for the job submission would
  * be to
  * - try submitting the QIR module directly.
@@ -24,9 +24,9 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  * - if that fails, try converting the QIR string to a QASM string and submit
  * that.
  *
- * Based on the assumption that any backend is supposed to support at least one
+ * Based on the assumption that any device is supposed to support at least one
  * of the submission functions, the above procedure should always succeed.
- * @see qdmi/backend/control.h for the backend interface.
+ * @see qdmi/device/control.h for the device interface.
  */
 
 // todo: add a note to all the functions that allocate memory that the memory

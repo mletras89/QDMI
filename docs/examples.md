@@ -3,21 +3,21 @@
 <!-- IMPORTANT: Keep the line above as the first line. -->
 <!-- This file is a static page and included in the ./CMakeLists.txt file. -->
 
-This page contains example implementations of backends and other components of the software stack
+This page contains example implementations of devices and other components of the software stack
 that use QDMI. Those example implementations can serve as templates. All examples distributed with
 QDMI are contained in the `examples/` directory in the repository.
 
 \tableofcontents
 
-## Implementing a Backend {#backend}
+## Implementing a Device {#device}
 
-Below you find a mock implementation of two QDMI backends: One is implemented in C and the other one
-in C++. Keep in mind, that even though the backend can be implemented in C++ it has to provide a C
+Below you find a mock implementation of two QDMI devices: One is implemented in C and the other one
+in C++. Keep in mind, that even though the device can be implemented in C++ it has to provide a C
 interface.
 
-### Basic String Properties {#backend-string}
+### Basic String Properties {#device-string}
 
-Every backend has to provide a name, its version, and the implemented QDMI library version through
+Every device has to provide a name, its version, and the implemented QDMI library version through
 the query interface. The corresponding properties are
 
 - @ref QDMI_NAME
@@ -31,36 +31,36 @@ C++.
 <!-- prettier-ignore-start -->
 <div class="tabbed">
 - <b class="tab-title">C</b>
-  \dontinclude backend.c
+  \dontinclude device.c
   \skip QDMI_query_device_property_string_dev
   \until DOXYGEN FUNCTION END
 - <b class="tab-title">C++</b>
-  \dontinclude backend.cpp
+  \dontinclude device.cpp
   \skip QDMI_query_device_property_string_dev
   \until DOXYGEN FUNCTION END
 </div>
 <!-- prettier-ignore-end -->
 
-### Double and Integer Properties {#backend-double-int}
+### Double and Integer Properties {#device-double-int}
 
 Following two examples for returning `double` and `int` properties.
 
 <!-- prettier-ignore-start -->
 <div class="tabbed">
 - <b class="tab-title">C</b>
-  \dontinclude backend.c
+  \dontinclude device.c
   \skip QDMI_query_device_property_double_dev
   \until QDMI_query_device_property_int_dev
   \until DOXYGEN FUNCTION END
 - <b class="tab-title">C++</b>
-  \dontinclude backend.cpp
+  \dontinclude device.cpp
   \skip QDMI_query_device_property_double_dev
   \until QDMI_query_device_property_int_dev
   \until DOXYGEN FUNCTION END
 </div>
 <!-- prettier-ignore-end -->
 
-### List Properties {#backend-list}
+### List Properties {#device-list}
 
 Some properties are returned as a list of the various data type. The following example shows how to
 return the list of available gates which are represented as strings, i.e., `char*` in the C
@@ -69,11 +69,11 @@ language.
 <!-- prettier-ignore-start -->
 <div class="tabbed">
 - <b class="tab-title">C</b>
-  \dontinclude backend.c
+  \dontinclude device.c
   \skip QDMI_query_device_property_string_list_dev
   \until DOXYGEN FUNCTION END
 - <b class="tab-title">C++</b>
-  \dontinclude backend.cpp
+  \dontinclude device.cpp
   \skip QDMI_query_device_property_string_list_dev
   \until DOXYGEN FUNCTION END
 </div>
@@ -84,17 +84,17 @@ Another example is the coupling map which is represented as a list of pairs of i
 <!-- prettier-ignore-start -->
 <div class="tabbed">
 - <b class="tab-title">C</b>
-  \dontinclude backend.c
+  \dontinclude device.c
   \skip QDMI_query_device_property_int_list_dev
   \until DOXYGEN FUNCTION END
 - <b class="tab-title">C++</b>
-  \dontinclude backend.cpp
+  \dontinclude device.cpp
   \skip QDMI_query_device_property_int_list_dev
   \until DOXYGEN FUNCTION END
 </div>
 <!-- prettier-ignore-end -->
 
-### Complex Properties {#backend-complex}
+### Complex Properties {#device-complex}
 
 The properties that are returned by @ref QDMI_query_operation_property_double_dev may depend on the
 actual site. Hence, the implementation of those functions can be more complex. In the following
@@ -103,29 +103,29 @@ example, we demonstrate how varying fidelities of two-qubit gates can be returne
 <!-- prettier-ignore-start -->
 <div class="tabbed">
 - <b class="tab-title">C</b>
-  \dontinclude backend.c
+  \dontinclude device.c
   \skip QDMI_query_operation_property_double_dev
   \until DOXYGEN FUNCTION END
 - <b class="tab-title">C++</b>
-  \dontinclude backend.cpp
+  \dontinclude device.cpp
   \skip pair_hash
   \until DOXYGEN FUNCTION END
 </div>
 <!-- prettier-ignore-end -->
 
-### Submitting a Job {#backend-submit}
+### Submitting a Job {#device-submit}
 
-One crucial part of QDMI is, that it allows to submit a job to the backend for execution. The
+One crucial part of QDMI is, that it allows to submit a job to the device for execution. The
 following example provides a mock implementation of the @ref QDMI_control_submit_qasm_dev function.
 
 <!-- prettier-ignore-start -->
 <div class="tabbed">
 - <b class="tab-title">C</b>
-  \dontinclude backend.c
+  \dontinclude device.c
   \skip QDMI_control_submit_qasm_dev
   \until DOXYGEN FUNCTION END
 - <b class="tab-title">C++</b>
-  \dontinclude backend.cpp
+  \dontinclude device.cpp
   \skip QDMI_control_submit_qasm_dev
   \until DOXYGEN FUNCTION END
 </div>

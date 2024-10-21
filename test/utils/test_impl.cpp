@@ -5,9 +5,9 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
 /** @file
- * @brief This file is for testing whether a backend implements all the required
+ * @brief This file is for testing whether a device implements all the required
  * functions.
- * @details It calls all the functions in the backend interface to ensure that
+ * @details It calls all the functions in the device interface to ensure that
  * they are implemented. During linking, when a function is not implemented this
  * will raise an error. Additionally, when executed, the tests check that no
  * function returns QDMI_ERROR_NOT_IMPLEMENTED.
@@ -23,8 +23,8 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 void QDMIImplementationTest::SetUp() {
   ASSERT_EQ(QDMI_session_alloc(&session), QDMI_SUCCESS)
       << "Failed to allocate session";
-  backend_name = GetParam() + Shared_library_file_extension();
-  ASSERT_EQ(QDMI_session_open_device(session, backend_name.c_str(),
+  device_name = GetParam() + Shared_library_file_extension();
+  ASSERT_EQ(QDMI_session_open_device(session, device_name.c_str(),
                                      QDMI_DEVICE_MODE_READ_WRITE, &device),
             QDMI_SUCCESS)
       << "Failed to open device";
@@ -335,8 +335,8 @@ TEST_P(QDMIImplementationTest, ControlDeviceModeReadOnly) {
   // First close currently open device
   ASSERT_EQ(QDMI_session_close_device(session, device), QDMI_SUCCESS);
   // Then reopen device in read-only mode
-  backend_name = GetParam() + Shared_library_file_extension();
-  ASSERT_EQ(QDMI_session_open_device(session, backend_name.c_str(),
+  device_name = GetParam() + Shared_library_file_extension();
+  ASSERT_EQ(QDMI_session_open_device(session, device_name.c_str(),
                                      QDMI_DEVICE_MODE_READ_ONLY, &device),
             QDMI_SUCCESS)
       << "Failed to open device in read-only mode";

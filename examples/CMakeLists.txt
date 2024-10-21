@@ -7,9 +7,9 @@
 # NOTE: If you change the target name, the name of the shared library will also
 # change. Hence, in the test you have to adapt the name of the shared library
 # accordingly.
-add_library(c_backend SHARED backend.c)
-target_link_libraries(c_backend PRIVATE qdmi::qdmi)
-add_library(qdmi::c_backend ALIAS c_backend)
+add_library(c_device SHARED device.c)
+target_link_libraries(c_device PRIVATE qdmi::qdmi)
+add_library(qdmi::c_device ALIAS c_device)
 
 # add C++ language support
 enable_language(CXX)
@@ -20,9 +20,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # NOTE: If you change the target name, the name of the shared library will also
 # change. Hence, in the test you have to adopt the name of the shared library
 # accordingly.
-add_library(cxx_backend SHARED backend.cpp)
-target_link_libraries(cxx_backend PRIVATE qdmi::qdmi)
-add_library(qdmi::cxx_backend ALIAS cxx_backend)
+add_library(cxx_device SHARED device.cpp)
+target_link_libraries(cxx_device PRIVATE qdmi::qdmi)
+add_library(qdmi::cxx_device ALIAS cxx_device)
 
 add_library(fomac SHARED fomac.cpp fomac.hpp)
 target_link_libraries(fomac PRIVATE qdmi::qdmi)

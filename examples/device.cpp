@@ -5,12 +5,12 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
 /** @file
- * @brief A simple example of a backend implementation in C++.
- * @details This file can be used as a template for implementing a backend in
- * C++. For more implemented functions, see also the \ref backend5.c file.
+ * @brief A simple example of a device implementation in C++.
+ * @details This file can be used as a template for implementing a device in
+ * C++. For more implemented functions, see also the \ref device5.c file.
  */
 
-#include "qdmi/backend.h"
+#include "qdmi/device.h"
 
 #include <cassert>
 #include <cstring>
@@ -44,7 +44,7 @@ QDMI_Device_State device_state;
 int QDMI_query_device_property_string_dev(const QDMI_Device_Property prop,
                                           char **value) {
   if (prop == QDMI_NAME) {
-    const std::string name("Backend with 7 qubits");
+    const std::string name("Device with 7 qubits");
     *value = new char[name.length() + 1];
     strcpy(*value, name.c_str());
     return QDMI_SUCCESS;

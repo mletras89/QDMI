@@ -17,7 +17,7 @@
 
 The Quantum Device Management Interface (QDMI) is the central part of the Munich Quantum Software
 Stack (MQSS)—a sophisticated software stack to connect end users to the wide range of possible
-quantum backends. It enables the submission to and the control of gate-based quantum systems and
+quantum devices. It enables the submission to and the control of gate-based quantum systems and
 enables software tools to automatically retrieve and adapt to changing physical characteristics and
 constraints of different platforms. QDMI strives to connect the software and hardware developers,
 mediating between their competing interests, bridging between technologies, and eventually providing
@@ -63,7 +63,7 @@ the Chairs for _Design Automation (CDA)_, and for _Computer Architecture and Par
 and remote quantum devices, support for modern compilation and optimization techniques, and enables
 both current and future high-level abstractions for quantum programming. This stack is designed to
 be capable of deployment in a variety of scenarios via flexible configuration options, including
-stand-alone scenarios for individual systems, cloud access to a variety of backends as well as tight
+stand-alone scenarios for individual systems, cloud access to a variety of devices as well as tight
 integration into HPC environments supporting quantum acceleration. Within the MQV, a concrete
 instance of the MQSS is deployed at the LRZ for the MQV, serving as a single access point to all of
 its quantum devices via multiple compatible access paths, including a web portal, command line

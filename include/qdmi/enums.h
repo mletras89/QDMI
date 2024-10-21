@@ -5,7 +5,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
 /** @file
- * @brief Define the properties that can be queried from the QDMI backend.
+ * @brief Define the properties that can be queried from the QDMI device.
  */
 
 #pragma once
@@ -41,7 +41,7 @@ enum QDMI_DEVICE_PROPERTY_T {
   QDMI_GATE_SET = 6,
   /**
    * @brief The maximum value of the enum.
-   * @details This value can be used for bounds checks by the backends.
+   * @details This value can be used for bounds checks by the devices.
    * @note This value should always be updated to be the last and maximum value
    * of the enum.
    */
@@ -61,7 +61,7 @@ enum QDMI_DEVICE_STATUS_T {
   QDMI_DEVICE_CALIBRATION = 5, ///< The device is in calibration.
   /**
    * @brief The maximum value of the enum.
-   * @details This value can be used for bounds checks by the backends.
+   * @details This value can be used for bounds checks by the devices.
    * @note This value should always be updated to be the last and maximum value
    * of the enum.
    */
@@ -77,7 +77,7 @@ enum QDMI_SITE_PROPERTY_T {
   QDMI_T2_TIME = 1, ///< `double` The T2 time of a site in µs.
   /**
    * @brief The maximum value of the enum.
-   * @details This value can be used for bounds checks by the backends.
+   * @details This value can be used for bounds checks by the devices.
    * @note This value should always be updated to be the last and maximum value
    * of the enum.
    */
@@ -97,7 +97,7 @@ enum QDMI_OPERATION_PROPERTY_T {
   QDMI_OPERATION_FIDELITY = 2,
   /**
    * @brief The maximum value of the enum.
-   * @details This value can be used for bounds checks by the backends.
+   * @details This value can be used for bounds checks by the devices.
    * @note This value should always be updated to be the last and maximum value
    * of the enum.
    */

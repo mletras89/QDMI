@@ -5,17 +5,17 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
 /** @file
- * @brief Include all public headers for the QDMI backend.
- * @details An implementation of a backend must include this header and
- * implement all entities defined @ref backend/control.h and @ref
- * backend/query.h.
+ * @brief Include all public headers for the QDMI device.
+ * @details An implementation of a device must include this header and
+ * implement all entities defined @ref device/control.h and @ref
+ * device/query.h.
  */
 
 #pragma once
 
-#include "qdmi/backend/control.h" // IWYU pragma: export
-#include "qdmi/backend/query.h"   // IWYU pragma: export
-#include "qdmi/enums.h"           // IWYU pragma: export
+#include "qdmi/device/control.h" // IWYU pragma: export
+#include "qdmi/device/query.h"   // IWYU pragma: export
+#include "qdmi/enums.h"          // IWYU pragma: export
 
 #ifdef __cplusplus
 extern "C" {

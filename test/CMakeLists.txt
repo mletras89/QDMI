@@ -19,19 +19,19 @@ add_subdirectory(utils)
 # ------------------------------------------------------------------------------
 # Non-Functional Tests
 # ------------------------------------------------------------------------------
-# test that a backend implementation implements all functions
+# test that a device implementation implements all functions
 #
 # NOTE: This executable is not meant to be ever executed, only linked.
-add_executable(qdmi_test_c_backend_defs utils/test_defs.cpp)
-target_link_libraries(qdmi_test_c_backend_defs
-                      PRIVATE qdmi::qdmi qdmi::c_backend qdmi::project_warnings)
+add_executable(qdmi_test_c_device_defs utils/test_defs.cpp)
+target_link_libraries(qdmi_test_c_device_defs PRIVATE qdmi::qdmi qdmi::c_device
+                                                      qdmi::project_warnings)
 
-# test that a backend implementation implements all functions NOTE: This
+# test that a device implementation implements all functions NOTE: This
 # executable is not meant to be ever executed, only linked.
-add_executable(qdmi_test_cxx_backend_defs utils/test_defs.cpp)
+add_executable(qdmi_test_cxx_device_defs utils/test_defs.cpp)
 target_link_libraries(
-  qdmi_test_cxx_backend_defs PRIVATE qdmi::qdmi qdmi::cxx_backend
-                                     qdmi::project_warnings)
+  qdmi_test_cxx_device_defs PRIVATE qdmi::qdmi qdmi::cxx_device
+                                    qdmi::project_warnings)
 
 # ------------------------------------------------------------------------------
 # Functional Tests
@@ -52,14 +52,14 @@ gtest_discover_tests(
   PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
              DISCOVERY_TIMEOUT 60)
 
-# ensure c_backend and cxx_backend are built whenever qdmi_test is built. Those
+# ensure c_device and cxx_device are built whenever qdmi_test is built. Those
 # targets build the dynamic libraries that are loaded in the tests.
-add_dependencies(qdmi_test qdmi::c_backend qdmi::cxx_backend)
-# ensure qdmi_test_c_backend_defs and qdmi_test_cxx_backend_defs are built
-# whenever qdmi_test is built. Those targets ensure that the respective backends
+add_dependencies(qdmi_test qdmi::c_device qdmi::cxx_device)
+# ensure qdmi_test_c_device_defs and qdmi_test_cxx_device_defs are built
+# whenever qdmi_test is built. Those targets ensure that the respective devices
 # implement all interface functions.
-add_dependencies(qdmi_test qdmi_test_c_backend_defs qdmi_test_cxx_backend_defs)
-# ensure my_c_backend_test and my_cxx_backend_test are built whenever qdmi_test
-# is built. Those targets ensure that there is no compilation error in the
+add_dependencies(qdmi_test qdmi_test_c_device_defs qdmi_test_cxx_device_defs)
+# ensure my_c_device_test and my_cxx_device_test are built whenever qdmi_test is
+# built. Those targets ensure that there is no compilation error in the
 # templates provided with QDMI and their tests.
-add_dependencies(qdmi_test my_c_backend_test my_cxx_backend_test)
+add_dependencies(qdmi_test my_c_device_test my_cxx_device_test)

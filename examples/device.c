@@ -5,11 +5,11 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
 /** @file
- * @brief A simple example of a backend implementation in C.
- * @details This file can be used as a template for implementing a backend in C.
+ * @brief A simple example of a device implementation in C.
+ * @details This file can be used as a template for implementing a device in C.
  */
 
-#include "qdmi/backend.h"
+#include "qdmi/device.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -32,7 +32,7 @@ typedef struct QDMI_Job_impl_d {
 int QDMI_query_device_property_string_dev(const QDMI_Device_Property prop,
                                           char **value) {
   if (prop == QDMI_NAME) {
-    char *name = "Backend with 5 qubits";
+    char *name = "Device with 5 qubits";
     *value = (char *)malloc(strlen(name) + 1);
     strcpy(*value, name);
     return QDMI_SUCCESS;
@@ -291,7 +291,7 @@ int QDMI_control_submit_qasm_dev(const char *qasm_string, int num_shots,
   (*job)->id = rand();
   (*job)->num_shots = num_shots;
   (*job)->status = QDMI_JOB_STATUS_SUBMITTED;
-  // here, the actual submission of the problem to the backend would happen
+  // here, the actual submission of the problem to the device would happen
   // ...
   // set job status to running for demonstration purposes
   (*job)->status = QDMI_JOB_STATUS_RUNNING;
@@ -310,7 +310,7 @@ int QDMI_control_submit_qir_string_dev(const char *qir_string, int num_shots,
   (*job)->id = rand();
   (*job)->num_shots = num_shots;
   (*job)->status = QDMI_JOB_STATUS_SUBMITTED;
-  // here, the actual submission of the problem to the backend would happen
+  // here, the actual submission of the problem to the device would happen
   // ...
   // set job status to running for demonstration purposes
   (*job)->status = QDMI_JOB_STATUS_RUNNING;
@@ -329,7 +329,7 @@ int QDMI_control_submit_qir_module_dev(const void *qir_module, int num_shots,
   (*job)->id = rand();
   (*job)->num_shots = num_shots;
   (*job)->status = QDMI_JOB_STATUS_SUBMITTED;
-  // here, the actual submission of the problem to the backend would happen
+  // here, the actual submission of the problem to the device would happen
   // ...
   // set job status to running for demonstration purposes
   (*job)->status = QDMI_JOB_STATUS_RUNNING;

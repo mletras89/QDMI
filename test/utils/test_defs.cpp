@@ -5,15 +5,15 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
 /** @file
- * @brief This file is for testing whether a backend implements all the required
+ * @brief This file is for testing whether a device implements all the required
  * functions.
- * @details It calls all the functions in the backend interface to ensure that
+ * @details It calls all the functions in the device interface to ensure that
  * they are implemented. During linking, when a function is not implemented this
  * will raise an error.
  * @note This file is not meant to be ever executed, only linked.
  */
 
-#include "qdmi/backend.h"
+#include "qdmi/device.h"
 
 typedef struct QDMI_Job_impl_d {
 } QDMI_Job_impl_t;

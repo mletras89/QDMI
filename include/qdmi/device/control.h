@@ -5,10 +5,10 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
 /** @file
- * @brief The control interface implemented by a QDMI backend.
+ * @brief The control interface implemented by a QDMI device.
  * @see qdmi/interface/control.h for the API interface.
  * @details
- * Backend implementations are expected to provide **at least one** of the
+ * Device implementations are expected to provide **at least one** of the
  * submission functions
  * - @ref QDMI_control_submit_qir_module_dev (preferred)
  * - @ref QDMI_control_submit_qir_string_dev

@@ -12,10 +12,10 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <string>
 
 // Instantiate the test suite with different parameters
-INSTANTIATE_TEST_SUITE_P(QDMIMyCBackend,         // Custom instantiation name
+INSTANTIATE_TEST_SUITE_P(QDMIMyCDevice,          // Custom instantiation name
                          QDMIImplementationTest, // Test suite name
                          // Parameters to test with
-                         ::testing::Values("../examples/libmy_backend"),
+                         ::testing::Values("../examples/libmy_device"),
                          [](const testing::TestParamInfo<std::string> &inf) {
                            // Extract the last part of the file path
                            const size_t pos = inf.param.find_last_of("/\\");
@@ -45,19 +45,19 @@ protected:
 
   QDMI_Session session = nullptr;
   QDMI_Device device = nullptr;
-  const std::string my_backend_name =
-      std::string("./libmy_backend") + Shared_library_file_extension();
+  const std::string my_device_name =
+      std::string("./libmy_device") + Shared_library_file_extension();
 };
 
 TEST_F(QDMITest, OpenDevice) {
-  ASSERT_EQ(QDMI_session_open_device(session, my_backend_name.c_str(),
+  ASSERT_EQ(QDMI_session_open_device(session, my_device_name.c_str(),
                                      QDMI_DEVICE_MODE_READ_WRITE, &device),
             QDMI_SUCCESS)
       << "Failed to open device";
 }
 
 TEST_F(QDMITest, QueryNumQubits) {
-  QDMI_session_open_device(session, my_backend_name.c_str(),
+  QDMI_session_open_device(session, my_device_name.c_str(),
                            QDMI_DEVICE_MODE_READ_WRITE, &device);
   int num_qubits = 0;
   ASSERT_EQ(
