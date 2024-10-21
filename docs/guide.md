@@ -169,9 +169,9 @@ of the file. Right now, this is done for all files in the include directory.
 \verbatim
 
 /** @file
- * @brief Include all public headers for the QDMI interface.
- * @details The detailed description of the interface is provided in the
- * @ref interface/control.h and @ref interface/query.h.
+ * @brief Include all public headers for the QDMI client.
+ * @details The detailed description of the interface is provided in
+ * @ref client/control.h and @ref client/query.h.
  */
 
 \endverbatim

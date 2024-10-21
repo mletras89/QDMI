@@ -10,7 +10,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #pragma once
 
-#include "qdmi/interface/query.h"
+#include "qdmi/client/query.h"
 
 #ifdef __cplusplus
 extern "C" {

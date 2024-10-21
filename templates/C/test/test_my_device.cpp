@@ -4,7 +4,7 @@ See https://llvm.org/LICENSE.txt for license information.
 SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
-#include "qdmi/interface.h"
+#include "qdmi/client.h"
 #include "test_impl.hpp"
 
 #include <cstddef>

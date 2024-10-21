@@ -4,18 +4,9 @@ See https://llvm.org/LICENSE.txt for license information.
 SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
-/** @file
- * @brief This file is for testing whether a device implements all the required
- * functions.
- * @details It calls all the functions in the device interface to ensure that
- * they are implemented. During linking, when a function is not implemented this
- * will raise an error. Additionally, when executed, the tests check that no
- * function returns QDMI_ERROR_NOT_IMPLEMENTED.
- */
-
 #include "test_impl.hpp"
 
-#include "qdmi/interface.h"
+#include "qdmi/client.h"
 
 #include <gtest/gtest.h>
 #include <string>

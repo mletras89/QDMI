@@ -5,7 +5,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
 #include "fomac.hpp"
-#include "qdmi/interface.h"
+#include "qdmi/client.h"
 #include "test_impl.hpp"
 #include "tool.hpp"
 

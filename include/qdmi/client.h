@@ -5,17 +5,17 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
 /** @file
- * @brief Include all public headers for the QDMI interface.
- * @details The detailed description of the interface is provided in the @ref
- * interface/control.h and @ref interface/query.h.
+ * @brief Include all public headers for the QDMI client.
+ * @details The detailed description of the interface is provided in @ref
+ * client/control.h and @ref client/query.h.
  */
 
 #pragma once
 
-#include "qdmi/enums.h"             // IWYU pragma: export
-#include "qdmi/interface/control.h" // IWYU pragma: export
-#include "qdmi/interface/query.h"   // IWYU pragma: export
-#include "qdmi/interface/session.h" // IWYU pragma: export
+#include "qdmi/client/control.h" // IWYU pragma: export
+#include "qdmi/client/query.h"   // IWYU pragma: export
+#include "qdmi/client/session.h" // IWYU pragma: export
+#include "qdmi/enums.h"          // IWYU pragma: export
 
 #ifdef __cplusplus
 extern "C" {

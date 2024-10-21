@@ -11,7 +11,7 @@ project(
   qdmi
   LANGUAGES C
   VERSION 0.2.0
-  DESCRIPTION "QDMI Interface")
+  DESCRIPTION "QDMI –– Quantum Device Management Interface")
 
 # make scripts available to cmake
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")

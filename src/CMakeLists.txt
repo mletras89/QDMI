@@ -22,7 +22,7 @@ endif()
 
 if(NOT TARGET project_warnings)
   # Use the warnings specified in CompilerWarnings.cmake
-  add_library(project_warnings INTERFACE)
+  add_library(project_warnings client)
 
   # Standard compiler warnings
   include(${PROJECT_SOURCE_DIR}/cmake/CompilerWarnings.cmake)
@@ -36,11 +36,11 @@ if(NOT TARGET qdmi)
   # collect all private source files
   file(GLOB_RECURSE QDMI_PRIVATE_SOURCES CONFIGURE_DEPENDS private/*.c)
 
-  # collect all interface source files
-  file(GLOB_RECURSE QDMI_INTERFACE_SOURCES CONFIGURE_DEPENDS interface/*.c)
+  # collect all client source files
+  file(GLOB_RECURSE QDMI_CLIENT_SOURCES CONFIGURE_DEPENDS client/*.c)
 
   # add main library code
-  add_library(qdmi SHARED ${QDMI_PRIVATE_SOURCES} ${QDMI_INTERFACE_SOURCES})
+  add_library(qdmi SHARED ${QDMI_PRIVATE_SOURCES} ${QDMI_CLIENT_SOURCES})
 
   # set include directories
   target_include_directories(
