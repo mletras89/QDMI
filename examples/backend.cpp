@@ -21,6 +21,9 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <utility>
 #include <vector>
 
+// todo: adopt the query functions to the updated docu of return codes, esp.,
+//  distinguish the case whether the input is invalid or not supported
+
 struct QDMI_Job_impl_d {
   int id = 0;
   QDMI_Job_Status status = QDMI_JOB_STATUS_SUBMITTED;
