@@ -149,6 +149,7 @@ enum QDMI_STATUS {
   QDMI_ERROR_OUT_OF_RANGE = -6,      ///< Out of range.
   QDMI_ERROR_INVALID_ARGUMENT = -7,  ///< Invalid argument.
   QDMI_ERROR_PERMISSION_DENIED = -8, ///< Permission denied.
+  QDMI_ERROR_NOT_SUPPORTED = -9,     ///< Operation is not supported.
 };
 
 #ifdef __cplusplus
