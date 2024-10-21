@@ -13,7 +13,6 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <cstdlib>
 #include <gtest/gtest.h>
 #include <string>
-#include <utility>
 #include <vector>
 
 // Instantiate the test suite with different parameters
@@ -21,7 +20,8 @@ INSTANTIATE_TEST_SUITE_P(
     QDMIDevice,             // Custom instantiation name
     QDMIImplementationTest, // Test suite name
     // Parameters to test with
-    ::testing::Values("../examples/libc_device", "../examples/libcxx_device"),
+    ::testing::Values("../examples/device/c/libc_device",
+                      "../examples/device/cxx/libcxx_device"),
     [](const testing::TestParamInfo<std::string> &inf) {
       // Extract the last part of the file path
       const size_t pos = inf.param.find_last_of("/\\");

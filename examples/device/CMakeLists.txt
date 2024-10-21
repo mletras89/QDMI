@@ -4,6 +4,5 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # ------------------------------------------------------------------------------
 
-add_subdirectory(device)
-add_subdirectory(fomac)
-add_subdirectory(tool)
+add_subdirectory(c)
+add_subdirectory(cxx)
