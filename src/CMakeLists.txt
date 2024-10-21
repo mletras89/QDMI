@@ -22,7 +22,7 @@ endif()
 
 if(NOT TARGET project_warnings)
   # Use the warnings specified in CompilerWarnings.cmake
-  add_library(project_warnings client)
+  add_library(project_warnings INTERFACE)
 
   # Standard compiler warnings
   include(${PROJECT_SOURCE_DIR}/cmake/CompilerWarnings.cmake)
