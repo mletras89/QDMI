@@ -33,13 +33,6 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //  for the output parameters is allocated by the implementations of the methods
 //  and the caller is responsible for freeing the memory.
 
-// todo: we should probably add the possible return values, i.e., error codes to
-//  the documentation of the functions. Otherwise, consumers don't know what to
-//  check for and impplementations don't know what to return.
-
-// todo: the submission functions should probably state that it is up to the
-//  backend implementation whether the submission is blocking or non-blocking.
-
 #pragma once
 
 #include "qdmi/enums.h"
@@ -71,72 +64,103 @@ typedef struct QDMI_Job_impl_d *QDMI_Job;
  * @details Create a job consisting of a circuit represented by a QASM string
  * and submit it to the device. The returned job handle helps to track the job
  * status.
- * @param dev The device to submit the job to.
- * @param qasm_string The QASM string to submit.
- * @param num_shots The number of shots to take.
- * @param job The job to submit.
- * @return @ref QDMI_SUCCESS if the job was successfully submitted,
- * otherwise an error code.
+ * @note This function can either be blocking until the job is finished or
+ * non-blocking and return immediately. In the latter case, there are the
+ * functions @ref QDMI_control_check_dev and @ref QDMI_control_wait_dev to check
+ * the status and wait for the job to finish.
+ * @param[in] dev The device to submit the job to.
+ * @param[in] qasm_string The QASM string to submit.
+ * @param[in] num_shots The number of shots to take.
+ * @param[out] job The job to submit.
+ * @return @ref QDMI_SUCCESS if the job was successfully submitted
+ * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the QASM string is invalid
+ * @return @ref QDMI_ERROR_NOT_SUPPORTED if the device does not support QASM
+ * @return @ref QDMI_ERROR_FATAL if the job submission failed
  */
 int QDMI_control_submit_qasm(QDMI_Device dev, const char *qasm_string,
                              int num_shots, QDMI_Job *job);
 
 /**
  * @brief Submit a QIR string to the device.
- * @details Create a job consisting of a circuit represented by a QIR string and
- * submit it to the device. The returned job handle helps to track the job
+ * @details Create a job consisting of a circuit represented by a QIR string
+ * and submit it to the device. The returned job handle helps to track the job
  * status.
- * @param dev The device to submit the job to.
- * @param qir_string The QIR string to submit.
- * @param num_shots The number of shots to take.
- * @param job The job to submit.
- * @return @ref QDMI_SUCCESS if the job was successfully submitted,
- * otherwise an error code.
+ * @note This function can either be blocking until the job is finished or
+ * non-blocking and return immediately. In the latter case, there are the
+ * functions @ref QDMI_control_check_dev and @ref QDMI_control_wait_dev to check
+ * the status and wait for the job to finish.
+ * @param[in] dev The device to submit the job to.
+ * @param[in] qir_string The QIR string to submit.
+ * @param[in] num_shots The number of shots to take.
+ * @param[out] job The job to submit.
+ * @return @ref QDMI_SUCCESS if the job was successfully submitted
+ * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the QIR string is invalid
+ * @return @ref QDMI_ERROR_NOT_SUPPORTED if the device does not support QIR as
+ * string
+ * @return @ref QDMI_ERROR_FATAL if the job submission failed
  */
 int QDMI_control_submit_qir_string(QDMI_Device dev, const char *qir_string,
                                    int num_shots, QDMI_Job *job);
 
 /**
  * @brief Submit a QIR module to the device.
- * @details Create a job consisting of a circuit represented by an in-memory
- * LLVM module containing QIR and submit it to the device. The returned job
- * handle helps to track the job status.
- * @param dev The device to submit the job to.
- * @param qir_module The module to submit.
- * @param num_shots The number of shots to take.
- * @param job The job to submit.
- * @return @ref QDMI_SUCCESS if the job was successfully submitted,
- * otherwise an error code.
+ * @details Create a job consisting of a circuit represented by a QIR module
+ * and submit it to the device. The returned job handle helps to track the job
+ * status.
+ * @note This function can either be blocking until the job is finished or
+ * non-blocking and return immediately. In the latter case, there are the
+ * functions @ref QDMI_control_check_dev and @ref QDMI_control_wait_dev to check
+ * the status and wait for the job to finish.
+ * @param[in] dev The device to submit the job to.
+ * @param[in] qir_module The QIR string to submit.
+ * @param[in] num_shots The number of shots to take.
+ * @param[out] job The job to submit.
+ * @return @ref QDMI_SUCCESS if the job was successfully submitted
+ * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the QIR module is invalid
+ * @return @ref QDMI_ERROR_NOT_SUPPORTED if the device does not support QIR as
+ * module
+ * @return @ref QDMI_ERROR_FATAL if the job submission failed
  */
 int QDMI_control_submit_qir_module(QDMI_Device dev, const void *qir_module,
                                    int num_shots, QDMI_Job *job);
 
 /**
  * @brief Cancel an already submitted job.
- * @details Remove the job from the queue of waiting jobs.
- * @param dev The device to cancel the job on.
- * @param job The job to cancel.
- * @return @ref QDMI_SUCCESS if the job was successfully cancelled,
- * otherwise an error code.
+ * @details Remove the job from the queue of waiting jobs. This changes the
+ * status of the job to @ref QDMI_JOB_STATUS_CANCELLED.
+ * @param[in] dev The device to cancel the job on.
+ * @param[in] job The job to cancel.
+ * @return @ref QDMI_SUCCESS if the job was successfully cancelled.
+ * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the job has already the status
+ * QDMI_JOB_STATUS_DONE or the job does not exist.
+ * @return @ref QDMI_ERROR_FATAL if the job could not be cancelled.
  */
 int QDMI_control_cancel(QDMI_Device dev, QDMI_Job job);
 
 /**
  * @brief Check the status of a job.
- * @param dev The device to check the job status on.
- * @param job The job to check the status of.
- * @param status The status of the job.
- * @return @ref QDMI_SUCCESS if the job status was successfully checked,
- * otherwise an error code.
+ * @note This function is non-blocking and returns immediately with the job
+ * status.
+ * @note It is *not* necessary to call this function before calling
+ * @ref QDMI_control_get_hist_dev or @ref QDMI_control_get_raw_dev.
+ * @param[in] dev The device to check the status on.
+ * @param[in] job The job to check the status of.
+ * @param[out] status The status of the job.
+ * @return @ref QDMI_SUCCESS if the job status was successfully checked.
+ * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the job does not exist.
  */
 int QDMI_control_check(QDMI_Device dev, QDMI_Job job, QDMI_Job_Status *status);
 
 /**
  * @brief Wait for a job to finish.
- * @param dev The device to wait for the job on.
- * @param job The job to wait for.
- * @return @ref QDMI_SUCCESS if the job is finished, otherwise an error
- * code when the waiting failed.
+ * @details This function blocks until the job has either finished or has been
+ * cancelled.
+ * @param[in] dev The device to wait on.
+ * @param[in] job The job to wait for.
+ * @return @ref QDMI_SUCCESS if the job is finished or cancelled.
+ * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the job does not exist.
+ * @return @ref QDMI_ERROR_FATAL if the job could not be waited for and this
+ * function returns before the job has finished or has been cancelled.
  */
 int QDMI_control_wait(QDMI_Device dev, QDMI_Job job);
 
@@ -155,15 +179,17 @@ int QDMI_control_wait(QDMI_Device dev, QDMI_Job job);
  * can be retrieved from the second list at the same index. The keys are the
  * respective measurement outcomes and the values are the number of times the
  * outcome was measured. Pairs for which the value is 0 are not included.
- * For the format of the keys, see also \ref QDMI_control_get_raw.
- * @param dev The device to retrieve the results from.
- * @param job The job to retrieve the results from.
- * @param data The list of keys.
- * @param counts The list of values.
- * @param size The size, i.e., the number of elements of each list.
- * @return @ref QDMI_SUCCESS if the results were successfully retrieved,
- * otherwise an error code.
- * @see QDMI_control_get_raw
+ * For the format of the keys, see also \ref QDMI_control_get_raw_dev.
+ * @param[in] dev The device to retrieve the results from.
+ * @param[in] job The job to retrieve the results from.
+ * @param[out] data The list of keys.
+ * @param[out] counts The list of values.
+ * @param[out] size The size, i.e., the number of elements of each list.
+ * @return @ref QDMI_SUCCESS if the results were successfully retrieved.
+ * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the job has not finished yet, was
+ * cancelled, or does not exist.
+ * @return @ref QDMI_ERROR_FATAL if an error occurred during the retrieval.
+ * @see QDMI_control_get_raw_dev
  */
 int QDMI_control_get_hist(QDMI_Device dev, QDMI_Job job, char ***data,
                           int **counts, int *size);
@@ -176,12 +202,15 @@ int QDMI_control_get_hist(QDMI_Device dev, QDMI_Job job, char ***data,
  * represents the outcome of the first qubit, the second character the outcome
  * of the second qubit, and so on. The strings are in little-endian order, i.e.,
  * the first character represents the least significant bit.
- * @param dev The device to retrieve the results from.
- * @param job The job to retrieve the results from.
- * @param data The list of raw measurement outcomes.
- * @param size The size, i.e., the number of elements of the list.
- * @return @ref QDMI_SUCCESS if the results were successfully retrieved,
- * otherwise an error code.
+ * @param[in] dev The device to retrieve the results from.
+ * @param[in] job The job to retrieve the results from.
+ * @param[out] data The list of raw measurement outcomes.
+ * @param[out] size The size, i.e., the number of elements of the list.
+ * @return @ref QDMI_SUCCESS if the results were successfully retrieved.
+ * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the job has not finished yet, was
+ * cancelled, or does not exist.
+ * @return @ref QDMI_ERROR_FATAL if an error occurred during the retrieval.
+ * @see QDMI_control_get_raw_dev
  */
 int QDMI_control_get_raw(QDMI_Device dev, QDMI_Job job, char ***data,
                          int *size);
@@ -189,8 +218,8 @@ int QDMI_control_get_raw(QDMI_Device dev, QDMI_Job job, char ***data,
 /**
  * @brief Free a job.
  * @details Free the resources associated with a job.
- * @param dev The device the job was submitted to.
- * @param job The job to free.
+ * @param[in] dev The device to free the job on.
+ * @param[in] job The job to free.
  */
 void QDMI_control_free_job(QDMI_Device dev, QDMI_Job job);
 
