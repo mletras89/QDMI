@@ -21,11 +21,12 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <string>
 
 void QDMIImplementationTest::SetUp() {
-  ASSERT_TRUE(QDMI_is_Success(QDMI_session_alloc(&session)))
+  ASSERT_EQ(QDMI_session_alloc(&session), QDMI_SUCCESS)
       << "Failed to allocate session";
   backend_name = GetParam() + Shared_library_file_extension();
-  ASSERT_TRUE(QDMI_is_Success(QDMI_session_open_device(
-      session, backend_name.c_str(), QDMI_DEVICE_MODE_READ_WRITE, &device)))
+  ASSERT_EQ(QDMI_session_open_device(session, backend_name.c_str(),
+                                     QDMI_DEVICE_MODE_READ_WRITE, &device),
+            QDMI_SUCCESS)
       << "Failed to open device";
 }
 
@@ -306,35 +307,38 @@ TEST_P(QDMIImplementationTest, ControlGetRawImplemented) {
 
 TEST_P(QDMIImplementationTest, QueryDeviceNameImplemented) {
   char *name = nullptr;
-  ASSERT_TRUE(QDMI_is_Success(
-      QDMI_query_device_property_string(device, QDMI_NAME, &name)));
+  ASSERT_EQ(QDMI_query_device_property_string(device, QDMI_NAME, &name),
+            QDMI_SUCCESS);
   ASSERT_NE(name, nullptr) << "Devices must provide a name";
   free(name);
 }
 
 TEST_P(QDMIImplementationTest, QueryDeviceVersionImplemented) {
   char *version = nullptr;
-  ASSERT_TRUE(QDMI_is_Success(QDMI_query_device_property_string(
-      device, QDMI_DEVICE_VERSION, &version)));
+  ASSERT_EQ(
+      QDMI_query_device_property_string(device, QDMI_DEVICE_VERSION, &version),
+      QDMI_SUCCESS);
   ASSERT_NE(version, nullptr) << "Devices must provide a version";
   free(version);
 }
 
 TEST_P(QDMIImplementationTest, QueryDeviceLibraryVersionImplemented) {
   char *version = nullptr;
-  ASSERT_TRUE(QDMI_is_Success(QDMI_query_device_property_string(
-      device, QDMI_LIBRARY_VERSION, &version)));
+  ASSERT_EQ(
+      QDMI_query_device_property_string(device, QDMI_LIBRARY_VERSION, &version),
+      QDMI_SUCCESS);
   ASSERT_NE(version, nullptr) << "Devices must provide a QDMI library version";
   free(version);
 }
 
 TEST_P(QDMIImplementationTest, ControlDeviceModeReadOnly) {
   // First close currently open device
-  ASSERT_TRUE(QDMI_is_Success(QDMI_session_close_device(session, device)));
+  ASSERT_EQ(QDMI_session_close_device(session, device), QDMI_SUCCESS);
   // Then reopen device in read-only mode
   backend_name = GetParam() + Shared_library_file_extension();
-  ASSERT_TRUE(QDMI_is_Success(QDMI_session_open_device(
-      session, backend_name.c_str(), QDMI_DEVICE_MODE_READ_ONLY, &device)))
+  ASSERT_EQ(QDMI_session_open_device(session, backend_name.c_str(),
+                                     QDMI_DEVICE_MODE_READ_ONLY, &device),
+            QDMI_SUCCESS)
       << "Failed to open device in read-only mode";
   QDMI_Job job;
   ASSERT_EQ(

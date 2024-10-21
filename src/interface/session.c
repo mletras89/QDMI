@@ -8,8 +8,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include "_device.h"
 #include "_types.h"
-#include "qdmi/properties.h"
-#include "qdmi/return_codes.h"
+#include "qdmi/enums.h"
 
 #include <stdlib.h>
 
@@ -40,7 +39,7 @@ int QDMI_session_open_device(QDMI_Session session, const char *lib_name,
                              QDMI_Device_Mode mode, QDMI_Device *device) {
   // open device
   const int err = QDMI_device_open(lib_name, mode, device);
-  if (!QDMI_is_Success(err)) {
+  if (err != QDMI_SUCCESS) {
     return err;
   }
   // add device to session

@@ -37,7 +37,7 @@ INSTANTIATE_TEST_SUITE_P(QDMIMyCBackend,         // Custom instantiation name
 class QDMITest : public ::testing::Test {
 protected:
   void SetUp() override {
-    ASSERT_TRUE(QDMI_is_Success(QDMI_session_alloc(&session)))
+    ASSERT_EQ(QDMI_session_alloc(&session), QDMI_SUCCESS)
         << "Failed to allocate session";
   }
 
@@ -50,8 +50,9 @@ protected:
 };
 
 TEST_F(QDMITest, OpenDevice) {
-  ASSERT_TRUE(QDMI_is_Success(QDMI_session_open_device(
-      session, my_backend_name.c_str(), QDMI_DEVICE_MODE_READ_WRITE, &device)))
+  ASSERT_EQ(QDMI_session_open_device(session, my_backend_name.c_str(),
+                                     QDMI_DEVICE_MODE_READ_WRITE, &device),
+            QDMI_SUCCESS)
       << "Failed to open device";
 }
 
@@ -59,8 +60,9 @@ TEST_F(QDMITest, QueryNumQubits) {
   QDMI_session_open_device(session, my_backend_name.c_str(),
                            QDMI_DEVICE_MODE_READ_WRITE, &device);
   int num_qubits = 0;
-  ASSERT_TRUE(QDMI_is_Success(
-      QDMI_query_device_property_int(device, QDMI_NUM_QUBITS, &num_qubits)))
+  ASSERT_EQ(
+      QDMI_query_device_property_int(device, QDMI_NUM_QUBITS, &num_qubits),
+      QDMI_SUCCESS)
       << "Failed to query number of qubits";
   ASSERT_EQ(num_qubits, 5); // <-- TODO Insert the correct number of qubits here
 }

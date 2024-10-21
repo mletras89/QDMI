@@ -17,8 +17,6 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  * For all of these, the remaining two can be implemented via simple
  * conversions.
  */
-// todo: it would be nice to show an example of this in the documentation
-
 // todo: add a note to all the functions that allocate memory that the
 //  implementations of the methods are expected to allocate memory for the
 //  output parameters and the caller is responsible for freeing the memory
@@ -32,7 +30,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #pragma once
 
-#include "qdmi/properties.h"
+#include "qdmi/enums.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -61,6 +59,7 @@ typedef struct QDMI_Job_impl_d *QDMI_Job;
  * @return @ref QDMI_SUCCESS if the job was successfully submitted,
  * otherwise an error code.
  */
+// todo blocking non blocking
 int QDMI_control_submit_qasm_dev(const char *qasm_string, int num_shots,
                                  QDMI_Job *job);
 

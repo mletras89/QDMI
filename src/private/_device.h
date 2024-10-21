@@ -13,7 +13,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #pragma once
 
 #include "_types.h"
-#include "qdmi/properties.h"
+#include "qdmi/enums.h"
 
 #ifdef __cplusplus
 extern "C" {

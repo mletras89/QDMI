@@ -5,9 +5,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
 #include "_types.h"
-#include "qdmi/properties.h"
-
-#include <qdmi/return_codes.h>
+#include "qdmi/enums.h"
 
 int QDMI_control_submit_qasm(QDMI_Device dev, const char *qasm_string,
                              int num_shots, QDMI_Job *job) {

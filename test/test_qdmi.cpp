@@ -37,11 +37,6 @@ INSTANTIATE_TEST_SUITE_P(
       return filename;
     });
 
-// todo: would it make sense to enforce some of these tests in the
-//  `test_impl.hpp` file? These are very general and I think it boils down to
-//  whether we want to enforce that all implementations provide certain
-//  functionality or not.
-
 TEST_P(QDMIImplementationTest, QueryNumQubits) {
   const auto fomac = FoMaC(device);
   ASSERT_GT(fomac.query_num_qubits(), 0);
@@ -81,26 +76,30 @@ TEST_P(QDMIImplementationTest, QueryGatePropertiesForEachGate) {
     if (gate_num_qubits == 1) {
       for (int i = 0; i < num_qubits; i++) {
         auto sites = std::array{i};
-        EXPECT_TRUE(QDMI_is_Success(QDMI_query_operation_property_double(
-            device, gate.c_str(), sites.data(), 1, QDMI_OPERATION_DURATION,
-            &duration)))
+        EXPECT_EQ(QDMI_query_operation_property_double(
+                      device, gate.c_str(), sites.data(), 1,
+                      QDMI_OPERATION_DURATION, &duration),
+                  QDMI_SUCCESS)
             << "Failed to query duration for gate " << gate;
-        EXPECT_TRUE(QDMI_is_Success(QDMI_query_operation_property_double(
-            device, gate.c_str(), sites.data(), 1, QDMI_OPERATION_FIDELITY,
-            &fidelity)))
+        EXPECT_EQ(QDMI_query_operation_property_double(
+                      device, gate.c_str(), sites.data(), 1,
+                      QDMI_OPERATION_FIDELITY, &fidelity),
+                  QDMI_SUCCESS)
             << "Failed to query fidelity for gate " << gate;
       }
     }
     if (gate_num_qubits == 2) {
       for (const auto &[control, target] : coupling_map) {
         auto sites = std::array{control, target};
-        EXPECT_TRUE(QDMI_is_Success(QDMI_query_operation_property_double(
-            device, gate.c_str(), sites.data(), 2, QDMI_OPERATION_DURATION,
-            &duration)))
+        EXPECT_EQ(QDMI_query_operation_property_double(
+                      device, gate.c_str(), sites.data(), 2,
+                      QDMI_OPERATION_DURATION, &duration),
+                  QDMI_SUCCESS)
             << "Failed to query duration for gate " << gate;
-        EXPECT_TRUE(QDMI_is_Success(QDMI_query_operation_property_double(
-            device, gate.c_str(), sites.data(), 2, QDMI_OPERATION_FIDELITY,
-            &fidelity)))
+        EXPECT_EQ(QDMI_query_operation_property_double(
+                      device, gate.c_str(), sites.data(), 2,
+                      QDMI_OPERATION_FIDELITY, &fidelity),
+                  QDMI_SUCCESS)
             << "Failed to query fidelity for gate " << gate;
       }
     }

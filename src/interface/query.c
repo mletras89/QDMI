@@ -5,7 +5,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
 #include "_types.h"
-#include "qdmi/properties.h"
+#include "qdmi/enums.h"
 
 int QDMI_query_device_property_string(const QDMI_Device device,
                                       const QDMI_Device_Property prop,

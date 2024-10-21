@@ -22,9 +22,7 @@ enum QDMI_DEVICE_PROPERTY_T {
       2,               /**< `char*` (string) The implemented version of QDMI. */
   QDMI_NUM_QUBITS = 3, /**< `int` The number of qubits in the device. */
   QDMI_DEVICE_STATUS =
-      4,                /**< `int` The @ref QDMI_Device_Status of the device. */
-  QDMI_AVG_T1_TIME = 5, /**< `double` The average T1 time of a qubit in µs. */
-  QDMI_AVG_T2_TIME = 6, /**< `double` The average T2 time of a qubit in µs. */
+      4, /**< `int` The @ref QDMI_Device_Status of the device. */
   /**
    * @brief `int*` (int list) The coupling map of the device.
    * @details The returned list contains pairs of qubits that are coupled. The
@@ -34,21 +32,21 @@ enum QDMI_DEVICE_PROPERTY_T {
    * 3-qubit device with a coupling map of (0, 1), (1, 2) would return
    * `{0, 1, 1, 2}`.
    */
-  QDMI_COUPLING_MAP = 7,
+  QDMI_COUPLING_MAP = 5,
   /**
    * @brief `char**` (string list) The set of gates supported by
    * the device.
    * @details The returned list contains the names of the gates supported by the
    * device.
    */
-  QDMI_GATE_SET = 8,
+  QDMI_GATE_SET = 6,
   /**
    * @brief The maximum value of the enum.
    * @details This value can be used for bounds checks by the backends.
    * @note This value should always be updated to be the last and maximum value
    * of the enum.
    */
-  QDMI_DEVICE_PROPERTY_MAX = 9
+  QDMI_DEVICE_PROPERTY_MAX = 7
 };
 
 /// Type of the device properties.
@@ -129,9 +127,6 @@ enum QDMI_JOB_STATUS_T {
 /// Type of the device status.
 typedef enum QDMI_JOB_STATUS_T QDMI_Job_Status;
 
-// TODO: By now, I do not know whether the name `properties.h` for the file is
-// fitting anymore. It might be better to rename it to `enums.h` or `types.h` or
-// something similar. Then, one could also include the return_codes directly.
 /**
  * @brief Enum of the device properties that can be queried.
  * @note The values of this enum are meant to be used as bitflags. Hence, their
@@ -146,6 +141,22 @@ enum QDMI_DEVICE_MODE_T {
 
 /// Type of the device mode used in opening a device.
 typedef enum QDMI_DEVICE_MODE_T QDMI_Device_Mode;
+
+/**
+ * @brief Status codes returned by the API.
+ */
+enum QDMI_STATUS {
+  QDMI_WARN_GENERAL = 1,             /**< A general warning. */
+  QDMI_SUCCESS = 0,                  /**< The operation was successful. */
+  QDMI_ERROR_FATAL = -1,             /**< A fatal error. */
+  QDMI_ERROR_OUT_OF_MEM = -2,        /**< Out of memory. */
+  QDMI_ERROR_NOT_IMPLEMENTED = -3,   /**< Not implemented. */
+  QDMI_ERROR_LIB_NOT_FOUND = -4,     /**< Library not found. */
+  QDMI_ERROR_NOT_FOUND = -5,         /**< Element not found. */
+  QDMI_ERROR_OUT_OF_RANGE = -6,      /**< Out of range. */
+  QDMI_ERROR_INVALID_ARGUMENT = -7,  /**< Invalid argument. */
+  QDMI_ERROR_PERMISSION_DENIED = -8, /**< Permission denied. */
+};
 
 #ifdef __cplusplus
 } // extern "C"

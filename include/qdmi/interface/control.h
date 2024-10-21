@@ -28,7 +28,6 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  * of the submission functions, the above procedure should always succeed.
  * @see qdmi/backend/control.h for the backend interface.
  */
-// todo: it would be nice to show an example of this in the documentation
 
 // todo: add a note to all the functions that allocate memory that the memory
 //  for the output parameters is allocated by the implementations of the methods
@@ -43,7 +42,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #pragma once
 
-#include "qdmi/properties.h"
+#include "qdmi/enums.h"
 
 #ifdef __cplusplus
 extern "C" {

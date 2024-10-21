@@ -51,14 +51,6 @@ int QDMI_query_device_property_string_dev(const QDMI_Device_Property prop,
 
 int QDMI_query_device_property_double_dev(const QDMI_Device_Property prop,
                                           double *value) {
-  if (prop == QDMI_AVG_T1_TIME) {
-    *value = 1000.0;
-    return QDMI_SUCCESS;
-  }
-  if (prop == QDMI_AVG_T2_TIME) {
-    *value = 100000.0;
-    return QDMI_SUCCESS;
-  }
   return QDMI_ERROR_INVALID_ARGUMENT;
 } /// [DOXYGEN FUNCTION END]
 

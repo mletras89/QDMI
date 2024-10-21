@@ -7,8 +7,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include "_device.h"
 
 #include "_types.h"
-#include "qdmi/properties.h"
-#include "qdmi/return_codes.h"
+#include "qdmi/enums.h"
 
 #include <dlfcn.h>
 #include <stdlib.h>
