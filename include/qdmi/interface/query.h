@@ -34,6 +34,7 @@ typedef struct QDMI_Device_impl_d *QDMI_Device;
 
 /**
  * @brief Query a device property of type string (char *).
+ * @param[in] device The device to query.
  * @param[in] prop The property to query.
  * @param[out] value The value of the property.
  * @return @ref QDMI_SUCCESS if the property was queried successfully.
@@ -48,6 +49,7 @@ int QDMI_query_device_property_string(QDMI_Device device,
 
 /**
  * @brief Query a device property of type double.
+ * @param[in] device The device to query.
  * @param[in] prop The property to query.
  * @param[out] value The value of the property.
  * @return @ref QDMI_SUCCESS if the property was queried successfully.
@@ -62,6 +64,7 @@ int QDMI_query_device_property_double(QDMI_Device device,
 
 /**
  * @brief Query a device property of type int.
+ * @param[in] device The device to query.
  * @param[in] prop The property to query.
  * @param[out] value The value of the property.
  * @return @ref QDMI_SUCCESS if the property was queried successfully.
@@ -76,6 +79,7 @@ int QDMI_query_device_property_int(QDMI_Device device,
 
 /**
  * @brief Query a device property of type string (char *) list.
+ * @param[in] device The device to query.
  * @param[in] prop The property to query.
  * @param[out] values The values of the list.
  * @param[out] size The size of the list.
@@ -92,6 +96,7 @@ int QDMI_query_device_property_string_list(QDMI_Device device,
 
 /**
  * @brief Query a device property of type double list.
+ * @param[in] device The device to query.
  * @param[in] prop The property to query.
  * @param[out] values The values of the list.
  * @param[out] size The size of the list.
@@ -108,6 +113,7 @@ int QDMI_query_device_property_double_list(QDMI_Device device,
 
 /**
  * @brief Query a device property of type int list.
+ * @param[in] device The device to query.
  * @param[in] prop The property to query.
  * @param[out] values The values of the list.
  * @param[out] size The size of the list.
@@ -144,6 +150,7 @@ int QDMI_query_device_property_int_list(QDMI_Device device,
 
 /**
  * @brief Query a site property of type string (char *).
+ * @param[in] device The device to query.
  * @param[in] site The site for which to query the property.
  * @param[in] prop The property to query.
  * @param[out] value The value of the property.
@@ -159,6 +166,7 @@ int QDMI_query_site_property_string(QDMI_Device device, int site,
 
 /**
  * @brief Query a site property of type double.
+ * @param[in] device The device to query.
  * @param[in] site The site for which to query the property.
  * @param[in] prop The property to query.
  * @param[out] value The value of the property.
@@ -174,6 +182,7 @@ int QDMI_query_site_property_double(QDMI_Device device, int site,
 
 /**
  * @brief Query a site property of type int.
+ * @param[in] device The device to query.
  * @param[in] site The site for which to query the property.
  * @param[in] prop The property to query.
  * @param[out] value The value of the property.
@@ -189,6 +198,7 @@ int QDMI_query_site_property_int(QDMI_Device device, int site,
 
 /**
  * @brief Query a site property of type string (char *) list.
+ * @param[in] device The device to query.
  * @param[in] site The site for which to query the property.
  * @param[in] prop The property to query.
  * @param[out] values The values of the list.
@@ -206,6 +216,7 @@ int QDMI_query_site_property_string_list(QDMI_Device device, int site,
 
 /**
  * @brief Query a site property of type double list.
+ * @param[in] device The device to query.
  * @param[in] site The site for which to query the property.
  * @param[in] prop The property to query.
  * @param[out] values The values of the list.
@@ -223,6 +234,7 @@ int QDMI_query_site_property_double_list(QDMI_Device device, int site,
 
 /**
  * @brief Query a site property of type int list.
+ * @param[in] device The device to query.
  * @param[in] site The site for which to query the property.
  * @param[in] prop The property to query.
  * @param[out] values The values of the list.
@@ -254,6 +266,7 @@ int QDMI_query_site_property_int_list(QDMI_Device device, int site,
  * properties may only be available as an average value for all sites.
  * Those may, nevertheless, be queried through this function by providing no
  * sites at all, i.e., passing the `nullptr` to the `sites` parameter.
+ * @param[in] device The device to query.
  * @param[in] operation The operation for which to query the property.
  * @param[in] sites The sites for which to query the property of the operation.
  * @param[in] num_sites The size of the sites list.
@@ -279,6 +292,7 @@ int QDMI_query_operation_property_string(QDMI_Device device,
  * properties may only be available as an average value for all sites.
  * Those may, nevertheless, be queried through this function by providing no
  * sites at all, i.e., passing the `nullptr` to the `sites` parameter.
+ * @param[in] device The device to query.
  * @param[in] operation The operation for which to query the property.
  * @param[in] sites The sites for which to query the property of the operation.
  * @param[in] num_sites The size of the sites list.
@@ -304,6 +318,7 @@ int QDMI_query_operation_property_double(QDMI_Device device,
  * properties may only be available as an average value for all sites.
  * Those may, nevertheless, be queried through this function by providing no
  * sites at all, i.e., passing the `nullptr` to the `sites` parameter.
+ * @param[in] device The device to query.
  * @param[in] operation The operation for which to query the property.
  * @param[in] sites The sites for which to query the property of the operation.
  * @param[in] num_sites The size of the sites list.
@@ -328,6 +343,7 @@ int QDMI_query_operation_property_int(QDMI_Device device, const char *operation,
  * properties may only be available as an average value for all sites.
  * Those may, nevertheless, be queried through this function by providing no
  * sites at all, i.e., passing the `nullptr` to the `sites` parameter.
+ * @param[in] device The device to query.
  * @param[in] operation The operation for which to query the property.
  * @param[in] sites The sites for which to query the property of the operation.
  * @param[in] num_sites The size of the sites list.
@@ -354,6 +370,7 @@ int QDMI_query_operation_property_string_list(QDMI_Device device,
  * properties may only be available as an average value for all sites.
  * Those may, nevertheless, be queried through this function by providing no
  * sites at all, i.e., passing the `nullptr` to the `sites` parameter.
+ * @param[in] device The device to query.
  * @param[in] operation The operation for which to query the property.
  * @param[in] sites The sites for which to query the property of the operation.
  * @param[in] num_sites The size of the sites list.
@@ -380,6 +397,7 @@ int QDMI_query_operation_property_double_list(QDMI_Device device,
  * properties may only be available as an average value for all sites.
  * Those may, nevertheless, be queried through this function by providing no
  * sites at all, i.e., passing the `nullptr` to the `sites` parameter.
+ * @param[in] device The device to query.
  * @param[in] operation The operation for which to query the property.
  * @param[in] sites The sites for which to query the property of the operation.
  * @param[in] num_sites The size of the sites list.
