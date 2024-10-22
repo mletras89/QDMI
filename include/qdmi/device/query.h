@@ -34,7 +34,8 @@ extern "C" {
  * num_sites are @c NULL.
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
-int QDMI_query_get_sites_dev(int num_entries, QDMI_Site *sites, int *num_sites);
+int QDMI_query_get_sites_dev(int num_entries, const const QDMI_Site *sites,
+                             int *num_sites);
 
 /**
  * @brief Get the operations available on the @p device.

@@ -39,8 +39,7 @@ const QDMI_Site DEVICE_SITES[] = {
 
 const QDMI_Operation DEVICE_OPERATIONS[] = {
     &(QDMI_Operation_impl_t){"rx"}, &(QDMI_Operation_impl_t){"ry"},
-    &(QDMI_Operation_impl_t){"rz"}, &(QDMI_Operation_impl_t){"cx"},
-    &(QDMI_Operation_impl_t){"cz"}};
+    &(QDMI_Operation_impl_t){"rz"}, &(QDMI_Operation_impl_t){"cx"}};
 
 #define ADD_SINGLE_VALUE_PROPERTY(prop_name, prop_type, prop_value, prop,      \
                                   size, value, size_ret)                       \
@@ -84,7 +83,7 @@ const QDMI_Operation DEVICE_OPERATIONS[] = {
         return QDMI_ERROR_INVALID_ARGUMENT;                                    \
       }                                                                        \
       if ((value) != NULL) {                                                   \
-        memcpy(*(value), prop_values, (prop_length) * sizeof(prop_type));      \
+        memcpy((value), prop_values, (prop_length) * sizeof(prop_type));       \
       }                                                                        \
       if ((size_ret) != NULL) {                                                \
         *(size_ret) = (prop_length) * (int)sizeof(prop_type);                  \
@@ -118,10 +117,10 @@ int QDMI_query_get_operations_dev(int num_entries, QDMI_Operation *operations,
   }
   if (operations != NULL) {
     memcpy(*operations, DEVICE_OPERATIONS,
-           min(num_entries, 5) * sizeof(QDMI_Operation));
+           min(num_entries, 4) * sizeof(QDMI_Operation));
   }
   if (num_operations != NULL) {
-    *num_operations = 5;
+    *num_operations = 4;
   }
   return QDMI_SUCCESS;
 }

@@ -12,6 +12,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include "qdmi/device.h"
 
+#include <array>
 #include <cassert>
 #include <cstring>
 #include <limits>
@@ -27,24 +28,28 @@ struct QDMI_Job_impl_d {
   int num_shots = 0;
   std::vector<std::string> data;
   std::bernoulli_distribution binary_dist{0.5};
-}; /// [DOXYGEN FUNCTION END]
+};
 
 struct QDMI_Device_State {
   QDMI_Device_Status status = QDMI_DEVICE_OFFLINE;
   std::random_device rd;
   std::mt19937 gen;
   std::uniform_int_distribution<> dis;
-}; /// [DOXYGEN FUNCTION END]
-
-QDMI_Device_State device_state;
+};
 
 struct QDMI_Site_impl_d {
   int id;
 };
 
 struct QDMI_Operation_impl_d {
-  char *name;
+  std::string name;
 };
+
+QDMI_Device_State device_state;
+
+std::array<QDMI_Site, 7> device_sites;
+
+std::array<QDMI_Operation, 4> device_operations;
 
 #define ADD_SINGLE_VALUE_PROPERTY(prop_name, prop_type, prop_value, prop,      \
                                   size, value, size_ret)                       \
@@ -54,7 +59,7 @@ struct QDMI_Operation_impl_d {
         return QDMI_ERROR_INVALID_ARGUMENT;                                    \
       }                                                                        \
       if ((value) != NULL) {                                                   \
-        *static_cast<(prop_type) *>(value) = prop_value;                       \
+        *static_cast<prop_type *>(value) = prop_value;                         \
       }                                                                        \
       if ((size_ret) != NULL) {                                                \
         *(size_ret) = sizeof(prop_type);                                       \
@@ -80,31 +85,54 @@ struct QDMI_Operation_impl_d {
     }                                                                          \
   }
 
-#define ADD_LIST_PROPERTY(prop_name, prop_type, prop_values, prop_length,      \
-                          prop, size, value, size_ret)                         \
+#define ADD_LIST_PROPERTY(prop_name, prop_type, prop_values, prop, size,       \
+                          value, size_ret)                                     \
   {                                                                            \
     if ((prop) == (prop_name)) {                                               \
-      if ((size) < (prop_length) * sizeof(prop_type)) {                        \
+      if ((size) < (prop_values).size() * sizeof(prop_type)) {                 \
         return QDMI_ERROR_INVALID_ARGUMENT;                                    \
       }                                                                        \
       if ((value) != NULL) {                                                   \
-        memcpy(*(value), prop_values, (prop_length) * sizeof(prop_type));      \
+        memcpy((value), (prop_values).data(),                                  \
+               (prop_values).size() * sizeof(prop_type));                      \
       }                                                                        \
       if ((size_ret) != NULL) {                                                \
-        *(size_ret) = (prop_length) * (int)sizeof(prop_type);                  \
+        *(size_ret) = (prop_values).size() * (int)sizeof(prop_type);           \
       }                                                                        \
       return QDMI_SUCCESS;                                                     \
     }                                                                          \
   }
 
-int QDMI_query_get_sites_dev(int num_entries, QDMI_Site *sites,
+int QDMI_query_get_sites_dev(int num_entries, const QDMI_Site *sites,
                              int *num_sites) {
-  return 0;
+  if ((sites != NULL && num_entries <= 0) ||
+      (sites == NULL && num_sites == NULL)) {
+    return QDMI_ERROR_INVALID_ARGUMENT;
+  }
+  if (sites != NULL) {
+    memcpy(*sites, static_cast<void *>(device_sites.data()),
+           std::min(num_entries, 7) * sizeof(QDMI_Site));
+  }
+  if (num_sites != NULL) {
+    *num_sites = 7;
+  }
+  return QDMI_SUCCESS;
 }
 
 int QDMI_query_get_operations_dev(int num_entries, QDMI_Operation *operations,
                                   int *num_operations) {
-  return 0;
+  if ((operations != NULL && num_entries <= 0) ||
+      (operations == NULL && num_operations == NULL)) {
+    return QDMI_ERROR_INVALID_ARGUMENT;
+  }
+  if (operations != NULL) {
+    memcpy(*operations, static_cast<void *>(device_operations.data()),
+           std::min(num_entries, 4) * sizeof(QDMI_Operation));
+  }
+  if (num_operations != NULL) {
+    *num_operations = 4;
+  }
+  return QDMI_SUCCESS;
 }
 
 int QDMI_query_device_property_dev(QDMI_Device_Property prop, int size,
@@ -124,43 +152,13 @@ int QDMI_query_device_property_dev(QDMI_Device_Property prop, int size,
                             device_state.status, prop, size, value, size_ret);
   ADD_STRING_PROPERTY(QDMI_GATE_SET, std::string("rx,ry,rz,cx"), prop, size,
                       value, size_ret);
-  return QDMI_ERROR_INVALID_ARGUMENT;
-} /// [DOXYGEN FUNCTION END]
-
-int QDMI_query_device_property_string_list_dev(const QDMI_Device_Property prop,
-                                               char ***value, int *size) {
-  if (prop == QDMI_GATE_SET) {
-    std::vector<std::string> gates = {"cz", "rx", "ry", "rz"};
-    *size = gates.size();
-    *value = new char *[*size];
-    for (int i = 0; i < *size; ++i) {
-      (*value)[i] = new char[gates[i].length() + 1];
-      strcpy((*value)[i], gates[i].c_str());
-    }
-    return QDMI_SUCCESS;
-  }
-  return QDMI_ERROR_INVALID_ARGUMENT;
-} /// [DOXYGEN FUNCTION END]
-
-int QDMI_query_device_property_double_list_dev(const QDMI_Device_Property prop,
-                                               double **value, int *size) {
-  return QDMI_ERROR_INVALID_ARGUMENT;
-} /// [DOXYGEN FUNCTION END]
-
-int QDMI_query_device_property_int_list_dev(const QDMI_Device_Property prop,
-                                            int **value, int *size) {
-  if (prop == QDMI_COUPLING_MAP) {
-    std::vector<std::pair<int, int>> coupling_map_pairs = {
-        {0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}, {6, 0}};
-    *size = static_cast<int>(coupling_map_pairs.size() * 2);
-    *value = new int[*size];
-    for (int i = 0; i < coupling_map_pairs.size(); ++i) {
-      (*value)[2 * i] = coupling_map_pairs[i].first;
-      (*value)[2 * i + 1] = coupling_map_pairs[i].second;
-    }
-    return QDMI_SUCCESS;
-  }
-  return QDMI_ERROR_INVALID_ARGUMENT;
+  ADD_STRING_PROPERTY(QDMI_GATE_SET, std::string("rx,ry,rz,cx"), prop, size,
+                      value, size_ret);
+  ADD_LIST_PROPERTY(
+      QDMI_COUPLING_MAP, int,
+      (std::vector<int>{0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 0}), prop, size,
+      value, size_ret);
+  return QDMI_ERROR_NOT_SUPPORTED;
 } /// [DOXYGEN FUNCTION END]
 
 int QDMI_query_site_property_string_dev(const int site,
@@ -473,6 +471,13 @@ int QDMI_control_initialize_dev() {
   device_state.gen = std::mt19937(device_state.rd());
   device_state.dis =
       std::uniform_int_distribution<>(0, std::numeric_limits<int>::max());
+  device_sites = {new QDMI_Site_impl_d{0}, new QDMI_Site_impl_d{1},
+                  new QDMI_Site_impl_d{2}, new QDMI_Site_impl_d{3},
+                  new QDMI_Site_impl_d{4}, new QDMI_Site_impl_d{5},
+                  new QDMI_Site_impl_d{6}};
+  device_operations = {
+      new QDMI_Operation_impl_d{"cz"}, new QDMI_Operation_impl_d{"rx"},
+      new QDMI_Operation_impl_d{"ry"}, new QDMI_Operation_impl_d{"rz"}};
   return QDMI_SUCCESS;
 } /// [DOXYGEN FUNCTION END]
 
