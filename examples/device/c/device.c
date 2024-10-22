@@ -16,22 +16,31 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <stdlib.h>
 #include <string.h>
 
-/// Global variable to store the status of the device
-QDMI_Device_Status device_status = QDMI_DEVICE_OFFLINE;
-
 typedef struct QDMI_Job_impl_d {
   int id;
   QDMI_Job_Status status;
   int num_shots;
 } QDMI_Job_impl_t;
 
-struct QDMI_Site_impl_d {
+typedef struct QDMI_Site_impl_d {
   int id;
-};
+} QDMI_Site_impl_t;
 
-struct QDMI_Operation_impl_d {
+typedef struct QDMI_Operation_impl_d {
   char *name;
-};
+} QDMI_Operation_impl_t;
+
+/// Global variable to store the status of the device
+QDMI_Device_Status device_status = QDMI_DEVICE_OFFLINE;
+
+const QDMI_Site DEVICE_SITES[] = {
+    &(QDMI_Site_impl_t){0}, &(QDMI_Site_impl_t){1}, &(QDMI_Site_impl_t){2},
+    &(QDMI_Site_impl_t){3}, &(QDMI_Site_impl_t){4}};
+
+const QDMI_Operation DEVICE_OPERATIONS[] = {
+    &(QDMI_Operation_impl_t){"rx"}, &(QDMI_Operation_impl_t){"ry"},
+    &(QDMI_Operation_impl_t){"rz"}, &(QDMI_Operation_impl_t){"cx"},
+    &(QDMI_Operation_impl_t){"cz"}};
 
 #define ADD_SINGLE_VALUE_PROPERTY(prop_name, prop_type, prop_value, prop,      \
                                   size, value, size_ret)                       \
@@ -84,14 +93,37 @@ struct QDMI_Operation_impl_d {
     }                                                                          \
   }
 
-int QDMI_query_get_sites_dev(int num_entries, QDMI_Site *sites,
+int min(const int a, const int b) { return a < b ? a : b; }
+
+int QDMI_query_get_sites_dev(const int num_entries, QDMI_Site *sites,
                              int *num_sites) {
-  return 0;
+  if ((sites != NULL && num_entries <= 0) ||
+      (sites == NULL && num_sites == NULL)) {
+    return QDMI_ERROR_INVALID_ARGUMENT;
+  }
+  if (sites != NULL) {
+    memcpy(*sites, DEVICE_SITES, min(num_entries, 5) * sizeof(QDMI_Site));
+  }
+  if (num_sites != NULL) {
+    *num_sites = 5;
+  }
+  return QDMI_SUCCESS;
 }
 
 int QDMI_query_get_operations_dev(int num_entries, QDMI_Operation *operations,
                                   int *num_operations) {
-  return 0;
+  if ((operations != NULL && num_entries <= 0) ||
+      (operations == NULL && num_operations == NULL)) {
+    return QDMI_ERROR_INVALID_ARGUMENT;
+  }
+  if (operations != NULL) {
+    memcpy(*operations, DEVICE_OPERATIONS,
+           min(num_entries, 5) * sizeof(QDMI_Operation));
+  }
+  if (num_operations != NULL) {
+    *num_operations = 5;
+  }
+  return QDMI_SUCCESS;
 }
 
 int QDMI_query_device_property_dev(QDMI_Device_Property prop, int size,
