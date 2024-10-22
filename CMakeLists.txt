@@ -168,6 +168,6 @@ if(BUILD_QDMI_TESTS)
   # include templates
   #
   # IMPORTANT: This directory must be included after the main library code.
-  add_subdirectory(templates/C)
-  add_subdirectory(templates/C++)
+  add_subdirectory(templates/device/c)
+  add_subdirectory(templates/device/cxx)
 endif()
