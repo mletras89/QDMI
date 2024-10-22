@@ -19,36 +19,13 @@ struct QDMI_Job_impl_d {};
 
 int main() {
   // query interface
-  QDMI_query_device_property_string_dev(QDMI_DEVICE_PROPERTY_MAX, nullptr);
-  QDMI_query_device_property_double_dev(QDMI_DEVICE_PROPERTY_MAX, nullptr);
-  QDMI_query_device_property_int_dev(QDMI_DEVICE_PROPERTY_MAX, nullptr);
-  QDMI_query_device_property_string_list_dev(QDMI_DEVICE_PROPERTY_MAX, nullptr,
-                                             nullptr);
-  QDMI_query_device_property_double_list_dev(QDMI_DEVICE_PROPERTY_MAX, nullptr,
-                                             nullptr);
-  QDMI_query_device_property_int_list_dev(QDMI_DEVICE_PROPERTY_MAX, nullptr,
-                                          nullptr);
-  QDMI_query_site_property_string_dev(0, QDMI_SITE_PROPERTY_MAX, nullptr);
-  QDMI_query_site_property_double_dev(0, QDMI_SITE_PROPERTY_MAX, nullptr);
-  QDMI_query_site_property_int_dev(0, QDMI_SITE_PROPERTY_MAX, nullptr);
-  QDMI_query_site_property_string_list_dev(0, QDMI_SITE_PROPERTY_MAX, nullptr,
-                                           nullptr);
-  QDMI_query_site_property_double_list_dev(0, QDMI_SITE_PROPERTY_MAX, nullptr,
-                                           nullptr);
-  QDMI_query_site_property_int_list_dev(0, QDMI_SITE_PROPERTY_MAX, nullptr,
-                                        nullptr);
-  QDMI_query_operation_property_string_dev(
-      nullptr, nullptr, 0, QDMI_OPERATION_PROPERTY_MAX, nullptr);
-  QDMI_query_operation_property_double_dev(
-      nullptr, nullptr, 0, QDMI_OPERATION_PROPERTY_MAX, nullptr);
-  QDMI_query_operation_property_int_dev(nullptr, nullptr, 0,
-                                        QDMI_OPERATION_PROPERTY_MAX, nullptr);
-  QDMI_query_operation_property_string_list_dev(
-      nullptr, nullptr, 0, QDMI_OPERATION_PROPERTY_MAX, nullptr, nullptr);
-  QDMI_query_operation_property_double_list_dev(
-      nullptr, nullptr, 0, QDMI_OPERATION_PROPERTY_MAX, nullptr, nullptr);
-  QDMI_query_operation_property_int_list_dev(
-      nullptr, nullptr, 0, QDMI_OPERATION_PROPERTY_MAX, nullptr, nullptr);
+  QDMI_query_get_sites_dev(nullptr, 0, nullptr, nullptr);
+  QDMI_query_get_operations_dev(nullptr, 0, nullptr, nullptr);
+  QDMI_query_device_property_dev(QDMI_DEVICE_PROPERTY_MAX, 0, nullptr, nullptr);
+  QDMI_query_site_property_dev(nullptr, QDMI_SITE_PROPERTY_MAX, 0, nullptr,
+                               nullptr);
+  QDMI_query_operation_property_dev(
+      nullptr, 0, nullptr, QDMI_OPERATION_PROPERTY_MAX, 0, nullptr, nullptr);
   // control interface
   QDMI_control_submit_qasm_dev(nullptr, 0, nullptr);
   QDMI_control_submit_qir_string_dev(nullptr, 0, nullptr);

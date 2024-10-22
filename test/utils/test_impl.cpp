@@ -6,8 +6,9 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include "test_impl.hpp"
 
+#include "examples/driver/driver.h"
 #include "qdmi/client.h"
-#include "qdmi/driver/driver.h"
+#include "qdmi/driver.h"
 
 #include <fstream>
 #include <gtest/gtest.h>
@@ -39,8 +40,8 @@ void QDMIImplementationTest::TearDown() {
 }
 
 TEST_P(QDMIImplementationTest, QueryDevicePropertyStringImplemented) {
-  ASSERT_EQ(QDMI_query_device_property_string(device, QDMI_DEVICE_PROPERTY_MAX,
-                                              nullptr),
+  ASSERT_EQ(QDMI_query_device_property(device, QDMI_DEVICE_PROPERTY_MAX, 0,
+                                       nullptr nullptr),
             QDMI_ERROR_INVALID_ARGUMENT);
 }
 
