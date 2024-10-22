@@ -15,8 +15,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include "qdmi/device.h"
 
-typedef struct QDMI_Job_impl_d {
-} QDMI_Job_impl_t;
+struct QDMI_Job_impl_d {};
 
 int main() {
   // query interface

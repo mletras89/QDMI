@@ -5,10 +5,12 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
 #include "qdmi/client.h"
-#include "qdmi/driver/session.h"
+#include "qdmi/driver/driver.h"
 #include "test_impl.hpp"
 
 #include <cstddef>
+#include <cstdio>
+#include <fstream>
 #include <gtest/gtest.h>
 #include <string>
 
@@ -38,32 +40,31 @@ INSTANTIATE_TEST_SUITE_P(QDMIMyCXXDevice,        // Custom instantiation name
 class QDMITest : public ::testing::Test {
 protected:
   void SetUp() override {
+    std::ofstream conf_file("qdmi.conf");
+    conf_file << device_name << Shared_library_file_extension()
+              << " read_write\n";
+    conf_file.close();
+
+    ASSERT_EQ(QDMI_Driver_init(), QDMI_SUCCESS)
+        << "Failed to initialize the driver";
+
     ASSERT_EQ(QDMI_session_alloc(&session), QDMI_SUCCESS)
         << "Failed to allocate session";
   }
 
-  void TearDown() override { QDMI_session_free(session); }
+  void TearDown() override {
+    QDMI_session_free(session);
+    QDMI_Driver_shutdown();
+    std::remove("qdmi.conf");
+  }
 
   QDMI_Session session = nullptr;
   QDMI_Device device = nullptr;
-  const std::string my_device_name =
-      std::string("./libmy_device") + Shared_library_file_extension();
+  const std::string device_name = "libmy_device";
 };
 
-TEST_F(QDMITest, OpenDevice) {
-  ASSERT_EQ(QDMI_session_open_device(session, my_device_name.c_str(),
-                                     QDMI_DEVICE_MODE_READ_WRITE, &device),
-            QDMI_SUCCESS)
-      << "Failed to open device";
-}
-
-TEST_F(QDMITest, QueryNumQubits) {
-  QDMI_session_open_device(session, my_device_name.c_str(),
-                           QDMI_DEVICE_MODE_READ_WRITE, &device);
-  int num_qubits = 0;
-  ASSERT_EQ(
-      QDMI_query_device_property_int(device, QDMI_NUM_QUBITS, &num_qubits),
-      QDMI_SUCCESS)
-      << "Failed to query number of qubits";
-  ASSERT_EQ(num_qubits, 5); // <-- TODO Insert the correct number of qubits here
+TEST_F(QDMITest, GetDevice) {
+  const auto ret = QDMI_session_get_devices(session, 1, &device, nullptr);
+  ASSERT_EQ(ret, QDMI_SUCCESS) << "Failed to get device";
+  ASSERT_NE(device, nullptr) << "Device is null";
 }

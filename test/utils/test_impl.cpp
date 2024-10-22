@@ -7,21 +7,36 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include "test_impl.hpp"
 
 #include "qdmi/client.h"
+#include "qdmi/driver/driver.h"
 
+#include <fstream>
 #include <gtest/gtest.h>
 #include <string>
 
 void QDMIImplementationTest::SetUp() {
+  device_name = GetParam();
+  std::ofstream conf_file("qdmi.conf");
+  conf_file << device_name << Shared_library_file_extension()
+            << " read_write\n";
+  conf_file << device_name << Shared_library_file_extension() << " read_only\n";
+  conf_file.close();
+
+  ASSERT_EQ(QDMI_Driver_init(), QDMI_SUCCESS)
+      << "Failed to initialize the driver";
+
   ASSERT_EQ(QDMI_session_alloc(&session), QDMI_SUCCESS)
       << "Failed to allocate session";
-  device_name = GetParam() + Shared_library_file_extension();
-  ASSERT_EQ(QDMI_session_open_device(session, device_name.c_str(),
-                                     QDMI_DEVICE_MODE_READ_WRITE, &device),
+
+  ASSERT_EQ(QDMI_session_get_devices(session, 1, &device, nullptr),
             QDMI_SUCCESS)
-      << "Failed to open device";
+      << "Failed to get device";
 }
 
-void QDMIImplementationTest::TearDown() { QDMI_session_free(session); }
+void QDMIImplementationTest::TearDown() {
+  QDMI_session_free(session);
+  QDMI_Driver_shutdown();
+  std::remove("qdmi.conf");
+}
 
 TEST_P(QDMIImplementationTest, QueryDevicePropertyStringImplemented) {
   ASSERT_EQ(QDMI_query_device_property_string(device, QDMI_DEVICE_PROPERTY_MAX,
@@ -323,14 +338,13 @@ TEST_P(QDMIImplementationTest, QueryDeviceLibraryVersionImplemented) {
 }
 
 TEST_P(QDMIImplementationTest, ControlDeviceModeReadOnly) {
-  // First close currently open device
-  ASSERT_EQ(QDMI_session_close_device(session, device), QDMI_SUCCESS);
-  // Then reopen device in read-only mode
-  device_name = GetParam() + Shared_library_file_extension();
-  ASSERT_EQ(QDMI_session_open_device(session, device_name.c_str(),
-                                     QDMI_DEVICE_MODE_READ_ONLY, &device),
-            QDMI_SUCCESS)
-      << "Failed to open device in read-only mode";
+  // attempt to get the second device in the session, which should be in
+  // read-only mode
+  QDMI_Device devices[2];
+  ASSERT_EQ(QDMI_session_get_devices(session, 2, devices, nullptr),
+            QDMI_SUCCESS);
+  device = devices[1];
+  ASSERT_NE(device, nullptr) << "Failed to get read-only device";
   QDMI_Job job;
   ASSERT_EQ(
       QDMI_control_submit_qasm(device, Get_test_circuit().c_str(), 10, &job),
