@@ -20,17 +20,6 @@ extern "C" {
 #endif
 
 /**
- * @brief Initialize the QDMI driver.
- * @details This function should be called before any other QDMI function. It
- * performs any necessary initialization of the driver so that a client can
- * allocate sessions (@ref QDMI_Session) and access devices (@ref QDMI_Device).
- * @note This function should be called only once.
- * @return @ref QDMI_SUCCESS if the driver was initialized successfully.
- * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
- */
-int QDMI_Driver_init();
-
-/**
  * @brief Opaque type for a QDMI session.
  * @details A handle for making devices (@ref QDMI_Device) available to a
  * client. It is implementation-defined how the session is represented and how
@@ -90,17 +79,6 @@ int QDMI_session_get_devices(QDMI_Session session, int num_entries,
  * @param[in] session the session to free.
  */
 void QDMI_session_free(QDMI_Session session);
-
-/**
- * @brief Shutdown the QDMI driver.
- * @details This function should be called to perform any necessary cleanup of
- * the driver. It should be called after all sessions have been freed and no
- * more QDMI functions will be called.
- * @note This function should be called only once.
- * @return @ref QDMI_SUCCESS if the driver was shut down successfully.
- * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
- */
-int QDMI_Driver_shutdown();
 
 #ifdef __cplusplus
 } // extern "C"

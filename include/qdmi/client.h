@@ -5,9 +5,14 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
 /** @file
- * @brief Include all public headers for the QDMI client.
- * @details The detailed description of the interface is provided in @ref
- * client/control.h and @ref client/query.h.
+ * @brief The QDMI client interface.
+ * @details The purpose of the client interface is to provide a set of functions
+ * that allow the user to interact with the QDMI devices. The client interface
+ * provides functions to query the properties of the devices and to control the
+ * devices.
+ * @par
+ * The detailed description of the functions provided by the interface is
+ * provided in @ref client/control.h and @ref client/query.h.
  */
 
 #pragma once

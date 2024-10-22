@@ -5,10 +5,14 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
 /** @file
- * @brief Include all public headers for the QDMI device.
- * @details An implementation of a device must include this header and
- * implement all entities defined @ref device/control.h and @ref
- * device/query.h.
+ * @brief The QDMI device interface.
+ * @details A device is a physical quantum computer or a classical quantum
+ * simulator. For the device to be accessible by the clients, it must provide
+ * functions to query the properties of the device and to control the device.
+ *
+ * @par
+ * An implementation of a device must include this header and implement all
+ * entities defined @ref device/control.h and @ref device/query.h.
  */
 
 #pragma once
