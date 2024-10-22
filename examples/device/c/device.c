@@ -15,13 +15,9 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 
 /// Global variable to store the status of the device
 QDMI_Device_Status device_status = QDMI_DEVICE_OFFLINE;
-
-// todo: adopt the query functions to the updated docu of return codes, esp.,
-//  distinguish the case whether the input is invalid or not supported
 
 typedef struct QDMI_Job_impl_d {
   int id;
@@ -29,254 +25,177 @@ typedef struct QDMI_Job_impl_d {
   int num_shots;
 } QDMI_Job_impl_t;
 
-int QDMI_query_device_property_string_dev(const QDMI_Device_Property prop,
-                                          char **value) {
-  if (prop == QDMI_NAME) {
-    char *name = "Device with 5 qubits";
-    *value = (char *)malloc(strlen(name) + 1);
-    strcpy(*value, name);
-    return QDMI_SUCCESS;
-  }
-  if (prop == QDMI_DEVICE_VERSION) {
-    char *version = "0.1.0";
-    *value = (char *)malloc(strlen(version) + 1);
-    strcpy(*value, version);
-    return QDMI_SUCCESS;
-  }
-  if (prop == QDMI_LIBRARY_VERSION) {
-    char *version = "0.2.0";
-    *value = (char *)malloc(strlen(version) + 1);
-    strcpy(*value, version);
-    return QDMI_SUCCESS;
-  }
-  return QDMI_ERROR_INVALID_ARGUMENT;
-} /// [DOXYGEN FUNCTION END]
+typedef struct QDMI_Site_impl_d {
+  int id;
+} QDMI_Site_impl_t;
 
-int QDMI_query_device_property_double_dev(const QDMI_Device_Property prop,
-                                          double *value) {
-  return QDMI_ERROR_INVALID_ARGUMENT;
-} /// [DOXYGEN FUNCTION END]
+typedef struct QDMI_Operation_impl_d {
+  char *name;
+} QDMI_Operation_impl_t;
 
-int QDMI_query_device_property_int_dev(const QDMI_Device_Property prop,
-                                       int *value) {
-  if (prop == QDMI_NUM_QUBITS) {
-    *value = 5;
-    return QDMI_SUCCESS;
-  }
-  if (prop == QDMI_DEVICE_STATUS) {
-    *value = device_status;
-    return QDMI_SUCCESS;
-  }
-  return QDMI_ERROR_INVALID_ARGUMENT;
-} /// [DOXYGEN FUNCTION END]
-
-int QDMI_query_device_property_string_list_dev(const QDMI_Device_Property prop,
-                                               char ***value, int *size) {
-  if (prop == QDMI_GATE_SET) {
-    *value = (char **)malloc(sizeof(char *) * 4);
-    for (int i = 0; i < 4; i++) {
-      (*value)[i] = (char *)malloc(sizeof(char) * 3);
-    }
-    strcpy((*value)[0], "cz");
-    strcpy((*value)[1], "rx");
-    strcpy((*value)[2], "ry");
-    strcpy((*value)[3], "rz");
-    *size = 4;
-    return QDMI_SUCCESS;
-  }
-  return QDMI_ERROR_INVALID_ARGUMENT;
-} /// [DOXYGEN FUNCTION END]
-
-int QDMI_query_device_property_double_list_dev(const QDMI_Device_Property prop,
-                                               double **value, int *size) {
-  return QDMI_ERROR_INVALID_ARGUMENT;
-} /// [DOXYGEN FUNCTION END]
-
-int QDMI_query_device_property_int_list_dev(const QDMI_Device_Property prop,
-                                            int **value, int *size) {
-  if (prop == QDMI_COUPLING_MAP) {
-    *size = 10;
-    *value = (int *)malloc(*size * sizeof(int));
-    // This defines a circular coupling map, i.e., qubit 0 is connected to 1,
-    // 1 to 2, and so on, and qubit 4 is connected to 0 again.
-    int temp[] = {0, 1, 1, 2, 2, 3, 3, 4, 4, 0};
-    memcpy(*value, temp, *size * sizeof(int));
-    return QDMI_SUCCESS;
-  }
-  return QDMI_ERROR_INVALID_ARGUMENT;
-} /// [DOXYGEN FUNCTION END]
-
-int QDMI_query_site_property_string_dev(const int site,
-                                        const QDMI_Site_Property prop,
-                                        char **value) {
-  return QDMI_ERROR_INVALID_ARGUMENT;
-} /// [DOXYGEN FUNCTION END]
-
-int QDMI_query_site_property_double_dev(const int site,
-                                        const QDMI_Site_Property prop,
-                                        double *value) {
-  int num_qubits = 0;
-  QDMI_query_device_property_int_dev(QDMI_NUM_QUBITS, &num_qubits);
-
-  if (site < 0 || site >= num_qubits) {
-    return QDMI_ERROR_OUT_OF_RANGE;
+#define ADD_SINGLE_VALUE_PROPERTY(prop_name, prop_type, prop_value, prop,      \
+                                  size, value, size_ret)                       \
+  {                                                                            \
+    if ((prop) == (prop_name)) {                                               \
+      if ((size) < sizeof(prop_type)) {                                        \
+        return QDMI_ERROR_INVALID_ARGUMENT;                                    \
+      }                                                                        \
+      if ((value) != NULL) {                                                   \
+        *(prop_type *)(value) = prop_value;                                    \
+      }                                                                        \
+      if ((size_ret) != NULL) {                                                \
+        *(size_ret) = sizeof(prop_type);                                       \
+      }                                                                        \
+      return QDMI_SUCCESS;                                                     \
+    }                                                                          \
   }
 
-  if (prop == QDMI_T1_TIME) {
-    // One could also specify the T1 for each qubit individually.
-    *value = 1000.0;
-    return QDMI_SUCCESS;
+#define ADD_STRING_PROPERTY(prop_name, prop_value, prop, size, value,          \
+                            size_ret)                                          \
+  {                                                                            \
+    if ((prop) == (prop_name)) {                                               \
+      if ((size) < strlen(prop_value) + 1) {                                   \
+        return QDMI_ERROR_INVALID_ARGUMENT;                                    \
+      }                                                                        \
+      if ((value) != NULL) {                                                   \
+        strcpy((char *)(value), prop_value);                                   \
+      }                                                                        \
+      if ((size_ret) != NULL) {                                                \
+        *(size_ret) = (int)strlen(prop_value) + 1;                             \
+      }                                                                        \
+      return QDMI_SUCCESS;                                                     \
+    }                                                                          \
   }
-  if (prop == QDMI_T2_TIME) {
-    // One could also specify the T2 for each qubit individually.
-    *value = 100000.0;
-    return QDMI_SUCCESS;
+
+#define ADD_LIST_PROPERTY(prop_name, prop_type, prop_values, prop_length,      \
+                          prop, size, value, size_ret)                         \
+  {                                                                            \
+    if ((prop) == (prop_name)) {                                               \
+      if ((size) < (prop_length) * sizeof(prop_type)) {                        \
+        return QDMI_ERROR_INVALID_ARGUMENT;                                    \
+      }                                                                        \
+      if ((value) != NULL) {                                                   \
+        memcpy(*(value), prop_values, (prop_length) * sizeof(prop_type));      \
+      }                                                                        \
+      if ((size_ret) != NULL) {                                                \
+        *(size_ret) = (prop_length) * (int)sizeof(prop_type);                  \
+      }                                                                        \
+      return QDMI_SUCCESS;                                                     \
+    }                                                                          \
   }
-  return QDMI_ERROR_INVALID_ARGUMENT;
-} /// [DOXYGEN FUNCTION END]
 
-int QDMI_query_site_property_int_dev(const int site,
-                                     const QDMI_Site_Property prop,
-                                     int *value) {
-  return QDMI_ERROR_INVALID_ARGUMENT;
-} /// [DOXYGEN FUNCTION END]
+int QDMI_query_get_sites_dev(int num_entries, QDMI_Site *sites,
+                             int *num_sites) {
+  return 0;
+}
 
-int QDMI_query_site_property_string_list_dev(const int site,
-                                             const QDMI_Site_Property prop,
-                                             char ***value, int *size) {
-  return QDMI_ERROR_INVALID_ARGUMENT;
-} /// [DOXYGEN FUNCTION END]
+int QDMI_query_get_operations_dev(int num_entries, QDMI_Operation *operations,
+                                  int *num_operations) {
+  return 0;
+}
 
-int QDMI_query_site_property_double_list_dev(const int site,
-                                             const QDMI_Site_Property prop,
-                                             double **value, int *size) {
-  return QDMI_ERROR_INVALID_ARGUMENT;
-} /// [DOXYGEN FUNCTION END]
-
-int QDMI_query_site_property_int_list_dev(const int site,
-                                          const QDMI_Site_Property prop,
-                                          int **value, int *size) {
-  return QDMI_ERROR_INVALID_ARGUMENT;
-} /// [DOXYGEN FUNCTION END]
-
-int QDMI_query_operation_property_string_dev(const char *operation,
-                                             const int *sites,
-                                             const int num_sites,
-                                             const QDMI_Operation_Property prop,
-                                             char **value) {
-  return QDMI_ERROR_INVALID_ARGUMENT;
-} /// [DOXYGEN FUNCTION END]
-
-int QDMI_query_operation_property_double_dev(const char *operation,
-                                             const int *sites,
-                                             const int num_sites,
-                                             const QDMI_Operation_Property prop,
-                                             double *value) {
-  if (prop == QDMI_OPERATION_DURATION) {
-    // One could also specify the duration depending on the site, see fidelity.
-    if (strcmp(operation, "cz") == 0) {
-      // The case num_sites = 0 queries the property globally without specifying
-      // a pair of sites.
-      if (num_sites != 0 && num_sites != 2) {
-        return QDMI_ERROR_INVALID_ARGUMENT;
-      }
-      *value = 0.1;
-      return QDMI_SUCCESS;
-    }
-    if (strcmp(operation, "rx") == 0 || strcmp(operation, "ry") == 0 ||
-        strcmp(operation, "rz") == 0) {
-      if (num_sites != 1) {
-        return QDMI_ERROR_INVALID_ARGUMENT;
-      }
-      *value = 0.01;
-      return QDMI_SUCCESS;
-    }
+int QDMI_query_device_property_dev(QDMI_Device_Property prop, int size,
+                                   void *value, int *size_ret) {
+  if (prop >= QDMI_DEVICE_PROPERTY_MAX || (value == NULL && size_ret == NULL)) {
     return QDMI_ERROR_INVALID_ARGUMENT;
   }
-  if (prop == QDMI_OPERATION_FIDELITY) {
-    if (strcmp(operation, "cz") == 0) {
-      if (num_sites != 2 || sites[0] == sites[1]) {
-        return QDMI_ERROR_INVALID_ARGUMENT;
-      }
-      if ((sites[0] == 0 && sites[1] == 1) ||
-          (sites[0] == 1 && sites[1] == 0)) {
-        *value = 0.99;
-        return QDMI_SUCCESS;
-      }
-      if ((sites[0] == 1 && sites[1] == 2) ||
-          (sites[0] == 2 && sites[1] == 1)) {
-        *value = 0.98;
-        return QDMI_SUCCESS;
-      }
-      if ((sites[0] == 2 && sites[1] == 3) ||
-          (sites[0] == 3 && sites[1] == 2)) {
-        *value = 0.97;
-        return QDMI_SUCCESS;
-      }
-      if ((sites[0] == 3 && sites[1] == 4) ||
-          (sites[0] == 4 && sites[1] == 3)) {
-        *value = 0.96;
-        return QDMI_SUCCESS;
-      }
-      if ((sites[0] == 4 && sites[1] == 0) ||
-          (sites[0] == 0 && sites[1] == 4)) {
-        *value = 0.95;
-        return QDMI_SUCCESS;
-      }
+  ADD_STRING_PROPERTY(QDMI_NAME, "Device with 5 qubits", prop, size, value,
+                      size_ret);
+  ADD_STRING_PROPERTY(QDMI_DEVICE_VERSION, "0.1.0", prop, size, value,
+                      size_ret);
+  ADD_STRING_PROPERTY(QDMI_LIBRARY_VERSION, "0.2.0", prop, size, value,
+                      size_ret);
+  ADD_SINGLE_VALUE_PROPERTY(QDMI_NUM_QUBITS, int, 5, prop, size, value,
+                            size_ret);
+  ADD_SINGLE_VALUE_PROPERTY(QDMI_DEVICE_STATUS, QDMI_Device_Status,
+                            device_status, prop, size, value, size_ret);
+  ADD_STRING_PROPERTY(QDMI_GATE_SET, "rx,ry,rz,cx", prop, size, value,
+                      size_ret);
+  ADD_LIST_PROPERTY(QDMI_COUPLING_MAP, int,
+                    ((int[]){0, 1, 1, 2, 2, 3, 3, 4, 4, 0}), 10, prop, size,
+                    value, size_ret);
+  return QDMI_ERROR_NOT_SUPPORTED;
+} /// [DOXYGEN FUNCTION END]
+
+int QDMI_query_site_property_dev(QDMI_Site site, QDMI_Site_Property prop,
+                                 int size, void *value, int *size_ret) {
+  if (prop >= QDMI_DEVICE_PROPERTY_MAX || (value == NULL && size_ret == NULL)) {
+    return QDMI_ERROR_INVALID_ARGUMENT;
+  }
+  ADD_SINGLE_VALUE_PROPERTY(QDMI_T1_TIME, double, 1000.0, prop, size, value,
+                            size_ret);
+  ADD_SINGLE_VALUE_PROPERTY(QDMI_T2_TIME, double, 100000.0, prop, size, value,
+                            size_ret);
+  return QDMI_ERROR_NOT_SUPPORTED;
+} /// [DOXYGEN FUNCTION END]
+
+int QDMI_query_operation_property_dev(QDMI_Operation operation, int num_sites,
+                                      const QDMI_Site *sites,
+                                      QDMI_Operation_Property prop, int size,
+                                      void *value, int *size_ret) {
+  if (prop >= QDMI_DEVICE_PROPERTY_MAX || (sites != NULL && num_sites <= 0) ||
+      (value == NULL && size_ret == NULL)) {
+    return QDMI_ERROR_INVALID_ARGUMENT;
+  }
+  // Two-qubit gates
+  if (strcmp(operation->name, "cz") == 0) {
+    if (sites != NULL && num_sites != 2) {
       return QDMI_ERROR_INVALID_ARGUMENT;
     }
-
-    if (strcmp(operation, "rx") == 0 || strcmp(operation, "ry") == 0 ||
-        strcmp(operation, "rz") == 0) {
-      if (num_sites != 1) {
-        return QDMI_ERROR_INVALID_ARGUMENT;
-      }
-      *value = 0.999;
-      return QDMI_SUCCESS;
+    ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_DURATION, double, 0.01, prop, size,
+                              value, size_ret);
+    if (sites == NULL) {
+      ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_NUM_QUBITS, int, 2, prop, size,
+                                value, size_ret);
+      return QDMI_ERROR_NOT_SUPPORTED;
     }
-  }
-  return QDMI_ERROR_INVALID_ARGUMENT;
-} /// [DOXYGEN FUNCTION END]
-
-int QDMI_query_operation_property_int_dev(const char *operation,
-                                          const int *sites, const int num_sites,
-                                          const QDMI_Operation_Property prop,
-                                          int *value) {
-  if (prop == QDMI_OPERATION_NUM_QUBITS) {
-    if (operation == NULL) {
+    if (sites[0] == sites[1]) {
       return QDMI_ERROR_INVALID_ARGUMENT;
     }
-    assert(sites == NULL);
-    assert(num_sites == 0);
-    if (strcmp(operation, "cz") == 0) {
-      *value = 2;
-      return QDMI_SUCCESS;
+    if ((sites[0]->id == 0 && sites[1]->id == 1) ||
+        (sites[0]->id == 1 && sites[1]->id == 0)) {
+      ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_FIDELITY, double, 0.99, prop,
+                                size, value, size_ret);
     }
-    if (strcmp(operation, "rx") == 0 || strcmp(operation, "ry") == 0 ||
-        strcmp(operation, "rz") == 0) {
-      *value = 1;
-      return QDMI_SUCCESS;
+    if ((sites[0]->id == 1 && sites[1]->id == 2) ||
+        (sites[0]->id == 2 && sites[1]->id == 1)) {
+      ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_FIDELITY, double, 0.98, prop,
+                                size, value, size_ret);
+    }
+    if ((sites[0]->id == 2 && sites[1]->id == 3) ||
+        (sites[0]->id == 3 && sites[1]->id == 2)) {
+      ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_FIDELITY, double, 0.97, prop,
+                                size, value, size_ret);
+    }
+    if ((sites[0]->id == 3 && sites[1]->id == 4) ||
+        (sites[0]->id == 4 && sites[1]->id == 3)) {
+      ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_FIDELITY, double, 0.96, prop,
+                                size, value, size_ret);
+    }
+    if ((sites[0]->id == 4 && sites[1]->id == 0) ||
+        (sites[0]->id == 0 && sites[1]->id == 4)) {
+      ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_FIDELITY, double, 0.95, prop,
+                                size, value, size_ret);
+    }
+    if (prop == QDMI_OPERATION_FIDELITY) {
+      return QDMI_ERROR_INVALID_ARGUMENT;
     }
   }
-  return QDMI_ERROR_INVALID_ARGUMENT;
-} /// [DOXYGEN FUNCTION END]
-
-int QDMI_query_operation_property_string_list_dev(
-    const char *operation, const int *sites, const int num_sites,
-    const QDMI_Operation_Property prop, char ***value, int *size) {
-  return QDMI_ERROR_INVALID_ARGUMENT;
-} /// [DOXYGEN FUNCTION END]
-
-int QDMI_query_operation_property_double_list_dev(
-    const char *operation, const int *sites, const int num_sites,
-    const QDMI_Operation_Property prop, double **value, int *size) {
-  return QDMI_ERROR_INVALID_ARGUMENT;
-} /// [DOXYGEN FUNCTION END]
-
-int QDMI_query_operation_property_int_list_dev(
-    const char *operation, const int *sites, const int num_sites,
-    const QDMI_Operation_Property prop, int **value, int *size) {
-  return QDMI_ERROR_INVALID_ARGUMENT;
+  // Single-qubit gates
+  else if (strcmp(operation->name, "rx") == 0 ||
+           strcmp(operation->name, "ry") == 0 ||
+           strcmp(operation->name, "rz") == 0) {
+    if (sites != NULL && num_sites != 1) {
+      return QDMI_ERROR_INVALID_ARGUMENT;
+    }
+    ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_DURATION, double, 0.01, prop, size,
+                              value, size_ret);
+    ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_NUM_QUBITS, int, 1, prop, size,
+                              value, size_ret);
+    ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_FIDELITY, double, 0.999, prop,
+                              size, value, size_ret);
+  }
+  return QDMI_ERROR_NOT_SUPPORTED;
 } /// [DOXYGEN FUNCTION END]
 
 int QDMI_control_submit_qasm_dev(const char *qasm_string, int num_shots,
@@ -414,9 +333,11 @@ int QDMI_control_get_raw_dev(QDMI_Job job, char ***data, int *size) {
 
   // generate random measurement results
   int num_qubits = 0;
-  QDMI_query_device_property_int_dev(QDMI_NUM_QUBITS, &num_qubits);
+  QDMI_query_device_property_dev(QDMI_NUM_QUBITS, sizeof(int), &num_qubits,
+                                 NULL);
   for (int i = 0; i < job->num_shots; i++) {
-    (*data)[i] = (char *)malloc(sizeof(char) * (unsigned long)num_qubits + 1U);
+    (*data)[i] =
+        (char *)malloc((sizeof(char) * (unsigned long)num_qubits) + 1U);
     // generate random 5-bit string
     for (int j = 0; j < num_qubits; j++) {
       (*data)[i][j] = (rand() % 2) ? '1' : '0';

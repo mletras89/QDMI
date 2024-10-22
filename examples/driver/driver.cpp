@@ -110,12 +110,13 @@ struct QDMI_Session_impl_d {
  */
 std::vector<std::shared_ptr<QDMI_Device_impl_d>> devices;
 
+// todo: Prefix for functions in device interface
 #define LOAD_SYMBOL(device, symbol)                                            \
   {                                                                            \
     (device).symbol = reinterpret_cast<decltype((device).symbol)>(             \
-        dlsym((device).lib_handle, #symbol));                                  \
+        dlsym((device).lib_handle, "QDMI_" #symbol "_dev"));                   \
     if ((device).symbol == nullptr) {                                          \
-      throw std::runtime_error("Failed to load symbol: " #symbol);             \
+      throw std::runtime_error("Failed to load symbol: QDMI_" #symbol "_dev"); \
     }                                                                          \
   }
 
