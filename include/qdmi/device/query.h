@@ -10,11 +10,61 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #pragma once
 
-#include "qdmi/enums.h"
+#include "qdmi/common/types.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/**
+ * @brief Get the sites associated with @p device.
+ * @param[in] device refers to the device returned by @ref
+ * QDMI_session_get_devices or can be @c NULL. If @p session is @c NULL, the
+ * behavior is implementation-defined.
+ * @param[in] num_entries the number of entries that can be added to @p devices.
+ * If @p devices is not @c NULL, @p num_entries must be greater than zero.
+ * @param[out] sites returns a list of sites available on the device. The @ref
+ * QDMI_Site values returned in @p sites can be used to identify a specific @ref
+ * QDMI_Site. If @p sites is @c NULL, this argument is ignored. The number of
+ * @ref QDMI_Site values returned is the minimum of the value specified by @p
+ * num_entries and the number of sites found.
+ * @param[out] num_sites returns the number of sites available. If @p num_sites
+ * is @c NULL, this argument is ignored.
+ * @return @ref QDMI_SUCCESS if the function is executed successfully.
+ * Otherwise, it returns one of the following error codes:
+ * @return @ref QDMI_ERROR_INVALID_ARGUMENT if @p num_entries is less than or
+ * equal to zero and @p sites is not @c NULL or if both @p sites and @p
+ * num_sites are @c NULL.
+ * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
+ */
+int QDMI_query_get_sites_dev(QDMI_Device device, int num_entries,
+                             QDMI_Site *sites, int *num_sites);
+
+/**
+ * @brief Get the operations available on the @p device.
+ * @param[in] device refers to the device returned by @ref
+ * QDMI_session_get_devices or can be @c NULL. If @p session is @c NULL, the
+ * behavior is implementation-defined.
+ * @param[in] num_entries the number of entries that can be added to @p devices.
+ * If @p devices is not @c NULL, @p num_entries must be greater than zero.
+ * @param[out] operations returns a list of operations available on the device.
+ * The @ref QDMI_Operation values returned in @p operations can be used to
+ * identify a specific @ref QDMI_Operation. If @p operations is @c NULL, this
+ * argument is ignored. The number of @ref QDMI_Operation values returned is the
+ * minimum of the value specified by @p num_entries and the number of operations
+ * found.
+ * @param[out] num_operations returns the number of operations available. If @p
+ * num_operations is @c NULL, this argument is ignored.
+ * @return @ref QDMI_SUCCESS if the function is executed successfully.
+ * Otherwise, it returns one of the following error codes:
+ * @return @ref QDMI_ERROR_INVALID_ARGUMENT if @p num_entries is less than or
+ * equal to zero and @p operations is not @c NULL or if both @p operations and
+ * @p num_operations are @c NULL.
+ * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
+ */
+int QDMI_query_get_operations_dev(QDMI_Device device, int num_entries,
+                                  QDMI_Operation *operations,
+                                  int *num_operations);
 
 /**
  * @brief Query a device property.
@@ -55,18 +105,6 @@ int QDMI_query_device_property_dev(QDMI_Device_Property prop, int size,
  * can be of different types, such as defined for the individual property. The
  * function returns the value of the property in the memory pointed to by @p
  * value.
- *
- * @par
- * A site is a place that can potentially hold a qubit. In the case of
- * superconducting qubits, sites can be used synonymously with qubits. In the
- * case of neutral atoms, sites represent individual traps that can confine
- * atoms. Those atoms are then used as qubits.
- *
- * @par
- * To this end, sites are a generalization of qubits that denote locations where
- * qubits can be placed on a device. Sites are identified by an integer index
- * that is unique for each site on a device. The indices start at zero and go up
- * to the number of sites minus one.
  * @param[in] site is the index of the site for which the property is queried.
  * @param[in] prop is an enumeration constant that identifies the platform
  * information being queried. It can be one of the values specified for @ref
@@ -92,8 +130,8 @@ int QDMI_query_device_property_dev(QDMI_Device_Property prop, int size,
  * device.
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
-int QDMI_query_site_property_dev(int site, QDMI_Site_Property prop, int size,
-                                 void *value, int *size_ret);
+int QDMI_query_site_property_dev(QDMI_Site site, QDMI_Site_Property prop,
+                                 int size, void *value, int *size_ret);
 
 /**
  * @brief Query an operation property.
@@ -110,6 +148,8 @@ int QDMI_query_site_property_dev(int site, QDMI_Site_Property prop, int size,
  * be queried through this function by providing no sites at all, i.e., passing
  * @c NULL to @p sites.
  * @param[in] operation is the name of the operation for which the property is
+ * queried.
+ * @param[in] num_sites is the number of sites for which the property is
  * queried.
  * @param[in] sites is a list of indices of the sites for which the property is
  * queried or can be @c NULL. If @p sites is @c NULL, the property is queried
@@ -137,8 +177,8 @@ int QDMI_query_site_property_dev(int site, QDMI_Site_Property prop, int size,
  * device or for the given list of sites.
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
-int QDMI_query_operation_property_dev(const char *operation, int num_sites,
-                                      const int *sites,
+int QDMI_query_operation_property_dev(QDMI_Operation operation, int num_sites,
+                                      const QDMI_Site *sites,
                                       QDMI_Operation_Property prop, int size,
                                       void *value, int *size_ret);
 

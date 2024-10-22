@@ -15,17 +15,11 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #pragma once
 
+#include "qdmi/common/types.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/**
- * @brief Opaque type for a QDMI session.
- * @details A handle for making devices (@ref QDMI_Device) available to a
- * client. It is implementation-defined how the session is represented and how
- * the session manages the devices it has access to.
- */
-typedef struct QDMI_Session_impl_d *QDMI_Session;
 
 /**
  * @brief Allocate a new QDMI session.
@@ -38,14 +32,6 @@ typedef struct QDMI_Session_impl_d *QDMI_Session;
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
 int QDMI_session_alloc(QDMI_Session *session);
-
-/**
- * @brief Opaque type for a device.
- * @details A handle for an implementation of the QDMI device interface. It is
- * implementation-defined how the device is represented and how the symbols
- * provided by the implementation are made available to the client.
- */
-typedef struct QDMI_Device_impl_d *QDMI_Device;
 
 /**
  * @brief Get the devices associated with @p session.

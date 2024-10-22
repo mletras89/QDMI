@@ -5,7 +5,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
 /** @file
- * @brief Define the properties that can be queried from the QDMI device.
+ * @brief Defines all enums used within QDMI.
  */
 
 #pragma once
@@ -48,9 +48,6 @@ enum QDMI_DEVICE_PROPERTY_T {
   QDMI_DEVICE_PROPERTY_MAX = 7
 };
 
-/// Type of the device properties.
-typedef enum QDMI_DEVICE_PROPERTY_T QDMI_Device_Property;
-
 /// Enum of the site properties that can be queried.
 enum QDMI_DEVICE_STATUS_T {
   QDMI_DEVICE_OFFLINE = 0,     ///< The device is offline.
@@ -68,9 +65,6 @@ enum QDMI_DEVICE_STATUS_T {
   QDMI_DEVICE_STATUS_MAX = 6
 };
 
-/// Type of the device status.
-typedef enum QDMI_DEVICE_STATUS_T QDMI_Device_Status;
-
 /// Enum of the site properties that can be queried.
 enum QDMI_SITE_PROPERTY_T {
   QDMI_T1_TIME = 0, ///< `double` The T1 time of a site in µs.
@@ -84,28 +78,24 @@ enum QDMI_SITE_PROPERTY_T {
   QDMI_SITE_PROPERTY_MAX = 2
 };
 
-/// Type of the site properties.
-typedef enum QDMI_SITE_PROPERTY_T QDMI_Site_Property;
-
 /// Enum of the operation properties that can be queried.
 enum QDMI_OPERATION_PROPERTY_T {
+  /// `char*` (string) The string identifier of the operation.
+  QDMI_OPERATION_NAME = 0,
   /// `int` The number of qubits in the operation.
-  QDMI_OPERATION_NUM_QUBITS = 0,
+  QDMI_OPERATION_NUM_QUBITS = 1,
   /// `double` The duration of an operation in µs.
-  QDMI_OPERATION_DURATION = 1,
+  QDMI_OPERATION_DURATION = 2,
   /// `double` The fidelity of an operation.
-  QDMI_OPERATION_FIDELITY = 2,
+  QDMI_OPERATION_FIDELITY = 3,
   /**
    * @brief The maximum value of the enum.
    * @details This value can be used for bounds checks by the devices.
    * @note This value should always be updated to be the last and maximum value
    * of the enum.
    */
-  QDMI_OPERATION_PROPERTY_MAX = 3
+  QDMI_OPERATION_PROPERTY_MAX = 4
 };
-
-/// Type of the operation properties.
-typedef enum QDMI_OPERATION_PROPERTY_T QDMI_Operation_Property;
 
 /// Enum of the device properties that can be queried.
 enum QDMI_JOB_STATUS_T {
@@ -119,9 +109,6 @@ enum QDMI_JOB_STATUS_T {
   QDMI_JOB_STATUS_CANCELLED = 3
 };
 
-/// Type of the device status.
-typedef enum QDMI_JOB_STATUS_T QDMI_Job_Status;
-
 /**
  * @brief Enum of the device properties that can be queried.
  * @note The values of this enum are meant to be used as bitflags. Hence, their
@@ -131,9 +118,6 @@ enum QDMI_DEVICE_MODE_T {
   QDMI_DEVICE_MODE_READ_ONLY = 0,  ///< To open the device in read-only mode.
   QDMI_DEVICE_MODE_READ_WRITE = 1, ///< To open the device in read-write mode.
 };
-
-/// Type of the device mode used in opening a device.
-typedef enum QDMI_DEVICE_MODE_T QDMI_Device_Mode;
 
 /**
  * @brief Status codes returned by the API.

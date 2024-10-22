@@ -29,29 +29,13 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  * @see qdmi/device/control.h for the device interface.
  */
 
-// todo: add a note to all the functions that allocate memory that the memory
-//  for the output parameters is allocated by the implementations of the methods
-//  and the caller is responsible for freeing the memory.
-
 #pragma once
 
-#include "qdmi/enums.h"
+#include "qdmi/common/types.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/**
- * @brief Opaque type for a device.
- * @details A device stores all functions implemented in its dynamic library.
- */
-typedef struct QDMI_Device_impl_d *QDMI_Device;
-/**
- * @brief Opaque type for a job.
- * @details A job is a handle to manage the job after it is submitted and to
- * access the results.
- */
-typedef struct QDMI_Job_impl_d *QDMI_Job;
 
 /**
  * @name Control Job Submission Interface

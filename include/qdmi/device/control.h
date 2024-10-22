@@ -17,24 +17,13 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  * For all of these, the remaining two can be implemented via simple
  * conversions.
  */
-// todo: add a note to all the functions that allocate memory that the
-//  implementations of the methods are expected to allocate memory for the
-//  output parameters and the caller is responsible for freeing the memory
-
 #pragma once
 
-#include "qdmi/enums.h"
+#include "qdmi/common/types.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/**
- * @brief Opaque type for a job.
- * @details A job is a handle to manage the job after it is submitted and to
- * access the results.
- */
-typedef struct QDMI_Job_impl_d *QDMI_Job;
 
 /** @name Control Job Submission Interface
  *  Functions related to submitting jobs.
