@@ -4,6 +4,12 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # ------------------------------------------------------------------------------
 
-add_library(driver driver.c)
+# add C++ language support
+enable_language(CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+add_library(driver driver.cpp)
 target_link_libraries(driver PRIVATE qdmi::qdmi)
 add_library(qdmi::driver ALIAS driver)
