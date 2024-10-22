@@ -23,116 +23,47 @@ extern "C" {
 typedef struct QDMI_Device_impl_d *QDMI_Device;
 
 /**
- * @name Query Device Interface
- * Functions related to querying device properties.
- * @{
- */
-
-// todo: add a note to all the string function that the device is responsible
-//  for allocating the memory of the returned string and the caller is
-//  responsible for freeing the memory of the returned string
-
-/**
- * @brief Query a device property of type string (char *).
- * @param[in] device The device to query.
- * @param[in] prop The property to query.
- * @param[out] value The value of the property.
- * @return @ref QDMI_SUCCESS if the property was queried successfully.
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the property has the wrong type.
+ * @brief Query a device property.
+ * @details This function queries a property of a device. The property can be
+ * one of the predefined properties in @ref QDMI_Device_Property. The property
+ * can be of different types, such as defined for the individual property. The
+ * function returns the value of the property in the memory pointed to by @p
+ * value.
+ * @param[in] device refers to the device returned by @ref
+ * QDMI_session_get_devices or can be @c NULL. If @p session is @c NULL, the
+ * behavior is implementation-defined.
+ * @param[in] prop is an enumeration constant that identifies the platform
+ * information being queried. It can be one of the values specified for @ref
+ * QDMI_Device_Property.
+ * @param[in] size specifies the size in bytes of memory pointed to by @p value.
+ * This size in bytes must be greater or equal to the size of the return type
+ * specified for the @ref QDMI_Device_Property @p prop.
+ * @param[out] value is a pointer to a memory location where appropriate values
+ * as specified for the @ref QDMI_Device_Property @p prop, will be returned. If
+ * @p value is @c NULL, it is ignored.
+ * @param[out] size_ret returns the actual size in bytes of data being queried
+ * by @p prop. If @p size_ret is @c NULL, it is ignored.
+ * @return @ref QDMI_SUCCESS if the function is executed successfully.
+ * Otherwise, it returns one of the following error codes:
+ * @return @ref QDMI_ERROR_INVALID_ARGUMENT if @p device is an invalid device,
+ * if @p prop is not one of the defined values, if the size in bytes specified
+ * by @p size is less than the size of the data being queried as specified for
+ * the @ref QDMI_Device_Property @p prop and @p value is not a @c NULL value, or
+ * if both @p value and @p size_ret are @c NULL.
  * @return @ref QDMI_ERROR_NOT_SUPPORTED if the property is not supported by the
  * device.
- * @return @ref QDMI_ERROR_FATAL if an error occurred while querying the
- * property.
+ * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
-int QDMI_query_device_property_string(QDMI_Device device,
-                                      QDMI_Device_Property prop, char **value);
+int QDMI_query_device_property(QDMI_Device device, QDMI_Device_Property prop,
+                               int size, void *value, int *size_ret);
 
 /**
- * @brief Query a device property of type double.
- * @param[in] device The device to query.
- * @param[in] prop The property to query.
- * @param[out] value The value of the property.
- * @return @ref QDMI_SUCCESS if the property was queried successfully.
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the property has the wrong type.
- * @return @ref QDMI_ERROR_NOT_SUPPORTED if the property is not supported by the
- * device.
- * @return @ref QDMI_ERROR_FATAL if an error occurred while querying the
- * property.
- */
-int QDMI_query_device_property_double(QDMI_Device device,
-                                      QDMI_Device_Property prop, double *value);
-
-/**
- * @brief Query a device property of type int.
- * @param[in] device The device to query.
- * @param[in] prop The property to query.
- * @param[out] value The value of the property.
- * @return @ref QDMI_SUCCESS if the property was queried successfully.
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the property has the wrong type.
- * @return @ref QDMI_ERROR_NOT_SUPPORTED if the property is not supported by the
- * device.
- * @return @ref QDMI_ERROR_FATAL if an error occurred while querying the
- * property.
- */
-int QDMI_query_device_property_int(QDMI_Device device,
-                                   QDMI_Device_Property prop, int *value);
-
-/**
- * @brief Query a device property of type string (char *) list.
- * @param[in] device The device to query.
- * @param[in] prop The property to query.
- * @param[out] values The values of the list.
- * @param[out] size The size of the list.
- * @return @ref QDMI_SUCCESS if the property was queried successfully.
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the property has the wrong type.
- * @return @ref QDMI_ERROR_NOT_SUPPORTED if the property is not supported by the
- * device.
- * @return @ref QDMI_ERROR_FATAL if an error occurred while querying the
- * property.
- */
-int QDMI_query_device_property_string_list(QDMI_Device device,
-                                           QDMI_Device_Property prop,
-                                           char ***values, int *size);
-
-/**
- * @brief Query a device property of type double list.
- * @param[in] device The device to query.
- * @param[in] prop The property to query.
- * @param[out] values The values of the list.
- * @param[out] size The size of the list.
- * @return @ref QDMI_SUCCESS if the property was queried successfully.
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the property has the wrong type.
- * @return @ref QDMI_ERROR_NOT_SUPPORTED if the property is not supported by the
- * device.
- * @return @ref QDMI_ERROR_FATAL if an error occurred while querying the
- * property.
- */
-int QDMI_query_device_property_double_list(QDMI_Device device,
-                                           QDMI_Device_Property prop,
-                                           double **values, int *size);
-
-/**
- * @brief Query a device property of type int list.
- * @param[in] device The device to query.
- * @param[in] prop The property to query.
- * @param[out] values The values of the list.
- * @param[out] size The size of the list.
- * @return @ref QDMI_SUCCESS if the property was queried successfully.
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the property has the wrong type.
- * @return @ref QDMI_ERROR_NOT_SUPPORTED if the property is not supported by the
- * device.
- * @return @ref QDMI_ERROR_FATAL if an error occurred while querying the
- * property.
- */
-int QDMI_query_device_property_int_list(QDMI_Device device,
-                                        QDMI_Device_Property prop, int **values,
-                                        int *size);
-
-/// @}
-
-/**
- * @name Query Site Interface
- * Functions related to querying site properties.
+ * @brief Query a site property.
+ * @details This function queries a property of a site. The property can be
+ * one of the predefined properties in @ref QDMI_Site_Property. The property
+ * can be of different types, such as defined for the individual property. The
+ * function returns the value of the property in the memory pointed to by @p
+ * value.
  *
  * @par
  * A site is a place that can potentially hold a qubit. In the case of
@@ -143,281 +74,89 @@ int QDMI_query_device_property_int_list(QDMI_Device device,
  * @par
  * To this end, sites are a generalization of qubits that denote locations where
  * qubits can be placed on a device. Sites are identified by an integer index
- * that is unique for each site on a device. The indices start at 0 and go up to
- * the number of sites minus one.
- * @{
- */
-
-/**
- * @brief Query a site property of type string (char *).
- * @param[in] device The device to query.
- * @param[in] site The site for which to query the property.
- * @param[in] prop The property to query.
- * @param[out] value The value of the property.
- * @return @ref QDMI_SUCCESS if the property was queried successfully.
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the property has the wrong type.
+ * that is unique for each site on a device. The indices start at zero and go up
+ * to the number of sites minus one.
+ * @param[in] device refers to the device returned by @ref
+ * QDMI_session_get_devices or can be @c NULL. If @p session is @c NULL, the
+ * behavior is implementation-defined.
+ * @param[in] site is the index of the site for which the property is queried.
+ * @param[in] prop is an enumeration constant that identifies the platform
+ * information being queried. It can be one of the values specified for @ref
+ * QDMI_Site_Property.
+ * @param[in] size specifies the size in bytes of memory pointed to by @p value.
+ * This size in bytes must be greater or equal to the size of the return type
+ * specified for the @ref QDMI_Site_Property @p prop.
+ * @param[out] value is a pointer to a memory location where appropriate values
+ * as specified for the @ref QDMI_Site_Property @p prop, will be returned. If
+ * @p value is @c NULL, it is ignored.
+ * @param[out] size_ret returns the actual size in bytes of data being queried
+ * by @p prop. If @p size_ret is @c NULL, it is ignored.
+ * @return @ref QDMI_SUCCESS if the function is executed successfully.
+ * Otherwise, it returns one of the following error codes:
+ * @return @ref QDMI_ERROR_INVALID_ARGUMENT if @p device is an invalid device,
+ * if @p prop is not one of the defined values, if the size in bytes specified
+ * by @p size is less than the size of the data being queried as specified for
+ * the @ref QDMI_Site_Property @p prop and @p value is not a @c NULL value, or
+ * if both @p value and @p size_ret are @c NULL.
+ * @return @ref QDMI_ERROR_OUT_OF_RANGE if the site index is out of range, i.e.,
+ * less than zero or greater than the number of sites minus one.
  * @return @ref QDMI_ERROR_NOT_SUPPORTED if the property is not supported by the
  * device.
- * @return @ref QDMI_ERROR_FATAL if an error occurred while querying the
- * property.
+ * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
-int QDMI_query_site_property_string(QDMI_Device device, int site,
-                                    QDMI_Site_Property prop, char **value);
+int QDMI_query_site_property(QDMI_Device device, int site,
+                             QDMI_Site_Property prop, int size, void *value,
+                             int *size_ret);
 
 /**
- * @brief Query a site property of type double.
- * @param[in] device The device to query.
- * @param[in] site The site for which to query the property.
- * @param[in] prop The property to query.
- * @param[out] value The value of the property.
- * @return @ref QDMI_SUCCESS if the property was queried successfully.
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the property has the wrong type.
+ * @brief Query an operation property.
+ * @details This function queries a property of an operation. The property can
+ * be one of the predefined properties in @ref QDMI_Operation_Property. The
+ * property can be of different types, such as defined for the individual
+ * property. The function returns the value of the property in the memory
+ * pointed to by @p value.
+ *
+ * @par
+ * The device may return @ref QDMI_ERROR_NOT_SUPPORTED also if the queried
+ * property cannot be provided for the given sites. E.g., some properties may
+ * only be available as an average value for all sites. Those may, nevertheless,
+ * be queried through this function by providing no sites at all, i.e., passing
+ * @c NULL to @p sites.
+ * @param[in] device refers to the device returned by @ref
+ * QDMI_session_get_devices or can be @c NULL. If @p session is @c NULL, the
+ * behavior is implementation-defined.
+ * @param[in] operation is the name of the operation for which the property is
+ * queried.
+ * @param[in] sites is a list of indices of the sites for which the property is
+ * queried or can be @c NULL. If @p sites is @c NULL, the property is queried
+ * for all sites, e.g., as an average value over all sites.
+ * @param[in] prop is an enumeration constant that identifies the platform
+ * information being queried. It can be one of the values specified for @ref
+ * QDMI_Site_Property.
+ * @param[in] size specifies the size in bytes of memory pointed to by @p value.
+ * This size in bytes must be greater or equal to the size of the return type
+ * specified for the @ref QDMI_Site_Property @p prop.
+ * @param[out] value is a pointer to a memory location where appropriate values
+ * as specified for the @ref QDMI_Site_Property @p prop, will be returned. If
+ * @p value is @c NULL, it is ignored.
+ * @param[out] size_ret returns the actual size in bytes of data being queried
+ * by @p prop. If @p size_ret is @c NULL, it is ignored.
+ * @return @ref QDMI_SUCCESS if the function is executed successfully.
+ * Otherwise, it returns one of the following error codes:
+ * @return @ref QDMI_ERROR_INVALID_ARGUMENT if @p device is an invalid device,
+ * if @p num_sites is less than or equal to zero and @p sites is not @c NULL, if
+ * @p prop is not one of the defined values, if the size in bytes specified by
+ * @p size is less than the size of the data being queried as specified for the
+ * @ref QDMI_Site_Property @p prop and @p value is not a @c NULL value, or if
+ * both @p value and @p size_ret are @c NULL.
  * @return @ref QDMI_ERROR_NOT_SUPPORTED if the property is not supported by the
- * device.
- * @return @ref QDMI_ERROR_FATAL if an error occurred while querying the
- * property.
+ * device or for the given list of sites.
+ * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
-int QDMI_query_site_property_double(QDMI_Device device, int site,
-                                    QDMI_Site_Property prop, double *value);
-
-/**
- * @brief Query a site property of type int.
- * @param[in] device The device to query.
- * @param[in] site The site for which to query the property.
- * @param[in] prop The property to query.
- * @param[out] value The value of the property.
- * @return @ref QDMI_SUCCESS if the property was queried successfully.
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the property has the wrong type.
- * @return @ref QDMI_ERROR_NOT_SUPPORTED if the property is not supported by the
- * device.
- * @return @ref QDMI_ERROR_FATAL if an error occurred while querying the
- * property.
- */
-int QDMI_query_site_property_int(QDMI_Device device, int site,
-                                 QDMI_Site_Property prop, int *value);
-
-/**
- * @brief Query a site property of type string (char *) list.
- * @param[in] device The device to query.
- * @param[in] site The site for which to query the property.
- * @param[in] prop The property to query.
- * @param[out] values The values of the list.
- * @param[out] size The size of the list.
- * @return @ref QDMI_SUCCESS if the property was queried successfully.
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the property has the wrong type.
- * @return @ref QDMI_ERROR_NOT_SUPPORTED if the property is not supported by the
- * device.
- * @return @ref QDMI_ERROR_FATAL if an error occurred while querying the
- * property.
- */
-int QDMI_query_site_property_string_list(QDMI_Device device, int site,
-                                         QDMI_Site_Property prop,
-                                         char ***values, int *size);
-
-/**
- * @brief Query a site property of type double list.
- * @param[in] device The device to query.
- * @param[in] site The site for which to query the property.
- * @param[in] prop The property to query.
- * @param[out] values The values of the list.
- * @param[out] size The size of the list.
- * @return @ref QDMI_SUCCESS if the property was queried successfully.
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the property has the wrong type.
- * @return @ref QDMI_ERROR_NOT_SUPPORTED if the property is not supported by the
- * device.
- * @return @ref QDMI_ERROR_FATAL if an error occurred while querying the
- * property.
- */
-int QDMI_query_site_property_double_list(QDMI_Device device, int site,
-                                         QDMI_Site_Property prop,
-                                         double **values, int *size);
-
-/**
- * @brief Query a site property of type int list.
- * @param[in] device The device to query.
- * @param[in] site The site for which to query the property.
- * @param[in] prop The property to query.
- * @param[out] values The values of the list.
- * @param[out] size The size of the list.
- * @return @ref QDMI_SUCCESS if the property was queried successfully.
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the property has the wrong type.
- * @return @ref QDMI_ERROR_NOT_SUPPORTED if the property is not supported by the
- * device.
- * @return @ref QDMI_ERROR_FATAL if an error occurred while querying the
- * property.
- */
-int QDMI_query_site_property_int_list(QDMI_Device device, int site,
-                                      QDMI_Site_Property prop, int **values,
-                                      int *size);
-
-/// @}
-
-/** @name Query Operation Interface
- * Functions related to querying operation properties. Operation properties can
- * be dependent of specific sites.
- * @see Query Site Interface
- * @{
- */
-
-/**
- * @brief Query an operation property at given sites of type string (char *).
- * @details The device may return @ref QDMI_ERROR_NOT_SUPPORTED also if the
- * queried property cannot be provided for the given sites. E.g., some
- * properties may only be available as an average value for all sites.
- * Those may, nevertheless, be queried through this function by providing no
- * sites at all, i.e., passing the `nullptr` to the `sites` parameter.
- * @param[in] device The device to query.
- * @param[in] operation The operation for which to query the property.
- * @param[in] sites The sites for which to query the property of the operation.
- * @param[in] num_sites The size of the sites list.
- * @param[in] prop The property to query.
- * @param[out] value The value of the property.
- * @return @ref QDMI_SUCCESS if the property was queried successfully.
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the property has the wrong type.
- * @return @ref QDMI_ERROR_NOT_SUPPORTED if the property is not supported by the
- * device.
- * @return @ref QDMI_ERROR_FATAL if an error occurred while querying the
- * property.
- */
-int QDMI_query_operation_property_string(QDMI_Device device,
-                                         const char *operation,
-                                         const int *sites, int num_sites,
-                                         QDMI_Operation_Property prop,
-                                         char **value);
-
-/**
- * @brief Query an operation property at given sites of type double.
- * @details The device may return @ref QDMI_ERROR_NOT_SUPPORTED also if the
- * queried property cannot be provided for the given sites. E.g., some
- * properties may only be available as an average value for all sites.
- * Those may, nevertheless, be queried through this function by providing no
- * sites at all, i.e., passing the `nullptr` to the `sites` parameter.
- * @param[in] device The device to query.
- * @param[in] operation The operation for which to query the property.
- * @param[in] sites The sites for which to query the property of the operation.
- * @param[in] num_sites The size of the sites list.
- * @param[in] prop The property to query.
- * @param[out] value The value of the property.
- * @return @ref QDMI_SUCCESS if the property was queried successfully.
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the property has the wrong type.
- * @return @ref QDMI_ERROR_NOT_SUPPORTED if the property is not supported by the
- * device.
- * @return @ref QDMI_ERROR_FATAL if an error occurred while querying the
- * property.
- */
-int QDMI_query_operation_property_double(QDMI_Device device,
-                                         const char *operation,
-                                         const int *sites, int num_sites,
-                                         QDMI_Operation_Property prop,
-                                         double *value);
-
-/**
- * @brief Query an operation property at given sites of type int.
- * @details The device may return @ref QDMI_ERROR_NOT_SUPPORTED also if the
- * queried property cannot be provided for the given sites. E.g., some
- * properties may only be available as an average value for all sites.
- * Those may, nevertheless, be queried through this function by providing no
- * sites at all, i.e., passing the `nullptr` to the `sites` parameter.
- * @param[in] device The device to query.
- * @param[in] operation The operation for which to query the property.
- * @param[in] sites The sites for which to query the property of the operation.
- * @param[in] num_sites The size of the sites list.
- * @param[in] prop The property to query.
- * @param[out] value The value of the property.
- * @return @ref QDMI_SUCCESS if the property was queried successfully.
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the property has the wrong type.
- * @return @ref QDMI_ERROR_NOT_SUPPORTED if the property is not supported by the
- * device.
- * @return @ref QDMI_ERROR_FATAL if an error occurred while querying the
- * property.
- */
-int QDMI_query_operation_property_int(QDMI_Device device, const char *operation,
-                                      const int *sites, int num_sites,
-                                      QDMI_Operation_Property prop, int *value);
-
-/**
- * @brief Query an operation property at given sites of type string (char *)
- * list.
- * @details The device may return @ref QDMI_ERROR_NOT_SUPPORTED also if the
- * queried property cannot be provided for the given sites. E.g., some
- * properties may only be available as an average value for all sites.
- * Those may, nevertheless, be queried through this function by providing no
- * sites at all, i.e., passing the `nullptr` to the `sites` parameter.
- * @param[in] device The device to query.
- * @param[in] operation The operation for which to query the property.
- * @param[in] sites The sites for which to query the property of the operation.
- * @param[in] num_sites The size of the sites list.
- * @param[in] prop The property to query.
- * @param[out] values The values of the list.
- * @param[out] size The size of the list.
- * @return @ref QDMI_SUCCESS if the property was queried successfully.
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the property has the wrong type.
- * @return @ref QDMI_ERROR_NOT_SUPPORTED if the property is not supported by the
- * device.
- * @return @ref QDMI_ERROR_FATAL if an error occurred while querying the
- * property.
- */
-int QDMI_query_operation_property_string_list(QDMI_Device device,
-                                              const char *operation,
-                                              const int *sites, int num_sites,
-                                              QDMI_Operation_Property prop,
-                                              char ***values, int *size);
-
-/**
- * @brief Query an operation property at given sites of type double list.
- * @details The device may return @ref QDMI_ERROR_NOT_SUPPORTED also if the
- * queried property cannot be provided for the given sites. E.g., some
- * properties may only be available as an average value for all sites.
- * Those may, nevertheless, be queried through this function by providing no
- * sites at all, i.e., passing the `nullptr` to the `sites` parameter.
- * @param[in] device The device to query.
- * @param[in] operation The operation for which to query the property.
- * @param[in] sites The sites for which to query the property of the operation.
- * @param[in] num_sites The size of the sites list.
- * @param[in] prop The property to query.
- * @param[out] values The values of the list.
- * @param[out] size The size of the list.
- * @return @ref QDMI_SUCCESS if the property was queried successfully.
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the property has the wrong type.
- * @return @ref QDMI_ERROR_NOT_SUPPORTED if the property is not supported by the
- * device.
- * @return @ref QDMI_ERROR_FATAL if an error occurred while querying the
- * property.
- */
-int QDMI_query_operation_property_double_list(QDMI_Device device,
-                                              const char *operation,
-                                              const int *sites, int num_sites,
-                                              QDMI_Operation_Property prop,
-                                              double **values, int *size);
-
-/**
- * @brief Query an operation property at given sites of type int list.
- * @details The device may return @ref QDMI_ERROR_NOT_SUPPORTED also if the
- * queried property cannot be provided for the given sites. E.g., some
- * properties may only be available as an average value for all sites.
- * Those may, nevertheless, be queried through this function by providing no
- * sites at all, i.e., passing the `nullptr` to the `sites` parameter.
- * @param[in] device The device to query.
- * @param[in] operation The operation for which to query the property.
- * @param[in] sites The sites for which to query the property of the operation.
- * @param[in] num_sites The size of the sites list.
- * @param[in] prop The property to query.
- * @param[out] values The values of the list.
- * @param[out] size The size of the list.
- * @return @ref QDMI_SUCCESS if the property was queried successfully.
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the property has the wrong type.
- * @return @ref QDMI_ERROR_NOT_SUPPORTED if the property is not supported by the
- * device.
- * @return @ref QDMI_ERROR_FATAL if an error occurred while querying the
- * property.
- */
-int QDMI_query_operation_property_int_list(QDMI_Device device,
-                                           const char *operation,
-                                           const int *sites, int num_sites,
-                                           QDMI_Operation_Property prop,
-                                           int **values, int *size);
-
-/// @}
+int QDMI_query_operation_property(QDMI_Device device, const char *operation,
+                                  int num_sites, const int *sites,
+                                  QDMI_Operation_Property prop, int size,
+                                  void *value, int *size_ret);
 
 #ifdef __cplusplus
 } // extern "C"
