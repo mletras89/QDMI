@@ -6,9 +6,9 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 /** @file
  * @brief A template of a device implementation in C.
- * @details In the end, all QDMI_ERROR_NOT_IMPLEMENTED return codes should be
- * replaced by QDMI_ERROR_NOT_IMPLEMENTED return codes.
- * For the documentation of the functions, see the official documentation.
+ * @details In the end, no function should return @ref
+ * QDMI_ERROR_NOT_IMPLEMENTED anymore. For the documentation of the functions,
+ * see the official documentation.
  */
 
 #include "qdmi/device.h"
@@ -23,110 +23,20 @@ typedef struct QDMI_Job_impl_d {
   int id;
 } QDMI_Job_impl_t;
 
-int QDMI_query_device_property_string_dev(const QDMI_Device_Property prop,
-                                          char **value) {
+int QDMI_query_device_property(QDMI_Device_Property prop, int size, void *value,
+                               int *size_ret) {
   return QDMI_ERROR_NOT_IMPLEMENTED;
 }
 
-int QDMI_query_device_property_double_dev(const QDMI_Device_Property prop,
-                                          double *value) {
+int QDMI_query_site_property(int site, QDMI_Site_Property prop, int size,
+                             void *value, int *size_ret) {
   return QDMI_ERROR_NOT_IMPLEMENTED;
 }
 
-int QDMI_query_device_property_int_dev(const QDMI_Device_Property prop,
-                                       int *value) {
-  return QDMI_ERROR_NOT_IMPLEMENTED;
-}
-
-int QDMI_query_device_property_string_list_dev(const QDMI_Device_Property prop,
-                                               char ***value, int *size) {
-  return QDMI_ERROR_NOT_IMPLEMENTED;
-}
-
-int QDMI_query_device_property_double_list_dev(const QDMI_Device_Property prop,
-                                               double **value, int *size) {
-  return QDMI_ERROR_NOT_IMPLEMENTED;
-}
-
-int QDMI_query_device_property_int_list_dev(const QDMI_Device_Property prop,
-                                            int **value, int *size) {
-  return QDMI_ERROR_NOT_IMPLEMENTED;
-}
-
-int QDMI_query_site_property_string_dev(const int site,
-                                        const QDMI_Site_Property prop,
-                                        char **value) {
-  return QDMI_ERROR_NOT_IMPLEMENTED;
-}
-
-int QDMI_query_site_property_double_dev(const int site,
-                                        const QDMI_Site_Property prop,
-                                        double *value) {
-  return QDMI_ERROR_NOT_IMPLEMENTED;
-}
-
-int QDMI_query_site_property_int_dev(const int site,
-                                     const QDMI_Site_Property prop,
-                                     int *value) {
-  return QDMI_ERROR_NOT_IMPLEMENTED;
-}
-
-int QDMI_query_site_property_string_list_dev(const int site,
-                                             const QDMI_Site_Property prop,
-                                             char ***value, int *size) {
-  return QDMI_ERROR_NOT_IMPLEMENTED;
-}
-
-int QDMI_query_site_property_double_list_dev(const int site,
-                                             const QDMI_Site_Property prop,
-                                             double **value, int *size) {
-  return QDMI_ERROR_NOT_IMPLEMENTED;
-}
-
-int QDMI_query_site_property_int_list_dev(const int site,
-                                          const QDMI_Site_Property prop,
-                                          int **value, int *size) {
-  return QDMI_ERROR_NOT_IMPLEMENTED;
-}
-
-int QDMI_query_operation_property_string_dev(const char *operation,
-                                             const int *sites,
-                                             const int num_sites,
-                                             const QDMI_Operation_Property prop,
-                                             char **value) {
-  return QDMI_ERROR_NOT_IMPLEMENTED;
-}
-
-int QDMI_query_operation_property_double_dev(const char *operation,
-                                             const int *sites,
-                                             const int num_sites,
-                                             const QDMI_Operation_Property prop,
-                                             double *value) {
-  return QDMI_ERROR_NOT_IMPLEMENTED;
-}
-
-int QDMI_query_operation_property_int_dev(const char *operation,
-                                          const int *sites, const int num_sites,
-                                          const QDMI_Operation_Property prop,
-                                          int *value) {
-  return QDMI_ERROR_NOT_IMPLEMENTED;
-}
-
-int QDMI_query_operation_property_string_list_dev(
-    const char *operation, const int *sites, const int num_sites,
-    const QDMI_Operation_Property prop, char ***value, int *size) {
-  return QDMI_ERROR_NOT_IMPLEMENTED;
-}
-
-int QDMI_query_operation_property_double_list_dev(
-    const char *operation, const int *sites, const int num_sites,
-    const QDMI_Operation_Property prop, double **value, int *size) {
-  return QDMI_ERROR_NOT_IMPLEMENTED;
-}
-
-int QDMI_query_operation_property_int_list_dev(
-    const char *operation, const int *sites, const int num_sites,
-    const QDMI_Operation_Property prop, int **value, int *size) {
+int QDMI_query_operation_property(const char *operation, int num_sites,
+                                  const int *sites,
+                                  QDMI_Operation_Property prop, int size,
+                                  void *value, int *size_ret) {
   return QDMI_ERROR_NOT_IMPLEMENTED;
 }
 
