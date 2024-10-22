@@ -18,9 +18,6 @@ extern "C" {
 
 /**
  * @brief Get the sites associated with @p device.
- * @param[in] device refers to the device returned by @ref
- * QDMI_session_get_devices or can be @c NULL. If @p session is @c NULL, the
- * behavior is implementation-defined.
  * @param[in] num_entries the number of entries that can be added to @p devices.
  * If @p devices is not @c NULL, @p num_entries must be greater than zero.
  * @param[out] sites returns a list of sites available on the device. The @ref
@@ -37,14 +34,10 @@ extern "C" {
  * num_sites are @c NULL.
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
-int QDMI_query_get_sites_dev(QDMI_Device device, int num_entries,
-                             QDMI_Site *sites, int *num_sites);
+int QDMI_query_get_sites_dev(int num_entries, QDMI_Site *sites, int *num_sites);
 
 /**
  * @brief Get the operations available on the @p device.
- * @param[in] device refers to the device returned by @ref
- * QDMI_session_get_devices or can be @c NULL. If @p session is @c NULL, the
- * behavior is implementation-defined.
  * @param[in] num_entries the number of entries that can be added to @p devices.
  * If @p devices is not @c NULL, @p num_entries must be greater than zero.
  * @param[out] operations returns a list of operations available on the device.
@@ -62,8 +55,7 @@ int QDMI_query_get_sites_dev(QDMI_Device device, int num_entries,
  * @p num_operations are @c NULL.
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
-int QDMI_query_get_operations_dev(QDMI_Device device, int num_entries,
-                                  QDMI_Operation *operations,
+int QDMI_query_get_operations_dev(int num_entries, QDMI_Operation *operations,
                                   int *num_operations);
 
 /**
