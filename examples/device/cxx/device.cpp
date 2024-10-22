@@ -21,9 +21,6 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <utility>
 #include <vector>
 
-// todo: adopt the query functions to the updated docu of return codes, esp.,
-//  distinguish the case whether the input is invalid or not supported
-
 struct QDMI_Job_impl_d {
   int id = 0;
   QDMI_Job_Status status = QDMI_JOB_STATUS_SUBMITTED;
@@ -41,44 +38,92 @@ struct QDMI_Device_State {
 
 QDMI_Device_State device_state;
 
-int QDMI_query_device_property_string_dev(const QDMI_Device_Property prop,
-                                          char **value) {
-  if (prop == QDMI_NAME) {
-    const std::string name("Device with 7 qubits");
-    *value = new char[name.length() + 1];
-    strcpy(*value, name.c_str());
-    return QDMI_SUCCESS;
-  }
-  if (prop == QDMI_DEVICE_VERSION) {
-    const std::string version("0.1.0");
-    *value = new char[version.length() + 1];
-    strcpy(*value, version.c_str());
-    return QDMI_SUCCESS;
-  }
-  if (prop == QDMI_LIBRARY_VERSION) {
-    const std::string version("0.2.0");
-    *value = new char[version.length() + 1];
-    strcpy(*value, version.c_str());
-    return QDMI_SUCCESS;
-  }
-  return QDMI_ERROR_INVALID_ARGUMENT;
-} /// [DOXYGEN FUNCTION END]
+struct QDMI_Site_impl_d {
+  int id;
+};
 
-int QDMI_query_device_property_double_dev(const QDMI_Device_Property prop,
-                                          double *value) {
-  return QDMI_ERROR_INVALID_ARGUMENT;
-} /// [DOXYGEN FUNCTION END]
+struct QDMI_Operation_impl_d {
+  char *name;
+};
 
-int QDMI_query_device_property_int_dev(const QDMI_Device_Property prop,
-                                       int *value) {
-  if (prop == QDMI_NUM_QUBITS) {
-    *value = 7;
-    return QDMI_SUCCESS;
+#define ADD_SINGLE_VALUE_PROPERTY(prop_name, prop_type, prop_value, prop,      \
+                                  size, value, size_ret)                       \
+  {                                                                            \
+    if ((prop) == (prop_name)) {                                               \
+      if ((size) < sizeof(prop_type)) {                                        \
+        return QDMI_ERROR_INVALID_ARGUMENT;                                    \
+      }                                                                        \
+      if ((value) != NULL) {                                                   \
+        *static_cast<(prop_type) *>(value) = prop_value;                       \
+      }                                                                        \
+      if ((size_ret) != NULL) {                                                \
+        *(size_ret) = sizeof(prop_type);                                       \
+      }                                                                        \
+      return QDMI_SUCCESS;                                                     \
+    }                                                                          \
   }
-  if (prop == QDMI_DEVICE_STATUS) {
-    *value = device_state.status;
-    return QDMI_SUCCESS;
+
+#define ADD_STRING_PROPERTY(prop_name, prop_value, prop, size, value,          \
+                            size_ret)                                          \
+  {                                                                            \
+    if ((prop) == (prop_name)) {                                               \
+      if ((size) < (prop_value).length() + 1) {                                \
+        return QDMI_ERROR_INVALID_ARGUMENT;                                    \
+      }                                                                        \
+      if ((value) != NULL) {                                                   \
+        strcpy(static_cast<char *>(value), (prop_value).c_str());              \
+      }                                                                        \
+      if ((size_ret) != NULL) {                                                \
+        *(size_ret) = static_cast<int>((prop_value).length()) + 1;             \
+      }                                                                        \
+      return QDMI_SUCCESS;                                                     \
+    }                                                                          \
   }
+
+#define ADD_LIST_PROPERTY(prop_name, prop_type, prop_values, prop_length,      \
+                          prop, size, value, size_ret)                         \
+  {                                                                            \
+    if ((prop) == (prop_name)) {                                               \
+      if ((size) < (prop_length) * sizeof(prop_type)) {                        \
+        return QDMI_ERROR_INVALID_ARGUMENT;                                    \
+      }                                                                        \
+      if ((value) != NULL) {                                                   \
+        memcpy(*(value), prop_values, (prop_length) * sizeof(prop_type));      \
+      }                                                                        \
+      if ((size_ret) != NULL) {                                                \
+        *(size_ret) = (prop_length) * (int)sizeof(prop_type);                  \
+      }                                                                        \
+      return QDMI_SUCCESS;                                                     \
+    }                                                                          \
+  }
+
+int QDMI_query_get_sites_dev(int num_entries, QDMI_Site *sites,
+                             int *num_sites) {
+  return 0;
+}
+
+int QDMI_query_get_operations_dev(int num_entries, QDMI_Operation *operations,
+                                  int *num_operations) {
+  return 0;
+}
+
+int QDMI_query_device_property_dev(QDMI_Device_Property prop, int size,
+                                   void *value, int *size_ret) {
+  if (prop >= QDMI_DEVICE_PROPERTY_MAX || (value == NULL && size_ret == NULL)) {
+    return QDMI_ERROR_INVALID_ARGUMENT;
+  }
+  ADD_STRING_PROPERTY(QDMI_NAME, std::string("Device with 5 qubits"), prop,
+                      size, value, size_ret);
+  ADD_STRING_PROPERTY(QDMI_DEVICE_VERSION, std::string("0.1.0"), prop, size,
+                      value, size_ret);
+  ADD_STRING_PROPERTY(QDMI_LIBRARY_VERSION, std::string("0.2.0"), prop, size,
+                      value, size_ret);
+  ADD_SINGLE_VALUE_PROPERTY(QDMI_NUM_QUBITS, int, 7, prop, size, value,
+                            size_ret);
+  ADD_SINGLE_VALUE_PROPERTY(QDMI_DEVICE_STATUS, QDMI_Device_Status,
+                            device_state.status, prop, size, value, size_ret);
+  ADD_STRING_PROPERTY(QDMI_GATE_SET, std::string("rx,ry,rz,cx"), prop, size,
+                      value, size_ret);
   return QDMI_ERROR_INVALID_ARGUMENT;
 } /// [DOXYGEN FUNCTION END]
 

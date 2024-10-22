@@ -25,13 +25,13 @@ typedef struct QDMI_Job_impl_d {
   int num_shots;
 } QDMI_Job_impl_t;
 
-typedef struct QDMI_Site_impl_d {
+struct QDMI_Site_impl_d {
   int id;
-} QDMI_Site_impl_t;
+};
 
-typedef struct QDMI_Operation_impl_d {
+struct QDMI_Operation_impl_d {
   char *name;
-} QDMI_Operation_impl_t;
+};
 
 #define ADD_SINGLE_VALUE_PROPERTY(prop_name, prop_type, prop_value, prop,      \
                                   size, value, size_ret)                       \
