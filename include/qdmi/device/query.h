@@ -45,8 +45,8 @@ extern "C" {
  * device.
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
-int QDMI_query_device_property(QDMI_Device_Property prop, int size, void *value,
-                               int *size_ret);
+int QDMI_query_device_property_dev(QDMI_Device_Property prop, int size,
+                                   void *value, int *size_ret);
 
 /**
  * @brief Query a site property.
@@ -92,8 +92,8 @@ int QDMI_query_device_property(QDMI_Device_Property prop, int size, void *value,
  * device.
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
-int QDMI_query_site_property(int site, QDMI_Site_Property prop, int size,
-                             void *value, int *size_ret);
+int QDMI_query_site_property_dev(int site, QDMI_Site_Property prop, int size,
+                                 void *value, int *size_ret);
 
 /**
  * @brief Query an operation property.
@@ -137,10 +137,10 @@ int QDMI_query_site_property(int site, QDMI_Site_Property prop, int size,
  * device or for the given list of sites.
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
-int QDMI_query_operation_property(const char *operation, int num_sites,
-                                  const int *sites,
-                                  QDMI_Operation_Property prop, int size,
-                                  void *value, int *size_ret);
+int QDMI_query_operation_property_dev(const char *operation, int num_sites,
+                                      const int *sites,
+                                      QDMI_Operation_Property prop, int size,
+                                      void *value, int *size_ret);
 
 #ifdef __cplusplus
 } // extern "C"
