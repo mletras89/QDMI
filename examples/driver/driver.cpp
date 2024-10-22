@@ -82,8 +82,8 @@ struct QDMI_Device_impl_d {
   // destructor
   ~QDMI_Device_impl_d() {
     // Check if QDMI_control_finalize is not NULL before calling it
-    if (QDMI_control_finalize_dev != nullptr) {
-      QDMI_control_finalize_dev();
+    if (control_finalize != nullptr) {
+      control_finalize();
     }
     // close the dynamic library
     if (lib_handle != nullptr) {

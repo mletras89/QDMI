@@ -13,7 +13,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  * control via sessions.
  *
  * @par
- * A driver must include this header and implement all enitites defined in this
+ * A driver must include this header and implement all entities defined in this
  * header and @ref driver/session.h.
  */
 
