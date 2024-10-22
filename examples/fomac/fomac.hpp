@@ -26,11 +26,11 @@ private:
 public:
   explicit FoMaC(QDMI_Device dev) : device(dev) {}
 
-  int query_num_qubits() const;
+  [[nodiscard]] int query_num_qubits() const;
 
-  std::vector<std::string> query_gate_set() const;
+  [[nodiscard]] std::vector<std::string> query_gate_set() const;
 
-  std::vector<std::pair<int, int>> query_coupling_map() const;
+  [[nodiscard]] std::vector<std::pair<int, int>> query_coupling_map() const;
 
-  int query_gate_num_qubits(const std::string &gate) const;
+  [[nodiscard]] int query_gate_num_qubits(const std::string &gate) const;
 };
