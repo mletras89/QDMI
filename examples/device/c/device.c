@@ -402,7 +402,7 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
   if (result == QDMI_JOB_RESULT_HIST_VALUES) {
     int raw_size = 0;
     QDMI_control_get_data_dev(job, QDMI_JOB_RESULT_SHOTS, 0, NULL, &raw_size);
-    char *raw_data = malloc(raw_size); // todo free this
+    char *raw_data = malloc(raw_size);
     QDMI_control_get_data_dev(job, QDMI_JOB_RESULT_SHOTS, raw_size, raw_data,
                               NULL);
     // split the string at the commas
