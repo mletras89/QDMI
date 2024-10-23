@@ -20,9 +20,9 @@ interface.
 Every device has to provide a name, its version, and the implemented QDMI library version through
 the query interface. The corresponding properties are
 
-- @ref QDMI_NAME
-- @ref QDMI_DEVICE_VERSION
-- @ref QDMI_LIBRARY_VERSION
+- @ref QDMI_DEVICE_PROPERTY_NAME
+- @ref QDMI_DEVICE_PROPERTY_VERSION
+- @ref QDMI_DEVICE_PROPERTY_LIBRARYVERSION
 
 All of those properties are of type `char*` (string). Hence, they are returned by the @ref
 QDMI_query_device_property function. Below you find the respective implementation in C and C++.
@@ -113,17 +113,17 @@ demonstrate how varying fidelities of two-qubit gates can be returned.
 ### Submitting a Job {#device-submit}
 
 One crucial part of QDMI is, that it allows to submit a job to the device for execution. The
-following example provides a mock implementation of the @ref QDMI_control_submit_qasm_dev function.
+following example provides a mock implementation of the @ref QDMI_control_submit_job_dev function.
 
 <!-- prettier-ignore-start -->
 <div class="tabbed">
 - <b class="tab-title">C</b>
   \dontinclude device.c
-  \skip QDMI_control_submit_qasm_dev
+  \skip QDMI_control_submit_job_dev
   \until DOXYGEN FUNCTION END
 - <b class="tab-title">C++</b>
   \dontinclude device.cpp
-  \skip QDMI_control_submit_qasm_dev
+  \skip QDMI_control_submit_job_dev
   \until DOXYGEN FUNCTION END
 </div>
 <!-- prettier-ignore-end -->

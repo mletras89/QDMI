@@ -134,8 +134,8 @@ int QDMI_query_device_property_dev(QDMI_Device_Property prop, int size,
                       size, value, size_ret);
   ADD_STRING_PROPERTY(QDMI_DEVICE_PROPERTY_VERSION, "0.1.0", prop, size, value,
                       size_ret);
-  ADD_STRING_PROPERTY(QDMI_DEVICE_PROPERTY_LIBRARYVERSION, "1.0.0b1", prop, size,
-                      value, size_ret);
+  ADD_STRING_PROPERTY(QDMI_DEVICE_PROPERTY_LIBRARYVERSION, "1.0.0b1", prop,
+                      size, value, size_ret);
   ADD_SINGLE_VALUE_PROPERTY(QDMI_DEVICE_PROPERTY_QUBITSNUM, int, 5, prop, size,
                             value, size_ret);
   ADD_SINGLE_VALUE_PROPERTY(QDMI_DEVICE_PROPERTY_STATUS, QDMI_Device_Status,
@@ -230,62 +230,60 @@ int QDMI_query_operation_property_dev(QDMI_Operation operation, int num_sites,
   return QDMI_ERROR_NOTSUPPORTED;
 } /// [DOXYGEN FUNCTION END]
 
-int QDMI_control_submit_qasm_dev(const char *qasm_string, int num_shots,
-                                 QDMI_Job *job) {
+int QDMI_control_create_job_dev(QDMI_Program_Format format, int size,
+                                const void *prog, QDMI_Job *job) {
   if (device_status != QDMI_DEVICE_STATUS_IDLE) {
     return QDMI_ERROR_FATAL;
   }
-
-  device_status = QDMI_DEVICE_STATUS_BUSY;
-  *job = (QDMI_Job)malloc(sizeof(QDMI_Job_impl_t));
-  // set job id to current time for demonstration purposes
-  (*job)->id = rand();
-  (*job)->num_shots = num_shots;
-  (*job)->status = QDMI_JOB_STATUS_SUBMITTED;
-  // here, the actual submission of the problem to the device would happen
-  // ...
-  // set job status to running for demonstration purposes
-  (*job)->status = QDMI_JOB_STATUS_RUNNING;
-  return QDMI_SUCCESS;
-} /// [DOXYGEN FUNCTION END]
-
-int QDMI_control_submit_qir_string_dev(const char *qir_string, int num_shots,
-                                       QDMI_Job *job) {
-  if (device_status != QDMI_DEVICE_STATUS_IDLE) {
-    return QDMI_ERROR_FATAL;
+  if (format == QDMI_PROGRAM_FORMAT_QASM2) {
+    device_status = QDMI_DEVICE_STATUS_BUSY;
+    *job = (QDMI_Job)malloc(sizeof(QDMI_Job_impl_t));
+    // set job id to current time for demonstration purposes
+    (*job)->id = rand();
+    (*job)->status = QDMI_JOB_STATUS_CREATED;
+    return QDMI_SUCCESS;
   }
-
-  device_status = QDMI_DEVICE_STATUS_BUSY;
-  *job = (QDMI_Job)malloc(sizeof(QDMI_Job_impl_t));
-  // set job id to current time for demonstration purposes
-  (*job)->id = rand();
-  (*job)->num_shots = num_shots;
-  (*job)->status = QDMI_JOB_STATUS_SUBMITTED;
-  // here, the actual submission of the problem to the device would happen
-  // ...
-  // set job status to running for demonstration purposes
-  (*job)->status = QDMI_JOB_STATUS_RUNNING;
-  return QDMI_SUCCESS;
-} /// [DOXYGEN FUNCTION END]
-
-int QDMI_control_submit_qir_module_dev(const void *qir_module, int num_shots,
-                                       QDMI_Job *job) {
-  if (device_status != QDMI_DEVICE_STATUS_IDLE) {
-    return QDMI_ERROR_FATAL;
+  if (format == QDMI_PROGRAM_FORMAT_QIRSTRING) {
+    device_status = QDMI_DEVICE_STATUS_BUSY;
+    *job = (QDMI_Job)malloc(sizeof(QDMI_Job_impl_t));
+    // set job id to current time for demonstration purposes
+    (*job)->id = rand();
+    (*job)->status = QDMI_JOB_STATUS_CREATED;
+    return QDMI_SUCCESS;
   }
+  if (format == QDMI_PROGRAM_FORMAT_QIRMODULE) {
+    device_status = QDMI_DEVICE_STATUS_BUSY;
+    *job = (QDMI_Job)malloc(sizeof(QDMI_Job_impl_t));
+    // set job id to current time for demonstration purposes
+    (*job)->id = rand();
+    (*job)->status = QDMI_JOB_STATUS_CREATED;
+    return QDMI_SUCCESS;
+  }
+  return QDMI_ERROR_NOTSUPPORTED;
+} /// [DOXYGEN FUNCTION END]
 
-  device_status = QDMI_DEVICE_STATUS_BUSY;
-  *job = (QDMI_Job)malloc(sizeof(QDMI_Job_impl_t));
-  // set job id to current time for demonstration purposes
-  (*job)->id = rand();
-  (*job)->num_shots = num_shots;
-  (*job)->status = QDMI_JOB_STATUS_SUBMITTED;
+int QDMI_control_set_parameter_dev(QDMI_Job job, QDMI_Job_Parameter param,
+                                   int size, const void *value) {
+  if (job == NULL || param >= QDMI_JOB_PARAMETER_MAX || size <= 0) {
+    return QDMI_ERROR_INVALIDARGUMENT;
+  }
+  if (param == QDMI_JOB_PARAMETER_SHOTS_NUM) {
+    job->num_shots = *(int *)value;
+    return QDMI_SUCCESS;
+  }
+  return QDMI_ERROR_NOTSUPPORTED;
+}
+
+int QDMI_control_submit_job_dev(QDMI_Job job) {
+  job->status = QDMI_JOB_STATUS_SUBMITTED;
   // here, the actual submission of the problem to the device would happen
   // ...
   // set job status to running for demonstration purposes
-  (*job)->status = QDMI_JOB_STATUS_RUNNING;
+  job->status = QDMI_JOB_STATUS_RUNNING;
   return QDMI_SUCCESS;
-} /// [DOXYGEN FUNCTION END]
+}
+
+void QDMI_control_free_job_dev(QDMI_Job job);
 
 int QDMI_control_cancel_dev(QDMI_Job job) {
   // cannot cancel a job that is already done
@@ -315,81 +313,77 @@ int Compare_results(const void *a, const void *b) {
   return strcmp(*(char **)a, *(char **)b);
 } /// [DOXYGEN FUNCTION END]
 
-int QDMI_control_get_hist_dev(QDMI_Job job, char ***data, int **counts,
-                              int *size) {
+int QDMI_control_get_data_dev(QDMI_Job job, QDMI_Job_Result result, int size,
+                              void *data, int *size_ret) {
   if (job->status != QDMI_JOB_STATUS_DONE) {
     return QDMI_ERROR_INVALIDARGUMENT;
   }
-
-  char **raw_data = NULL;
-  int raw_size = 0;
-  QDMI_control_get_raw_dev(job, &raw_data, &raw_size);
-  assert(raw_size == job->num_shots);
-  // Sort the array
-  qsort((void *)raw_data, raw_size, sizeof(char *), Compare_results);
-  // Count unique elements
-  int count = 1; // First element is always unique
-  for (int i = 1; i < raw_size; i++) {
-    if (strcmp(raw_data[i], raw_data[i - 1]) != 0) {
-      count++;
+  if (result == QDMI_JOB_RESULT_SHOTS) {
+    // generate random measurement results
+    int num_qubits = 0;
+    QDMI_query_device_property_dev(QDMI_DEVICE_PROPERTY_QUBITSNUM, sizeof(int),
+                                   &num_qubits, NULL);
+    if (size < job->num_shots * (num_qubits + 1)) {
+      return QDMI_ERROR_INVALIDARGUMENT;
     }
+    *size_ret = job->num_shots * num_qubits;
+    for (int i = 0; i < job->num_shots; i++) {
+      // generate random 5-bit string
+      for (int j = 0; j < num_qubits; j++) {
+        *(char *)(data + (i * (num_qubits + 1)) + j) = (rand() % 2) ? '1' : '0';
+      }
+      *(char *)(data + ((i + 1) * (num_qubits + 1))) = ',';
+    }
+    *(char *)(data + job->num_shots * (num_qubits + 1)) = '\0';
+    return QDMI_SUCCESS;
   }
-  *data = (char **)malloc(sizeof(char *) * (unsigned long)count);
-  *counts = (int *)malloc(sizeof(int) * (unsigned long)count);
-  *size = count;
-  int j = 0;
-  (*data)[j] = raw_data[j];
-  (*counts)[j] = 1;
-  for (int i = 1; i < raw_size; i++) {
-    // if next measured state is equivalent to the previous; note that the
-    // states are sorted
-    if (strcmp(raw_data[i], raw_data[i - 1]) == 0) {
-      (*counts)[j]++;
+  if (result == QDMI_JOB_RESULT_HIST_KEY) {
+
+    char **raw_data = NULL;
+    int raw_size = 0;
+    QDMI_control_get_raw_dev(job, &raw_data, &raw_size);
+    assert(raw_size == job->num_shots);
+    // Sort the array
+    qsort((void *)raw_data, raw_size, sizeof(char *), Compare_results);
+    // Count unique elements
+    int count = 1; // First element is always unique
+    for (int i = 1; i < raw_size; i++) {
+      if (strcmp(raw_data[i], raw_data[i - 1]) != 0) {
+        count++;
+      }
     }
-    // if next measured state is different to the previous; note that the
-    // states are sorted
-    (*data)[j] = raw_data[i];
+    *data = (char **)malloc(sizeof(char *) * (unsigned long)count);
+    *counts = (int *)malloc(sizeof(int) * (unsigned long)count);
+    *size = count;
+    int j = 0;
+    (*data)[j] = raw_data[j];
     (*counts)[j] = 1;
-    ++j;
-  }
-  return QDMI_SUCCESS;
-} /// [DOXYGEN FUNCTION END]
-
-int QDMI_control_get_raw_dev(QDMI_Job job, char ***data, int *size) {
-  if (job->status != QDMI_JOB_STATUS_DONE) {
-    return QDMI_ERROR_INVALIDARGUMENT;
-  }
-
-  *size = job->num_shots;
-  *data = (char **)malloc(sizeof(char *) * job->num_shots);
-
-  // generate random measurement results
-  int num_qubits = 0;
-  QDMI_query_device_property_dev(QDMI_DEVICE_PROPERTY_QUBITSNUM, sizeof(int),
-                                 &num_qubits, NULL);
-  for (int i = 0; i < job->num_shots; i++) {
-    (*data)[i] =
-        (char *)malloc((sizeof(char) * (unsigned long)num_qubits) + 1U);
-    // generate random 5-bit string
-    for (int j = 0; j < num_qubits; j++) {
-      (*data)[i][j] = (rand() % 2) ? '1' : '0';
+    for (int i = 1; i < raw_size; i++) {
+      // if next measured state is equivalent to the previous; note that the
+      // states are sorted
+      if (strcmp(raw_data[i], raw_data[i - 1]) == 0) {
+        (*counts)[j]++;
+      }
+      // if next measured state is different to the previous; note that the
+      // states are sorted
+      (*data)[j] = raw_data[i];
+      (*counts)[j] = 1;
+      ++j;
     }
-    (*data)[i][num_qubits] = '\0';
-  }
-  return QDMI_SUCCESS;
-} /// [DOXYGEN FUNCTION END]
+    return QDMI_SUCCESS;
+  } /// [DOXYGEN FUNCTION END]
 
-void QDMI_control_free_job_dev(QDMI_Job job) {
-  // this method should free all resources associated with the job
-  free(job);
-} /// [DOXYGEN FUNCTION END]
+  void QDMI_control_free_job_dev(QDMI_Job job) {
+    // this method should free all resources associated with the job
+    free(job);
+  } /// [DOXYGEN FUNCTION END]
 
-int QDMI_control_initialize_dev(void) {
-  device_status = QDMI_DEVICE_STATUS_IDLE;
-  return QDMI_SUCCESS;
-} /// [DOXYGEN FUNCTION END]
+  int QDMI_control_initialize_dev(void) {
+    device_status = QDMI_DEVICE_STATUS_IDLE;
+    return QDMI_SUCCESS;
+  } /// [DOXYGEN FUNCTION END]
 
-int QDMI_control_finalize_dev(void) {
-  device_status = QDMI_DEVICE_STATUS_OFFLINE;
-  return QDMI_SUCCESS;
-} /// [DOXYGEN FUNCTION END]
+  int QDMI_control_finalize_dev(void) {
+    device_status = QDMI_DEVICE_STATUS_OFFLINE;
+    return QDMI_SUCCESS;
+  } /// [DOXYGEN FUNCTION END]
