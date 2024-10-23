@@ -10,7 +10,7 @@ cmake_minimum_required(VERSION 3.19...3.30)
 project(
   qdmi
   LANGUAGES C
-  VERSION 1.0.0
+  VERSION 1.0.0 # Beta 1
   DESCRIPTION "QDMI –– Quantum Device Management Interface")
 
 # make scripts available to cmake
