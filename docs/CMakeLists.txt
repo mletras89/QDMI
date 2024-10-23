@@ -46,7 +46,7 @@ set(DOXYGEN_CONFIG_FILE_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
 
 # Save the location the files of the project doxygen-awesome-css were cloned
 # into. This allows us to get the path to doxygen-awesome.css. For its usage
-# also see the occurrences of @@AWESOME_CSS_DIR@@ in the Doxyfile.in.
+# also see the occurrences of @AWESOME_CSS_DIR@ in the Doxyfile.in.
 FetchContent_GetProperties(doxygen-awesome-css SOURCE_DIR AWESOME_CSS_DIR)
 
 # Replace variables inside @@ with the current values, e.g., the placeholder
