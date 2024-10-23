@@ -12,4 +12,5 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_library(driver driver.cpp)
 target_link_libraries(driver PRIVATE qdmi::qdmi)
+target_include_directories(driver PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 add_library(qdmi::driver ALIAS driver)
