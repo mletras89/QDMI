@@ -164,7 +164,8 @@ int QDMI_query_operation_property_dev(QDMI_Operation operation, int num_sites,
                                       const QDMI_Site *sites,
                                       QDMI_Operation_Property prop, int size,
                                       void *value, int *size_ret) {
-  if (prop >= QDMI_DEVICE_PROPERTY_MAX || (sites != NULL && num_sites <= 0) ||
+  if (prop >= QDMI_DEVICE_PROPERTY_MAX || operation == NULL ||
+      (sites != NULL && num_sites <= 0) ||
       (value == NULL && size_ret == NULL)) {
     return QDMI_ERROR_INVALID_ARGUMENT;
   }
