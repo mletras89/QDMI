@@ -159,13 +159,12 @@ TEST_P(QDMIImplementationTest, QueryDeviceNameImplemented) {
                                        nullptr, &size),
             QDMI_SUCCESS)
       << "Devices must provide a name";
-  auto *value = new char[size];
+  std::string value(size, '\0');
   ASSERT_EQ(QDMI_query_device_property(device, QDMI_DEVICE_PROPERTY_NAME, size,
-                                       value, nullptr),
+                                       value.data(), nullptr),
             QDMI_SUCCESS)
       << "Devices must provide a name";
   ASSERT_NE(value, nullptr) << "Devices must provide a name";
-  delete value;
 }
 
 TEST_P(QDMIImplementationTest, QueryDeviceVersionImplemented) {
@@ -174,13 +173,12 @@ TEST_P(QDMIImplementationTest, QueryDeviceVersionImplemented) {
                                        nullptr, &size),
             QDMI_SUCCESS)
       << "Devices must provide a version";
-  auto *value = new char[size];
+  std::string value(size, '\0');
   ASSERT_EQ(QDMI_query_device_property(device, QDMI_DEVICE_PROPERTY_VERSION,
-                                       size, value, nullptr),
+                                       size, value.data(), nullptr),
             QDMI_SUCCESS)
       << "Devices must provide a version";
   ASSERT_NE(value, nullptr) << "Devices must provide a version";
-  delete value;
 }
 
 TEST_P(QDMIImplementationTest, QueryDeviceLibraryVersionImplemented) {
@@ -189,14 +187,13 @@ TEST_P(QDMIImplementationTest, QueryDeviceLibraryVersionImplemented) {
                 device, QDMI_DEVICE_PROPERTY_LIBRARYVERSION, 0, nullptr, &size),
             QDMI_SUCCESS)
       << "Devices must provide a library version";
-  auto *value = new char[size];
+  std::string value(size, '\0');
   ASSERT_EQ(QDMI_query_device_property(device,
                                        QDMI_DEVICE_PROPERTY_LIBRARYVERSION,
-                                       size, value, nullptr),
+                                       size, value.data(), nullptr),
             QDMI_SUCCESS)
       << "Devices must provide a library version";
   ASSERT_NE(value, nullptr) << "Devices must provide a library version";
-  delete value;
 }
 
 TEST_P(QDMIImplementationTest, ControlDeviceModeReadOnly) {
