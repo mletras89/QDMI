@@ -5,6 +5,4 @@
 # ------------------------------------------------------------------------------
 
 add_subdirectory(device)
-add_subdirectory(fomac)
-add_subdirectory(tool)
 add_subdirectory(driver)
