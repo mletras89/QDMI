@@ -28,7 +28,7 @@ extern "C" {
  * @param[out] session a handle to the session that is allocated. The session
  * must be freed by calling @ref QDMI_session_free when it is no longer needed.
  * @return @ref QDMI_SUCCESS if the session was allocated successfully.
- * @return @ref QDMI_ERROR_OUT_OF_MEM if memory space ran out.
+ * @return @ref QDMI_ERROR_OUTOFMEM if memory space ran out.
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
 int QDMI_session_alloc(QDMI_Session *session);
@@ -49,7 +49,7 @@ int QDMI_session_alloc(QDMI_Session *session);
  * num_devices is `NULL`, this argument is ignored.
  * @return @ref QDMI_SUCCESS if the function is executed successfully.
  * Otherwise, it returns one of the following error codes:
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if @p num_entries is less than or
+ * @return @ref QDMI_ERROR_INVALIDARGUMENT if @p num_entries is less than or
  * equal to zero and @p devices is not `NULL` or if both @p devices and @p
  * num_devices are `NULL`.
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.

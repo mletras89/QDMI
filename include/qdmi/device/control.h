@@ -43,8 +43,8 @@ extern "C" {
  * @param[in] num_shots The number of shots to take.
  * @param[out] job The job to submit.
  * @return @ref QDMI_SUCCESS if the job was successfully submitted
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the QASM string is invalid
- * @return @ref QDMI_ERROR_NOT_SUPPORTED if the device does not support QASM
+ * @return @ref QDMI_ERROR_INVALIDARGUMENT if the QASM string is invalid
+ * @return @ref QDMI_ERROR_NOTSUPPORTED if the device does not support QASM
  * @return @ref QDMI_ERROR_FATAL if the job submission failed
  */
 int QDMI_control_submit_qasm_dev(const char *qasm_string, int num_shots,
@@ -63,8 +63,8 @@ int QDMI_control_submit_qasm_dev(const char *qasm_string, int num_shots,
  * @param[in] num_shots The number of shots to take.
  * @param[out] job The job to submit.
  * @return @ref QDMI_SUCCESS if the job was successfully submitted
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the QIR string is invalid
- * @return @ref QDMI_ERROR_NOT_SUPPORTED if the device does not support QIR as
+ * @return @ref QDMI_ERROR_INVALIDARGUMENT if the QIR string is invalid
+ * @return @ref QDMI_ERROR_NOTSUPPORTED if the device does not support QIR as
  * string
  * @return @ref QDMI_ERROR_FATAL if the job submission failed
  */
@@ -84,8 +84,8 @@ int QDMI_control_submit_qir_string_dev(const char *qir_string, int num_shots,
  * @param[in] num_shots The number of shots to take.
  * @param[out] job The job to submit.
  * @return @ref QDMI_SUCCESS if the job was successfully submitted
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the QIR module is invalid
- * @return @ref QDMI_ERROR_NOT_SUPPORTED if the device does not support QIR as
+ * @return @ref QDMI_ERROR_INVALIDARGUMENT if the QIR module is invalid
+ * @return @ref QDMI_ERROR_NOTSUPPORTED if the device does not support QIR as
  * module
  * @return @ref QDMI_ERROR_FATAL if the job submission failed
  */
@@ -98,7 +98,7 @@ int QDMI_control_submit_qir_module_dev(const void *qir_module, int num_shots,
  * status of the job to @ref QDMI_JOB_STATUS_CANCELLED.
  * @param[in] job The job to cancel.
  * @return @ref QDMI_SUCCESS if the job was successfully cancelled.
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the job has already the status
+ * @return @ref QDMI_ERROR_INVALIDARGUMENT if the job has already the status
  * QDMI_JOB_STATUS_DONE or the job does not exist.
  * @return @ref QDMI_ERROR_FATAL if the job could not be cancelled.
  */
@@ -113,7 +113,7 @@ int QDMI_control_cancel_dev(QDMI_Job job);
  * @param[in] job The job to check the status of.
  * @param[out] status The status of the job.
  * @return @ref QDMI_SUCCESS if the job status was successfully checked.
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the job does not exist.
+ * @return @ref QDMI_ERROR_INVALIDARGUMENT if the job does not exist.
  */
 int QDMI_control_check_dev(QDMI_Job job, QDMI_Job_Status *status);
 
@@ -123,7 +123,7 @@ int QDMI_control_check_dev(QDMI_Job job, QDMI_Job_Status *status);
  * cancelled.
  * @param[in] job The job to wait for.
  * @return @ref QDMI_SUCCESS if the job is finished or cancelled.
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the job does not exist.
+ * @return @ref QDMI_ERROR_INVALIDARGUMENT if the job does not exist.
  * @return @ref QDMI_ERROR_FATAL if the job could not be waited for and this
  * function returns before the job has finished or has been cancelled.
  */
@@ -150,7 +150,7 @@ int QDMI_control_wait_dev(QDMI_Job job);
  * @param[out] counts The list of values.
  * @param[out] size The size, i.e., the number of elements of each list.
  * @return @ref QDMI_SUCCESS if the results were successfully retrieved.
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the job has not finished yet, was
+ * @return @ref QDMI_ERROR_INVALIDARGUMENT if the job has not finished yet, was
  * cancelled, or does not exist.
  * @return @ref QDMI_ERROR_FATAL if an error occurred during the retrieval.
  * @see QDMI_control_get_raw_dev
@@ -170,7 +170,7 @@ int QDMI_control_get_hist_dev(QDMI_Job job, char ***data, int **counts,
  * @param[out] data The list of raw measurement outcomes.
  * @param[out] size The size, i.e., the number of elements of the list.
  * @return @ref QDMI_SUCCESS if the results were successfully retrieved.
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if the job has not finished yet, was
+ * @return @ref QDMI_ERROR_INVALIDARGUMENT if the job has not finished yet, was
  * cancelled, or does not exist.
  * @return @ref QDMI_ERROR_FATAL if an error occurred during the retrieval.
  * @see QDMI_control_get_raw_dev

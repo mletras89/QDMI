@@ -29,7 +29,7 @@ extern "C" {
  * is @c NULL, this argument is ignored.
  * @return @ref QDMI_SUCCESS if the function is executed successfully.
  * Otherwise, it returns one of the following error codes:
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if @p num_entries is less than or
+ * @return @ref QDMI_ERROR_INVALIDARGUMENT if @p num_entries is less than or
  * equal to zero and @p sites is not @c NULL or if both @p sites and @p
  * num_sites are @c NULL.
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
@@ -50,7 +50,7 @@ int QDMI_query_get_sites_dev(int num_entries, QDMI_Site *sites, int *num_sites);
  * num_operations is @c NULL, this argument is ignored.
  * @return @ref QDMI_SUCCESS if the function is executed successfully.
  * Otherwise, it returns one of the following error codes:
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if @p num_entries is less than or
+ * @return @ref QDMI_ERROR_INVALIDARGUMENT if @p num_entries is less than or
  * equal to zero and @p operations is not @c NULL or if both @p operations and
  * @p num_operations are @c NULL.
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
@@ -78,12 +78,12 @@ int QDMI_query_get_operations_dev(int num_entries, QDMI_Operation *operations,
  * by @p prop. If @p size_ret is @c NULL, it is ignored.
  * @return @ref QDMI_SUCCESS if the function is executed successfully.
  * Otherwise, it returns one of the following error codes:
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT
+ * @return @ref QDMI_ERROR_INVALIDARGUMENT
  * if @p prop is not one of the defined values, if the size in bytes specified
  * by @p size is less than the size of the data being queried as specified for
  * the @ref QDMI_Device_Property @p prop and @p value is not a @c NULL value, or
  * if both @p value and @p size_ret are @c NULL.
- * @return @ref QDMI_ERROR_NOT_SUPPORTED if the property is not supported by the
+ * @return @ref QDMI_ERROR_NOTSUPPORTED if the property is not supported by the
  * device.
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
@@ -111,14 +111,14 @@ int QDMI_query_device_property_dev(QDMI_Device_Property prop, int size,
  * by @p prop. If @p size_ret is @c NULL, it is ignored.
  * @return @ref QDMI_SUCCESS if the function is executed successfully.
  * Otherwise, it returns one of the following error codes:
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if @p site is an invalid site,
+ * @return @ref QDMI_ERROR_INVALIDARGUMENT if @p site is an invalid site,
  * if @p prop is not one of the defined values, if the size in bytes specified
  * by @p size is less than the size of the data being queried as specified for
  * the @ref QDMI_Site_Property @p prop and @p value is not a @c NULL value, or
  * if both @p value and @p size_ret are @c NULL.
- * @return @ref QDMI_ERROR_OUT_OF_RANGE if the site index is out of range, i.e.,
+ * @return @ref QDMI_ERROR_OUTOFRANGE if the site index is out of range, i.e.,
  * less than zero or greater than the number of sites minus one.
- * @return @ref QDMI_ERROR_NOT_SUPPORTED if the property is not supported by the
+ * @return @ref QDMI_ERROR_NOTSUPPORTED if the property is not supported by the
  * device.
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
@@ -134,7 +134,7 @@ int QDMI_query_site_property_dev(QDMI_Site site, QDMI_Site_Property prop,
  * pointed to by @p value.
  *
  * @par
- * The device may return @ref QDMI_ERROR_NOT_SUPPORTED also if the queried
+ * The device may return @ref QDMI_ERROR_NOTSUPPORTED also if the queried
  * property cannot be provided for the given sites. E.g., some properties may
  * only be available as an average value for all sites. Those may, nevertheless,
  * be queried through this function by providing no sites at all, i.e., passing
@@ -159,14 +159,14 @@ int QDMI_query_site_property_dev(QDMI_Site site, QDMI_Site_Property prop,
  * by @p prop. If @p size_ret is @c NULL, it is ignored.
  * @return @ref QDMI_SUCCESS if the function is executed successfully.
  * Otherwise, it returns one of the following error codes:
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if @p operation is an invalid
+ * @return @ref QDMI_ERROR_INVALIDARGUMENT if @p operation is an invalid
  * operation, if @p num_sites is less than or equal to zero and @p sites is not
  * @c NULL, if
  * @p prop is not one of the defined values, if the size in bytes specified by
  * @p size is less than the size of the data being queried as specified for the
  * @ref QDMI_Site_Property @p prop and @p value is not a @c NULL value, or if
  * both @p value and @p size_ret are @c NULL.
- * @return @ref QDMI_ERROR_NOT_SUPPORTED if the property is not supported by the
+ * @return @ref QDMI_ERROR_NOTSUPPORTED if the property is not supported by the
  * device or for the given list of sites.
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
