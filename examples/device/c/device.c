@@ -179,8 +179,8 @@ int QDMI_query_operation_property_dev(const QDMI_Operation operation,
     ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_PROPERTY_DURATION, double, 0.01,
                               prop, size, value, size_ret);
     if (sites == NULL) {
-      ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_PROPERTY_QUBITS_NUM, int, 2,
-                                prop, size, value, size_ret);
+      ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_PROPERTY_QUBITSNUM, int, 2, prop,
+                                size, value, size_ret);
       return QDMI_ERROR_NOTSUPPORTED;
     }
     if (sites[0] == sites[1]) {
@@ -224,7 +224,7 @@ int QDMI_query_operation_property_dev(const QDMI_Operation operation,
     }
     ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_PROPERTY_DURATION, double, 0.01,
                               prop, size, value, size_ret);
-    ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_PROPERTY_QUBITS_NUM, int, 1, prop,
+    ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_PROPERTY_QUBITSNUM, int, 1, prop,
                               size, value, size_ret);
     ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_PROPERTY_FIDELITY, double, 0.999,
                               prop, size, value, size_ret);

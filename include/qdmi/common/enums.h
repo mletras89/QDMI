@@ -79,7 +79,7 @@ enum QDMI_OPERATION_PROPERTY_T {
   /// `char*` (string) The string identifier of the operation.
   QDMI_OPERATION_PROPERTY_NAME = 0,
   /// `int` The number of qubits in the operation.
-  QDMI_OPERATION_PROPERTY_QUBITS_NUM = 1,
+  QDMI_OPERATION_PROPERTY_QUBITSNUM = 1,
   /// `double` The duration of an operation in µs.
   QDMI_OPERATION_PROPERTY_DURATION = 2,
   /// `double` The fidelity of an operation.
