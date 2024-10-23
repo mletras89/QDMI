@@ -27,14 +27,13 @@ int main() {
   QDMI_query_operation_property_dev(
       nullptr, 0, nullptr, QDMI_OPERATION_PROPERTY_MAX, 0, nullptr, nullptr);
   // control interface
-  QDMI_control_submit_qasm_dev(nullptr, 0, nullptr);
-  QDMI_control_submit_qir_string_dev(nullptr, 0, nullptr);
-  QDMI_control_submit_qir_module_dev(nullptr, 0, nullptr);
+  QDMI_control_create_job_dev(QDMI_PROGRAM_FORMAT_MAX, 0, nullptr, nullptr);
+  QDMI_control_set_parameter_dev(nullptr, QDMI_JOB_PARAMETER_MAX, 0, nullptr);
+  QDMI_control_submit_job_dev(nullptr);
   QDMI_control_cancel_dev(nullptr);
   QDMI_control_check_dev(nullptr, nullptr);
   QDMI_control_wait_dev(nullptr);
-  QDMI_control_get_hist_dev(nullptr, nullptr, nullptr, nullptr);
-  QDMI_control_get_raw_dev(nullptr, nullptr, nullptr);
+  QDMI_control_get_data_dev(nullptr, QDMI_JOB_RESULT_MAX, 0, nullptr, nullptr);
   QDMI_control_free_job_dev(nullptr);
   QDMI_control_initialize_dev();
   QDMI_control_finalize_dev();
