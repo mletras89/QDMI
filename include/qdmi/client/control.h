@@ -43,6 +43,8 @@ extern "C" {
  * @{
  */
 
+// todo: substitute "immediately" by something else, because there is no
+//  immediately.
 /**
  * @brief Submit a QASM string to the device.
  * @details Create a job consisting of a circuit represented by a QASM string
