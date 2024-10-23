@@ -165,9 +165,4 @@ if(BUILD_QDMI_TESTS)
   add_subdirectory(examples)
   # include the tests itself
   add_subdirectory(test)
-  # include templates
-  #
-  # IMPORTANT: This directory must be included after the main library code.
-  add_subdirectory(templates/device/c)
-  add_subdirectory(templates/device/cxx)
 endif()
