@@ -17,11 +17,6 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  * header and @ref driver/session.h.
  */
 
-// todo: Martin had a comment to keep a prefix `qdmi_` in the name of the
-// header.
-//  I think it is not necessary, because the header is already in the `qdmi`
-//  directory. Does that suffice?
-
 #pragma once
 
 #include "qdmi/client.h"         // IWYU pragma: export
