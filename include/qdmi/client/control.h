@@ -135,7 +135,7 @@ int QDMI_control_wait(QDMI_Device dev, QDMI_Job job);
  * @return @ref QDMI_ERROR_FATAL if an error occurred during the retrieval.
  */
 int QDMI_control_get_data(QDMI_Device dev, QDMI_Job job, QDMI_Job_Result result,
-                          int size, void **data, int *size_ret);
+                          int size, void *data, int *size_ret);
 
 /**
  * @brief Free a job.
