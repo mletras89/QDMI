@@ -141,8 +141,6 @@ int QDMI_query_device_property_dev(const QDMI_Device_Property prop,
                             value, size_ret);
   ADD_SINGLE_VALUE_PROPERTY(QDMI_DEVICE_PROPERTY_STATUS, QDMI_Device_Status,
                             device_status, prop, size, value, size_ret);
-  ADD_STRING_PROPERTY(QDMI_DEVICE_PROPERTY_GATESET, "rx,ry,rz,cx", prop, size,
-                      value, size_ret);
   ADD_LIST_PROPERTY(QDMI_DEVICE_PROPERTY_COUPLINGMAP, int,
                     ((int[]){0, 1, 1, 2, 2, 3, 3, 4, 4, 0}), 10, prop, size,
                     value, size_ret);

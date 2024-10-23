@@ -67,7 +67,7 @@ TEST_P(QDMIImplementationTest, QueryCouplingMap) {
       << "Failed to query the size of the coupling map";
   ASSERT_GE(size, 0)
       << "Size of the coupling map must be greater or equal to 0";
-  std::vector<int> coupling_map(size);
+  std::vector<int> coupling_map(static_cast<std::size_t>(size));
   ASSERT_EQ(QDMI_query_device_property(device, QDMI_DEVICE_PROPERTY_COUPLINGMAP,
                                        size, coupling_map.data(), nullptr),
             QDMI_SUCCESS)
