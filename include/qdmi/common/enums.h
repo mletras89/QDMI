@@ -23,8 +23,8 @@ enum QDMI_DEVICE_PROPERTY_T {
   QDMI_DEVICE_PROPERTY_STATUS = 2,
   /// `char*` (string) The implemented version of QDMI.
   QDMI_DEVICE_PROPERTY_LIBRARYVERSION = 3,
-  QDMI_DEVICE_PROPERTY_QUBITSNUM =
-      4, ///< `int` The number of qubits in the device.
+  /// `int` The number of qubits in the device.
+  QDMI_DEVICE_PROPERTY_QUBITSNUM = 4,
   /**
    * @brief `int*` (int list) The coupling map of the device.
    * @details The returned list contains pairs of qubits that are coupled. The
@@ -35,13 +35,6 @@ enum QDMI_DEVICE_PROPERTY_T {
    * `{0, 1, 1, 2}`.
    */
   QDMI_DEVICE_PROPERTY_COUPLINGMAP = 5,
-  /**
-   * @brief `char**` (string list) The set of gates supported by
-   * the device.
-   * @details The returned list contains the names of the gates supported by the
-   * device.
-   */
-  QDMI_DEVICE_PROPERTY_GATESET = 6,
   /**
    * @brief The maximum value of the enum.
    * @details This value can be used for bounds checks by the devices.
