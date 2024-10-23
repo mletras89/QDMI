@@ -18,10 +18,10 @@ extern "C" {
 enum QDMI_DEVICE_PROPERTY_T {
   QDMI_NAME = 0,           ///< `char*` (string) The name of the device.
   QDMI_DEVICE_VERSION = 1, ///< `char*` (string) The version of the device.
+  QDMI_DEVICE_STATUS = 2,  ///< `int` The @ref QDMI_Device_Status of the device.
   /// `char*` (string) The implemented version of QDMI.
-  QDMI_LIBRARY_VERSION = 2,
-  QDMI_NUM_QUBITS = 3,    ///< `int` The number of qubits in the device.
-  QDMI_DEVICE_STATUS = 4, ///< `int` The @ref QDMI_Device_Status of the device.
+  QDMI_LIBRARY_VERSION = 3,
+  QDMI_QUBITS_NUM = 4, ///< `int` The number of qubits in the device.
   /**
    * @brief `int*` (int list) The coupling map of the device.
    * @details The returned list contains pairs of qubits that are coupled. The
@@ -31,14 +31,14 @@ enum QDMI_DEVICE_PROPERTY_T {
    * 3-qubit device with a coupling map of (0, 1), (1, 2) would return
    * `{0, 1, 1, 2}`.
    */
-  QDMI_COUPLING_MAP = 5,
+  QDMI_COUPLINGMAP = 5,
   /**
    * @brief `char**` (string list) The set of gates supported by
    * the device.
    * @details The returned list contains the names of the gates supported by the
    * device.
    */
-  QDMI_GATE_SET = 6,
+  QDMI_GATESET = 6,
   /**
    * @brief The maximum value of the enum.
    * @details This value can be used for bounds checks by the devices.
@@ -67,8 +67,8 @@ enum QDMI_DEVICE_STATUS_T {
 
 /// Enum of the site properties that can be queried.
 enum QDMI_SITE_PROPERTY_T {
-  QDMI_T1_TIME = 0, ///< `double` The T1 time of a site in µs.
-  QDMI_T2_TIME = 1, ///< `double` The T2 time of a site in µs.
+  QDMI_TIME_T1 = 0, ///< `double` The T1 time of a site in µs.
+  QDMI_TIME_T2 = 1, ///< `double` The T2 time of a site in µs.
   /**
    * @brief The maximum value of the enum.
    * @details This value can be used for bounds checks by the devices.
@@ -83,7 +83,7 @@ enum QDMI_OPERATION_PROPERTY_T {
   /// `char*` (string) The string identifier of the operation.
   QDMI_OPERATION_NAME = 0,
   /// `int` The number of qubits in the operation.
-  QDMI_OPERATION_NUM_QUBITS = 1,
+  QDMI_OPERATION_QUBITS_NUM = 1,
   /// `double` The duration of an operation in µs.
   QDMI_OPERATION_DURATION = 2,
   /// `double` The fidelity of an operation.
@@ -115,25 +115,25 @@ enum QDMI_JOB_STATUS_T {
  * values must be powers of 2.
  */
 enum QDMI_DEVICE_MODE_T {
-  QDMI_DEVICE_MODE_READ_ONLY = 0,  ///< To open the device in read-only mode.
-  QDMI_DEVICE_MODE_READ_WRITE = 1, ///< To open the device in read-write mode.
+  QDMI_DEVICE_MODE_READONLY = 0,  ///< To open the device in read-only mode.
+  QDMI_DEVICE_MODE_READWRITE = 1, ///< To open the device in read-write mode.
 };
 
 /**
  * @brief Status codes returned by the API.
  */
 enum QDMI_STATUS {
-  QDMI_WARN_GENERAL = 1,             ///< A general warning.
-  QDMI_SUCCESS = 0,                  ///< The operation was successful.
-  QDMI_ERROR_FATAL = -1,             ///< A fatal error.
-  QDMI_ERROR_OUT_OF_MEM = -2,        ///< Out of memory.
-  QDMI_ERROR_NOT_IMPLEMENTED = -3,   ///< Not implemented.
-  QDMI_ERROR_LIB_NOT_FOUND = -4,     ///< Library not found.
-  QDMI_ERROR_NOT_FOUND = -5,         ///< Element not found.
-  QDMI_ERROR_OUT_OF_RANGE = -6,      ///< Out of range.
-  QDMI_ERROR_INVALID_ARGUMENT = -7,  ///< Invalid argument.
-  QDMI_ERROR_PERMISSION_DENIED = -8, ///< Permission denied.
-  QDMI_ERROR_NOT_SUPPORTED = -9,     ///< Operation is not supported.
+  QDMI_WARN_GENERAL = 1,            ///< A general warning.
+  QDMI_SUCCESS = 0,                 ///< The operation was successful.
+  QDMI_ERROR_FATAL = -1,            ///< A fatal error.
+  QDMI_ERROR_OUTOFMEM = -2,         ///< Out of memory.
+  QDMI_ERROR_NOTIMPLEMENTED = -3,   ///< Not implemented.
+  QDMI_ERROR_LIBNOTFOUND = -4,      ///< Library not found.
+  QDMI_ERROR_NOTFOUND = -5,         ///< Element not found.
+  QDMI_ERROR_OUTOFRANGE = -6,       ///< Out of range.
+  QDMI_ERROR_INVALIDARGUMENT = -7,  ///< Invalid argument.
+  QDMI_ERROR_PERMISSIONDENIED = -8, ///< Permission denied.
+  QDMI_ERROR_NOTSUPPORTED = -9,     ///< Operation is not supported.
 };
 
 #ifdef __cplusplus

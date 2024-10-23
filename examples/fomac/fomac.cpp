@@ -23,7 +23,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 int FoMaC::query_num_qubits() const {
   int num_qubits = 0;
   const int ret =
-      QDMI_query_device_property_int(device, QDMI_NUM_QUBITS, &num_qubits);
+      QDMI_query_device_property_int(device, QDMI_QUBITS_NUM, &num_qubits);
   assert(ret == QDMI_SUCCESS);
   return num_qubits;
 }
@@ -31,7 +31,7 @@ int FoMaC::query_num_qubits() const {
 std::vector<std::string> FoMaC::query_gate_set() const {
   char **gate_set = nullptr;
   int num_gates = 0;
-  const int ret = QDMI_query_device_property_string_list(device, QDMI_GATE_SET,
+  const int ret = QDMI_query_device_property_string_list(device, QDMI_GATESET,
                                                          &gate_set, &num_gates);
   assert(ret == QDMI_SUCCESS);
   std::vector<std::string> gates;
@@ -50,7 +50,7 @@ std::vector<std::pair<int, int>> FoMaC::query_coupling_map() const {
   int *coupling_map = nullptr;
   int num_couplings = 0;
   const int ret = QDMI_query_device_property_int_list(
-      device, QDMI_COUPLING_MAP, &coupling_map, &num_couplings);
+      device, QDMI_COUPLINGMAP, &coupling_map, &num_couplings);
   assert(ret == QDMI_SUCCESS);
   assert(num_couplings % 2 == 0);
 
@@ -69,7 +69,7 @@ std::vector<std::pair<int, int>> FoMaC::query_coupling_map() const {
 int FoMaC::query_gate_num_qubits(const std::string &gate) const {
   int num_qubits = 0;
   const int ret = QDMI_query_operation_property_int(
-      device, gate.c_str(), nullptr, 0, QDMI_OPERATION_NUM_QUBITS, &num_qubits);
+      device, gate.c_str(), nullptr, 0, QDMI_OPERATION_QUBITS_NUM, &num_qubits);
   assert(ret == QDMI_SUCCESS);
   return num_qubits;
 }

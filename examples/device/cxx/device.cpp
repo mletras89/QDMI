@@ -64,7 +64,7 @@ constexpr static std::array<QDMI_Operation, 4> device_operations = {
   {                                                                            \
     if ((prop) == (prop_name)) {                                               \
       if ((size) < sizeof(prop_type)) {                                        \
-        return QDMI_ERROR_INVALID_ARGUMENT;                                    \
+        return QDMI_ERROR_INVALIDARGUMENT;                                     \
       }                                                                        \
       if ((value) != nullptr) {                                                \
         *static_cast<prop_type *>(value) = prop_value;                         \
@@ -81,7 +81,7 @@ constexpr static std::array<QDMI_Operation, 4> device_operations = {
   {                                                                            \
     if ((prop) == (prop_name)) {                                               \
       if ((size) < (prop_value).length() + 1) {                                \
-        return QDMI_ERROR_INVALID_ARGUMENT;                                    \
+        return QDMI_ERROR_INVALIDARGUMENT;                                     \
       }                                                                        \
       if ((value) != nullptr) {                                                \
         strcpy(static_cast<char *>(value), (prop_value).c_str());              \
@@ -98,7 +98,7 @@ constexpr static std::array<QDMI_Operation, 4> device_operations = {
   {                                                                            \
     if ((prop) == (prop_name)) {                                               \
       if ((size) < (prop_values).size() * sizeof(prop_type)) {                 \
-        return QDMI_ERROR_INVALID_ARGUMENT;                                    \
+        return QDMI_ERROR_INVALIDARGUMENT;                                     \
       }                                                                        \
       if ((value) != nullptr) {                                                \
         memcpy((value), (prop_values).data(),                                  \
@@ -115,7 +115,7 @@ int QDMI_query_get_sites_dev(int num_entries, const QDMI_Site *sites,
                              int *num_sites) {
   if ((sites != nullptr && num_entries <= 0) ||
       (sites == nullptr && num_sites == nullptr)) {
-    return QDMI_ERROR_INVALID_ARGUMENT;
+    return QDMI_ERROR_INVALIDARGUMENT;
   }
   if (sites != nullptr) {
     memcpy(*sites, static_cast<const void *>(device_sites.data()),
@@ -132,7 +132,7 @@ int QDMI_query_get_operations_dev(int num_entries, QDMI_Operation *operations,
                                   int *num_operations) {
   if ((operations != nullptr && num_entries <= 0) ||
       (operations == nullptr && num_operations == nullptr)) {
-    return QDMI_ERROR_INVALID_ARGUMENT;
+    return QDMI_ERROR_INVALIDARGUMENT;
   }
   if (operations != nullptr) {
     memcpy(*operations, static_cast<const void *>(device_operations.data()),
@@ -148,7 +148,7 @@ int QDMI_query_device_property_dev(QDMI_Device_Property prop, int size,
                                    void *value, int *size_ret) {
   if (prop >= QDMI_DEVICE_PROPERTY_MAX ||
       (value == nullptr && size_ret == nullptr)) {
-    return QDMI_ERROR_INVALID_ARGUMENT;
+    return QDMI_ERROR_INVALIDARGUMENT;
   }
   ADD_STRING_PROPERTY(QDMI_NAME, std::string("Device with 5 qubits"), prop,
                       size, value, size_ret);
@@ -156,18 +156,18 @@ int QDMI_query_device_property_dev(QDMI_Device_Property prop, int size,
                       value, size_ret);
   ADD_STRING_PROPERTY(QDMI_LIBRARY_VERSION, std::string("0.2.0"), prop, size,
                       value, size_ret);
-  ADD_SINGLE_VALUE_PROPERTY(QDMI_NUM_QUBITS, int, 7, prop, size, value,
+  ADD_SINGLE_VALUE_PROPERTY(QDMI_QUBITS_NUM, int, 7, prop, size, value,
                             size_ret);
   ADD_SINGLE_VALUE_PROPERTY(QDMI_DEVICE_STATUS, QDMI_Device_Status,
                             device_state.status, prop, size, value, size_ret);
-  ADD_STRING_PROPERTY(QDMI_GATE_SET, std::string("rx,ry,rz,cx"), prop, size,
+  ADD_STRING_PROPERTY(QDMI_GATESET, std::string("rx,ry,rz,cx"), prop, size,
                       value, size_ret);
-  ADD_STRING_PROPERTY(QDMI_GATE_SET, std::string("rx,ry,rz,cx"), prop, size,
+  ADD_STRING_PROPERTY(QDMI_GATESET, std::string("rx,ry,rz,cx"), prop, size,
                       value, size_ret);
   const std::vector<std::pair<int, int>> edges = {
       {0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}, {6, 0}};
   ADD_LIST_PROPERTY(
-      QDMI_COUPLING_MAP, int,
+      QDMI_COUPLINGMAP, int,
       (std::accumulate(edges.cbegin(), edges.cend(), std::vector<int>(),
                        [](auto &acc, const auto e) {
                          acc.emplace_back(e.first);
@@ -175,20 +175,20 @@ int QDMI_query_device_property_dev(QDMI_Device_Property prop, int size,
                          return acc;
                        })),
       prop, size, value, size_ret);
-  return QDMI_ERROR_NOT_SUPPORTED;
+  return QDMI_ERROR_NOTSUPPORTED;
 } /// [DOXYGEN FUNCTION END]
 
 int QDMI_query_site_property_dev(QDMI_Site site, QDMI_Site_Property prop,
                                  int size, void *value, int *size_ret) {
   if (prop >= QDMI_DEVICE_PROPERTY_MAX ||
       (value == nullptr && size_ret == nullptr)) {
-    return QDMI_ERROR_INVALID_ARGUMENT;
+    return QDMI_ERROR_INVALIDARGUMENT;
   }
-  ADD_SINGLE_VALUE_PROPERTY(QDMI_T1_TIME, double, 1000.0, prop, size, value,
+  ADD_SINGLE_VALUE_PROPERTY(QDMI_TIME_T1, double, 1000.0, prop, size, value,
                             size_ret);
-  ADD_SINGLE_VALUE_PROPERTY(QDMI_T2_TIME, double, 100000.0, prop, size, value,
+  ADD_SINGLE_VALUE_PROPERTY(QDMI_TIME_T2, double, 100000.0, prop, size, value,
                             size_ret);
-  return QDMI_ERROR_NOT_SUPPORTED;
+  return QDMI_ERROR_NOTSUPPORTED;
 } /// [DOXYGEN FUNCTION END]
 
 struct pair_hash {
@@ -207,7 +207,7 @@ int QDMI_query_operation_property_dev(QDMI_Operation operation, int num_sites,
   if (prop >= QDMI_DEVICE_PROPERTY_MAX || operation == nullptr ||
       (sites != nullptr && num_sites <= 0) ||
       (value == nullptr && size_ret == nullptr)) {
-    return QDMI_ERROR_INVALID_ARGUMENT;
+    return QDMI_ERROR_INVALIDARGUMENT;
   }
 
   static const std::unordered_map<QDMI_Operation, double> operation_durations =
@@ -244,7 +244,7 @@ int QDMI_query_operation_property_dev(QDMI_Operation operation, int num_sites,
                       size_ret);
   if (prop == QDMI_OPERATION_DURATION &&
       operation_durations.find(operation) == operation_durations.end()) {
-    return QDMI_ERROR_INVALID_ARGUMENT;
+    return QDMI_ERROR_INVALIDARGUMENT;
   }
   ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_DURATION, double,
                             operation_durations.at(operation), prop, size,
@@ -268,24 +268,24 @@ int QDMI_query_operation_property_dev(QDMI_Operation operation, int num_sites,
                                   size, value, size_ret);
       }
     }
-    return QDMI_ERROR_INVALID_ARGUMENT;
+    return QDMI_ERROR_INVALIDARGUMENT;
   }
-  if (prop == QDMI_OPERATION_NUM_QUBITS) {
+  if (prop == QDMI_OPERATION_QUBITS_NUM) {
     if (sites != nullptr) {
-      return QDMI_ERROR_NOT_SUPPORTED;
+      return QDMI_ERROR_NOTSUPPORTED;
     }
     if (operation == device_operations[0]) {
-      ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_NUM_QUBITS, int, 2, prop, size,
+      ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_QUBITS_NUM, int, 2, prop, size,
                                 value, size_ret);
     } else if (operation == device_operations[1] ||
                operation == device_operations[2] ||
                operation == device_operations[3]) {
-      ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_NUM_QUBITS, int, 1, prop, size,
+      ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_QUBITS_NUM, int, 1, prop, size,
                                 value, size_ret);
     }
-    return QDMI_ERROR_INVALID_ARGUMENT;
+    return QDMI_ERROR_INVALIDARGUMENT;
   }
-  return QDMI_ERROR_NOT_SUPPORTED;
+  return QDMI_ERROR_NOTSUPPORTED;
 } /// [DOXYGEN FUNCTION END]
 
 int QDMI_control_submit_qasm_dev(const char *qasm_string, int num_shots,
@@ -332,7 +332,7 @@ int QDMI_control_submit_qir_module_dev(const void *qir_module, int num_shots,
 
 int QDMI_control_cancel_dev(QDMI_Job job) {
   if (job->status == QDMI_JOB_STATUS_DONE) {
-    return QDMI_ERROR_INVALID_ARGUMENT;
+    return QDMI_ERROR_INVALIDARGUMENT;
   }
 
   job->status = QDMI_JOB_STATUS_CANCELLED;
@@ -360,7 +360,7 @@ int QDMI_control_wait_dev(QDMI_Job job) {
 int QDMI_control_get_hist_dev(QDMI_Job job, char ***data, int **counts,
                               int *size) {
   if (job->status != QDMI_JOB_STATUS_DONE) {
-    return QDMI_ERROR_INVALID_ARGUMENT;
+    return QDMI_ERROR_INVALIDARGUMENT;
   }
 
   char **raw_data = nullptr;
@@ -389,14 +389,14 @@ int QDMI_control_get_hist_dev(QDMI_Job job, char ***data, int **counts,
 
 int QDMI_control_get_raw_dev(QDMI_Job job, char ***data, int *size) {
   if (job->status != QDMI_JOB_STATUS_DONE) {
-    return QDMI_ERROR_INVALID_ARGUMENT;
+    return QDMI_ERROR_INVALIDARGUMENT;
   }
 
   *size = job->num_shots;
   *data = new char *[job->num_shots];
 
   int num_qubits = 0;
-  QDMI_query_device_property_int_dev(QDMI_NUM_QUBITS, &num_qubits);
+  QDMI_query_device_property_int_dev(QDMI_QUBITS_NUM, &num_qubits);
 
   std::bernoulli_distribution binary_dist(0.5); // 50% chance for '0' or '1'
 

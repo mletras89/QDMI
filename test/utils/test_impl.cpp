@@ -42,115 +42,115 @@ void QDMIImplementationTest::TearDown() {
 TEST_P(QDMIImplementationTest, QueryDevicePropertyStringImplemented) {
   ASSERT_EQ(QDMI_query_device_property(device, QDMI_DEVICE_PROPERTY_MAX, 0,
                                        nullptr nullptr),
-            QDMI_ERROR_INVALID_ARGUMENT);
+            QDMI_ERROR_INVALIDARGUMENT);
 }
 
 TEST_P(QDMIImplementationTest, QueryDevicePropertyDoubleImplemented) {
   ASSERT_EQ(QDMI_query_device_property_double(device, QDMI_DEVICE_PROPERTY_MAX,
                                               nullptr),
-            QDMI_ERROR_INVALID_ARGUMENT);
+            QDMI_ERROR_INVALIDARGUMENT);
 }
 
 TEST_P(QDMIImplementationTest, QueryDevicePropertyIntImplemented) {
   ASSERT_EQ(
       QDMI_query_device_property_int(device, QDMI_DEVICE_PROPERTY_MAX, nullptr),
-      QDMI_ERROR_INVALID_ARGUMENT);
+      QDMI_ERROR_INVALIDARGUMENT);
 }
 
 TEST_P(QDMIImplementationTest, QueryDevicePropertyStringListImplemented) {
   ASSERT_EQ(QDMI_query_device_property_string_list(
                 device, QDMI_DEVICE_PROPERTY_MAX, nullptr, nullptr),
-            QDMI_ERROR_INVALID_ARGUMENT);
+            QDMI_ERROR_INVALIDARGUMENT);
 }
 
 TEST_P(QDMIImplementationTest, QueryDevicePropertyDoubleListImplemented) {
   ASSERT_EQ(QDMI_query_device_property_double_list(
                 device, QDMI_DEVICE_PROPERTY_MAX, nullptr, nullptr),
-            QDMI_ERROR_INVALID_ARGUMENT);
+            QDMI_ERROR_INVALIDARGUMENT);
 }
 
 TEST_P(QDMIImplementationTest, QueryDevicePropertyIntListImplemented) {
   ASSERT_EQ(QDMI_query_device_property_int_list(
                 device, QDMI_DEVICE_PROPERTY_MAX, nullptr, nullptr),
-            QDMI_ERROR_INVALID_ARGUMENT);
+            QDMI_ERROR_INVALIDARGUMENT);
 }
 
 TEST_P(QDMIImplementationTest, QuerySitePropertyStringImplemented) {
   ASSERT_EQ(QDMI_query_site_property_string(device, 0, QDMI_SITE_PROPERTY_MAX,
                                             nullptr),
-            QDMI_ERROR_INVALID_ARGUMENT);
+            QDMI_ERROR_INVALIDARGUMENT);
 }
 
 TEST_P(QDMIImplementationTest, QuerySitePropertyDoubleImplemented) {
   ASSERT_EQ(QDMI_query_site_property_double(device, 0, QDMI_SITE_PROPERTY_MAX,
                                             nullptr),
-            QDMI_ERROR_INVALID_ARGUMENT);
+            QDMI_ERROR_INVALIDARGUMENT);
 }
 
 TEST_P(QDMIImplementationTest, QuerySitePropertyIntImplemented) {
   ASSERT_EQ(
       QDMI_query_site_property_int(device, 0, QDMI_SITE_PROPERTY_MAX, nullptr),
-      QDMI_ERROR_INVALID_ARGUMENT);
+      QDMI_ERROR_INVALIDARGUMENT);
 }
 
 TEST_P(QDMIImplementationTest, QuerySitePropertyStringListImplemented) {
   ASSERT_EQ(QDMI_query_site_property_string_list(
                 device, 0, QDMI_SITE_PROPERTY_MAX, nullptr, nullptr),
-            QDMI_ERROR_INVALID_ARGUMENT);
+            QDMI_ERROR_INVALIDARGUMENT);
 }
 
 TEST_P(QDMIImplementationTest, QuerySitePropertyDoubleListImplemented) {
   ASSERT_EQ(QDMI_query_site_property_double_list(
                 device, 0, QDMI_SITE_PROPERTY_MAX, nullptr, nullptr),
-            QDMI_ERROR_INVALID_ARGUMENT);
+            QDMI_ERROR_INVALIDARGUMENT);
 }
 
 TEST_P(QDMIImplementationTest, QuerySitePropertyIntListImplemented) {
   ASSERT_EQ(QDMI_query_site_property_int_list(device, 0, QDMI_SITE_PROPERTY_MAX,
                                               nullptr, nullptr),
-            QDMI_ERROR_INVALID_ARGUMENT);
+            QDMI_ERROR_INVALIDARGUMENT);
 }
 
 TEST_P(QDMIImplementationTest, QueryOperationPropertyStringImplemented) {
   ASSERT_EQ(QDMI_query_operation_property_string(device, nullptr, nullptr, 0,
                                                  QDMI_OPERATION_PROPERTY_MAX,
                                                  nullptr),
-            QDMI_ERROR_INVALID_ARGUMENT);
+            QDMI_ERROR_INVALIDARGUMENT);
 }
 
 TEST_P(QDMIImplementationTest, QueryOperationPropertyDoubleImplemented) {
   ASSERT_EQ(QDMI_query_operation_property_double(device, nullptr, nullptr, 0,
                                                  QDMI_OPERATION_PROPERTY_MAX,
                                                  nullptr),
-            QDMI_ERROR_INVALID_ARGUMENT);
+            QDMI_ERROR_INVALIDARGUMENT);
 }
 
 TEST_P(QDMIImplementationTest, QueryOperationPropertyIntImplemented) {
   ASSERT_EQ(QDMI_query_operation_property_int(device, nullptr, nullptr, 0,
                                               QDMI_OPERATION_PROPERTY_MAX,
                                               nullptr),
-            QDMI_ERROR_INVALID_ARGUMENT);
+            QDMI_ERROR_INVALIDARGUMENT);
 }
 
 TEST_P(QDMIImplementationTest, QueryOperationPropertyStringListImplemented) {
   ASSERT_EQ(QDMI_query_operation_property_string_list(
                 device, nullptr, nullptr, 0, QDMI_OPERATION_PROPERTY_MAX,
                 nullptr, nullptr),
-            QDMI_ERROR_INVALID_ARGUMENT);
+            QDMI_ERROR_INVALIDARGUMENT);
 }
 
 TEST_P(QDMIImplementationTest, QueryOperationPropertyDoubleListImplemented) {
   ASSERT_EQ(QDMI_query_operation_property_double_list(
                 device, nullptr, nullptr, 0, QDMI_OPERATION_PROPERTY_MAX,
                 nullptr, nullptr),
-            QDMI_ERROR_INVALID_ARGUMENT);
+            QDMI_ERROR_INVALIDARGUMENT);
 }
 
 TEST_P(QDMIImplementationTest, QueryOperationPropertyIntListImplemented) {
   ASSERT_EQ(QDMI_query_operation_property_int_list(device, nullptr, nullptr, 0,
                                                    QDMI_OPERATION_PROPERTY_MAX,
                                                    nullptr, nullptr),
-            QDMI_ERROR_INVALID_ARGUMENT);
+            QDMI_ERROR_INVALIDARGUMENT);
 }
 
 std::string Get_test_circuit() {
@@ -167,7 +167,7 @@ TEST_P(QDMIImplementationTest, ControlSubmitQasmImplemented) {
   QDMI_Job job = nullptr;
   ASSERT_NE(
       QDMI_control_submit_qasm(device, Get_test_circuit().c_str(), 10, &job),
-      QDMI_ERROR_NOT_IMPLEMENTED);
+      QDMI_ERROR_NOTIMPLEMENTED);
   QDMI_control_free_job(device, job);
 }
 
@@ -246,7 +246,7 @@ attributes #1 = { "irreversible" }
     )";
   ASSERT_NE(
       QDMI_control_submit_qir_string(device, qir_string.c_str(), 10, &job),
-      QDMI_ERROR_NOT_IMPLEMENTED);
+      QDMI_ERROR_NOTIMPLEMENTED);
   QDMI_control_free_job(device, job);
 }
 
@@ -254,7 +254,7 @@ TEST_P(QDMIImplementationTest, ControlSubmitQirModuleImplemented) {
   QDMI_Job job = nullptr;
   void *qir_module = nullptr;
   ASSERT_NE(QDMI_control_submit_qir_module(device, qir_module, 0, &job),
-            QDMI_ERROR_NOT_IMPLEMENTED);
+            QDMI_ERROR_NOTIMPLEMENTED);
   QDMI_control_free_job(device, job);
 }
 
@@ -262,8 +262,8 @@ TEST_P(QDMIImplementationTest, ControlCancelImplemented) {
   QDMI_Job job = nullptr;
   ASSERT_NE(
       QDMI_control_submit_qasm(device, Get_test_circuit().c_str(), 10, &job),
-      QDMI_ERROR_NOT_IMPLEMENTED);
-  ASSERT_NE(QDMI_control_cancel(device, job), QDMI_ERROR_NOT_IMPLEMENTED);
+      QDMI_ERROR_NOTIMPLEMENTED);
+  ASSERT_NE(QDMI_control_cancel(device, job), QDMI_ERROR_NOTIMPLEMENTED);
   QDMI_control_free_job(device, job);
 }
 
@@ -272,9 +272,9 @@ TEST_P(QDMIImplementationTest, ControlCheckImplemented) {
   QDMI_Job_Status status = QDMI_JOB_STATUS_RUNNING;
   ASSERT_NE(
       QDMI_control_submit_qasm(device, Get_test_circuit().c_str(), 10, &job),
-      QDMI_ERROR_NOT_IMPLEMENTED);
+      QDMI_ERROR_NOTIMPLEMENTED);
   ASSERT_NE(QDMI_control_check(device, job, &status),
-            QDMI_ERROR_NOT_IMPLEMENTED);
+            QDMI_ERROR_NOTIMPLEMENTED);
   QDMI_control_free_job(device, job);
 }
 
@@ -282,8 +282,8 @@ TEST_P(QDMIImplementationTest, ControlWaitImplemented) {
   QDMI_Job job = nullptr;
   ASSERT_NE(
       QDMI_control_submit_qasm(device, Get_test_circuit().c_str(), 10, &job),
-      QDMI_ERROR_NOT_IMPLEMENTED);
-  ASSERT_NE(QDMI_control_wait(device, job), QDMI_ERROR_NOT_IMPLEMENTED);
+      QDMI_ERROR_NOTIMPLEMENTED);
+  ASSERT_NE(QDMI_control_wait(device, job), QDMI_ERROR_NOTIMPLEMENTED);
   QDMI_control_free_job(device, job);
 }
 
@@ -294,9 +294,9 @@ TEST_P(QDMIImplementationTest, ControlGetHistImplemented) {
   int size = 0;
   ASSERT_NE(
       QDMI_control_submit_qasm(device, Get_test_circuit().c_str(), 10, &job),
-      QDMI_ERROR_NOT_IMPLEMENTED);
+      QDMI_ERROR_NOTIMPLEMENTED);
   ASSERT_NE(QDMI_control_get_hist(device, job, &data, &counts, &size),
-            QDMI_ERROR_NOT_IMPLEMENTED);
+            QDMI_ERROR_NOTIMPLEMENTED);
   QDMI_control_free_job(device, job);
 }
 
@@ -306,9 +306,9 @@ TEST_P(QDMIImplementationTest, ControlGetRawImplemented) {
   int size = 0;
   ASSERT_NE(
       QDMI_control_submit_qasm(device, Get_test_circuit().c_str(), 10, &job),
-      QDMI_ERROR_NOT_IMPLEMENTED);
+      QDMI_ERROR_NOTIMPLEMENTED);
   ASSERT_NE(QDMI_control_get_raw(device, job, &data, &size),
-            QDMI_ERROR_NOT_IMPLEMENTED);
+            QDMI_ERROR_NOTIMPLEMENTED);
   QDMI_control_free_job(device, job);
 }
 
@@ -349,21 +349,21 @@ TEST_P(QDMIImplementationTest, ControlDeviceModeReadOnly) {
   QDMI_Job job;
   ASSERT_EQ(
       QDMI_control_submit_qasm(device, Get_test_circuit().c_str(), 10, &job),
-      QDMI_ERROR_PERMISSION_DENIED);
+      QDMI_ERROR_PERMISSIONDENIED);
   ASSERT_EQ(QDMI_control_submit_qir_string(device, "", 10, &job),
-            QDMI_ERROR_PERMISSION_DENIED);
+            QDMI_ERROR_PERMISSIONDENIED);
   ASSERT_EQ(QDMI_control_submit_qir_module(device, nullptr, 10, &job),
-            QDMI_ERROR_PERMISSION_DENIED);
-  EXPECT_EQ(QDMI_control_cancel(device, job), QDMI_ERROR_PERMISSION_DENIED);
+            QDMI_ERROR_PERMISSIONDENIED);
+  EXPECT_EQ(QDMI_control_cancel(device, job), QDMI_ERROR_PERMISSIONDENIED);
   QDMI_Job_Status status;
   EXPECT_EQ(QDMI_control_check(device, job, &status),
-            QDMI_ERROR_PERMISSION_DENIED);
-  EXPECT_EQ(QDMI_control_wait(device, job), QDMI_ERROR_PERMISSION_DENIED);
+            QDMI_ERROR_PERMISSIONDENIED);
+  EXPECT_EQ(QDMI_control_wait(device, job), QDMI_ERROR_PERMISSIONDENIED);
   char **data;
   int *counts;
   int size;
   EXPECT_EQ(QDMI_control_get_hist(device, job, &data, &counts, &size),
-            QDMI_ERROR_PERMISSION_DENIED);
+            QDMI_ERROR_PERMISSIONDENIED);
   EXPECT_EQ(QDMI_control_get_raw(device, job, &data, &size),
-            QDMI_ERROR_PERMISSION_DENIED);
+            QDMI_ERROR_PERMISSIONDENIED);
 }

@@ -34,7 +34,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  */
 struct QDMI_Device_impl_d {
   void *lib_handle = nullptr;
-  QDMI_Device_Mode mode = QDMI_DEVICE_MODE_READ_WRITE;
+  QDMI_Device_Mode mode = QDMI_DEVICE_MODE_READWRITE;
 
   /// Function pointer to @ref QDMI_query_get_sites_dev.
   decltype(QDMI_query_get_sites_dev) *query_get_sites{};
@@ -192,9 +192,9 @@ int QDMI_Driver_init() {
 
     QDMI_Device_Mode mode{};
     if (mode_str == "read_only") {
-      mode = QDMI_Device_Mode::QDMI_DEVICE_MODE_READ_ONLY;
+      mode = QDMI_Device_Mode::QDMI_DEVICE_MODE_READONLY;
     } else if (mode_str == "read_write") {
-      mode = QDMI_Device_Mode::QDMI_DEVICE_MODE_READ_WRITE;
+      mode = QDMI_Device_Mode::QDMI_DEVICE_MODE_READWRITE;
     } else {
       std::cerr << "Invalid mode: " << mode_str << " in line: " << line << "\n";
       continue;
@@ -223,7 +223,7 @@ int QDMI_session_get_devices(QDMI_Session session, const int num_entries,
                              QDMI_Device *devices, int *num_devices) {
   if ((num_entries <= 0 && devices != nullptr) ||
       (devices == nullptr && num_devices == nullptr)) {
-    return QDMI_ERROR_INVALID_ARGUMENT;
+    return QDMI_ERROR_INVALIDARGUMENT;
   }
 
   if (session == nullptr) {
@@ -299,67 +299,67 @@ int QDMI_query_operation_property(const QDMI_Device device,
 
 int QDMI_control_submit_qasm(QDMI_Device dev, const char *qasm_string,
                              int num_shots, QDMI_Job *job) {
-  if ((dev->mode & QDMI_DEVICE_MODE_READ_WRITE) != 0) {
+  if ((dev->mode & QDMI_DEVICE_MODE_READWRITE) != 0) {
     return dev->control_submit_qasm(qasm_string, num_shots, job);
   }
-  return QDMI_ERROR_PERMISSION_DENIED;
+  return QDMI_ERROR_PERMISSIONDENIED;
 }
 
 int QDMI_control_submit_qir_string(QDMI_Device dev, const char *qir_string,
                                    int num_shots, QDMI_Job *job) {
-  if ((dev->mode & QDMI_DEVICE_MODE_READ_WRITE) != 0) {
+  if ((dev->mode & QDMI_DEVICE_MODE_READWRITE) != 0) {
     return dev->control_submit_qir_string(qir_string, num_shots, job);
   }
-  return QDMI_ERROR_PERMISSION_DENIED;
+  return QDMI_ERROR_PERMISSIONDENIED;
 }
 
 int QDMI_control_submit_qir_module(QDMI_Device dev, const void *qir_module,
                                    int num_shots, QDMI_Job *job) {
-  if ((dev->mode & QDMI_DEVICE_MODE_READ_WRITE) != 0) {
+  if ((dev->mode & QDMI_DEVICE_MODE_READWRITE) != 0) {
     return dev->control_submit_qir_module(qir_module, num_shots, job);
   }
-  return QDMI_ERROR_PERMISSION_DENIED;
+  return QDMI_ERROR_PERMISSIONDENIED;
 }
 
 int QDMI_control_cancel(QDMI_Device dev, QDMI_Job job) {
-  if ((dev->mode & QDMI_DEVICE_MODE_READ_WRITE) != 0) {
+  if ((dev->mode & QDMI_DEVICE_MODE_READWRITE) != 0) {
     return dev->control_cancel(job);
   }
-  return QDMI_ERROR_PERMISSION_DENIED;
+  return QDMI_ERROR_PERMISSIONDENIED;
 }
 
 int QDMI_control_check(QDMI_Device dev, QDMI_Job job, QDMI_Job_Status *status) {
-  if ((dev->mode & QDMI_DEVICE_MODE_READ_WRITE) != 0) {
+  if ((dev->mode & QDMI_DEVICE_MODE_READWRITE) != 0) {
     return dev->control_check(job, status);
   }
-  return QDMI_ERROR_PERMISSION_DENIED;
+  return QDMI_ERROR_PERMISSIONDENIED;
 }
 
 int QDMI_control_wait(QDMI_Device dev, QDMI_Job job) {
-  if ((dev->mode & QDMI_DEVICE_MODE_READ_WRITE) != 0) {
+  if ((dev->mode & QDMI_DEVICE_MODE_READWRITE) != 0) {
     return dev->control_wait(job);
   }
-  return QDMI_ERROR_PERMISSION_DENIED;
+  return QDMI_ERROR_PERMISSIONDENIED;
 }
 
 int QDMI_control_get_hist(QDMI_Device dev, QDMI_Job job, char ***data,
                           int **counts, int *size) {
-  if ((dev->mode & QDMI_DEVICE_MODE_READ_WRITE) != 0) {
+  if ((dev->mode & QDMI_DEVICE_MODE_READWRITE) != 0) {
     return dev->control_get_hist(job, data, counts, size);
   }
-  return QDMI_ERROR_PERMISSION_DENIED;
+  return QDMI_ERROR_PERMISSIONDENIED;
 }
 
 int QDMI_control_get_raw(QDMI_Device dev, QDMI_Job job, char ***data,
                          int *size) {
-  if ((dev->mode & QDMI_DEVICE_MODE_READ_WRITE) != 0) {
+  if ((dev->mode & QDMI_DEVICE_MODE_READWRITE) != 0) {
     return dev->control_get_raw(job, data, size);
   }
-  return QDMI_ERROR_PERMISSION_DENIED;
+  return QDMI_ERROR_PERMISSIONDENIED;
 }
 
 void QDMI_control_free_job(QDMI_Device dev, QDMI_Job job) {
-  if ((dev->mode & QDMI_DEVICE_MODE_READ_WRITE) != 0) {
+  if ((dev->mode & QDMI_DEVICE_MODE_READWRITE) != 0) {
     dev->control_free_job(job);
   }
 }
