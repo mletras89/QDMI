@@ -25,18 +25,17 @@ the query interface. The corresponding properties are
 - @ref QDMI_LIBRARY_VERSION
 
 All of those properties are of type `char*` (string). Hence, they are returned by the @ref
-QDMI_query_device_property_string function. Below you find the respective implementation in C and
-C++.
+QDMI_query_device_property function. Below you find the respective implementation in C and C++.
 
 <!-- prettier-ignore-start -->
 <div class="tabbed">
 - <b class="tab-title">C</b>
   \dontinclude device.c
-  \skip QDMI_query_device_property_string_dev
+  \skip QDMI_query_device_property_dev
   \until DOXYGEN FUNCTION END
 - <b class="tab-title">C++</b>
   \dontinclude device.cpp
-  \skip QDMI_query_device_property_string_dev
+  \skip QDMI_query_device_property_dev
   \until DOXYGEN FUNCTION END
 </div>
 <!-- prettier-ignore-end -->
@@ -49,13 +48,11 @@ Following two examples for returning `double` and `int` properties.
 <div class="tabbed">
 - <b class="tab-title">C</b>
   \dontinclude device.c
-  \skip QDMI_query_device_property_double_dev
-  \until QDMI_query_device_property_int_dev
+  \skip QDMI_query_device_property_dev
   \until DOXYGEN FUNCTION END
 - <b class="tab-title">C++</b>
   \dontinclude device.cpp
-  \skip QDMI_query_device_property_double_dev
-  \until QDMI_query_device_property_int_dev
+  \skip QDMI_query_device_property_dev
   \until DOXYGEN FUNCTION END
 </div>
 <!-- prettier-ignore-end -->
@@ -70,11 +67,11 @@ language.
 <div class="tabbed">
 - <b class="tab-title">C</b>
   \dontinclude device.c
-  \skip QDMI_query_device_property_string_list_dev
+  \skip QDMI_query_device_property_dev
   \until DOXYGEN FUNCTION END
 - <b class="tab-title">C++</b>
   \dontinclude device.cpp
-  \skip QDMI_query_device_property_string_list_dev
+  \skip QDMI_query_device_property_dev
   \until DOXYGEN FUNCTION END
 </div>
 <!-- prettier-ignore-end -->
@@ -85,26 +82,26 @@ Another example is the coupling map which is represented as a list of pairs of i
 <div class="tabbed">
 - <b class="tab-title">C</b>
   \dontinclude device.c
-  \skip QDMI_query_device_property_int_list_dev
+  \skip QDMI_query_device_property_dev
   \until DOXYGEN FUNCTION END
 - <b class="tab-title">C++</b>
   \dontinclude device.cpp
-  \skip QDMI_query_device_property_int_list_dev
+  \skip QDMI_query_device_property_dev
   \until DOXYGEN FUNCTION END
 </div>
 <!-- prettier-ignore-end -->
 
 ### Complex Properties {#device-complex}
 
-The properties that are returned by @ref QDMI_query_operation_property_double_dev may depend on the
-actual site. Hence, the implementation of those functions can be more complex. In the following
-example, we demonstrate how varying fidelities of two-qubit gates can be returned.
+The properties that are returned by @ref QDMI_query_operation_property_dev may depend on the actual
+site. Hence, the implementation of those functions can be more complex. In the following example, we
+demonstrate how varying fidelities of two-qubit gates can be returned.
 
 <!-- prettier-ignore-start -->
 <div class="tabbed">
 - <b class="tab-title">C</b>
   \dontinclude device.c
-  \skip QDMI_query_operation_property_double_dev
+  \skip QDMI_query_operation_property_dev
   \until DOXYGEN FUNCTION END
 - <b class="tab-title">C++</b>
   \dontinclude device.cpp
