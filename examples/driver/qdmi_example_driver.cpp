@@ -9,7 +9,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  * @details This file can be used as a template for implementing a driver in C.
  */
 
-#include "driver.h"
+#include "qdmi_example_driver.h"
 
 #include "qdmi/driver.h"
 

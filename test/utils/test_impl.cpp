@@ -6,9 +6,8 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include "test_impl.hpp"
 
-// TODO: Rename driver to disambiguate from potential other driver headers
-#include "driver.h"
 #include "qdmi/client.h"
+#include "qdmi_example_driver.h"
 
 #include <fstream>
 #include <gtest/gtest.h>
