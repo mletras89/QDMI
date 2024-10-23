@@ -34,8 +34,7 @@ extern "C" {
  * num_sites are @c NULL.
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
-int QDMI_query_get_sites_dev(int num_entries, const const QDMI_Site *sites,
-                             int *num_sites);
+int QDMI_query_get_sites_dev(int num_entries, QDMI_Site *sites, int *num_sites);
 
 /**
  * @brief Get the operations available on the @p device.
@@ -79,7 +78,7 @@ int QDMI_query_get_operations_dev(int num_entries, QDMI_Operation *operations,
  * by @p prop. If @p size_ret is @c NULL, it is ignored.
  * @return @ref QDMI_SUCCESS if the function is executed successfully.
  * Otherwise, it returns one of the following error codes:
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if @p device is an invalid device,
+ * @return @ref QDMI_ERROR_INVALID_ARGUMENT
  * if @p prop is not one of the defined values, if the size in bytes specified
  * by @p size is less than the size of the data being queried as specified for
  * the @ref QDMI_Device_Property @p prop and @p value is not a @c NULL value, or
@@ -112,7 +111,7 @@ int QDMI_query_device_property_dev(QDMI_Device_Property prop, int size,
  * by @p prop. If @p size_ret is @c NULL, it is ignored.
  * @return @ref QDMI_SUCCESS if the function is executed successfully.
  * Otherwise, it returns one of the following error codes:
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if @p device is an invalid device,
+ * @return @ref QDMI_ERROR_INVALID_ARGUMENT if @p site is an invalid site,
  * if @p prop is not one of the defined values, if the size in bytes specified
  * by @p size is less than the size of the data being queried as specified for
  * the @ref QDMI_Site_Property @p prop and @p value is not a @c NULL value, or
@@ -160,8 +159,9 @@ int QDMI_query_site_property_dev(QDMI_Site site, QDMI_Site_Property prop,
  * by @p prop. If @p size_ret is @c NULL, it is ignored.
  * @return @ref QDMI_SUCCESS if the function is executed successfully.
  * Otherwise, it returns one of the following error codes:
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if @p device is an invalid device,
- * if @p num_sites is less than or equal to zero and @p sites is not @c NULL, if
+ * @return @ref QDMI_ERROR_INVALID_ARGUMENT if @p operation is an invalid
+ * operation, if @p num_sites is less than or equal to zero and @p sites is not
+ * @c NULL, if
  * @p prop is not one of the defined values, if the size in bytes specified by
  * @p size is less than the size of the data being queried as specified for the
  * @ref QDMI_Site_Property @p prop and @p value is not a @c NULL value, or if

@@ -32,9 +32,9 @@ extern "C" {
  * is @c NULL, this argument is ignored.
  * @return @ref QDMI_SUCCESS if the function is executed successfully.
  * Otherwise, it returns one of the following error codes:
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if @p num_entries is less than or
- * equal to zero and @p sites is not @c NULL or if both @p sites and @p
- * num_sites are @c NULL.
+ * @return @ref QDMI_ERROR_INVALID_ARGUMENT if @p device is an invalid device,
+ * if @p num_entries is less than or equal to zero and @p sites is not @c NULL
+ * or if both @p sites and @p num_sites are @c NULL.
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
 int QDMI_query_get_sites(QDMI_Device device, int num_entries, QDMI_Site *sites,
@@ -57,8 +57,9 @@ int QDMI_query_get_sites(QDMI_Device device, int num_entries, QDMI_Site *sites,
  * num_operations is @c NULL, this argument is ignored.
  * @return @ref QDMI_SUCCESS if the function is executed successfully.
  * Otherwise, it returns one of the following error codes:
- * @return @ref QDMI_ERROR_INVALID_ARGUMENT if @p num_entries is less than or
- * equal to zero and @p operations is not @c NULL or if both @p operations and
+ * @return @ref QDMI_ERROR_INVALID_ARGUMENT if @p device is an invalid device,
+ * if @p num_entries is less than or equal to zero and @p operations is not @c
+ * NULL or if both @p operations and
  * @p num_operations are @c NULL.
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
@@ -147,7 +148,7 @@ int QDMI_query_device_property(QDMI_Device device, QDMI_Device_Property prop,
  * device.
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
-int QDMI_query_site_property(QDMI_Device device, int site,
+int QDMI_query_site_property(QDMI_Device device, QDMI_Site site,
                              QDMI_Site_Property prop, int size, void *value,
                              int *size_ret);
 
@@ -198,8 +199,8 @@ int QDMI_query_site_property(QDMI_Device device, int site,
  * device or for the given list of sites.
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
-int QDMI_query_operation_property(QDMI_Device device, const char *operation,
-                                  int num_sites, const int *sites,
+int QDMI_query_operation_property(QDMI_Device device, QDMI_Operation operation,
+                                  int num_sites, const QDMI_Site *sites,
                                   QDMI_Operation_Property prop, int size,
                                   void *value, int *size_ret);
 
