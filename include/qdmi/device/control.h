@@ -133,6 +133,27 @@ int QDMI_control_get_data_dev(QDMI_Job job, QDMI_Job_Result result, int size,
  */
 void QDMI_control_free_job_dev(QDMI_Job job);
 
+/**
+ * @brief Initialize a device.
+ * @details A device can expect that this function is called once in the
+ * beginning and has returned before any other functions are invoked on that
+ * device.
+ * @return @ref QDMI_SUCCESS if the initialization was successful.
+ * @return @ref QDMI_ERROR_FATAL if the initialization failed.
+ */
+int QDMI_control_initialize_dev(void);
+
+/**
+ * @brief Finalize a device.
+ * @details A device can expect that this function is called once at the end of
+ * a session and no other functions are invoked on that device after that
+ * anymore.
+ * @return @ref QDMI_SUCCESS if the finalization was successful.
+ * @return @ref QDMI_ERROR_FATAL if the finalization failed, this could, e.g.,
+ * be due to a job that is still running.
+ */
+int QDMI_control_finalize_dev(void);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif
