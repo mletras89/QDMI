@@ -126,15 +126,16 @@ int QDMI_control_wait(QDMI_Device dev, QDMI_Job job);
  * @param[in] dev The device to retrieve the results from.
  * @param[in] job The job to retrieve the results from.
  * @param[in] result The result to retrieve.
+ * @param[in] size The size of the data buffer in bytes.
  * @param[out] data The data of the result.
- * @param[out] size The size of the data.
+ * @param[out] size_ret The size of the returned data in bytes.
  * @return @ref QDMI_SUCCESS if the results were successfully retrieved.
  * @return @ref QDMI_ERROR_INVALIDARGUMENT if the job has not finished yet, was
  * cancelled, or does not exist.
  * @return @ref QDMI_ERROR_FATAL if an error occurred during the retrieval.
  */
 int QDMI_control_get_data(QDMI_Device dev, QDMI_Job job, QDMI_Job_Result result,
-                          void **data, int *size);
+                          int size, void **data, int *size_ret);
 
 /**
  * @brief Free a job.
