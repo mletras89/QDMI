@@ -47,22 +47,20 @@ struct QDMI_Device_impl_d {
   /// Function pointer to @ref QDMI_query_operation_property_dev.
   decltype(QDMI_query_operation_property_dev) *query_operation_property{};
 
-  /// Function pointer to @ref QDMI_control_submit_qasm_dev.
-  decltype(QDMI_control_submit_qasm_dev) *control_submit_qasm{};
-  /// Function pointer to @ref QDMI_control_submit_qir_string_dev.
-  decltype(QDMI_control_submit_qir_string_dev) *control_submit_qir_string{};
-  /// Function pointer to @ref QDMI_control_submit_qir_module_dev.
-  decltype(QDMI_control_submit_qir_module_dev) *control_submit_qir_module{};
+  /// Function pointer to @ref QDMI_control_create_job_dev.
+  decltype(QDMI_control_create_job_dev) *control_create_job{};
+  /// Function pointer to @ref QDMI_control_set_parameter_dev.
+  decltype(QDMI_control_set_parameter_dev) *control_set_parameter{};
+  /// Function pointer to @ref QDMI_control_submit_job_dev.
+  decltype(QDMI_control_submit_job_dev) *control_submit_job{};
   /// Function pointer to @ref QDMI_control_cancel_dev.
   decltype(QDMI_control_cancel_dev) *control_cancel{};
   /// Function pointer to @ref QDMI_control_check_dev.
   decltype(QDMI_control_check_dev) *control_check{};
   /// Function pointer to @ref QDMI_control_wait_dev.
   decltype(QDMI_control_wait_dev) *control_wait{};
-  /// Function pointer to @ref QDMI_control_get_hist_dev.
-  decltype(QDMI_control_get_hist_dev) *control_get_hist{};
-  /// Function pointer to @ref QDMI_control_get_raw_dev.
-  decltype(QDMI_control_get_raw_dev) *control_get_raw{};
+  /// Function pointer to @ref QDMI_control_get_data_dev.
+  decltype(QDMI_control_get_data_dev) *control_get_data{};
   /// Function pointer to @ref QDMI_control_free_job_dev.
   decltype(QDMI_control_free_job_dev) *control_free_job{};
   /// Function pointer to @ref QDMI_control_initialize_dev.
@@ -110,7 +108,6 @@ struct QDMI_Session_impl_d {
  */
 std::vector<std::shared_ptr<QDMI_Device_impl_d>> devices;
 
-// todo: Prefix for functions in device interface
 #define LOAD_SYMBOL(device, symbol)                                            \
   {                                                                            \
     (device).symbol = reinterpret_cast<decltype((device).symbol)>(             \
@@ -142,14 +139,13 @@ QDMI_Device_open(const std::string &lib_name, const QDMI_Device_Mode mode) {
     LOAD_SYMBOL(device, query_site_property);
     LOAD_SYMBOL(device, query_operation_property);
 
-    LOAD_SYMBOL(device, control_submit_qasm);
-    LOAD_SYMBOL(device, control_submit_qir_string);
-    LOAD_SYMBOL(device, control_submit_qir_module);
+    LOAD_SYMBOL(device, control_create_job);
+    LOAD_SYMBOL(device, control_set_parameter);
+    LOAD_SYMBOL(device, control_submit_job);
     LOAD_SYMBOL(device, control_cancel);
     LOAD_SYMBOL(device, control_check);
     LOAD_SYMBOL(device, control_wait);
-    LOAD_SYMBOL(device, control_get_hist);
-    LOAD_SYMBOL(device, control_get_raw);
+    LOAD_SYMBOL(device, control_get_data);
     LOAD_SYMBOL(device, control_free_job);
     LOAD_SYMBOL(device, control_initialize);
 
@@ -297,26 +293,26 @@ int QDMI_query_operation_property(const QDMI_Device device,
                                           size, value, size_ret);
 }
 
-int QDMI_control_submit_qasm(QDMI_Device dev, const char *qasm_string,
-                             int num_shots, QDMI_Job *job) {
+int QDMI_control_create_job(QDMI_Device dev, QDMI_Program_Format format,
+                            int size, const void *prog, QDMI_Job *job) {
   if ((dev->mode & QDMI_DEVICE_MODE_READWRITE) != 0) {
-    return dev->control_submit_qasm(qasm_string, num_shots, job);
+    return dev->control_create_job(format, size, prog, job);
   }
   return QDMI_ERROR_PERMISSIONDENIED;
 }
 
-int QDMI_control_submit_qir_string(QDMI_Device dev, const char *qir_string,
-                                   int num_shots, QDMI_Job *job) {
+int QDMI_control_set_parameter(QDMI_Device dev, QDMI_Job job,
+                               QDMI_Job_Parameter param, int size,
+                               const void *value) {
   if ((dev->mode & QDMI_DEVICE_MODE_READWRITE) != 0) {
-    return dev->control_submit_qir_string(qir_string, num_shots, job);
+    return dev->control_set_parameter(job, param, size, value);
   }
   return QDMI_ERROR_PERMISSIONDENIED;
 }
 
-int QDMI_control_submit_qir_module(QDMI_Device dev, const void *qir_module,
-                                   int num_shots, QDMI_Job *job) {
+int QDMI_control_submit_job(QDMI_Device dev, QDMI_Job job) {
   if ((dev->mode & QDMI_DEVICE_MODE_READWRITE) != 0) {
-    return dev->control_submit_qir_module(qir_module, num_shots, job);
+    return dev->control_submit_job(job);
   }
   return QDMI_ERROR_PERMISSIONDENIED;
 }
@@ -342,18 +338,10 @@ int QDMI_control_wait(QDMI_Device dev, QDMI_Job job) {
   return QDMI_ERROR_PERMISSIONDENIED;
 }
 
-int QDMI_control_get_hist(QDMI_Device dev, QDMI_Job job, char ***data,
-                          int **counts, int *size) {
+int QDMI_control_get_data(QDMI_Device dev, QDMI_Job job, QDMI_Job_Result result,
+                          int size, void *data, int *size_ret) {
   if ((dev->mode & QDMI_DEVICE_MODE_READWRITE) != 0) {
-    return dev->control_get_hist(job, data, counts, size);
-  }
-  return QDMI_ERROR_PERMISSIONDENIED;
-}
-
-int QDMI_control_get_raw(QDMI_Device dev, QDMI_Job job, char ***data,
-                         int *size) {
-  if ((dev->mode & QDMI_DEVICE_MODE_READWRITE) != 0) {
-    return dev->control_get_raw(job, data, size);
+    return dev->control_get_data(job, result, size, data, size_ret);
   }
   return QDMI_ERROR_PERMISSIONDENIED;
 }
