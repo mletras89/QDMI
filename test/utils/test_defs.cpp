@@ -19,8 +19,8 @@ struct QDMI_Job_impl_d {};
 
 int main() {
   // query interface
-  QDMI_query_get_sites_dev(nullptr, 0, nullptr, nullptr);
-  QDMI_query_get_operations_dev(nullptr, 0, nullptr, nullptr);
+  QDMI_query_get_sites_dev(0, nullptr, nullptr);
+  QDMI_query_get_operations_dev(0, nullptr, nullptr);
   QDMI_query_device_property_dev(QDMI_DEVICE_PROPERTY_MAX, 0, nullptr, nullptr);
   QDMI_query_site_property_dev(nullptr, QDMI_SITE_PROPERTY_MAX, 0, nullptr,
                                nullptr);
