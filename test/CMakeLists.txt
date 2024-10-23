@@ -27,13 +27,6 @@ target_link_libraries(
   qdmi_test_c_device_defs PRIVATE qdmi::qdmi qdmi::c_device qdmi::driver
                                   qdmi::project_warnings)
 
-# test that a device implementation implements all functions NOTE: This
-# executable is not meant to be ever executed, only linked.
-add_executable(qdmi_test_cxx_device_defs utils/test_defs.cpp)
-target_link_libraries(
-  qdmi_test_cxx_device_defs PRIVATE qdmi::qdmi qdmi::cxx_device qdmi::driver
-                                    qdmi::project_warnings)
-
 # ------------------------------------------------------------------------------
 # Functional Tests
 # ------------------------------------------------------------------------------
@@ -59,13 +52,12 @@ gtest_discover_tests(
   PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
              DISCOVERY_TIMEOUT 60)
 
-# ensure c_device and cxx_device are built whenever qdmi_test is built. Those
-# targets build the dynamic libraries that are loaded in the tests.
-add_dependencies(qdmi_test qdmi::c_device qdmi::cxx_device)
-# ensure qdmi_test_c_device_defs and qdmi_test_cxx_device_defs are built
-# whenever qdmi_test is built. Those targets ensure that the respective devices
-# implement all interface functions.
-add_dependencies(qdmi_test qdmi_test_c_device_defs qdmi_test_cxx_device_defs)
+# ensure c_device are built whenever qdmi_test is built. Those targets build the
+# dynamic libraries that are loaded in the tests.
+add_dependencies(qdmi_test qdmi::c_device)
+# ensure qdmi_test_c_device_defs are built whenever qdmi_test is built. Those
+# targets ensure that the respective devices implement all interface functions.
+add_dependencies(qdmi_test qdmi_test_c_device_defs)
 # ensure my_c_device_test and my_cxx_device_test are built whenever qdmi_test is
 # built. Those targets ensure that there is no compilation error in the
 # templates provided with QDMI and their tests.
