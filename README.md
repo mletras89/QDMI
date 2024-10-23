@@ -4,11 +4,6 @@
   SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 -->
 
-> [!IMPORTANT]
->
-> The Quantum Device Management Interface (QDMI) is experimental at this stage, and significant
-> changes, including breaking changes, are anticipated in upcoming releases.
-
 ![QDMI](docs/_static/qdmi.png)
 
 # QDMI — Quantum Device Management Interface (QDMI)
@@ -23,23 +18,10 @@ constraints of different platforms. QDMI strives to connect the software and har
 mediating between their competing interests, bridging between technologies, and eventually providing
 corresponding figures of merits and constraints to be considered. QDMI is therefore the method of
 choice for integrating new platforms into the MQSS and for software tools to query information from
-these platforms. QDMI is provided as a C header file to allow fast integration into an HPC
-environment and consists of three main components:
-
-- **QDMI Core**: Provides core functionality to manage sessions as well as to open and close
-  connections to devices.
-- **QDMI Query**: Allows querying properties of the device, e.g., supported gates, error rates, gate
-  duration, etc.
-- **QDMI Control**: Enables the control of the quantum devices. One can submit quantum circuits,
-  control the job queue, and readout measurement results.
+these platforms. QDMI is provided as a collection of C header files to allow fast integration into
+an HPC environment.
 
 <!-- [DOXYGEN MAIN] -->
-
-<p align="center">
-  <a href="https://mqss.readthedocs.io/projects/qdmi">
-  <img width=30% src="https://img.shields.io/badge/documentation-blue?style=for-the-badge&logo=read%20the%20docs" alt="Documentation" />
-  </a>
-</p>
 
 > [!IMPORTANT]
 >
@@ -87,7 +69,7 @@ interfacing with QDMI for platform feedback.
 
 ### Where is the code?
 
-The code is publicly available hosted on GitHub at
+The code is publicly available and hosted on GitHub at
 [github.com/Munich-Quantum-Software-Stack/QDMI](https://github.com/Munich-Quantum-Software-Stack/QDMI).
 
 ### Under which license is QDMI released?
@@ -108,7 +90,7 @@ software stacks, including those for HPC.
 Python natively allows calling C APIs. So while it might not be as straightforward as the usage from
 C/C++, it is definitely possible. However, we generally do expect Python-based programming
 approaches to be used as front-ends, feeding into a natively implemented compiler infrastructure,
-which then relies on QDMI. This is very analog on how Python is used in many other parts of
+which then relies on QDMI. This is very similar to how Python is used in many other parts of
 high-performance computing.
 
 <!-- [DOXYGEN FAQ] -->
