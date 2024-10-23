@@ -78,12 +78,12 @@ TEST_P(QDMIImplementationTest, QueryGatePropertiesForEachGate) {
         auto sites = std::array{i};
         EXPECT_EQ(QDMI_query_operation_property_double(
                       device, gate.c_str(), sites.data(), 1,
-                      QDMI_OPERATION_DURATION, &duration),
+                      QDMI_OPERATION_PROPERTY_DURATION, &duration),
                   QDMI_SUCCESS)
             << "Failed to query duration for gate " << gate;
         EXPECT_EQ(QDMI_query_operation_property_double(
                       device, gate.c_str(), sites.data(), 1,
-                      QDMI_OPERATION_FIDELITY, &fidelity),
+                      QDMI_OPERATION_PROPERTY_FIDELITY, &fidelity),
                   QDMI_SUCCESS)
             << "Failed to query fidelity for gate " << gate;
       }
@@ -93,12 +93,12 @@ TEST_P(QDMIImplementationTest, QueryGatePropertiesForEachGate) {
         auto sites = std::array{control, target};
         EXPECT_EQ(QDMI_query_operation_property_double(
                       device, gate.c_str(), sites.data(), 2,
-                      QDMI_OPERATION_DURATION, &duration),
+                      QDMI_OPERATION_PROPERTY_DURATION, &duration),
                   QDMI_SUCCESS)
             << "Failed to query duration for gate " << gate;
         EXPECT_EQ(QDMI_query_operation_property_double(
                       device, gate.c_str(), sites.data(), 2,
-                      QDMI_OPERATION_FIDELITY, &fidelity),
+                      QDMI_OPERATION_PROPERTY_FIDELITY, &fidelity),
                   QDMI_SUCCESS)
             << "Failed to query fidelity for gate " << gate;
       }

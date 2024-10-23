@@ -23,20 +23,30 @@ typedef struct QDMI_Job_impl_d {
   int id;
 } QDMI_Job_impl_t;
 
-int QDMI_query_device_property(QDMI_Device_Property prop, int size, void *value,
-                               int *size_ret) {
+int QDMI_query_get_sites_dev(int num_entries, QDMI_Site *sites,
+                             int *num_sites) {
   return QDMI_ERROR_NOTIMPLEMENTED;
 }
 
-int QDMI_query_site_property(int site, QDMI_Site_Property prop, int size,
-                             void *value, int *size_ret) {
+int QDMI_query_get_operations_dev(int num_entries, QDMI_Operation *operations,
+                                  int *num_operations) {
   return QDMI_ERROR_NOTIMPLEMENTED;
 }
 
-int QDMI_query_operation_property(const char *operation, int num_sites,
-                                  const int *sites,
-                                  QDMI_Operation_Property prop, int size,
-                                  void *value, int *size_ret) {
+int QDMI_query_device_property_dev(QDMI_Device_Property prop, int size,
+                                   void *value, int *size_ret) {
+  return QDMI_ERROR_NOTIMPLEMENTED;
+}
+
+int QDMI_query_site_property_dev(int site, QDMI_Site_Property prop, int size,
+                                 void *value, int *size_ret) {
+  return QDMI_ERROR_NOTIMPLEMENTED;
+}
+
+int QDMI_query_operation_property_dev(const char *operation, int num_sites,
+                                      const int *sites,
+                                      QDMI_Operation_Property prop, int size,
+                                      void *value, int *size_ret) {
   return QDMI_ERROR_NOTIMPLEMENTED;
 }
 

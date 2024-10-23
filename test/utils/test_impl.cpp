@@ -314,7 +314,8 @@ TEST_P(QDMIImplementationTest, ControlGetRawImplemented) {
 
 TEST_P(QDMIImplementationTest, QueryDeviceNameImplemented) {
   char *name = nullptr;
-  ASSERT_EQ(QDMI_query_device_property_string(device, QDMI_NAME, &name),
+  ASSERT_EQ(QDMI_query_device_property_string(device, QDMI_DEVICE_PROPERTY_NAME,
+                                              &name),
             QDMI_SUCCESS);
   ASSERT_NE(name, nullptr) << "Devices must provide a name";
   free(name);
@@ -322,18 +323,18 @@ TEST_P(QDMIImplementationTest, QueryDeviceNameImplemented) {
 
 TEST_P(QDMIImplementationTest, QueryDeviceVersionImplemented) {
   char *version = nullptr;
-  ASSERT_EQ(
-      QDMI_query_device_property_string(device, QDMI_DEVICE_VERSION, &version),
-      QDMI_SUCCESS);
+  ASSERT_EQ(QDMI_query_device_property_string(
+                device, QDMI_DEVICE_PROPERTY_VERSION, &version),
+            QDMI_SUCCESS);
   ASSERT_NE(version, nullptr) << "Devices must provide a version";
   free(version);
 }
 
 TEST_P(QDMIImplementationTest, QueryDeviceLibraryVersionImplemented) {
   char *version = nullptr;
-  ASSERT_EQ(
-      QDMI_query_device_property_string(device, QDMI_LIBRARY_VERSION, &version),
-      QDMI_SUCCESS);
+  ASSERT_EQ(QDMI_query_device_property_string(
+                device, QDMI_DEVICE_PROPERTY_LIBRARYVERSION, &version),
+            QDMI_SUCCESS);
   ASSERT_NE(version, nullptr) << "Devices must provide a QDMI library version";
   free(version);
 }

@@ -31,7 +31,7 @@ typedef struct QDMI_Operation_impl_d {
 } QDMI_Operation_impl_t;
 
 /// Global variable to store the status of the device
-QDMI_Device_Status device_status = QDMI_DEVICE_OFFLINE;
+QDMI_Device_Status device_status = QDMI_DEVICE_STATUS_OFFLINE;
 
 const QDMI_Site DEVICE_SITES[] = {
     &(QDMI_Site_impl_t){0}, &(QDMI_Site_impl_t){1}, &(QDMI_Site_impl_t){2},
@@ -130,18 +130,19 @@ int QDMI_query_device_property_dev(QDMI_Device_Property prop, int size,
   if (prop >= QDMI_DEVICE_PROPERTY_MAX || (value == NULL && size_ret == NULL)) {
     return QDMI_ERROR_INVALIDARGUMENT;
   }
-  ADD_STRING_PROPERTY(QDMI_NAME, "Device with 5 qubits", prop, size, value,
+  ADD_STRING_PROPERTY(QDMI_DEVICE_PROPERTY_NAME, "Device with 5 qubits", prop,
+                      size, value, size_ret);
+  ADD_STRING_PROPERTY(QDMI_DEVICE_PROPERTY_VERSION, "0.1.0", prop, size, value,
                       size_ret);
-  ADD_STRING_PROPERTY(QDMI_DEVICE_VERSION, "0.1.0", prop, size, value,
-                      size_ret);
-  ADD_STRING_PROPERTY(QDMI_LIBRARY_VERSION, "0.2.0", prop, size, value,
-                      size_ret);
-  ADD_SINGLE_VALUE_PROPERTY(QDMI_QUBITS_NUM, int, 5, prop, size, value,
-                            size_ret);
-  ADD_SINGLE_VALUE_PROPERTY(QDMI_DEVICE_STATUS, QDMI_Device_Status,
+  ADD_STRING_PROPERTY(QDMI_DEVICE_PROPERTY_LIBRARYVERSION, "0.2.0", prop, size,
+                      value, size_ret);
+  ADD_SINGLE_VALUE_PROPERTY(QDMI_DEVICE_PROPERTY_QUBITSNUM, int, 5, prop, size,
+                            value, size_ret);
+  ADD_SINGLE_VALUE_PROPERTY(QDMI_DEVICE_PROPERTY_STATUS, QDMI_Device_Status,
                             device_status, prop, size, value, size_ret);
-  ADD_STRING_PROPERTY(QDMI_GATESET, "rx,ry,rz,cx", prop, size, value, size_ret);
-  ADD_LIST_PROPERTY(QDMI_COUPLINGMAP, int,
+  ADD_STRING_PROPERTY(QDMI_DEVICE_PROPERTY_GATESET, "rx,ry,rz,cx", prop, size,
+                      value, size_ret);
+  ADD_LIST_PROPERTY(QDMI_DEVICE_PROPERTY_COUPLINGMAP, int,
                     ((int[]){0, 1, 1, 2, 2, 3, 3, 4, 4, 0}), 10, prop, size,
                     value, size_ret);
   return QDMI_ERROR_NOTSUPPORTED;
@@ -152,10 +153,10 @@ int QDMI_query_site_property_dev(QDMI_Site site, QDMI_Site_Property prop,
   if (prop >= QDMI_DEVICE_PROPERTY_MAX || (value == NULL && size_ret == NULL)) {
     return QDMI_ERROR_INVALIDARGUMENT;
   }
-  ADD_SINGLE_VALUE_PROPERTY(QDMI_TIME_T1, double, 1000.0, prop, size, value,
-                            size_ret);
-  ADD_SINGLE_VALUE_PROPERTY(QDMI_TIME_T2, double, 100000.0, prop, size, value,
-                            size_ret);
+  ADD_SINGLE_VALUE_PROPERTY(QDMI_SITE_PROPERTY_TIME_T1, double, 1000.0, prop,
+                            size, value, size_ret);
+  ADD_SINGLE_VALUE_PROPERTY(QDMI_SITE_PROPERTY_TIME_T2, double, 100000.0, prop,
+                            size, value, size_ret);
   return QDMI_ERROR_NOTSUPPORTED;
 } /// [DOXYGEN FUNCTION END]
 
@@ -173,11 +174,11 @@ int QDMI_query_operation_property_dev(QDMI_Operation operation, int num_sites,
     if (sites != NULL && num_sites != 2) {
       return QDMI_ERROR_INVALIDARGUMENT;
     }
-    ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_DURATION, double, 0.01, prop, size,
-                              value, size_ret);
+    ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_PROPERTY_DURATION, double, 0.01,
+                              prop, size, value, size_ret);
     if (sites == NULL) {
-      ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_QUBITS_NUM, int, 2, prop, size,
-                                value, size_ret);
+      ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_PROPERTY_QUBITS_NUM, int, 2,
+                                prop, size, value, size_ret);
       return QDMI_ERROR_NOTSUPPORTED;
     }
     if (sites[0] == sites[1]) {
@@ -185,30 +186,30 @@ int QDMI_query_operation_property_dev(QDMI_Operation operation, int num_sites,
     }
     if ((sites[0]->id == 0 && sites[1]->id == 1) ||
         (sites[0]->id == 1 && sites[1]->id == 0)) {
-      ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_FIDELITY, double, 0.99, prop,
-                                size, value, size_ret);
+      ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_PROPERTY_FIDELITY, double, 0.99,
+                                prop, size, value, size_ret);
     }
     if ((sites[0]->id == 1 && sites[1]->id == 2) ||
         (sites[0]->id == 2 && sites[1]->id == 1)) {
-      ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_FIDELITY, double, 0.98, prop,
-                                size, value, size_ret);
+      ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_PROPERTY_FIDELITY, double, 0.98,
+                                prop, size, value, size_ret);
     }
     if ((sites[0]->id == 2 && sites[1]->id == 3) ||
         (sites[0]->id == 3 && sites[1]->id == 2)) {
-      ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_FIDELITY, double, 0.97, prop,
-                                size, value, size_ret);
+      ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_PROPERTY_FIDELITY, double, 0.97,
+                                prop, size, value, size_ret);
     }
     if ((sites[0]->id == 3 && sites[1]->id == 4) ||
         (sites[0]->id == 4 && sites[1]->id == 3)) {
-      ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_FIDELITY, double, 0.96, prop,
-                                size, value, size_ret);
+      ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_PROPERTY_FIDELITY, double, 0.96,
+                                prop, size, value, size_ret);
     }
     if ((sites[0]->id == 4 && sites[1]->id == 0) ||
         (sites[0]->id == 0 && sites[1]->id == 4)) {
-      ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_FIDELITY, double, 0.95, prop,
-                                size, value, size_ret);
+      ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_PROPERTY_FIDELITY, double, 0.95,
+                                prop, size, value, size_ret);
     }
-    if (prop == QDMI_OPERATION_FIDELITY) {
+    if (prop == QDMI_OPERATION_PROPERTY_FIDELITY) {
       return QDMI_ERROR_INVALIDARGUMENT;
     }
   }
@@ -219,23 +220,23 @@ int QDMI_query_operation_property_dev(QDMI_Operation operation, int num_sites,
     if (sites != NULL && num_sites != 1) {
       return QDMI_ERROR_INVALIDARGUMENT;
     }
-    ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_DURATION, double, 0.01, prop, size,
-                              value, size_ret);
-    ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_QUBITS_NUM, int, 1, prop, size,
-                              value, size_ret);
-    ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_FIDELITY, double, 0.999, prop,
+    ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_PROPERTY_DURATION, double, 0.01,
+                              prop, size, value, size_ret);
+    ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_PROPERTY_QUBITS_NUM, int, 1, prop,
                               size, value, size_ret);
+    ADD_SINGLE_VALUE_PROPERTY(QDMI_OPERATION_PROPERTY_FIDELITY, double, 0.999,
+                              prop, size, value, size_ret);
   }
   return QDMI_ERROR_NOTSUPPORTED;
 } /// [DOXYGEN FUNCTION END]
 
 int QDMI_control_submit_qasm_dev(const char *qasm_string, int num_shots,
                                  QDMI_Job *job) {
-  if (device_status != QDMI_DEVICE_IDLE) {
+  if (device_status != QDMI_DEVICE_STATUS_IDLE) {
     return QDMI_ERROR_FATAL;
   }
 
-  device_status = QDMI_DEVICE_BUSY;
+  device_status = QDMI_DEVICE_STATUS_BUSY;
   *job = (QDMI_Job)malloc(sizeof(QDMI_Job_impl_t));
   // set job id to current time for demonstration purposes
   (*job)->id = rand();
@@ -250,11 +251,11 @@ int QDMI_control_submit_qasm_dev(const char *qasm_string, int num_shots,
 
 int QDMI_control_submit_qir_string_dev(const char *qir_string, int num_shots,
                                        QDMI_Job *job) {
-  if (device_status != QDMI_DEVICE_IDLE) {
+  if (device_status != QDMI_DEVICE_STATUS_IDLE) {
     return QDMI_ERROR_FATAL;
   }
 
-  device_status = QDMI_DEVICE_BUSY;
+  device_status = QDMI_DEVICE_STATUS_BUSY;
   *job = (QDMI_Job)malloc(sizeof(QDMI_Job_impl_t));
   // set job id to current time for demonstration purposes
   (*job)->id = rand();
@@ -269,11 +270,11 @@ int QDMI_control_submit_qir_string_dev(const char *qir_string, int num_shots,
 
 int QDMI_control_submit_qir_module_dev(const void *qir_module, int num_shots,
                                        QDMI_Job *job) {
-  if (device_status != QDMI_DEVICE_IDLE) {
+  if (device_status != QDMI_DEVICE_STATUS_IDLE) {
     return QDMI_ERROR_FATAL;
   }
 
-  device_status = QDMI_DEVICE_BUSY;
+  device_status = QDMI_DEVICE_STATUS_BUSY;
   *job = (QDMI_Job)malloc(sizeof(QDMI_Job_impl_t));
   // set job id to current time for demonstration purposes
   (*job)->id = rand();
@@ -293,7 +294,7 @@ int QDMI_control_cancel_dev(QDMI_Job job) {
   }
 
   job->status = QDMI_JOB_STATUS_CANCELLED;
-  device_status = QDMI_DEVICE_IDLE;
+  device_status = QDMI_DEVICE_STATUS_IDLE;
   return QDMI_SUCCESS;
 } /// [DOXYGEN FUNCTION END]
 
@@ -305,7 +306,7 @@ int QDMI_control_check_dev(QDMI_Job job, QDMI_Job_Status *status) {
 int QDMI_control_wait_dev(QDMI_Job job) {
   // in a real implementation, this would wait for the job to finish
   job->status = QDMI_JOB_STATUS_DONE;
-  device_status = QDMI_DEVICE_IDLE;
+  device_status = QDMI_DEVICE_STATUS_IDLE;
   return QDMI_SUCCESS;
 } /// [DOXYGEN FUNCTION END]
 
@@ -364,8 +365,8 @@ int QDMI_control_get_raw_dev(QDMI_Job job, char ***data, int *size) {
 
   // generate random measurement results
   int num_qubits = 0;
-  QDMI_query_device_property_dev(QDMI_QUBITS_NUM, sizeof(int), &num_qubits,
-                                 NULL);
+  QDMI_query_device_property_dev(QDMI_DEVICE_PROPERTY_QUBITSNUM, sizeof(int),
+                                 &num_qubits, NULL);
   for (int i = 0; i < job->num_shots; i++) {
     (*data)[i] =
         (char *)malloc((sizeof(char) * (unsigned long)num_qubits) + 1U);
@@ -384,11 +385,11 @@ void QDMI_control_free_job_dev(QDMI_Job job) {
 } /// [DOXYGEN FUNCTION END]
 
 int QDMI_control_initialize_dev(void) {
-  device_status = QDMI_DEVICE_IDLE;
+  device_status = QDMI_DEVICE_STATUS_IDLE;
   return QDMI_SUCCESS;
 } /// [DOXYGEN FUNCTION END]
 
 int QDMI_control_finalize_dev(void) {
-  device_status = QDMI_DEVICE_OFFLINE;
+  device_status = QDMI_DEVICE_STATUS_OFFLINE;
   return QDMI_SUCCESS;
 } /// [DOXYGEN FUNCTION END]
