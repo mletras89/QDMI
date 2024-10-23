@@ -134,7 +134,7 @@ int QDMI_query_device_property_dev(QDMI_Device_Property prop, int size,
                       size, value, size_ret);
   ADD_STRING_PROPERTY(QDMI_DEVICE_PROPERTY_VERSION, "0.1.0", prop, size, value,
                       size_ret);
-  ADD_STRING_PROPERTY(QDMI_DEVICE_PROPERTY_LIBRARYVERSION, "0.2.0", prop, size,
+  ADD_STRING_PROPERTY(QDMI_DEVICE_PROPERTY_LIBRARYVERSION, "1.0.0b1", prop, size,
                       value, size_ret);
   ADD_SINGLE_VALUE_PROPERTY(QDMI_DEVICE_PROPERTY_QUBITSNUM, int, 5, prop, size,
                             value, size_ret);
