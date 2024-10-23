@@ -29,13 +29,13 @@ extern "C" {
  * @param[in] prog is the program to run.
  * @param[out] job is a handle to the job created.
  * @return @ref QDMI_SUCCESS if the job was successfully created.
- * @return @ref QDMI_ERROR_INVALIDARGUMENT if the program @prog is invalid.
+ * @return @ref QDMI_ERROR_INVALIDARGUMENT if the program @p prog is invalid.
  * @return @ref QDMI_ERROR_NOTSUPPORTED if the device does not support the
  * program format.
  * @return @ref QDMI_ERROR_FATAL if the job creation failed.
  */
-int QDMI_control_create_job(QDMI_Program_Format format, int size,
-                            const void *prog, QDMI_Job *job);
+int QDMI_control_create_job_dev(QDMI_Program_Format format, int size,
+                                const void *prog, QDMI_Job *job);
 
 /**
  * @brief Set a parameter for a job.
@@ -53,8 +53,8 @@ int QDMI_control_create_job(QDMI_Program_Format format, int size,
  * parameter.
  * @return @ref QDMI_ERROR_FATAL if the parameter could not be set.
  */
-int QDMI_control_set_parameter(QDMI_Job job, QDMI_Job_Parameter param, int size,
-                               const void *value);
+int QDMI_control_set_parameter_dev(QDMI_Job job, QDMI_Job_Parameter param,
+                                   int size, const void *value);
 
 /**
  * @brief Submit a job to the device.
@@ -71,7 +71,7 @@ int QDMI_control_set_parameter(QDMI_Job job, QDMI_Job_Parameter param, int size,
  * @return @ref QDMI_ERROR_NOTSUPPORTED if the device does not support QASM
  * @return @ref QDMI_ERROR_FATAL if the job submission failed
  */
-int QDMI_control_submit_job(QDMI_Job job);
+int QDMI_control_submit_job_dev(QDMI_Job job);
 
 /**
  * @brief Cancel an already submitted job.
@@ -83,20 +83,20 @@ int QDMI_control_submit_job(QDMI_Job job);
  * QDMI_JOB_STATUS_DONE or the job does not exist.
  * @return @ref QDMI_ERROR_FATAL if the job could not be cancelled.
  */
-int QDMI_control_cancel(QDMI_Job job);
+int QDMI_control_cancel_dev(QDMI_Job job);
 
 /**
  * @brief Check the status of a job.
  * @note This function is non-blocking and returns immediately with the job
  * status.
  * @note It is *not* necessary to call this function before calling
- * @ref QDMI_control_get_hist_dev or @ref QDMI_control_get_raw_dev.
+ * @ref QDMI_control_get_data_dev.
  * @param[in] job The job to check the status of.
  * @param[out] status The status of the job.
  * @return @ref QDMI_SUCCESS if the job status was successfully checked.
  * @return @ref QDMI_ERROR_INVALIDARGUMENT if the job does not exist.
  */
-int QDMI_control_check(QDMI_Job job, QDMI_Job_Status *status);
+int QDMI_control_check_dev(QDMI_Job job, QDMI_Job_Status *status);
 
 /**
  * @brief Wait for a job to finish.
@@ -108,7 +108,7 @@ int QDMI_control_check(QDMI_Job job, QDMI_Job_Status *status);
  * @return @ref QDMI_ERROR_FATAL if the job could not be waited for and this
  * function returns before the job has finished or has been cancelled.
  */
-int QDMI_control_wait(QDMI_Job job);
+int QDMI_control_wait_dev(QDMI_Job job);
 
 /**
  * @brief Retrieve the results of a job.
@@ -122,15 +122,15 @@ int QDMI_control_wait(QDMI_Job job);
  * cancelled, or does not exist.
  * @return @ref QDMI_ERROR_FATAL if an error occurred during the retrieval.
  */
-int QDMI_control_get_data(QDMI_Job job, QDMI_Job_Result result, void **data,
-                          int *size);
+int QDMI_control_get_data_dev(QDMI_Job job, QDMI_Job_Result result, void **data,
+                              int *size);
 
 /**
  * @brief Free a job.
  * @details Free the resources associated with a job.
  * @param[in] job The job to free.
  */
-void QDMI_control_free_job(QDMI_Job job);
+void QDMI_control_free_job_dev(QDMI_Job job);
 
 #ifdef __cplusplus
 } // extern "C"

@@ -8,24 +8,6 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  * @brief The interface for controlling a device via QDMI.
  * @details The control interface allows submitting jobs to a device, managing
  * the jobs, and retrieving the results.
- *
- * Consumers of the interface may assume that at least one of the submission
- * functions
- * - @ref QDMI_control_submit_qir_module
- * - @ref QDMI_control_submit_qir_string
- * - @ref QDMI_control_submit_qasm
- *
- * is implemented by the device. Assuming the computation is generally
- * available as a QIR module, a reasonable strategy for the job submission would
- * be to
- * - try submitting the QIR module directly.
- * - if that fails, try converting the QIR module to a QIR string and submit
- * that.
- * - if that fails, try converting the QIR string to a QASM string and submit
- * that.
- *
- * Based on the assumption that any device is supposed to support at least one
- * of the submission functions, the above procedure should always succeed.
  * @see qdmi/device/control.h for the device interface.
  */
 
@@ -36,12 +18,6 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/**
- * @name Control Job Submission Interface
- * Functions related to submitting jobs.
- * @{
- */
 
 /**
  * @brief Create a job on a device.
@@ -57,7 +33,7 @@ extern "C" {
  * @param[in] prog is the program to run.
  * @param[out] job is a handle to the job created.
  * @return @ref QDMI_SUCCESS if the job was successfully created.
- * @return @ref QDMI_ERROR_INVALIDARGUMENT if the program @prog is invalid.
+ * @return @ref QDMI_ERROR_INVALIDARGUMENT if the program @p prog is invalid.
  * @return @ref QDMI_ERROR_NOTSUPPORTED if the device does not support the
  * program format.
  * @return @ref QDMI_ERROR_FATAL if the job creation failed.
@@ -122,7 +98,7 @@ int QDMI_control_cancel(QDMI_Device dev, QDMI_Job job);
  * @note This function is non-blocking and returns immediately with the job
  * status.
  * @note It is *not* necessary to call this function before calling
- * @ref QDMI_control_get_hist_dev or @ref QDMI_control_get_raw_dev.
+ * @ref QDMI_control_get_data_dev.
  * @param[in] dev The device to check the status on.
  * @param[in] job The job to check the status of.
  * @param[out] status The status of the job.
