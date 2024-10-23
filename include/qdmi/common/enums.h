@@ -16,12 +16,15 @@ extern "C" {
 
 /// Enum of the device properties that can be queried.
 enum QDMI_DEVICE_PROPERTY_T {
-  QDMI_NAME = 0,           ///< `char*` (string) The name of the device.
-  QDMI_DEVICE_VERSION = 1, ///< `char*` (string) The version of the device.
-  QDMI_DEVICE_STATUS = 2,  ///< `int` The @ref QDMI_Device_Status of the device.
+  QDMI_DEVICE_PROPERTY_NAME = 0, ///< `char*` (string) The name of the device.
+  /// `char*` (string) The version of the device.
+  QDMI_DEVICE_PROPERTY_VERSION = 1,
+  /// `int` The @ref QDMI_Device_Status of the device.
+  QDMI_DEVICE_PROPERTY_STATUS = 2,
   /// `char*` (string) The implemented version of QDMI.
-  QDMI_LIBRARY_VERSION = 3,
-  QDMI_QUBITS_NUM = 4, ///< `int` The number of qubits in the device.
+  QDMI_DEVICE_PROPERTY_LIBRARYVERSION = 3,
+  QDMI_DEVICE_PROPERTY_QUBITSNUM =
+      4, ///< `int` The number of qubits in the device.
   /**
    * @brief `int*` (int list) The coupling map of the device.
    * @details The returned list contains pairs of qubits that are coupled. The
@@ -31,14 +34,14 @@ enum QDMI_DEVICE_PROPERTY_T {
    * 3-qubit device with a coupling map of (0, 1), (1, 2) would return
    * `{0, 1, 1, 2}`.
    */
-  QDMI_COUPLINGMAP = 5,
+  QDMI_DEVICE_PROPERTY_COUPLINGMAP = 5,
   /**
    * @brief `char**` (string list) The set of gates supported by
    * the device.
    * @details The returned list contains the names of the gates supported by the
    * device.
    */
-  QDMI_GATESET = 6,
+  QDMI_DEVICE_PROPERTY_GATESET = 6,
   /**
    * @brief The maximum value of the enum.
    * @details This value can be used for bounds checks by the devices.
@@ -50,12 +53,12 @@ enum QDMI_DEVICE_PROPERTY_T {
 
 /// Enum of the site properties that can be queried.
 enum QDMI_DEVICE_STATUS_T {
-  QDMI_DEVICE_OFFLINE = 0,     ///< The device is offline.
-  QDMI_DEVICE_IDLE = 1,        ///< The device is idle.
-  QDMI_DEVICE_BUSY = 2,        ///< The device is busy.
-  QDMI_DEVICE_ERROR = 3,       ///< The device is in an error state.
-  QDMI_DEVICE_MAINTENANCE = 4, ///< The device is in maintenance.
-  QDMI_DEVICE_CALIBRATION = 5, ///< The device is in calibration.
+  QDMI_DEVICE_STATUS_OFFLINE = 0,     ///< The device is offline.
+  QDMI_DEVICE_STATUS_IDLE = 1,        ///< The device is idle.
+  QDMI_DEVICE_STATUS_BUSY = 2,        ///< The device is busy.
+  QDMI_DEVICE_STATUS_ERROR = 3,       ///< The device is in an error state.
+  QDMI_DEVICE_STATUS_MAINTENANCE = 4, ///< The device is in maintenance.
+  QDMI_DEVICE_STATUS_CALIBRATION = 5, ///< The device is in calibration.
   /**
    * @brief The maximum value of the enum.
    * @details This value can be used for bounds checks by the devices.
@@ -67,8 +70,8 @@ enum QDMI_DEVICE_STATUS_T {
 
 /// Enum of the site properties that can be queried.
 enum QDMI_SITE_PROPERTY_T {
-  QDMI_TIME_T1 = 0, ///< `double` The T1 time of a site in µs.
-  QDMI_TIME_T2 = 1, ///< `double` The T2 time of a site in µs.
+  QDMI_SITE_PROPERTY_TIME_T1 = 0, ///< `double` The T1 time of a site in µs.
+  QDMI_SITE_PROPERTY_TIME_T2 = 1, ///< `double` The T2 time of a site in µs.
   /**
    * @brief The maximum value of the enum.
    * @details This value can be used for bounds checks by the devices.
@@ -81,13 +84,13 @@ enum QDMI_SITE_PROPERTY_T {
 /// Enum of the operation properties that can be queried.
 enum QDMI_OPERATION_PROPERTY_T {
   /// `char*` (string) The string identifier of the operation.
-  QDMI_OPERATION_NAME = 0,
+  QDMI_OPERATION_PROPERTY_NAME = 0,
   /// `int` The number of qubits in the operation.
-  QDMI_OPERATION_QUBITS_NUM = 1,
+  QDMI_OPERATION_PROPERTY_QUBITS_NUM = 1,
   /// `double` The duration of an operation in µs.
-  QDMI_OPERATION_DURATION = 2,
+  QDMI_OPERATION_PROPERTY_DURATION = 2,
   /// `double` The fidelity of an operation.
-  QDMI_OPERATION_FIDELITY = 3,
+  QDMI_OPERATION_PROPERTY_FIDELITY = 3,
   /**
    * @brief The maximum value of the enum.
    * @details This value can be used for bounds checks by the devices.
@@ -99,14 +102,19 @@ enum QDMI_OPERATION_PROPERTY_T {
 
 /// Enum of the device properties that can be queried.
 enum QDMI_JOB_STATUS_T {
+  /**
+   * @brief The job was created and can be configured via @ref
+   * QDMI_control_set_parameter.
+   */
+  QDMI_JOB_STATUS_CREATED = 0,
   /// The job was submitted and is waiting to be executed
-  QDMI_JOB_STATUS_SUBMITTED = 0,
+  QDMI_JOB_STATUS_SUBMITTED = 1,
   /// The job is done, and the result can be retrieved.
-  QDMI_JOB_STATUS_DONE = 1,
+  QDMI_JOB_STATUS_DONE = 2,
   /// The job is running, and the result is not yet available.
-  QDMI_JOB_STATUS_RUNNING = 2,
+  QDMI_JOB_STATUS_RUNNING = 3,
   /// The job was cancelled and the result is not available.
-  QDMI_JOB_STATUS_CANCELLED = 3
+  QDMI_JOB_STATUS_CANCELLED = 4
 };
 
 /**
@@ -134,6 +142,77 @@ enum QDMI_STATUS {
   QDMI_ERROR_INVALIDARGUMENT = -7,  ///< Invalid argument.
   QDMI_ERROR_PERMISSIONDENIED = -8, ///< Permission denied.
   QDMI_ERROR_NOTSUPPORTED = -9,     ///< Operation is not supported.
+};
+
+/**
+ * @brief Enum of formats that can be submitted to the device.
+ */
+enum QDMI_PROGRAM_FORMAT_T {
+  /// `char*`(string) The OpenQASM 2.0 program to run.
+  QDMI_PROGRAM_FORMAT_QASM2 = 0,
+  /// `char*`(string) The OpenQASM 3 program to run.
+  QDMI_PROGRAM_FORMAT_QASM3 = 1,
+  /// `char*`(string) The QIR program to run as a string.
+  QDMI_PROGRAM_FORMAT_QIRSTRING = 2,
+  /// `char*`(string) The QIR program as a binary module.
+  QDMI_PROGRAM_FORMAT_QIRMODULE = 3,
+  /**
+   * @brief The maximum value of the enum.
+   * @details This value can be used for bounds checks by the devices.
+   * @note This value should always be updated to be the last and maximum value
+   * of the enum.
+   */
+  QDMI_PROGRAM_FORMAT_MAX = 4
+};
+
+/**
+ * @brief Enum of the job parameters that can be set.
+ */
+enum QDMI_JOB_PARAMETER_T {
+  /// `int` The number of shots to take.
+  QDMI_JOB_PARAMETER_SHOTS_NUM = 0,
+  /**
+   * @brief The maximum value of the enum.
+   * @details This value can be used for bounds checks by the devices.
+   * @note This value should always be updated to be the last and maximum value
+   * of the enum.
+   */
+  QDMI_JOB_PARAMETER_MAX = 1
+};
+
+/**
+ * @brief Enum of data-types of the result.
+ */
+enum QDMI_JOB_RESULT_T {
+  /**
+   * @brief `char*`(string) The results of the individual shots as a
+   * comma-separated list, e.g., "0010,1101,0101,1100,1001,1100" for four qubits
+   * and six shots.
+   */
+  QDMI_JOB_RESULT_SHOTS = 0,
+  /**
+   * @brief `char*`(string) The keys for the histogram of the results.
+   * @details The histogram of the measurement results is represented as a
+   * key-value mapping. This mapping is returned as a list of keys and a
+   * equal-length list of values. The corresponding partners of keys and values
+   * can be found at the same index in the lists.
+   *
+   * This constant denotes the list of keys, @ref QDMI_JOB_RESULT_HIST_VALUES
+   * denotes the list of values.
+   */
+  QDMI_JOB_RESULT_HIST_KEY = 1,
+  /**
+   * @brief `int*` (int list) The values for the histogram of the results.
+   * @see QDMI_JOB_RESULT_HIST_KEY
+   */
+  QDMI_JOB_RESULT_HIST_VALUES = 2,
+  /**
+   * @brief The maximum value of the enum.
+   * @details This value can be used for bounds checks by the devices.
+   * @note This value should always be updated to be the last and maximum value
+   * of the enum.
+   */
+  QDMI_JOB_RESULT_MAX = 1
 };
 
 #ifdef __cplusplus

@@ -34,6 +34,15 @@ typedef enum QDMI_JOB_STATUS_T QDMI_Job_Status;
 /// Type of the device mode used in opening a device.
 typedef enum QDMI_DEVICE_MODE_T QDMI_Device_Mode;
 
+/// Type of the program format.
+typedef enum QDMI_PROGRAM_FORMAT_T QDMI_Program_Format;
+
+/// Type of the job parameter.
+typedef enum QDMI_JOB_PARAMETER_T QDMI_Job_Parameter;
+
+/// Type of the job result.
+typedef enum QDMI_JOB_RESULT_T QDMI_Job_Result;
+
 /**
  * @brief Opaque type for a QDMI session.
  * @details A handle for making devices (@ref QDMI_Device) available to a
