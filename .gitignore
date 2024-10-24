@@ -138,7 +138,6 @@ _skbuild/
 
 # Any build dirs in the tests
 test/**/build/
-/src/**/_version.py
 
 # Common editor files
 *~
