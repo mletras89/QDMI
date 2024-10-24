@@ -26,6 +26,20 @@ enum QDMI_DEVICE_PROPERTY_T {
   /// `int` The number of qubits in the device.
   QDMI_DEVICE_PROPERTY_QUBITSNUM = 4,
   /**
+   * @brief This property is reserved for a custom property.
+   * @details The meaning and the type of this property is defined by the
+   * device.
+   */
+  QDMI_DEVICE_PROPERTY_CUSTOM_1 = 5,
+  /// @see QDMI_DEVICE_PROPERTY_CUSTOM_1
+  QDMI_DEVICE_PROPERTY_CUSTOM_2 = 6,
+  /// @see QDMI_DEVICE_PROPERTY_CUSTOM_1
+  QDMI_DEVICE_PROPERTY_CUSTOM_3 = 7,
+  /// @see QDMI_DEVICE_PROPERTY_CUSTOM_1
+  QDMI_DEVICE_PROPERTY_CUSTOM_4 = 8,
+  /// @see QDMI_DEVICE_PROPERTY_CUSTOM_1
+  QDMI_DEVICE_PROPERTY_CUSTOM_5 = 9,
+  /**
    * @brief `int*` (int list) The coupling map of the device.
    * @details The returned list contains pairs of qubits that are coupled. The
    * pairs in the list are flattened such that the first qubit of the pair is at
@@ -34,7 +48,7 @@ enum QDMI_DEVICE_PROPERTY_T {
    * 3-qubit device with a coupling map of (0, 1), (1, 2) would return
    * `{0, 1, 1, 2}`.
    */
-  QDMI_DEVICE_PROPERTY_COUPLINGMAP = 5,
+  QDMI_DEVICE_PROPERTY_COUPLINGMAP = 10,
   /**
    * @brief The maximum value of the enum.
    * @details This value can be used for bounds checks by the devices.
@@ -66,12 +80,26 @@ enum QDMI_SITE_PROPERTY_T {
   QDMI_SITE_PROPERTY_TIME_T1 = 0, ///< `double` The T1 time of a site in µs.
   QDMI_SITE_PROPERTY_TIME_T2 = 1, ///< `double` The T2 time of a site in µs.
   /**
+   * @brief This property is reserved for a custom property.
+   * @details The meaning and the type of this property is defined by the
+   * device.
+   */
+  QDMI_SITE_PROPERTY_CUSTOM_1 = 2,
+  /// @see QDMI_SITE_PROPERTY_CUSTOM_1
+  QDMI_SITE_PROPERTY_CUSTOM_2 = 3,
+  /// @see QDMI_SITE_PROPERTY_CUSTOM_1
+  QDMI_SITE_PROPERTY_CUSTOM_3 = 4,
+  /// @see QDMI_SITE_PROPERTY_CUSTOM_1
+  QDMI_SITE_PROPERTY_CUSTOM_4 = 5,
+  /// @see QDMI_SITE_PROPERTY_CUSTOM_1
+  QDMI_SITE_PROPERTY_CUSTOM_5 = 6,
+  /**
    * @brief The maximum value of the enum.
    * @details This value can be used for bounds checks by the devices.
    * @note This value should always be updated to be the last and maximum value
    * of the enum.
    */
-  QDMI_SITE_PROPERTY_MAX = 2
+  QDMI_SITE_PROPERTY_MAX = 7
 };
 
 /// Enum of the operation properties that can be queried.
@@ -85,12 +113,26 @@ enum QDMI_OPERATION_PROPERTY_T {
   /// `double` The fidelity of an operation.
   QDMI_OPERATION_PROPERTY_FIDELITY = 3,
   /**
+   * @brief This property is reserved for a custom property.
+   * @details The meaning and the type of this property is defined by the
+   * device.
+   */
+  QDMI_OPERATION_PROPERTY_CUSTOM_1 = 4,
+  /// @see QDMI_OPERATION_PROPERTY_CUSTOM_1
+  QDMI_OPERATION_PROPERTY_CUSTOM_2 = 5,
+  /// @see QDMI_OPERATION_PROPERTY_CUSTOM_1
+  QDMI_OPERATION_PROPERTY_CUSTOM_3 = 6,
+  /// @see QDMI_OPERATION_PROPERTY_CUSTOM_1
+  QDMI_OPERATION_PROPERTY_CUSTOM_4 = 7,
+  /// @see QDMI_OPERATION_PROPERTY_CUSTOM_1
+  QDMI_OPERATION_PROPERTY_CUSTOM_5 = 8,
+  /**
    * @brief The maximum value of the enum.
    * @details This value can be used for bounds checks by the devices.
    * @note This value should always be updated to be the last and maximum value
    * of the enum.
    */
-  QDMI_OPERATION_PROPERTY_MAX = 4
+  QDMI_OPERATION_PROPERTY_MAX = 9
 };
 
 /// Enum of the device properties that can be queried.
@@ -150,12 +192,25 @@ enum QDMI_PROGRAM_FORMAT_T {
   /// `char*`(string) The QIR program as a binary module.
   QDMI_PROGRAM_FORMAT_QIRMODULE = 3,
   /**
+   * @brief This value is reserved for a custom format.
+   * @details The meaning and the type of this format is defined by the device.
+   */
+  QDMI_PROGRAM_FORMAT_CUSTOM_1 = 4,
+  /// @see QDMI_PROGRAM_FORMAT_CUSTOM_1
+  QDMI_PROGRAM_FORMAT_CUSTOM_2 = 5,
+  /// @see QDMI_PROGRAM_FORMAT_CUSTOM_1
+  QDMI_PROGRAM_FORMAT_CUSTOM_3 = 6,
+  /// @see QDMI_PROGRAM_FORMAT_CUSTOM_1
+  QDMI_PROGRAM_FORMAT_CUSTOM_4 = 7,
+  /// @see QDMI_PROGRAM_FORMAT_CUSTOM_1
+  QDMI_PROGRAM_FORMAT_CUSTOM_5 = 8,
+  /**
    * @brief The maximum value of the enum.
    * @details This value can be used for bounds checks by the devices.
    * @note This value should always be updated to be the last and maximum value
    * of the enum.
    */
-  QDMI_PROGRAM_FORMAT_MAX = 4
+  QDMI_PROGRAM_FORMAT_MAX = 9
 };
 
 /**
@@ -165,12 +220,26 @@ enum QDMI_JOB_PARAMETER_T {
   /// `int` The number of shots to take.
   QDMI_JOB_PARAMETER_SHOTS_NUM = 0,
   /**
+   * @brief This property is reserved for a custom property.
+   * @details The meaning and the type of this property is defined by the
+   * device.
+   */
+  QDMI_JOB_PARAMETER_CUSTOM_1 = 1,
+  /// @see QDMI_JOB_PARAMETER_CUSTOM_1
+  QDMI_JOB_PARAMETER_CUSTOM_2 = 2,
+  /// @see QDMI_JOB_PARAMETER_CUSTOM_1
+  QDMI_JOB_PARAMETER_CUSTOM_3 = 3,
+  /// @see QDMI_JOB_PARAMETER_CUSTOM_1
+  QDMI_JOB_PARAMETER_CUSTOM_4 = 4,
+  /// @see QDMI_JOB_PARAMETER_CUSTOM_1
+  QDMI_JOB_PARAMETER_CUSTOM_5 = 5,
+  /**
    * @brief The maximum value of the enum.
    * @details This value can be used for bounds checks by the devices.
    * @note This value should always be updated to be the last and maximum value
    * of the enum.
    */
-  QDMI_JOB_PARAMETER_MAX = 1
+  QDMI_JOB_PARAMETER_MAX = 6
 };
 
 /**
@@ -200,12 +269,26 @@ enum QDMI_JOB_RESULT_T {
    */
   QDMI_JOB_RESULT_HIST_VALUES = 2,
   /**
+   * @brief This property is reserved for a custom property.
+   * @details The meaning and the type of this property is defined by the
+   * device.
+   */
+  QDMI_JOB_RESULT_CUSTOM_1 = 3,
+  /// @see QDMI_JOB_RESULT_CUSTOM_1
+  QDMI_JOB_RESULT_CUSTOM_2 = 4,
+  /// @see QDMI_JOB_RESULT_CUSTOM_1
+  QDMI_JOB_RESULT_CUSTOM_3 = 5,
+  /// @see QDMI_JOB_RESULT_CUSTOM_1
+  QDMI_JOB_RESULT_CUSTOM_4 = 6,
+  /// @see QDMI_JOB_RESULT_CUSTOM_1
+  QDMI_JOB_RESULT_CUSTOM_5 = 7,
+  /**
    * @brief The maximum value of the enum.
    * @details This value can be used for bounds checks by the devices.
    * @note This value should always be updated to be the last and maximum value
    * of the enum.
    */
-  QDMI_JOB_RESULT_MAX = 1
+  QDMI_JOB_RESULT_MAX = 8
 };
 
 #ifdef __cplusplus
