@@ -359,7 +359,7 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
                               NULL);
     // split the string at the commas
     char **raw_data_split =
-        (char **)malloc(sizeof(char *) * (unsigned long)job->num_shots);
+        (char **)malloc(sizeof(char *) * (size_t)job->num_shots);
     char *token = strtok(raw_data, ",");
     int i = 0;
     while (token != NULL) {
@@ -387,6 +387,9 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
         return QDMI_ERROR_INVALIDARGUMENT;
       }
       strcpy((char *)data, raw_data_split[0]);
+      if (count > 1) {
+        *(char *)(data + num_qubits) = ',';
+      }
       int k = 1;
       for (int j = 1; j < job->num_shots; j++) {
         if (strcmp(raw_data_split[j], raw_data_split[j - 1]) != 0) {
@@ -426,7 +429,7 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
           compare_results);
     // Count unique elements
     int count = 1; // First element is always unique
-    for (int j = 1; j < raw_size; j++) {
+    for (int j = 1; j < job->num_shots; j++) {
       if (strcmp(raw_data_split[j], raw_data_split[j - 1]) != 0) {
         count++;
       }
@@ -442,7 +445,7 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
       }
       int k = 0;
       int n = 1;
-      for (int j = 1; j < raw_size; j++) {
+      for (int j = 1; j < job->num_shots; j++) {
         if (strcmp(raw_data_split[j], raw_data_split[j - 1]) != 0) {
           *(int *)(data + k) = n;
           ++k;
