@@ -55,7 +55,7 @@ enum QDMI_DEVICE_PROPERTY_T {
    * @note This value should always be updated to be the last and maximum value
    * of the enum.
    */
-  QDMI_DEVICE_PROPERTY_MAX = 7
+  QDMI_DEVICE_PROPERTY_MAX = 11
 };
 
 /// Enum of the site properties that can be queried.
