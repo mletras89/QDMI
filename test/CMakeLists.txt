@@ -66,3 +66,7 @@ add_dependencies(qdmi_test qdmi::c_device qdmi::cxx_device)
 # whenever qdmi_test is built. Those targets ensure that the respective devices
 # implement all interface functions.
 add_dependencies(qdmi_test qdmi_test_c_device_defs qdmi_test_cxx_device_defs)
+# ensure my_c_device_test and my_cxx_device_test are built whenever qdmi_test is
+# built. Those targets ensure that there is no compilation error in the
+# templates provided with QDMI and their tests.
+add_dependencies(qdmi_test my_c_device_test my_cxx_device_test)

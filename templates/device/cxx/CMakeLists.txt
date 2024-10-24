@@ -1,0 +1,40 @@
+# ------------------------------------------------------------------------------
+# Part of the MQSS Project, under the Apache License v2.0 with LLVM Exceptions.
+# See https://llvm.org/LICENSE.txt for license information.
+# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+# ------------------------------------------------------------------------------
+
+# set required cmake version
+cmake_minimum_required(VERSION 3.19...3.30)
+
+project(
+  MyDevice
+  LANGUAGES C CXX
+  VERSION 0.0.1
+  DESCRIPTION "My QDMI C++ Device Implementation")
+
+# make scripts available to cmake
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+# Require C++ standard
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+if(TARGET qdmi::qdmi)
+  message(STATUS "Device C++ template: QDMI is already available.")
+else()
+  message(STATUS "Device C++ template: QDMI will be included via FetchContent")
+  include(cmake/ExternalDependencies.cmake)
+endif()
+
+# set the include directory for the build tree
+set(QDMI_INCLUDE_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
+
+# add main library code
+add_subdirectory(src)
+
+# enable testing
+enable_testing()
+include(GoogleTest)
+add_subdirectory(test)
