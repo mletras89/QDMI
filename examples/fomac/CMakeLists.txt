@@ -4,7 +4,13 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # ------------------------------------------------------------------------------
 
-add_subdirectory(device)
-add_subdirectory(fomac)
-add_subdirectory(tool)
-add_subdirectory(driver)
+# add C++ language support
+enable_language(CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+add_library(fomac fomac.cpp fomac.hpp)
+target_link_libraries(fomac PRIVATE qdmi::qdmi)
+target_include_directories(fomac PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+add_library(qdmi::fomac ALIAS fomac)
