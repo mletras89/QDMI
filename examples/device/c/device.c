@@ -118,7 +118,7 @@ int QDMI_query_get_operations_dev(const int num_entries,
     return QDMI_ERROR_INVALIDARGUMENT;
   }
   if (operations != NULL) {
-    memcpy(*operations, DEVICE_OPERATIONS,
+    memcpy((void *)operations, (void *)DEVICE_OPERATIONS,
            min(num_entries, 4) * sizeof(QDMI_Operation));
   }
   if (num_operations != NULL) {
@@ -142,9 +142,13 @@ int QDMI_query_device_property_dev(const QDMI_Device_Property prop,
                             value, size_ret);
   ADD_SINGLE_VALUE_PROPERTY(QDMI_DEVICE_PROPERTY_STATUS, QDMI_Device_Status,
                             device_status, prop, size, value, size_ret);
-  ADD_LIST_PROPERTY(QDMI_DEVICE_PROPERTY_COUPLINGMAP, int,
-                    ((int[]){0, 1, 1, 2, 2, 3, 3, 4, 4, 0}), 10, prop, size,
-                    value, size_ret);
+  ADD_LIST_PROPERTY(
+      QDMI_DEVICE_PROPERTY_COUPLINGMAP, QDMI_Site,
+      ((QDMI_Site[]){DEVICE_SITES[0], DEVICE_SITES[1], DEVICE_SITES[1],
+                     DEVICE_SITES[2], DEVICE_SITES[2], DEVICE_SITES[3],
+                     DEVICE_SITES[3], DEVICE_SITES[4], DEVICE_SITES[4],
+                     DEVICE_SITES[0]}),
+      10, prop, size, value, size_ret);
   return QDMI_ERROR_NOTSUPPORTED;
 } /// [DOXYGEN FUNCTION END]
 
@@ -173,7 +177,7 @@ int QDMI_query_operation_property_dev(const QDMI_Operation operation,
     return QDMI_ERROR_INVALIDARGUMENT;
   }
   // Two-qubit gates
-  if (strcmp(operation->name, "cz") == 0) {
+  if (strcmp(operation->name, "cx") == 0) {
     if (sites != NULL && num_sites != 2) {
       return QDMI_ERROR_INVALIDARGUMENT;
     }
