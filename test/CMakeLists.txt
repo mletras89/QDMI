@@ -14,7 +14,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# add_subdirectory(utils)
+add_subdirectory(utils)
 
 # ------------------------------------------------------------------------------
 # Non-Functional Tests
@@ -32,10 +32,10 @@ target_link_libraries(
 # ------------------------------------------------------------------------------
 
 # create an executable in which the tests will be stored
-add_executable(qdmi_test test_qdmi.cpp utils/test_impl.cpp)
+add_executable(qdmi_test test_qdmi.cpp)
 
 # link the Google test infrastructure to the test executable.
-target_link_libraries(qdmi_test PRIVATE qdmi::qdmi qdmi::driver
+target_link_libraries(qdmi_test PRIVATE qdmi::qdmi qdmi::test_impl qdmi::driver
                                         qdmi::project_warnings gtest_main)
 
 # discover tests
