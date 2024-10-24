@@ -351,7 +351,7 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
     }
     return QDMI_SUCCESS;
   }
-  if (result == QDMI_JOB_RESULT_HIST_KEY) {
+  if (result == QDMI_JOB_RESULT_HIST_KEYS) {
     int raw_size = 0;
     QDMI_control_get_data_dev(job, QDMI_JOB_RESULT_SHOTS, 0, NULL, &raw_size);
     char *raw_data = malloc(raw_size);
@@ -372,7 +372,7 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
           compare_results);
     // Count unique elements
     int count = 1; // First element is always unique
-    for (int j = 1; j < raw_size; j++) {
+    for (int j = 1; j < job->num_shots; j++) {
       if (strcmp(raw_data_split[j], raw_data_split[j - 1]) != 0) {
         count++;
       }
@@ -388,7 +388,7 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
       }
       strcpy((char *)data, raw_data_split[0]);
       int k = 1;
-      for (int j = 1; j < raw_size; j++) {
+      for (int j = 1; j < job->num_shots; j++) {
         if (strcmp(raw_data_split[j], raw_data_split[j - 1]) != 0) {
           strcpy((char *)(data + k * (num_qubits + 1)), raw_data_split[j]);
           if (k < count - 1) {

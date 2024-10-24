@@ -193,7 +193,7 @@ enum QDMI_JOB_RESULT_T {
    * This constant denotes the list of keys, @ref QDMI_JOB_RESULT_HIST_VALUES
    * denotes the list of values.
    */
-  QDMI_JOB_RESULT_HIST_KEY = 1,
+  QDMI_JOB_RESULT_HIST_KEYS = 1,
   /**
    * @brief `int*` (int list) The values for the histogram of the results.
    * @see QDMI_JOB_RESULT_HIST_KEY

@@ -5,7 +5,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
 #include "qdmi/client.h"
-#include "test_impl.hpp"
+#include "utils/test_impl.hpp"
 
 #include <cstdlib>
 #include <gtest/gtest.h>
@@ -76,4 +76,63 @@ TEST_P(QDMIImplementationTest, QueryCouplingMap) {
       << "Coupling map must have at least one element";
   ASSERT_EQ(coupling_map.size() % 2, 0)
       << "Coupling map must have an even number of elements";
+}
+
+TEST_P(QDMIImplementationTest, ControlGetData) {
+  printf("Start ControlGetData\n");
+  std::string test_circuit = R"(
+OPENQASM 2.0;
+include "qelib1.inc";
+qreg q[2];
+creg c[2];
+h q[0];
+cx q[0], q[1];
+measure q -> c;
+  )";
+  QDMI_Job job = nullptr;
+  printf("Create job\n");
+  ASSERT_EQ(QDMI_control_create_job(device, QDMI_PROGRAM_FORMAT_QASM2,
+                                    static_cast<int>(test_circuit.length() + 1),
+                                    test_circuit.c_str(), &job),
+            QDMI_SUCCESS);
+  printf("Created job\n");
+  int shots_num = 6;
+  ASSERT_EQ(QDMI_control_set_parameter(device, job,
+                                       QDMI_JOB_PARAMETER_SHOTS_NUM,
+                                       sizeof(int), &shots_num),
+            QDMI_SUCCESS);
+  printf("Set shots\n");
+  ASSERT_EQ(QDMI_control_submit_job(device, job), QDMI_SUCCESS);
+  printf("Submitted job\n");
+  ASSERT_EQ(QDMI_control_wait(device, job), QDMI_SUCCESS);
+  printf("Waited on job\n");
+  int size = 0;
+  ASSERT_EQ(QDMI_control_get_data(device, job, QDMI_JOB_RESULT_HIST_KEYS, 0,
+                                  nullptr, &size),
+            QDMI_SUCCESS);
+  printf("Retrieved key length %d\n", size);
+  std::string key_list(static_cast<std::size_t>(size), '\0');
+  ASSERT_EQ(QDMI_control_get_data(device, job, QDMI_JOB_RESULT_HIST_KEYS, size,
+                                  key_list.data(), nullptr),
+            QDMI_SUCCESS);
+  printf("Retrieved keys\n");
+  std::vector<std::string> key_vec;
+  std::string token;
+  std::stringstream ss(key_list);
+  while (std::getline(ss, token, ',')) {
+    key_vec.emplace_back(token);
+  }
+  size = static_cast<int>(key_vec.size());
+  std::vector<int> val_vec(key_vec.size());
+  ASSERT_EQ(QDMI_control_get_data(device, job, QDMI_JOB_RESULT_HIST_VALUES,
+                                  static_cast<int>(sizeof(int)) * size,
+                                  val_vec.data(), nullptr),
+            QDMI_SUCCESS);
+  printf("Retrieved values\n");
+  std::map<std::string, int> results;
+  for (size_t i = 0; i < key_vec.size(); ++i) {
+    results[key_vec[i]] = val_vec[i];
+  }
+  ASSERT_EQ(results.size(), static_cast<std::size_t>(size));
+  QDMI_control_free_job(device, job);
 }
