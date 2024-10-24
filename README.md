@@ -8,6 +8,12 @@
 
 # QDMI — Quantum Device Management Interface (QDMI)
 
+<p align="center">
+  <a href="https://munich-quantum-software-stack.github.io/QDMI/">
+  <img width=30% src="https://img.shields.io/badge/documentation-blue?style=for-the-badge&logo=read%20the%20docs" alt="Documentation" />
+  </a>
+</p>
+
 <!-- [DOXYGEN MAIN] -->
 
 The Quantum Device Management Interface (QDMI) is the central part of the Munich Quantum Software
