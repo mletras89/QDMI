@@ -20,6 +20,7 @@ typedef struct QDMI_Job_impl_d {
   int id;
   QDMI_Job_Status status;
   int num_shots;
+  char *results;
 } QDMI_Job_impl_t;
 
 typedef struct QDMI_Site_impl_d {
@@ -283,6 +284,21 @@ int QDMI_control_submit_job_dev(QDMI_Job job) {
   // ...
   // set job status to running for demonstration purposes
   job->status = QDMI_JOB_STATUS_RUNNING;
+  // generate random result data
+  int num_qubits = 0;
+  QDMI_query_device_property_dev(QDMI_DEVICE_PROPERTY_QUBITSNUM, sizeof(int),
+                                 &num_qubits, NULL);
+  job->results = (char *)malloc((size_t)job->num_shots * (num_qubits + 1));
+  for (int i = 0; i < job->num_shots; i++) {
+    // generate random 5-bit string
+    for (int j = 0; j < 5; j++) {
+      *(job->results + (i * (num_qubits + 1) + j)) = (rand() % 2) ? '1' : '0';
+    }
+    if (i < job->num_shots - 1) {
+      *(job->results + ((i + 1) * (num_qubits + 1) - 1)) = ',';
+    }
+  }
+  *(job->results + (job->num_shots * (num_qubits + 1) - 1)) = '\0';
   return QDMI_SUCCESS;
 }
 
@@ -328,17 +344,7 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
       if (size < job->num_shots * (num_qubits + 1)) {
         return QDMI_ERROR_INVALIDARGUMENT;
       }
-      for (int i = 0; i < job->num_shots; i++) {
-        // generate random 5-bit string
-        for (int j = 0; j < num_qubits; j++) {
-          *(char *)(data + (i * (num_qubits + 1)) + j) =
-              (rand() % 2) ? '1' : '0';
-        }
-        if (i < job->num_shots - 1) {
-          *(char *)(data + (i + 1) * (num_qubits + 1) - 1) = ',';
-        }
-      }
-      *(char *)(data + job->num_shots * (num_qubits + 1) - 1) = '\0';
+      strcpy((char *)data, job->results);
     }
     if ((size_ret) != NULL) {
       *(size_ret) = job->num_shots * (num_qubits + 1);
