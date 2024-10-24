@@ -26,20 +26,6 @@ enum QDMI_DEVICE_PROPERTY_T {
   /// `int` The number of qubits in the device.
   QDMI_DEVICE_PROPERTY_QUBITSNUM = 4,
   /**
-   * @brief This property is reserved for a custom property.
-   * @details The meaning and the type of this property is defined by the
-   * device.
-   */
-  QDMI_DEVICE_PROPERTY_CUSTOM_1 = 5,
-  /// @see QDMI_DEVICE_PROPERTY_CUSTOM_1
-  QDMI_DEVICE_PROPERTY_CUSTOM_2 = 6,
-  /// @see QDMI_DEVICE_PROPERTY_CUSTOM_1
-  QDMI_DEVICE_PROPERTY_CUSTOM_3 = 7,
-  /// @see QDMI_DEVICE_PROPERTY_CUSTOM_1
-  QDMI_DEVICE_PROPERTY_CUSTOM_4 = 8,
-  /// @see QDMI_DEVICE_PROPERTY_CUSTOM_1
-  QDMI_DEVICE_PROPERTY_CUSTOM_5 = 9,
-  /**
    * @brief `int*` (int list) The coupling map of the device.
    * @details The returned list contains pairs of qubits that are coupled. The
    * pairs in the list are flattened such that the first qubit of the pair is at
@@ -48,7 +34,21 @@ enum QDMI_DEVICE_PROPERTY_T {
    * 3-qubit device with a coupling map of (0, 1), (1, 2) would return
    * `{0, 1, 1, 2}`.
    */
-  QDMI_DEVICE_PROPERTY_COUPLINGMAP = 10,
+  QDMI_DEVICE_PROPERTY_COUPLINGMAP = 5,
+  /**
+   * @brief This property is reserved for a custom property.
+   * @details The meaning and the type of this property is defined by the
+   * device.
+   */
+  QDMI_DEVICE_PROPERTY_CUSTOM_1 = 6,
+  /// @see QDMI_DEVICE_PROPERTY_CUSTOM_1
+  QDMI_DEVICE_PROPERTY_CUSTOM_2 = 7,
+  /// @see QDMI_DEVICE_PROPERTY_CUSTOM_1
+  QDMI_DEVICE_PROPERTY_CUSTOM_3 = 8,
+  /// @see QDMI_DEVICE_PROPERTY_CUSTOM_1
+  QDMI_DEVICE_PROPERTY_CUSTOM_4 = 9,
+  /// @see QDMI_DEVICE_PROPERTY_CUSTOM_1
+  QDMI_DEVICE_PROPERTY_CUSTOM_5 = 10,
   /**
    * @brief The maximum value of the enum.
    * @details This value can be used for bounds checks by the devices.
