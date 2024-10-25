@@ -102,7 +102,7 @@ int QDMI_query_get_sites_dev(const int num_entries, QDMI_Site *sites,
     return QDMI_ERROR_INVALIDARGUMENT;
   }
   if (sites != NULL) {
-    memcpy(*sites, DEVICE_SITES, min(num_entries, 5) * sizeof(QDMI_Site));
+    memcpy(sites, DEVICE_SITES, min(num_entries, 5) * sizeof(QDMI_Site));
   }
   if (num_sites != NULL) {
     *num_sites = 5;
@@ -176,6 +176,9 @@ int QDMI_query_operation_property_dev(const QDMI_Operation operation,
       (value == NULL && size_ret == NULL)) {
     return QDMI_ERROR_INVALIDARGUMENT;
   }
+  // General properties
+  ADD_STRING_PROPERTY(QDMI_OPERATION_PROPERTY_NAME, operation->name, prop, size,
+                      value, size_ret);
   // Two-qubit gates
   if (strcmp(operation->name, "cx") == 0) {
     if (sites != NULL && num_sites != 2) {

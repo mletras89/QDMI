@@ -10,10 +10,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_library(tool SHARED tool.cpp tool.hpp)
-target_link_libraries(
-  tool
-  PRIVATE qdmi::qdmi
-  PUBLIC qdmi::fomac)
+add_library(tool tool.cpp tool.hpp)
+target_link_libraries(tool PRIVATE qdmi::qdmi qdmi::fomac)
 target_include_directories(tool PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 add_library(qdmi::tool ALIAS tool)

@@ -22,7 +22,8 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <utility>
 #include <vector>
 
-void FoMaC::throw_if_error(int status, const std::string &message) {
+auto FoMaC::throw_if_error(int status, const std::string &message) const
+    -> void {
   if (status != QDMI_SUCCESS) {
     if (status == QDMI_WARN_GENERAL) {
       if (message.empty()) {
@@ -123,7 +124,8 @@ auto FoMaC::get_operation_map() const -> std::map<std::string, QDMI_Operation> {
   return ops_map;
 }
 
-std::vector<std::pair<QDMI_Site, QDMI_Site>> FoMaC::get_coupling_map() const {
+auto FoMaC::get_coupling_map() const
+    -> std::vector<std::pair<QDMI_Site, QDMI_Site>> {
   int size = 0;
   int ret = QDMI_query_device_property(device, QDMI_DEVICE_PROPERTY_COUPLINGMAP,
                                        0, nullptr, &size);
@@ -144,10 +146,20 @@ std::vector<std::pair<QDMI_Site, QDMI_Site>> FoMaC::get_coupling_map() const {
   return coupling_pairs;
 }
 
+auto FoMaC::get_sites() const -> std::vector<QDMI_Site> {
+  int sites_num = 0;
+  int ret = QDMI_query_get_sites(device, 0, nullptr, &sites_num);
+  throw_if_error(ret, "Failed to get the sites number.");
+  std::vector<QDMI_Site> sites(static_cast<std::size_t>(sites_num));
+  ret = QDMI_query_get_sites(device, sites_num, sites.data(), nullptr);
+  throw_if_error(ret, "Failed to get the sites.");
+  return sites;
+}
+
 int FoMaC::get_operands_num(const QDMI_Operation &op) const {
   int operands_num = 0;
   const int ret = QDMI_query_operation_property(
-      device, op, 0, nullptr, QDMI_OPERATION_PROPERTY_QUBITSNUM, 0,
+      device, op, 0, nullptr, QDMI_OPERATION_PROPERTY_QUBITSNUM, sizeof(int),
       &operands_num, nullptr);
   throw_if_error(ret, "Failed to query the operand number");
   return operands_num;

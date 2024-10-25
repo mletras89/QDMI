@@ -34,6 +34,8 @@ public:
   [[nodiscard]] auto get_operation_map() const
       -> std::map<std::string, QDMI_Operation>;
 
+  [[nodiscard]] auto get_sites() const -> std::vector<QDMI_Site>;
+
   [[nodiscard]] auto get_coupling_map() const
       -> std::vector<std::pair<QDMI_Site, QDMI_Site>>;
 
