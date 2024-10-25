@@ -15,6 +15,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include "qdmi/client.h"
 
 #include <cassert>
+#include <map>
 #include <string>
 #include <utility>
 #include <vector>
@@ -23,14 +24,18 @@ class FoMaC {
 private:
   QDMI_Device device;
 
+  auto throw_if_error(int status, const std::string &message) const -> void;
+
 public:
   explicit FoMaC(QDMI_Device dev) : device(dev) {}
 
-  [[nodiscard]] int query_num_qubits() const;
+  [[nodiscard]] auto get_qubits_num() const -> int;
 
-  [[nodiscard]] std::vector<std::string> query_gate_set() const;
+  [[nodiscard]] auto get_operation_map() const
+      -> std::map<std::string, QDMI_Operation>;
 
-  [[nodiscard]] std::vector<std::pair<int, int>> query_coupling_map() const;
+  [[nodiscard]] auto get_coupling_map() const
+      -> std::vector<std::pair<QDMI_Site, QDMI_Site>>;
 
-  [[nodiscard]] int query_gate_num_qubits(const std::string &gate) const;
+  [[nodiscard]] auto get_operands_num(const QDMI_Operation &op) const -> int;
 };

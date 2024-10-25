@@ -51,16 +51,16 @@ std::string Tool::compile(const std::string &qasm_string) {
                                 "this tool only supports up to two qubits.");
   }
   // Check whether the device provides enough qubits
-  if (num_qubits > fomac.query_num_qubits()) {
+  if (num_qubits > fomac.get_qubits_num()) {
     throw std::invalid_argument(
         "The device does not provide enough qubits for the circuit.");
   }
   // Choose an arbitrary edge for the two qubits
-  const auto edge = fomac.query_coupling_map().front();
+  const auto edge = fomac.get_coupling_map().front();
   std::stringstream from;
   from << "qreg q[" << num_qubits << "];";
   std::stringstream to;
-  to << "qreg q[" << fomac.query_num_qubits() << "];";
+  to << "qreg q[" << fomac.get_qubits_num() << "];";
   auto result = replace_all_occurrences(qasm_string, from.str(), to.str());
   from.clear();
   from << "q[0]";
