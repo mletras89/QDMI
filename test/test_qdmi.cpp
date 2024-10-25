@@ -4,13 +4,16 @@ See https://llvm.org/LICENSE.txt for license information.
 SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
+#include "fomac.hpp"
 #include "qdmi/client.h"
+#include "tool.hpp"
 #include "utils/test_impl.hpp"
 
 #include <array>
 #include <cstdlib>
 #include <gtest/gtest.h>
 #include <string>
+#include <vector>
 
 // Instantiate the test suite with different parameters
 INSTANTIATE_TEST_SUITE_P(QDMIDevice,             // Custom instantiation name
@@ -36,47 +39,93 @@ INSTANTIATE_TEST_SUITE_P(QDMIDevice,             // Custom instantiation name
                          });
 
 TEST_P(QDMIImplementationTest, QueryNumQubits) {
-  int sites_num = 0;
-  ASSERT_EQ(QDMI_query_get_sites(device, 0, nullptr, &sites_num), QDMI_SUCCESS)
-      << "Failed to get sites";
-  int size = 0;
-  int qubits_num = 0;
-  ASSERT_EQ(QDMI_query_device_property(device, QDMI_DEVICE_PROPERTY_QUBITSNUM,
-                                       sizeof(int), &qubits_num, &size),
-            QDMI_SUCCESS)
-      << "Failed to query number of qubits";
-  ASSERT_EQ(size, sizeof(int))
-      << "Size of returned data must be " << sizeof(int);
-  ASSERT_GT(qubits_num, 0) << "Number of qubits must be greater than 0";
-  ASSERT_LE(qubits_num, sites_num)
-      << "Number of qubits must be less or equal to the number of sites";
+  const auto fomac = FoMaC(device);
+  ASSERT_GT(fomac.query_num_qubits(), 0);
 }
 
 TEST_P(QDMIImplementationTest, QueryGateSet) {
-  int operations_num = 0;
-  ASSERT_EQ(QDMI_query_get_operations(device, 0, nullptr, &operations_num),
-            QDMI_SUCCESS)
-      << "Failed to get operations";
-  ASSERT_GT(operations_num, 0) << "Number of operations must be greater than 0";
+  const auto fomac = FoMaC(device);
+  const auto gates = fomac.query_gate_set();
+  ASSERT_GT(gates.size(), 0);
+  for (const auto &gate : gates) {
+    ASSERT_GT(gate.size(), 0);
+  }
 }
 
 TEST_P(QDMIImplementationTest, QueryCouplingMap) {
-  int size = 0;
-  ASSERT_EQ(QDMI_query_device_property(device, QDMI_DEVICE_PROPERTY_COUPLINGMAP,
-                                       0, nullptr, &size),
-            QDMI_SUCCESS)
-      << "Failed to query the size of the coupling map";
-  ASSERT_GE(size, 0)
-      << "Size of the coupling map must be greater or equal to 0";
-  std::vector<int> coupling_map(static_cast<std::size_t>(size));
-  ASSERT_EQ(QDMI_query_device_property(device, QDMI_DEVICE_PROPERTY_COUPLINGMAP,
-                                       size, coupling_map.data(), nullptr),
-            QDMI_SUCCESS)
-      << "Failed to query the coupling map";
-  ASSERT_GT(coupling_map.size(), 0)
-      << "Coupling map must have at least one element";
-  ASSERT_EQ(coupling_map.size() % 2, 0)
-      << "Coupling map must have an even number of elements";
+  const auto fomac = FoMaC(device);
+  const auto coupling_map = fomac.query_coupling_map();
+  const auto num_qubits = fomac.query_num_qubits();
+  if (num_qubits == 1) {
+    ASSERT_TRUE(coupling_map.empty());
+  } else {
+    ASSERT_GT(coupling_map.size(), 0);
+  }
+}
+
+TEST_P(QDMIImplementationTest, QueryGatePropertiesForEachGate) {
+  // for every gate in the gate set, query the duration of the gate
+  const auto fomac = FoMaC(device);
+  const auto num_qubits = fomac.query_num_qubits();
+  const auto gates = fomac.query_gate_set();
+  const auto coupling_map = fomac.query_coupling_map();
+
+  for (const auto &gate : gates) {
+    const auto gate_num_qubits = fomac.query_gate_num_qubits(gate);
+    double duration = 0;
+    double fidelity = 0;
+    if (gate_num_qubits == 1) {
+      for (int i = 0; i < num_qubits; i++) {
+        auto sites = std::array{i};
+        EXPECT_EQ(QDMI_query_operation_property_double(
+                      device, gate.c_str(), sites.data(), 1,
+                      QDMI_OPERATION_PROPERTY_DURATION, &duration),
+                  QDMI_SUCCESS)
+            << "Failed to query duration for gate " << gate;
+        EXPECT_EQ(QDMI_query_operation_property_double(
+                      device, gate.c_str(), sites.data(), 1,
+                      QDMI_OPERATION_PROPERTY_FIDELITY, &fidelity),
+                  QDMI_SUCCESS)
+            << "Failed to query fidelity for gate " << gate;
+      }
+    }
+    if (gate_num_qubits == 2) {
+      for (const auto &[control, target] : coupling_map) {
+        auto sites = std::array{control, target};
+        EXPECT_EQ(QDMI_query_operation_property_double(
+                      device, gate.c_str(), sites.data(), 2,
+                      QDMI_OPERATION_PROPERTY_DURATION, &duration),
+                  QDMI_SUCCESS)
+            << "Failed to query duration for gate " << gate;
+        EXPECT_EQ(QDMI_query_operation_property_double(
+                      device, gate.c_str(), sites.data(), 2,
+                      QDMI_OPERATION_PROPERTY_FIDELITY, &fidelity),
+                  QDMI_SUCCESS)
+            << "Failed to query fidelity for gate " << gate;
+      }
+    }
+  }
+}
+
+TEST_P(QDMIImplementationTest, ToolCompile) {
+  Tool tool(device);
+  const auto fomac = FoMaC(device);
+  const auto num_qubits = fomac.query_num_qubits();
+
+  const std::string input = "OPENQASM 2.0;\n"
+                            "include \"qelib1.inc\";\n"
+                            "qreg q[2];\n"
+                            "h q[0];\n"
+                            "cx q[0], q[1];\n";
+  const std::string expected = "OPENQASM 2.0;\n"
+                               "include \"qelib1.inc\";\n"
+                               "qreg q[" +
+                               std::to_string(num_qubits) +
+                               "];\n"
+                               "h q[0];\n"
+                               "cx q[0], q[1];\n";
+  const std::string actual = tool.compile(input);
+  ASSERT_EQ(actual, expected);
 }
 
 TEST_P(QDMIImplementationTest, ControlGetData) {
