@@ -22,8 +22,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <utility>
 #include <vector>
 
-auto FoMaC::throw_if_error(int status, const std::string &message) const
-    -> void {
+auto FoMaC::throw_if_error(int status, const std::string &message) -> void {
   if (status != QDMI_SUCCESS) {
     if (status == QDMI_WARN_GENERAL) {
       if (message.empty()) {

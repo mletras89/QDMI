@@ -24,7 +24,7 @@ class FoMaC {
 private:
   QDMI_Device device;
 
-  auto throw_if_error(int status, const std::string &message) const -> void;
+  static auto throw_if_error(int status, const std::string &message) -> void;
 
 public:
   explicit FoMaC(QDMI_Device dev) : device(dev) {}
