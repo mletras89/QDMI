@@ -103,8 +103,10 @@ auto FoMaC::get_operation_map() const -> std::map<std::string, QDMI_Operation> {
   int ret = QDMI_query_get_operations(device, 0, nullptr, &ops_num);
   throw_if_error(ret, "Failed to retrieve operation number.");
   std::vector<QDMI_Operation> ops(ops_num);
-  ret = QDMI_query_get_operations(device, sizeof(QDMI_Operation) * ops_num,
-                                  ops.data(), nullptr);
+  ret = QDMI_query_get_operations(
+      device,
+      static_cast<int>(sizeof(QDMI_Operation) * static_cast<size_t>(ops_num)),
+      ops.data(), nullptr);
   throw_if_error(ret, "Failed to retrieve operations.");
   std::map<std::string, QDMI_Operation> ops_map;
   for (const auto &op : ops) {
