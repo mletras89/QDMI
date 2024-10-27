@@ -474,7 +474,10 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
 
 void QDMI_control_free_job_dev(QDMI_Job job) {
   // this method should free all resources associated with the job
-  free(job->results);
+  if (job->results != NULL) {
+    free(job->results);
+    job->results = NULL;
+  }
   free(job);
 } /// [DOXYGEN FUNCTION END]
 
