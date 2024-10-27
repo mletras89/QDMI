@@ -131,19 +131,21 @@ auto FoMaC::get_coupling_map() const
   int ret = QDMI_query_device_property(device, QDMI_DEVICE_PROPERTY_COUPLINGMAP,
                                        0, nullptr, &size);
   throw_if_error(ret, "Failed to query the coupling map size.");
-  std::vector<QDMI_Site> coupling_map(size / sizeof(QDMI_Site));
+
+  const auto coupling_map_size =
+      static_cast<std::size_t>(size) / sizeof(QDMI_Site);
+  if (coupling_map_size % 2 != 0) {
+    throw std::runtime_error("The coupling map needs to have an even number of "
+                             "elements.");
+  }
+
+  // `std::vector` guarantees that the elements are contiguous in memory.
+  std::vector<std::pair<QDMI_Site, QDMI_Site>> coupling_pairs(
+      coupling_map_size / 2);
   ret = QDMI_query_device_property(
       device, QDMI_DEVICE_PROPERTY_COUPLINGMAP, size,
-      static_cast<void *>(coupling_map.data()), nullptr);
+      static_cast<void *>(coupling_pairs.data()), nullptr);
   throw_if_error(ret, "Failed to query the coupling map.");
-  if (coupling_map.size() % 2 != 0) {
-    throw std::runtime_error("The coupling map is not valid.");
-  }
-  std::vector<std::pair<QDMI_Site, QDMI_Site>> coupling_pairs;
-  coupling_pairs.reserve(coupling_map.size() / 2);
-  for (int i = 0; i < coupling_map.size(); i += 2) {
-    coupling_pairs.emplace_back(coupling_map[i], coupling_map[i + 1]);
-  }
   return coupling_pairs;
 }
 
