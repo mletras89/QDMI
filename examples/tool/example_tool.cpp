@@ -10,7 +10,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  * pass in C++.
  */
 
-#include "tool.hpp"
+#include "example_tool.hpp"
 
 #include <cstddef>
 #include <iterator>

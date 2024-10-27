@@ -10,7 +10,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_library(fomac fomac.cpp fomac.hpp)
+add_library(fomac example_fomac.cpp example_fomac.hpp)
 target_link_libraries(fomac PRIVATE qdmi::qdmi)
 target_include_directories(fomac PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 add_library(qdmi::fomac ALIAS fomac)

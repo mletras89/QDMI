@@ -10,7 +10,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  * merit and constraints library in C++.
  */
 
-#include "fomac.hpp"
+#include "example_fomac.hpp"
 
 #include "qdmi/client.h"
 
