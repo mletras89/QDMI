@@ -40,7 +40,7 @@ else()
   endif()
 endif()
 
-if(BUILD_MY_CXX_DEVICE_TESTS)
+if(BUILD_MY_DEVICE_TESTS)
   set(gtest_force_shared_crt
       ON
       CACHE BOOL "" FORCE)

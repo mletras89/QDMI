@@ -4,9 +4,6 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # ------------------------------------------------------------------------------
 
-# NOTE: If you change the target name, the name of the shared library will also
-# change. Hence, in the test you have to adopt the name of the shared library
-# accordingly.
-add_library(my_cxx_device SHARED my_device.cpp)
-target_link_libraries(my_cxx_device PRIVATE qdmi::qdmi qdmi::project_warnings)
-add_library(qdmi::my_cxx_device ALIAS my_cxx_device)
+add_library(my_device SHARED my_device.cpp)
+target_link_libraries(my_device PRIVATE qdmi::qdmi qdmi::project_warnings)
+add_library(qdmi::my_device ALIAS my_device)

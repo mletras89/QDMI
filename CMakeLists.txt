@@ -181,13 +181,8 @@ endif()
 # add templates
 if(BUILD_QDMI_TEMPLATES OR BUILD_QDMI_TESTS)
   # if testing is enabled, also enable building the tests in the templates
-  set(BUILD_MY_C_DEVICE_TESTS
+  set(BUILD_MY_DEVICE_TESTS
       ${BUILD_QDMI_TESTS}
-      CACHE BOOL "Build tests for MyCDevice" FORCE)
-  add_subdirectory(templates/device/c)
-
-  set(BUILD_MY_CXX_DEVICE_TESTS
-      ${BUILD_QDMI_TESTS}
-      CACHE BOOL "Build tests for MyCxxDevice" FORCE)
-  add_subdirectory(templates/device/cxx)
+      CACHE BOOL "Build tests for MyDevice" FORCE)
+  add_subdirectory(templates/device)
 endif()

@@ -4,20 +4,21 @@ See https://llvm.org/LICENSE.txt for license information.
 SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
-#include "test_impl_direct.hpp"
-
 #include "qdmi/device.h"
 
 #include <cstddef>
 #include <gtest/gtest.h>
 #include <string>
 
-void QDMIImplementationTest::SetUp() {
-  ASSERT_EQ(QDMI_control_initialize_dev(), QDMI_SUCCESS)
-      << "Failed to initialize the device";
-}
+class QDMIImplementationTest : public ::testing::Test {
+protected:
+  void SetUp() override {
+    ASSERT_EQ(QDMI_control_initialize_dev(), QDMI_SUCCESS)
+        << "Failed to initialize the device";
+  }
 
-void QDMIImplementationTest::TearDown() { QDMI_control_finalize_dev(); }
+  void TearDown() override { QDMI_control_finalize_dev(); }
+};
 
 TEST_F(QDMIImplementationTest, QueryGetSitesImplemented) {
   ASSERT_EQ(QDMI_query_get_sites_dev(0, nullptr, nullptr),
@@ -181,4 +182,11 @@ TEST_F(QDMIImplementationTest, QueryDeviceLibraryVersionImplemented) {
             QDMI_SUCCESS)
       << "Devices must provide a library version";
   ASSERT_FALSE(value.empty()) << "Devices must provide a library version";
+}
+
+TEST_F(QDMIImplementationTest, QubitNum) {
+  int num_qubits = 0;
+  EXPECT_EQ(QDMI_query_device_property_dev(QDMI_DEVICE_PROPERTY_QUBITSNUM,
+                                           sizeof(int), &num_qubits, nullptr),
+            QDMI_SUCCESS);
 }
