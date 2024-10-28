@@ -74,8 +74,7 @@ int QDMI_control_set_parameter(QDMI_Device dev, QDMI_Job job,
  * @param[in] dev The device to submit the job to.
  * @param[in] job The job to submit.
  * @return @ref QDMI_SUCCESS if the job was successfully submitted
- * @return @ref QDMI_ERROR_INVALIDARGUMENT if the QASM string is invalid
- * @return @ref QDMI_ERROR_NOTSUPPORTED if the device does not support QASM
+ * @return @ref QDMI_ERROR_INVALIDARGUMENT if the job is in an invalid state
  * @return @ref QDMI_ERROR_FATAL if the job submission failed
  */
 int QDMI_control_submit_job(QDMI_Device dev, QDMI_Job job);
