@@ -248,6 +248,9 @@ int QDMI_control_create_job_dev(const QDMI_Program_Format format,
   if (device_status != QDMI_DEVICE_STATUS_IDLE) {
     return QDMI_ERROR_FATAL;
   }
+  if (size <= 0 || prog == NULL || job == NULL) {
+    return QDMI_ERROR_INVALIDARGUMENT;
+  }
   if (format == QDMI_PROGRAM_FORMAT_QASM2) {
     device_status = QDMI_DEVICE_STATUS_BUSY;
     *job = (QDMI_Job)malloc(sizeof(QDMI_Job_impl_t));
@@ -277,7 +280,8 @@ int QDMI_control_create_job_dev(const QDMI_Program_Format format,
 
 int QDMI_control_set_parameter_dev(QDMI_Job job, const QDMI_Job_Parameter param,
                                    const int size, const void *value) {
-  if (job == NULL || param >= QDMI_JOB_PARAMETER_MAX || size <= 0) {
+  if (job == NULL || param >= QDMI_JOB_PARAMETER_MAX || size <= 0 ||
+      job->status != QDMI_JOB_STATUS_CREATED) {
     return QDMI_ERROR_INVALIDARGUMENT;
   }
   if (param == QDMI_JOB_PARAMETER_SHOTS_NUM) {
@@ -288,6 +292,9 @@ int QDMI_control_set_parameter_dev(QDMI_Job job, const QDMI_Job_Parameter param,
 }
 
 int QDMI_control_submit_job_dev(QDMI_Job job) {
+  if (job == NULL || job->status != QDMI_JOB_STATUS_CREATED) {
+    return QDMI_ERROR_INVALIDARGUMENT;
+  }
   device_status = QDMI_DEVICE_STATUS_BUSY;
   job->status = QDMI_JOB_STATUS_SUBMITTED;
   // here, the actual submission of the problem to the device would happen
