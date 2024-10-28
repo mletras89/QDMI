@@ -13,6 +13,12 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include "qdmi/device.h"
 
+// The following line ignores the unused parameters in the functions.
+// Additionally, it ignores warnings for easily swappable parameters.
+// Please remove the `misc-unused-parameters` part while populating the
+// functions.
+// NOLINTBEGIN(misc-unused-parameters,clang-diagnostic-unused-parameter,bugprone-easily-swappable-parameters)
+
 /**
  * @brief Implementation of the QDMI_Job structure.
  * @details This structure can, e.g., be used to store the job id.
@@ -78,3 +84,9 @@ void QDMI_control_free_job_dev(QDMI_Job job) {}
 int QDMI_control_initialize_dev() { return QDMI_ERROR_NOTIMPLEMENTED; }
 
 int QDMI_control_finalize_dev() { return QDMI_ERROR_NOTIMPLEMENTED; }
+
+// The following line ignores the unused parameters in the functions.
+// Additionally, it ignores warnings for easily swappable parameters.
+// Please remove the `misc-unused-parameters` part while populating the
+// functions.
+// NOLINTEND(misc-unused-parameters,clang-diagnostic-unused-parameter,bugprone-easily-swappable-parameters)

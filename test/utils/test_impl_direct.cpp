@@ -8,7 +8,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include "qdmi/device.h"
 
-#include <fstream>
+#include <cstddef>
 #include <gtest/gtest.h>
 #include <string>
 
@@ -36,8 +36,8 @@ TEST_F(QDMIImplementationTest, QueryDevicePropertyImplemented) {
 }
 
 TEST_F(QDMIImplementationTest, QuerySitePropertyImplemented) {
-  ASSERT_EQ(QDMI_query_site_property_dev(0, QDMI_SITE_PROPERTY_MAX, 0, nullptr,
-                                         nullptr),
+  ASSERT_EQ(QDMI_query_site_property_dev(nullptr, QDMI_SITE_PROPERTY_MAX, 0,
+                                         nullptr, nullptr),
             QDMI_ERROR_INVALIDARGUMENT);
 }
 
@@ -48,6 +48,7 @@ TEST_F(QDMIImplementationTest, QueryOperationPropertyImplemented) {
             QDMI_ERROR_INVALIDARGUMENT);
 }
 
+namespace {
 std::string Get_test_circuit() {
   return "OPENQASM 2.0;\n"
          "include \"qelib1.inc\";\n"
@@ -57,6 +58,7 @@ std::string Get_test_circuit() {
          "cx q[0], q[1];\n"
          "measure q -> c;\n";
 }
+} // namespace
 
 TEST_F(QDMIImplementationTest, ControlCreateJobImplemented) {
   QDMI_Job job = nullptr;
@@ -145,7 +147,7 @@ TEST_F(QDMIImplementationTest, QueryDeviceNameImplemented) {
                                            nullptr, &size),
             QDMI_SUCCESS)
       << "Devices must provide a name";
-  std::string value(static_cast<std::size_t>(size), '\0');
+  std::string value(static_cast<size_t>(size), '\0');
   ASSERT_EQ(QDMI_query_device_property_dev(QDMI_DEVICE_PROPERTY_NAME, size,
                                            value.data(), nullptr),
             QDMI_SUCCESS)
@@ -159,7 +161,7 @@ TEST_F(QDMIImplementationTest, QueryDeviceVersionImplemented) {
                                            nullptr, &size),
             QDMI_SUCCESS)
       << "Devices must provide a version";
-  std::string value(static_cast<std::size_t>(size), '\0');
+  std::string value(static_cast<size_t>(size), '\0');
   ASSERT_EQ(QDMI_query_device_property_dev(QDMI_DEVICE_PROPERTY_VERSION, size,
                                            value.data(), nullptr),
             QDMI_SUCCESS)
@@ -173,7 +175,7 @@ TEST_F(QDMIImplementationTest, QueryDeviceLibraryVersionImplemented) {
                                            0, nullptr, &size),
             QDMI_SUCCESS)
       << "Devices must provide a library version";
-  std::string value(static_cast<std::size_t>(size), '\0');
+  std::string value(static_cast<size_t>(size), '\0');
   ASSERT_EQ(QDMI_query_device_property_dev(QDMI_DEVICE_PROPERTY_LIBRARYVERSION,
                                            size, value.data(), nullptr),
             QDMI_SUCCESS)

@@ -4,7 +4,20 @@ See https://llvm.org/LICENSE.txt for license information.
 SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
+/** @file
+ * @brief A template of a device implementation in C.
+ * @details In the end, all QDMI_ERROR_NOT_IMPLEMENTED return codes should be
+ * replaced by QDMI_ERROR_NOT_IMPLEMENTED return codes.
+ * For the documentation of the functions, see the official documentation.
+ */
+
 #include "qdmi/device.h"
+
+// The following line ignores the unused parameters in the functions.
+// Additionally, it ignores warnings for easily swappable parameters.
+// Please remove the `misc-unused-parameters` part while populating the
+// functions.
+// NOLINTBEGIN(misc-unused-parameters,clang-diagnostic-unused-parameter,bugprone-easily-swappable-parameters)
 
 typedef struct QDMI_Job_impl_d {
   int id;
@@ -69,3 +82,9 @@ void QDMI_control_free_job_dev(QDMI_Job job) {}
 int QDMI_control_initialize_dev(void) { return QDMI_ERROR_NOTIMPLEMENTED; }
 
 int QDMI_control_finalize_dev(void) { return QDMI_ERROR_NOTIMPLEMENTED; }
+
+// The following line ignores the unused parameters in the functions.
+// Additionally, it ignores warnings for easily swappable parameters.
+// Please remove the `misc-unused-parameters` part while populating the
+// functions.
+// NOLINTEND(misc-unused-parameters,clang-diagnostic-unused-parameter,bugprone-easily-swappable-parameters)
