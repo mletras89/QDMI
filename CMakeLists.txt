@@ -27,6 +27,10 @@ option(QDMI_INSTALL "Generate installation instructions for QDMI"
        ${QDMI_MASTER_PROJECT})
 option(BUILD_QDMI_TESTS "Also build tests for the QDMI project"
        ${QDMI_MASTER_PROJECT})
+option(BUILD_QDMI_EXAMPLES "Also build examples for the QDMI project"
+       ${QDMI_MASTER_PROJECT})
+option(BUILD_QDMI_DOCS "Also build documentation for the QDMI project"
+       ${QDMI_MASTER_PROJECT})
 
 # enable organization of targets into folders
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -155,14 +159,19 @@ if(QDMI_INSTALL)
 endif()
 
 # add documentation
-add_subdirectory(docs)
+if(BUILD_QDMI_DOCS)
+  add_subdirectory(docs)
+endif()
+
+# add examples (used by tests)
+if(BUILD_QDMI_EXAMPLES OR BUILD_QDMI_TESTS)
+  add_subdirectory(examples)
+endif()
 
 # add test code
 if(BUILD_QDMI_TESTS)
   enable_testing()
   include(GoogleTest)
-  # include examples, these are used by the tests
-  add_subdirectory(examples)
   # include the tests itself
   add_subdirectory(test)
 endif()

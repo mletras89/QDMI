@@ -16,6 +16,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <array>
 #include <cstring>
 #include <functional>
+#include <iterator>
 #include <limits>
 #include <random>
 #include <sstream>
@@ -114,6 +115,7 @@ const static std::unordered_map<
         // No need to specify single-qubit fidelities here
 };
 
+// NOLINTBEGIN(bugprone-macro-parentheses)
 #define ADD_SINGLE_VALUE_PROPERTY(prop_name, prop_type, prop_value, prop,      \
                                   size, value, size_ret)                       \
   {                                                                            \
@@ -139,7 +141,8 @@ const static std::unordered_map<
         if ((size) < strlen(prop_value) + 1) {                                 \
           return QDMI_ERROR_INVALIDARGUMENT;                                   \
         }                                                                      \
-        strcpy(static_cast<char *>(value), prop_value);                        \
+        strncpy(static_cast<char *>(value), prop_value, size);                 \
+        static_cast<char *>(value)[size - 1] = '\0';                           \
       }                                                                        \
       if ((size_ret) != nullptr) {                                             \
         *(size_ret) = static_cast<int>(strlen(prop_value)) + 1;                \
@@ -166,6 +169,7 @@ const static std::unordered_map<
       return QDMI_SUCCESS;                                                     \
     }                                                                          \
   }
+// NOLINTEND(bugprone-macro-parentheses)
 
 int QDMI_query_get_sites_dev(const int num_entries, QDMI_Site *sites,
                              int *num_sites) {
@@ -399,10 +403,14 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
       if (size < job->num_shots * (num_qubits + 1)) {
         return QDMI_ERROR_INVALIDARGUMENT;
       }
-      std::size_t offset = 0;
-      for (const auto &res : job->results) {
-        std::copy(res.begin(), res.end(), static_cast<char *>(data) + offset);
-        offset += res.size() + 1; // +1 for the null terminator
+      auto *data_ptr = static_cast<char *>(data);
+      for (auto it = job->results.begin(); it != job->results.end(); ++it) {
+        data_ptr = std::copy(it->begin(), it->end(), data_ptr);
+        if (std::next(it) != job->results.end()) {
+          *data_ptr++ = ','; // Add comma separator
+        } else {
+          *data_ptr++ = '\0'; // Add null terminator at the end
+        }
       }
     }
     if ((size_ret) != nullptr) {
@@ -432,10 +440,15 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
         return QDMI_ERROR_INVALIDARGUMENT;
       }
       char *data_ptr = static_cast<char *>(data);
-      for (const auto &[k, v] : hist) {
+      for (auto it = hist.begin(); it != hist.end(); ++it) {
+        const auto &k = it->first;
         std::copy(k.begin(), k.end(), data_ptr);
         data_ptr += k.length();
-        *data_ptr++ = '\0'; // Add null terminator
+        if (std::next(it) != hist.end()) {
+          *data_ptr++ = ','; // Add comma separator
+        } else {
+          *data_ptr++ = '\0'; // Add null terminator at the end
+        }
       }
     }
     if ((size_ret) != nullptr) {

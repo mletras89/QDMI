@@ -1,7 +1,6 @@
 FormatStyle: file
 
 Checks: |
-  boost-*,
   bugprone-*,
   clang-analyzer-*,
   clang-diagnostic-*,
