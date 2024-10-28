@@ -115,6 +115,7 @@ const static std::unordered_map<
         // No need to specify single-qubit fidelities here
 };
 
+// NOLINTBEGIN(bugprone-macro-parentheses)
 #define ADD_SINGLE_VALUE_PROPERTY(prop_name, prop_type, prop_value, prop,      \
                                   size, value, size_ret)                       \
   {                                                                            \
@@ -140,7 +141,8 @@ const static std::unordered_map<
         if ((size) < strlen(prop_value) + 1) {                                 \
           return QDMI_ERROR_INVALIDARGUMENT;                                   \
         }                                                                      \
-        strcpy(static_cast<char *>(value), prop_value);                        \
+        strncpy(static_cast<char *>(value), prop_value, size);                 \
+        static_cast<char *>(value)[size - 1] = '\0';                           \
       }                                                                        \
       if ((size_ret) != nullptr) {                                             \
         *(size_ret) = static_cast<int>(strlen(prop_value)) + 1;                \
@@ -167,6 +169,7 @@ const static std::unordered_map<
       return QDMI_SUCCESS;                                                     \
     }                                                                          \
   }
+// NOLINTEND(bugprone-macro-parentheses)
 
 int QDMI_query_get_sites_dev(const int num_entries, QDMI_Site *sites,
                              int *num_sites) {
