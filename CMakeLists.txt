@@ -31,6 +31,8 @@ option(BUILD_QDMI_EXAMPLES "Also build examples for the QDMI project"
        ${QDMI_MASTER_PROJECT})
 option(BUILD_QDMI_DOCS "Also build documentation for the QDMI project"
        ${QDMI_MASTER_PROJECT})
+option(BUILD_QDMI_TEMPLATES "Also build templates for the QDMI project"
+       ${QDMI_MASTER_PROJECT})
 
 # enable organization of targets into folders
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -174,9 +176,18 @@ if(BUILD_QDMI_TESTS)
   include(GoogleTest)
   # include the tests itself
   add_subdirectory(test)
-  # include templates
-  #
-  # IMPORTANT: This directory must be included after the main library code.
+endif()
+
+# add templates
+if(BUILD_QDMI_TEMPLATES OR BUILD_QDMI_TESTS)
+  # if testing is enabled, also enable building the tests in the templates
+  set(BUILD_MY_C_DEVICE_TESTS
+      ${BUILD_QDMI_TESTS}
+      CACHE BOOL "Build tests for MyCDevice" FORCE)
   add_subdirectory(templates/device/c)
+
+  set(BUILD_MY_CXX_DEVICE_TESTS
+      ${BUILD_QDMI_TESTS}
+      CACHE BOOL "Build tests for MyCxxDevice" FORCE)
   add_subdirectory(templates/device/cxx)
 endif()

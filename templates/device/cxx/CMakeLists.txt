@@ -8,7 +8,7 @@
 cmake_minimum_required(VERSION 3.19...3.30)
 
 project(
-  MyDevice
+  MyCxxDevice
   LANGUAGES C CXX
   VERSION 0.0.1
   DESCRIPTION "My QDMI C++ Device Implementation")
@@ -21,20 +21,24 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-if(TARGET qdmi::qdmi)
-  message(STATUS "Device C++ template: QDMI is already available.")
+# check if this is the master project or used via add_subdirectory
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+  set(MY_CXX_DEVICE_MASTER_PROJECT ON)
 else()
-  message(STATUS "Device C++ template: QDMI will be included via FetchContent")
-  include(cmake/ExternalDependencies.cmake)
+  set(MY_CXX_DEVICE_MASTER_PROJECT OFF)
 endif()
 
-# set the include directory for the build tree
-set(QDMI_INCLUDE_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
+option(BUILD_MY_CXX_DEVICE_TESTS "Build tests for MyCxxDevice"
+       ${MY_CXX_DEVICE_MASTER_PROJECT})
+
+include(cmake/ExternalDependencies.cmake)
 
 # add main library code
 add_subdirectory(src)
 
 # enable testing
-enable_testing()
-include(GoogleTest)
-add_subdirectory(test)
+if(BUILD_MY_CXX_DEVICE_TESTS)
+  enable_testing()
+  include(GoogleTest)
+  add_subdirectory(test)
+endif()

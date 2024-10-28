@@ -29,13 +29,17 @@ target_link_libraries(
   my_cxx_device_test PRIVATE gtest_main qdmi::qdmi my_cxx_device
                              qdmi::test_impl_direct qdmi::project_warnings)
 
-# discover tests
+# ensure my_device and my_device_definitions_test are built whenever
+# my_device_test is built
+add_dependencies(my_cxx_device_test qdmi_test_my_cxx_device_defs)
+
+# only discover tests if this is the main project
+if(NOT MY_CXX_DEVICE_MASTER_PROJECT)
+  return()
+endif()
+
 gtest_discover_tests(
   my_cxx_device_test
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
   PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
              DISCOVERY_TIMEOUT 60)
-
-# ensure my_device and my_device_definitions_test are built whenever
-# my_device_test is built
-add_dependencies(my_cxx_device_test qdmi_test_my_cxx_device_defs)
