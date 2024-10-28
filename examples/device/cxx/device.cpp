@@ -51,11 +51,11 @@ struct QDMI_Device_State {
 
 QDMI_Device_State device_state;
 
-constexpr static std::array<QDMI_Site, 7> device_sites = {
+const static std::array<QDMI_Site, 7> device_sites = {
     new QDMI_Site_impl_d{0}, new QDMI_Site_impl_d{1}, new QDMI_Site_impl_d{2},
     new QDMI_Site_impl_d{3}, new QDMI_Site_impl_d{4}};
 
-constexpr static std::array<QDMI_Operation, 4> device_operations = {
+const static std::array<QDMI_Operation, 4> device_operations = {
     new QDMI_Operation_impl_d{"rx"}, new QDMI_Operation_impl_d{"ry"},
     new QDMI_Operation_impl_d{"rz"}, new QDMI_Operation_impl_d{"cx"}};
 
@@ -63,10 +63,10 @@ constexpr static std::array<QDMI_Operation, 4> device_operations = {
                                   size, value, size_ret)                       \
   {                                                                            \
     if ((prop) == (prop_name)) {                                               \
-      if ((size) < sizeof(prop_type)) {                                        \
-        return QDMI_ERROR_INVALIDARGUMENT;                                     \
-      }                                                                        \
       if ((value) != nullptr) {                                                \
+        if ((size) < sizeof(prop_type)) {                                      \
+          return QDMI_ERROR_INVALIDARGUMENT;                                   \
+        }                                                                      \
         *static_cast<prop_type *>(value) = prop_value;                         \
       }                                                                        \
       if ((size_ret) != nullptr) {                                             \
@@ -80,10 +80,10 @@ constexpr static std::array<QDMI_Operation, 4> device_operations = {
                             size_ret)                                          \
   {                                                                            \
     if ((prop) == (prop_name)) {                                               \
-      if ((size) < (prop_value).length() + 1) {                                \
-        return QDMI_ERROR_INVALIDARGUMENT;                                     \
-      }                                                                        \
       if ((value) != nullptr) {                                                \
+        if ((size) < (prop_value).length() + 1) {                              \
+          return QDMI_ERROR_INVALIDARGUMENT;                                   \
+        }                                                                      \
         strcpy(static_cast<char *>(value), (prop_value).c_str());              \
       }                                                                        \
       if ((size_ret) != nullptr) {                                             \
@@ -97,10 +97,10 @@ constexpr static std::array<QDMI_Operation, 4> device_operations = {
                           value, size_ret)                                     \
   {                                                                            \
     if ((prop) == (prop_name)) {                                               \
-      if ((size) < (prop_values).size() * sizeof(prop_type)) {                 \
-        return QDMI_ERROR_INVALIDARGUMENT;                                     \
-      }                                                                        \
       if ((value) != nullptr) {                                                \
+        if ((size) < (prop_values).size() * sizeof(prop_type)) {               \
+          return QDMI_ERROR_INVALIDARGUMENT;                                   \
+        }                                                                      \
         memcpy(static_cast<void *>(value),                                     \
                static_cast<const void *>((prop_values).data()),                \
                (prop_values).size() * sizeof(prop_type));                      \
@@ -112,7 +112,7 @@ constexpr static std::array<QDMI_Operation, 4> device_operations = {
     }                                                                          \
   }
 
-int QDMI_query_get_sites_dev(int num_entries, QDMI_Site *sites,
+int QDMI_query_get_sites_dev(const int num_entries, QDMI_Site *sites,
                              int *num_sites) {
   if ((sites != nullptr && num_entries <= 0) ||
       (sites == nullptr && num_sites == nullptr)) {
@@ -130,7 +130,8 @@ int QDMI_query_get_sites_dev(int num_entries, QDMI_Site *sites,
   return QDMI_SUCCESS;
 }
 
-int QDMI_query_get_operations_dev(int num_entries, QDMI_Operation *operations,
+int QDMI_query_get_operations_dev(const int num_entries,
+                                  QDMI_Operation *operations,
                                   int *num_operations) {
   if ((operations != nullptr && num_entries <= 0) ||
       (operations == nullptr && num_operations == nullptr)) {
@@ -149,8 +150,8 @@ int QDMI_query_get_operations_dev(int num_entries, QDMI_Operation *operations,
   return QDMI_SUCCESS;
 }
 
-int QDMI_query_device_property_dev(QDMI_Device_Property prop, int size,
-                                   void *value, int *size_ret) {
+int QDMI_query_device_property_dev(const QDMI_Device_Property prop,
+                                   const int size, void *value, int *size_ret) {
   if (prop >= QDMI_DEVICE_PROPERTY_MAX ||
       (value == nullptr && size_ret == nullptr)) {
     return QDMI_ERROR_INVALIDARGUMENT;
@@ -173,8 +174,8 @@ int QDMI_query_device_property_dev(QDMI_Device_Property prop, int size,
       {device_sites[3], device_sites[4]},
       {device_sites[4], device_sites[0]}};
   ADD_LIST_PROPERTY(
-      QDMI_DEVICE_PROPERTY_COUPLINGMAP, int,
-      (std::accumulate(edges.cbegin(), edges.cend(), std::vector<int>(),
+      QDMI_DEVICE_PROPERTY_COUPLINGMAP, QDMI_Site,
+      (std::accumulate(edges.cbegin(), edges.cend(), std::vector<QDMI_Site>(),
                        [](auto &acc, const auto e) {
                          acc.emplace_back(e.first);
                          acc.emplace_back(e.second);
@@ -186,7 +187,7 @@ int QDMI_query_device_property_dev(QDMI_Device_Property prop, int size,
 
 int QDMI_query_site_property_dev(QDMI_Site site, QDMI_Site_Property prop,
                                  int size, void *value, int *size_ret) {
-  if (prop >= QDMI_DEVICE_PROPERTY_MAX ||
+  if (prop >= QDMI_SITE_PROPERTY_MAX ||
       (value == nullptr && size_ret == nullptr)) {
     return QDMI_ERROR_INVALIDARGUMENT;
   }
@@ -210,7 +211,7 @@ int QDMI_query_operation_property_dev(QDMI_Operation operation, int num_sites,
                                       const QDMI_Site *sites,
                                       QDMI_Operation_Property prop, int size,
                                       void *value, int *size_ret) {
-  if (prop >= QDMI_DEVICE_PROPERTY_MAX || operation == nullptr ||
+  if (prop >= QDMI_OPERATION_PROPERTY_MAX || operation == nullptr ||
       (sites != nullptr && num_sites <= 0) ||
       (value == nullptr && size_ret == nullptr)) {
     return QDMI_ERROR_INVALIDARGUMENT;
@@ -218,18 +219,18 @@ int QDMI_query_operation_property_dev(QDMI_Operation operation, int num_sites,
   // General properties
   ADD_STRING_PROPERTY(QDMI_OPERATION_PROPERTY_NAME, operation->name, prop, size,
                       value, size_ret);
-  constexpr static std::unordered_map<QDMI_Operation, double>
-      operation_durations = {
-          {device_operations[0], 0.1},
+  const static std::unordered_map<QDMI_Operation, double> operation_durations =
+      {
+          {device_operations[0], 0.01},
           {device_operations[1], 0.01},
           {device_operations[2], 0.01},
-          {device_operations[3], 0.01},
+          {device_operations[3], 0.1},
       };
-  constexpr static std::unordered_map<
+  const static std::unordered_map<
       QDMI_Operation,
       std::unordered_map<std::pair<QDMI_Site, QDMI_Site>, double, pair_hash>>
       operation_fidelities = {
-          {device_operations[0],
+          {device_operations[3],
            {{{device_sites[0], device_sites[1]}, 0.99},
             {{device_sites[1], device_sites[0]}, 0.99},
             {{device_sites[1], device_sites[2]}, 0.98},
@@ -289,6 +290,9 @@ int QDMI_control_create_job_dev(const QDMI_Program_Format format,
   if (device_state.status != QDMI_DEVICE_STATUS_IDLE) {
     return QDMI_ERROR_FATAL;
   }
+  if (size <= 0 || prog == nullptr || job == nullptr) {
+    return QDMI_ERROR_INVALIDARGUMENT;
+  }
   if (format == QDMI_PROGRAM_FORMAT_QASM2) {
     device_state.status = QDMI_DEVICE_STATUS_BUSY;
     *job = new QDMI_Job_impl_d;
@@ -318,7 +322,8 @@ int QDMI_control_create_job_dev(const QDMI_Program_Format format,
 
 int QDMI_control_set_parameter_dev(QDMI_Job job, const QDMI_Job_Parameter param,
                                    const int size, const void *value) {
-  if (job == nullptr || param >= QDMI_JOB_PARAMETER_MAX || size <= 0) {
+  if (job == nullptr || param >= QDMI_JOB_PARAMETER_MAX || size <= 0 ||
+      job->status != QDMI_JOB_STATUS_CREATED) {
     return QDMI_ERROR_INVALIDARGUMENT;
   }
   if (param == QDMI_JOB_PARAMETER_SHOTS_NUM) {
@@ -329,6 +334,9 @@ int QDMI_control_set_parameter_dev(QDMI_Job job, const QDMI_Job_Parameter param,
 }
 
 int QDMI_control_submit_job_dev(QDMI_Job job) {
+  if (job == nullptr || job->status != QDMI_JOB_STATUS_CREATED) {
+    return QDMI_ERROR_INVALIDARGUMENT;
+  }
   device_state.status = QDMI_DEVICE_STATUS_BUSY;
   job->status = QDMI_JOB_STATUS_SUBMITTED;
   // here, the actual submission of the problem to the device would happen
@@ -427,7 +435,7 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
       }
       for (const auto &[k, v] : hist) {
         strcpy(static_cast<char *>(data), k.c_str());
-        data += k.length() + 1;
+        data = static_cast<char *>(data) + (k.length() + 1);
       }
     }
     if ((size_ret) != nullptr) {
@@ -458,7 +466,7 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
       }
       for (const auto &[k, v] : hist) {
         *static_cast<int *>(data) = v;
-        data += sizeof(int);
+        data = static_cast<int *>(data) + 1;
       }
     }
     if ((size_ret) != nullptr) {

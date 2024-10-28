@@ -12,6 +12,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <array>
 #include <cstdlib>
 #include <gtest/gtest.h>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -151,7 +152,6 @@ TEST_P(QDMIImplementationTest, ControlJob) {
   EXPECT_EQ(QDMI_control_wait(device, job), QDMI_SUCCESS);
   ASSERT_EQ(QDMI_control_check(device, job, &status), QDMI_SUCCESS);
   EXPECT_EQ(status, QDMI_JOB_STATUS_DONE);
-  // retrieve data
   EXPECT_EQ(QDMI_control_set_parameter(
                 device, job, QDMI_JOB_PARAMETER_SHOTS_NUM, sizeof(int), &shots),
             QDMI_ERROR_INVALIDARGUMENT);
