@@ -19,12 +19,30 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <string>
 
 void QDMIImplementationTest::SetUp() {
-  device_name = GetParam();
-  std::ofstream conf_file("qdmi.conf");
-  conf_file << device_name << Shared_library_file_extension()
+  library_name = GetParam();
+
+  // Get the current test info
+  const ::testing::TestInfo *test_info =
+      ::testing::UnitTest::GetInstance()->current_test_info();
+  auto test_name =
+      test_info->test_suite_name() + std::string("_") + test_info->name();
+  // replace all `/` with `_` in the test name
+  std::replace(test_name.begin(), test_name.end(), '/', '_');
+
+  config_file_name = "qdmi_" + test_name + ".conf";
+  std::ofstream conf_file(config_file_name);
+  conf_file << library_name << Shared_library_file_extension()
             << " read_write\n";
-  conf_file << device_name << Shared_library_file_extension() << " read_only\n";
+  conf_file << library_name << Shared_library_file_extension()
+            << " read_only\n";
   conf_file.close();
+
+#ifdef _WIN32
+  _putenv_s("QDMI_CONF", config_file_name.c_str());
+#else
+  // NOLINTNEXTLINE(misc-include-cleaner) already included from `<cstdlib>`
+  setenv("QDMI_CONF", config_file_name.c_str(), 1);
+#endif
 
   ASSERT_EQ(QDMI_Driver_init(), QDMI_SUCCESS)
       << "Failed to initialize the driver";
@@ -40,7 +58,7 @@ void QDMIImplementationTest::SetUp() {
 void QDMIImplementationTest::TearDown() {
   QDMI_session_free(session);
   QDMI_Driver_shutdown();
-  std::filesystem::remove("qdmi.conf");
+  std::filesystem::remove(config_file_name);
 }
 
 TEST_P(QDMIImplementationTest, QueryGetSitesImplemented) {
