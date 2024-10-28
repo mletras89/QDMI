@@ -411,7 +411,7 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
       strcpy((char *)data, raw_data_split[0]);
       data += num_qubits;
       if (count > 1) {
-        *(char *)(data + num_qubits) = ',';
+        *(char *)data = ',';
       }
       data += 1;
       int k = 1;
