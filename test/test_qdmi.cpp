@@ -116,6 +116,48 @@ TEST_P(QDMIImplementationTest, QueryGatePropertiesForEachGate) {
   }
 }
 
+TEST_P(QDMIImplementationTest, ControlJob) {
+  QDMI_Job job;
+  const std::string input = "OPENQASM 2.0;\n"
+                            "include \"qelib1.inc\";\n"
+                            "qreg q[2];\n"
+                            "h q[0];\n"
+                            "cx q[0], q[1];\n";
+  EXPECT_EQ(QDMI_control_create_job(device, QDMI_PROGRAM_FORMAT_QASM2, 1,
+                                    nullptr, &job),
+            QDMI_ERROR_INVALIDARGUMENT);
+  ASSERT_EQ(QDMI_control_create_job(device, QDMI_PROGRAM_FORMAT_QASM2,
+                                    static_cast<int>(input.length()) + 1,
+                                    input.c_str(), &job),
+            QDMI_SUCCESS);
+  int shots = 5;
+  EXPECT_EQ(QDMI_control_set_parameter(device, nullptr,
+                                       QDMI_JOB_PARAMETER_SHOTS_NUM,
+                                       sizeof(int), &shots),
+            QDMI_ERROR_INVALIDARGUMENT);
+  EXPECT_EQ(QDMI_control_set_parameter(
+                device, job, QDMI_JOB_PARAMETER_SHOTS_NUM, 0, nullptr),
+            QDMI_ERROR_INVALIDARGUMENT);
+  EXPECT_EQ(QDMI_control_set_parameter(device, job, QDMI_JOB_PARAMETER_CUSTOM_5,
+                                       sizeof(int), &shots),
+            QDMI_ERROR_NOTSUPPORTED);
+  ASSERT_EQ(QDMI_control_set_parameter(
+                device, job, QDMI_JOB_PARAMETER_SHOTS_NUM, sizeof(int), &shots),
+            QDMI_SUCCESS);
+  ASSERT_EQ(QDMI_control_submit_job(device, job), QDMI_SUCCESS);
+  EXPECT_EQ(QDMI_control_submit_job(device, job), QDMI_ERROR_INVALIDARGUMENT);
+  QDMI_Job_Status status;
+  EXPECT_EQ(QDMI_control_check(device, job, &status), QDMI_SUCCESS);
+  EXPECT_EQ(QDMI_control_wait(device, job), QDMI_SUCCESS);
+  ASSERT_EQ(QDMI_control_check(device, job, &status), QDMI_SUCCESS);
+  EXPECT_EQ(status, QDMI_JOB_STATUS_DONE);
+  // retrieve data
+  EXPECT_EQ(QDMI_control_set_parameter(
+                device, job, QDMI_JOB_PARAMETER_SHOTS_NUM, sizeof(int), &shots),
+            QDMI_ERROR_INVALIDARGUMENT);
+  QDMI_control_free_job(device, job);
+}
+
 TEST_P(QDMIImplementationTest, ToolCompile) {
   Tool tool(device);
   const auto fomac = FoMaC(device);
