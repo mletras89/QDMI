@@ -39,6 +39,7 @@ jobs:
             include/**
             test/**
             examples/**
+            templates/**
             CMakeLists.txt
             cmake/**
             .github/codecov.yml
@@ -59,6 +60,7 @@ jobs:
             include/**
             test/**
             examples/**
+            templates/**
             .clang-tidy
             .github/workflows/ci.yml
       - name: Set a flag for running the linter
@@ -78,6 +80,7 @@ jobs:
             include/**
             examples/**
             test/**
+            templates/**
             CMakeLists.txt
             .github/workflows/ci.yml
       - name: Set a flag for running CodeQL
@@ -95,6 +98,7 @@ jobs:
           filter: |
             include/**
             examples/**
+            templates/**
             docs/**
             .github/workflows/reusable-docs.yml
             .github/workflows/ci.yml
