@@ -118,7 +118,7 @@ TEST_P(QDMIImplementationTest, QueryGatePropertiesForEachGate) {
 }
 
 TEST_P(QDMIImplementationTest, ControlJob) {
-  QDMI_Job job;
+  QDMI_Job job{};
   const std::string input = "OPENQASM 2.0;\n"
                             "include \"qelib1.inc\";\n"
                             "qreg q[2];\n"
@@ -147,7 +147,7 @@ TEST_P(QDMIImplementationTest, ControlJob) {
             QDMI_SUCCESS);
   ASSERT_EQ(QDMI_control_submit_job(device, job), QDMI_SUCCESS);
   EXPECT_EQ(QDMI_control_submit_job(device, job), QDMI_ERROR_INVALIDARGUMENT);
-  QDMI_Job_Status status;
+  QDMI_Job_Status status{};
   EXPECT_EQ(QDMI_control_check(device, job, &status), QDMI_SUCCESS);
   EXPECT_EQ(QDMI_control_wait(device, job), QDMI_SUCCESS);
   ASSERT_EQ(QDMI_control_check(device, job, &status), QDMI_SUCCESS);
@@ -180,7 +180,7 @@ TEST_P(QDMIImplementationTest, ToolCompile) {
 }
 
 TEST_P(QDMIImplementationTest, ControlGetData) {
-  std::string test_circuit = R"(
+  const std::string test_circuit = R"(
 OPENQASM 2.0;
 include "qelib1.inc";
 qreg q[2];
