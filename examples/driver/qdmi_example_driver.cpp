@@ -17,6 +17,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <cstdlib>
 #include <dlfcn.h>
 #include <exception>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <memory>
@@ -161,12 +162,34 @@ QDMI_Device_open(const std::string &lib_name, const QDMI_Device_Mode mode) {
 
   return device_handle;
 }
+
+bool Is_path_allowed(const std::filesystem::path &path) {
+  // Define the whitelist of allowed directories
+  const std::vector<std::filesystem::path> whitelist = {
+      std::filesystem::current_path(),
+      std::filesystem::path(std::getenv("HOME"))};
+
+  // Resolve the provided path to its absolute form
+  std::filesystem::path resolved_path = std::filesystem::absolute(path);
+
+  // Check if the resolved path starts with any of the whitelisted directories
+  return std::any_of(
+      whitelist.begin(), whitelist.end(), [&](const auto &allowed_path) {
+        return resolved_path.string().rfind(allowed_path.string(), 0) == 0;
+      });
+}
 } // namespace
 
 int QDMI_Driver_init() {
   const char *config_file = std::getenv("QDMI_CONF");
   if (config_file == nullptr) {
     config_file = "qdmi.conf";
+  }
+
+  // Validate the configuration file path
+  if (!Is_path_allowed(config_file)) {
+    std::cerr << "Config file path is not allowed: " << config_file << "\n";
+    return QDMI_ERROR_FATAL;
   }
 
   std::ifstream file(config_file);
