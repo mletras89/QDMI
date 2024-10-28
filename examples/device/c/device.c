@@ -251,31 +251,20 @@ int QDMI_control_create_job_dev(const QDMI_Program_Format format,
   if (size <= 0 || prog == NULL || job == NULL) {
     return QDMI_ERROR_INVALIDARGUMENT;
   }
-  if (format == QDMI_PROGRAM_FORMAT_QASM2) {
-    device_status = QDMI_DEVICE_STATUS_BUSY;
-    *job = (QDMI_Job)malloc(sizeof(QDMI_Job_impl_t));
-    // set job id to current time for demonstration purposes
-    (*job)->id = rand();
-    (*job)->status = QDMI_JOB_STATUS_CREATED;
-    return QDMI_SUCCESS;
+  if (format != QDMI_PROGRAM_FORMAT_QASM2 &&
+      format != QDMI_PROGRAM_FORMAT_QIRSTRING &&
+      format != QDMI_PROGRAM_FORMAT_QIRMODULE) {
+    return QDMI_ERROR_NOTSUPPORTED;
   }
-  if (format == QDMI_PROGRAM_FORMAT_QIRSTRING) {
-    device_status = QDMI_DEVICE_STATUS_BUSY;
-    *job = (QDMI_Job)malloc(sizeof(QDMI_Job_impl_t));
-    // set job id to current time for demonstration purposes
-    (*job)->id = rand();
-    (*job)->status = QDMI_JOB_STATUS_CREATED;
-    return QDMI_SUCCESS;
-  }
-  if (format == QDMI_PROGRAM_FORMAT_QIRMODULE) {
-    device_status = QDMI_DEVICE_STATUS_BUSY;
-    *job = (QDMI_Job)malloc(sizeof(QDMI_Job_impl_t));
-    // set job id to current time for demonstration purposes
-    (*job)->id = rand();
-    (*job)->status = QDMI_JOB_STATUS_CREATED;
-    return QDMI_SUCCESS;
-  }
-  return QDMI_ERROR_NOTSUPPORTED;
+
+  device_status = QDMI_DEVICE_STATUS_BUSY;
+  *job = (QDMI_Job)malloc(sizeof(QDMI_Job_impl_t));
+  // set job id to current time for demonstration purposes
+  (*job)->id = rand();
+  (*job)->status = QDMI_JOB_STATUS_CREATED;
+  (*job)->num_shots = 1;
+  (*job)->results = NULL;
+  return QDMI_SUCCESS;
 } /// [DOXYGEN FUNCTION END]
 
 int QDMI_control_set_parameter_dev(QDMI_Job job, const QDMI_Job_Parameter param,
