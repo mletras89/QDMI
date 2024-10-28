@@ -31,8 +31,8 @@ add_executable(my_c_device_test test_my_device.cpp)
 
 # link the Google test infrastructure to the test executable.
 target_link_libraries(
-  my_c_device_test PRIVATE gtest_main qdmi::qdmi qdmi::test_impl qdmi::driver
-                           qdmi::project_warnings)
+  my_c_device_test PRIVATE gtest_main qdmi::qdmi my_c_device
+                           qdmi::test_impl_direct qdmi::project_warnings)
 
 # discover tests
 gtest_discover_tests(
@@ -43,4 +43,4 @@ gtest_discover_tests(
 
 # ensure my_device and my_device_definitions_test are built whenever
 # my_device_test is built
-add_dependencies(my_c_device_test my_c_device qdmi_test_my_c_device_defs)
+add_dependencies(my_c_device_test qdmi_test_my_c_device_defs)
