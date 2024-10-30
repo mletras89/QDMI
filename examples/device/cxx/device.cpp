@@ -515,7 +515,7 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
     size_t count = 0;
     for (size_t i = 0; i < 1ULL << num_qubits; ++i) {
       if (dense_data[2 * i] != 0.0 || dense_data[(2 * i) + 1] != 0.0) {
-        count++;
+        ++count;
       }
     }
     if (data != nullptr) {
@@ -553,7 +553,7 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
     size_t count = 0;
     for (size_t i = 0; i < 1ULL << num_qubits; ++i) {
       if (dense_data[2 * i] != 0.0 || dense_data[(2 * i) + 1] != 0.0) {
-        count++;
+        ++count;
       }
     }
     if (data != nullptr) {
@@ -602,7 +602,7 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
     size_t count = 0;
     for (size_t i = 0; i < 1ULL << num_qubits; ++i) {
       if (dense_data[i] != 0.0) {
-        count++;
+        ++count;
       }
     }
     if (data != nullptr) {
@@ -612,7 +612,7 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
       auto *data_ptr = static_cast<char *>(data);
       for (size_t i = 0; i < 1ULL << num_qubits; ++i) {
         if (dense_data[i] != 0.0) {
-          for (size_t j = 0; j < num_qubits; j++) {
+          for (size_t j = 0; j < num_qubits; ++j) {
             *data_ptr++ = ((i & (1 << (num_qubits - j - 1))) != 0U) ? '1' : '0';
           }
           *data_ptr++ = ',';
@@ -640,7 +640,7 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
     size_t count = 0;
     for (size_t i = 0; i < 1ULL << num_qubits; ++i) {
       if (dense_data[i] != 0.0) {
-        count++;
+        ++count;
       }
     }
     if (data != nullptr) {
