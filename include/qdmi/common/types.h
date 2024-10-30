@@ -8,7 +8,8 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  * @brief Defines all types used within QDMI.
  */
 
-#pragma once
+#ifndef QDMI_COMMON_TYPES_H
+#define QDMI_COMMON_TYPES_H
 
 #include "qdmi/common/enums.h"
 
@@ -101,3 +102,9 @@ typedef struct QDMI_Operation_impl_d *QDMI_Operation;
 #ifdef __cplusplus
 } // extern "C"
 #endif
+
+#ifdef QDMI_PREFIX
+#undef QDMI_COMMON_TYPES_H
+#endif // QDMI_PREFIX
+
+#endif // QDMI_COMMON_TYPES_H

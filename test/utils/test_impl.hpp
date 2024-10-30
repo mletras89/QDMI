@@ -19,6 +19,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <gtest/gtest.h>
 #include <string>
+#include <utility>
 
 constexpr const char *Shared_library_file_extension() {
 #if defined(_WIN32)
@@ -30,7 +31,8 @@ constexpr const char *Shared_library_file_extension() {
 #endif
 }
 
-class QDMIImplementationTest : public ::testing::TestWithParam<std::string> {
+class QDMIImplementationTest
+    : public ::testing::TestWithParam<std::pair<std::string, std::string>> {
 protected:
   void SetUp() override;
 
@@ -39,5 +41,6 @@ protected:
   QDMI_Session session = nullptr;
   QDMI_Device device = nullptr;
   std::string library_name;
+  std::string prefix;
   std::string config_file_name;
 };

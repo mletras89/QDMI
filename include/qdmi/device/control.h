@@ -8,7 +8,9 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  * @brief The control interface implemented by a QDMI device.
  * @see qdmi/client/control.h for the client interface.
  */
-#pragma once
+
+#ifndef QDMI_DEVICE_CONTROL_H
+#define QDMI_DEVICE_CONTROL_H
 
 #include "qdmi/common/types.h"
 
@@ -157,3 +159,9 @@ int QDMI_control_finalize_dev(void);
 #ifdef __cplusplus
 } // extern "C"
 #endif
+
+#ifdef QDMI_PREFIX
+#undef QDMI_DEVICE_CONTROL_H
+#endif // QDMI_PREFIX
+
+#endif // QDMI_DEVICE_CONTROL_H

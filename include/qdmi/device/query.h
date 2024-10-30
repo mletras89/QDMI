@@ -8,7 +8,8 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  * @brief Define the interface for querying properties of a device.
  */
 
-#pragma once
+#ifndef QDMI_DEVICE_QUERY_H
+#define QDMI_DEVICE_QUERY_H
 
 #include "qdmi/common/types.h"
 
@@ -176,3 +177,9 @@ int QDMI_query_operation_property_dev(QDMI_Operation operation, int num_sites,
 #ifdef __cplusplus
 } // extern "C"
 #endif
+
+#ifdef QDMI_PREFIX
+#undef QDMI_DEVICE_QUERY_H
+#endif // QDMI_PREFIX
+
+#endif // QDMI_DEVICE_QUERY_H

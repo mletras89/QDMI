@@ -8,7 +8,8 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  * @brief Defines all enums used within QDMI.
  */
 
-#pragma once
+#ifndef QDMI_COMMON_ENUMS_H
+#define QDMI_COMMON_ENUMS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -353,3 +354,5 @@ enum QDMI_JOB_RESULT_T {
 #ifdef __cplusplus
 } // extern "C"
 #endif
+
+#endif // QDMI_COMMON_ENUMS_H
