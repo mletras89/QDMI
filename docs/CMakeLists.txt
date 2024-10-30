@@ -50,7 +50,7 @@ set(DOXYGEN_CONFIG_FILE_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
 FetchContent_GetProperties(doxygen-awesome-css SOURCE_DIR AWESOME_CSS_DIR)
 
 # Replace variables inside @@ with the current values, e.g., the placeholder
-# @@DOXYGEN_INPUT_DIRS@@ is replaced by the content of the variable
+# @DOXYGEN_INPUT_DIRS@ is replaced by the content of the variable
 # DOXYGEN_INPUT_DIRS.
 configure_file(${DOXYGEN_CONFIG_FILE_IN} ${DOXYGEN_CONFIG_FILE_OUT} @ONLY)
 
