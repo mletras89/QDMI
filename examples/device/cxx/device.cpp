@@ -649,7 +649,7 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
                               nullptr, &dense_size);
     std::vector<double> dense_data(
         static_cast<std::size_t>(dense_size / sizeof(double)));
-    QDMI_control_get_data_dev(job, QDMI_JOB_RESULT_STATEVECTOR_DENSE,
+    QDMI_control_get_data_dev(job, QDMI_JOB_RESULT_PROBABILITIES_DENSE,
                               dense_size, dense_data.data(), nullptr);
     int num_qubits = 0;
     QDMI_query_device_property_dev(QDMI_DEVICE_PROPERTY_QUBITSNUM, sizeof(int),
@@ -692,7 +692,7 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
                               nullptr, &dense_size);
     std::vector<double> dense_data(
         static_cast<std::size_t>(dense_size / sizeof(double)));
-    QDMI_control_get_data_dev(job, QDMI_JOB_RESULT_STATEVECTOR_DENSE,
+    QDMI_control_get_data_dev(job, QDMI_JOB_RESULT_PROBABILITIES_DENSE,
                               dense_size, dense_data.data(), nullptr);
     int num_qubits = 0;
     QDMI_query_device_property_dev(QDMI_DEVICE_PROPERTY_QUBITSNUM, sizeof(int),
