@@ -55,7 +55,7 @@ TEST_P(QDMIImplementationTest, QueryGateSet) {
     std::string name(k.length(), '\0');
     ASSERT_EQ(QDMI_query_operation_property(
                   device, v, 0, nullptr, QDMI_OPERATION_PROPERTY_NAME,
-                  static_cast<int>(name.length()) + 1, name.data(), nullptr),
+                  static_cast<int>(name.length()), name.data(), nullptr),
               QDMI_SUCCESS);
     EXPECT_EQ(k, name);
   }

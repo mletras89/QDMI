@@ -190,7 +190,7 @@ TEST_P(QDMIImplementationTest, QueryDeviceNameImplemented) {
                                        nullptr, &size),
             QDMI_SUCCESS)
       << "Devices must provide a name";
-  std::string value(static_cast<size_t>(size), '\0');
+  std::string value(static_cast<size_t>(size - 1), '\0');
   ASSERT_EQ(QDMI_query_device_property(device, QDMI_DEVICE_PROPERTY_NAME, size,
                                        value.data(), nullptr),
             QDMI_SUCCESS)
@@ -204,7 +204,7 @@ TEST_P(QDMIImplementationTest, QueryDeviceVersionImplemented) {
                                        nullptr, &size),
             QDMI_SUCCESS)
       << "Devices must provide a version";
-  std::string value(static_cast<size_t>(size), '\0');
+  std::string value(static_cast<size_t>(size - 1), '\0');
   ASSERT_EQ(QDMI_query_device_property(device, QDMI_DEVICE_PROPERTY_VERSION,
                                        size, value.data(), nullptr),
             QDMI_SUCCESS)
@@ -218,7 +218,7 @@ TEST_P(QDMIImplementationTest, QueryDeviceLibraryVersionImplemented) {
                 device, QDMI_DEVICE_PROPERTY_LIBRARYVERSION, 0, nullptr, &size),
             QDMI_SUCCESS)
       << "Devices must provide a library version";
-  std::string value(static_cast<size_t>(size), '\0');
+  std::string value(static_cast<size_t>(size - 1), '\0');
   ASSERT_EQ(QDMI_query_device_property(device,
                                        QDMI_DEVICE_PROPERTY_LIBRARYVERSION,
                                        size, value.data(), nullptr),
