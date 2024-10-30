@@ -38,6 +38,7 @@ INSTANTIATE_TEST_SUITE_P(
         filename = filename.substr(prefix.size());
       }
 
+      // return name for the test
       return filename;
     });
 
