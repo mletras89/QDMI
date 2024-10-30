@@ -279,7 +279,7 @@ measure q -> c;
   std::vector<double> val_vec(key_vec.size() * 2);
   ASSERT_EQ(QDMI_control_get_data(
                 device, job, QDMI_JOB_RESULT_STATEVECTOR_SPARSE_VALUES,
-                static_cast<int>(sizeof(double) * key_vec.size() * 2),
+                static_cast<int>(sizeof(double) * val_vec.size()),
                 val_vec.data(), nullptr),
             QDMI_SUCCESS);
   std::unordered_map<std::string, std::pair<double, double>> results;
