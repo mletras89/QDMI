@@ -355,7 +355,7 @@ int QDMI_control_submit_job_dev(QDMI_Job job) {
                                  &num_qubits, nullptr);
   job->results.clear();
   job->results.reserve(job->num_shots);
-  for (int i = 0; i < job->num_shots; i++) {
+  for (int i = 0; i < job->num_shots; ++i) {
     // generate random 5-bit string
     std::string result(num_qubits, '0');
     std::generate(result.begin(), result.end(), [&]() {
@@ -368,7 +368,7 @@ int QDMI_control_submit_job_dev(QDMI_Job job) {
   job->state_vec.reserve(static_cast<std::size_t>(std::pow(2, num_qubits)));
   double norm = 0.0;
   for (size_t i = 0; i < static_cast<std::size_t>(std::pow(2, num_qubits));
-       i++) {
+       ++i) {
     const double real_part = device_state.dis_real(device_state.gen);
     const double imag_part = device_state.dis_real(device_state.gen);
     norm += real_part * real_part + imag_part * imag_part;
@@ -376,7 +376,7 @@ int QDMI_control_submit_job_dev(QDMI_Job job) {
   }
   // Normalize the vector
   norm = sqrt(norm);
-  for (size_t i = 0; i < static_cast<size_t>(pow(2, num_qubits)); i++) {
+  for (size_t i = 0; i < static_cast<size_t>(pow(2, num_qubits)); ++i) {
     job->state_vec[i] = {job->state_vec[i].first / norm,
                          job->state_vec[i].first / norm};
   }
@@ -501,7 +501,7 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
       int *int_data = static_cast<int *>(data);
       for (const auto &[k, v] : hist) {
         *int_data = v;
-        int_data++;
+        ++int_data;
       }
     }
     if ((size_ret) != nullptr) {
@@ -544,9 +544,9 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
     // count non-zero elements
     int count = 0;
     for (size_t i = 0; i < static_cast<std::size_t>(std::pow(2, num_qubits));
-         i++) {
+         ++i) {
       if (dense_data[2 * i] != 0.0 || dense_data[(2 * i) + 1] != 0.0) {
-        count++;
+        ++count;
       }
     }
     if (data != nullptr) {
@@ -555,9 +555,9 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
       }
       auto *data_ptr = static_cast<char *>(data);
       for (size_t i = 0, n = 0;
-           i < static_cast<std::size_t>(std::pow(2, num_qubits)); i++) {
+           i < static_cast<std::size_t>(std::pow(2, num_qubits)); ++i) {
         if (dense_data[2 * i] != 0.0 || dense_data[(2 * i) + 1] != 0.0) {
-          for (int j = 0; j < num_qubits; j++) {
+          for (int j = 0; j < num_qubits; ++j) {
             *data_ptr++ = ((i & (1 << (num_qubits - j - 1))) != 0U) ? '1' : '0';
           }
           if (n < count - 1) {
@@ -588,9 +588,9 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
     // count non-zero elements
     int count = 0;
     for (size_t i = 0; i < static_cast<std::size_t>(std::pow(2, num_qubits));
-         i++) {
+         ++i) {
       if (dense_data[2 * i] != 0.0 || dense_data[(2 * i) + 1] != 0.0) {
-        count++;
+        ++count;
       }
     }
     if (data != nullptr) {
@@ -599,7 +599,7 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
       }
       auto *data_ptr = static_cast<double *>(data);
       for (size_t i = 0; i < static_cast<size_t>(std::pow(2, num_qubits));
-           i++) {
+           ++i) {
         if (dense_data[2 * i] != 0.0 || dense_data[(2 * i) + 1] != 0.0) {
           *data_ptr++ = dense_data[2 * i];
           *data_ptr++ = dense_data[(2 * i) + 1];
@@ -630,7 +630,7 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
       }
       auto *data_ptr = static_cast<double *>(data);
       for (size_t i = 0; i < static_cast<size_t>(std::pow(2, num_qubits));
-           i++) {
+           ++i) {
         // Calculate the probability of the state
         *data_ptr++ =
             std::sqrt((dense_data[2 * i] * dense_data[2 * i]) +
@@ -656,9 +656,9 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
                                    &num_qubits, nullptr);
     // count non-zero elements
     int count = 0;
-    for (size_t i = 0; i < static_cast<size_t>(std::pow(2, num_qubits)); i++) {
+    for (size_t i = 0; i < static_cast<size_t>(std::pow(2, num_qubits)); ++i) {
       if (dense_data[i] != 0.0) {
-        count++;
+        ++count;
       }
     }
     if (data != nullptr) {
@@ -667,9 +667,9 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
       }
       auto *data_ptr = static_cast<char *>(data);
       for (size_t i = 0, n = 0;
-           i < static_cast<size_t>(std::pow(2, num_qubits)); i++) {
+           i < static_cast<size_t>(std::pow(2, num_qubits)); ++i) {
         if (dense_data[i] != 0.0) {
-          for (size_t j = 0; j < num_qubits; j++) {
+          for (size_t j = 0; j < num_qubits; ++j) {
             *data_ptr++ = ((i & (1 << (num_qubits - j - 1))) != 0U) ? '1' : '0';
           }
           if (n < count - 1) {
@@ -699,9 +699,9 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
                                    &num_qubits, nullptr);
     // count non-zero elements
     int count = 0;
-    for (size_t i = 0; i < static_cast<size_t>(std::pow(2, num_qubits)); i++) {
+    for (size_t i = 0; i < static_cast<size_t>(std::pow(2, num_qubits)); ++i) {
       if (dense_data[i] != 0.0) {
-        count++;
+        ++count;
       }
     }
     if (data != nullptr) {
@@ -710,7 +710,7 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
       }
       auto *data_ptr = static_cast<double *>(data);
       for (size_t i = 0; i < static_cast<size_t>(std::pow(2, num_qubits));
-           i++) {
+           ++i) {
         if (dense_data[i] != 0.0) {
           *data_ptr++ = dense_data[i];
         }
