@@ -136,7 +136,7 @@ const static std::unordered_map<
       }                                                                        \
       return QDMI_SUCCESS;                                                     \
     }                                                                          \
-  }
+  } /// [DOXYGEN MACRO END]
 
 #define ADD_STRING_PROPERTY(prop_name, prop_value, prop, size, value,          \
                             size_ret)                                          \
@@ -154,7 +154,7 @@ const static std::unordered_map<
       }                                                                        \
       return QDMI_SUCCESS;                                                     \
     }                                                                          \
-  }
+  } /// [DOXYGEN MACRO END]
 
 #define ADD_LIST_PROPERTY(prop_name, prop_type, prop_values, prop, size,       \
                           value, size_ret)                                     \
@@ -173,7 +173,7 @@ const static std::unordered_map<
       }                                                                        \
       return QDMI_SUCCESS;                                                     \
     }                                                                          \
-  }
+  } /// [DOXYGEN MACRO END]
 // NOLINTEND(bugprone-macro-parentheses)
 
 int QDMI_query_get_sites_dev(const size_t num_entries, QDMI_Site *sites,

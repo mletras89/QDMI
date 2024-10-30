@@ -86,7 +86,7 @@ const QDMI_Operation DEVICE_OPERATIONS[] = {
       }                                                                        \
       return QDMI_SUCCESS;                                                     \
     }                                                                          \
-  }
+  } /// [DOXYGEN MACRO END]
 
 #define ADD_STRING_PROPERTY(prop_name, prop_value, prop, size, value,          \
                             size_ret)                                          \
@@ -104,7 +104,7 @@ const QDMI_Operation DEVICE_OPERATIONS[] = {
       }                                                                        \
       return QDMI_SUCCESS;                                                     \
     }                                                                          \
-  }
+  } /// [DOXYGEN MACRO END]
 
 #define ADD_LIST_PROPERTY(prop_name, prop_type, prop_values, prop_length,      \
                           prop, size, value, size_ret)                         \
@@ -122,7 +122,7 @@ const QDMI_Operation DEVICE_OPERATIONS[] = {
       }                                                                        \
       return QDMI_SUCCESS;                                                     \
     }                                                                          \
-  }
+  } /// [DOXYGEN MACRO END]
 
 int QDMI_query_get_sites_dev(const size_t num_entries, QDMI_Site *sites,
                              size_t *num_sites) {
