@@ -454,21 +454,20 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
         free(raw_data);
         return QDMI_ERROR_INVALIDARGUMENT;
       }
-      strcpy((char *)data, raw_data_split[0]);
-      data += num_qubits;
+      char *data_ptr = data;
+      strcpy(data_ptr, raw_data_split[0]);
+      data_ptr += num_qubits;
       if (count > 1) {
-        *(char *)data = ',';
+        *data_ptr++ = ',';
       }
-      data += 1;
       int k = 1;
       for (int j = 1; j < job->num_shots; j++) {
         if (strcmp(raw_data_split[j], raw_data_split[j - 1]) != 0) {
-          strcpy((char *)data, raw_data_split[j]);
-          data += num_qubits;
+          strcpy(data_ptr, raw_data_split[j]);
+          data_ptr += num_qubits;
           if (k < count - 1) {
-            *(char *)data = ',';
+            *data_ptr++ = ',';
           }
-          data += 1;
           ++k;
         }
       }
@@ -516,10 +515,10 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
         return QDMI_ERROR_INVALIDARGUMENT;
       }
       int n = 1;
-      for (int j = 1; j < job->num_shots; j++) {
+      int *data_ptr = data;
+      for (size_t j = 1; j < job->num_shots; j++) {
         if (strcmp(raw_data_split[j], raw_data_split[j - 1]) != 0) {
-          *(int *)data = n;
-          data += sizeof(int);
+          *data_ptr++ = n;
           n = 1;
         } else {
           ++n;
@@ -571,18 +570,17 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
         free(dense_data);
         return QDMI_ERROR_INVALIDARGUMENT;
       }
+      char *data_ptr = data;
       for (size_t i = 0, n = 0; i < (size_t)pow(2, num_qubits); i++) {
         if (dense_data[2 * i] != 0.0 || dense_data[(2 * i) + 1] != 0.0) {
-          for (int j = 0; j < num_qubits; j++) {
-            *(char *)data = (i & (1 << (num_qubits - j - 1))) ? '1' : '0';
-            data += 1;
+          for (size_t j = 0; j < num_qubits; j++) {
+            *data_ptr++ = (i & (1 << (num_qubits - j - 1))) ? '1' : '0';
           }
           if (n < count - 1) {
-            *(char *)data = ',';
+            *data_ptr++ = ',';
           } else {
-            *(char *)data = '\0';
+            *data_ptr++ = '\0';
           }
-          data += 1;
           ++n;
         }
       }
@@ -615,12 +613,11 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
         free(dense_data);
         return QDMI_ERROR_INVALIDARGUMENT;
       }
+      double *data_ptr = data;
       for (size_t i = 0; i < (size_t)pow(2, num_qubits); i++) {
         if (dense_data[2 * i] != 0.0 || dense_data[(2 * i) + 1] != 0.0) {
-          *(double *)data = dense_data[2 * i];
-          data += sizeof(double);
-          *(double *)data = dense_data[(2 * i) + 1];
-          data += sizeof(double);
+          *data_ptr++ = dense_data[2 * i];
+          *data_ptr++ = dense_data[(2 * i) + 1];
         }
       }
     }
@@ -644,11 +641,11 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
       if (size < (size_t)pow(2, num_qubits) * sizeof(double)) {
         return QDMI_ERROR_INVALIDARGUMENT;
       }
+      double *data_ptr = data;
       for (size_t i = 0; i < (size_t)pow(2, num_qubits); i++) {
         // Calculate the probability of the state
-        ((double *)data)[i] =
-            sqrt((dense_data[2 * i] * dense_data[2 * i]) +
-                 (dense_data[(2 * i) + 1] * dense_data[(2 * i) + 1]));
+        *data_ptr++ = sqrt((dense_data[2 * i] * dense_data[2 * i]) +
+                           (dense_data[(2 * i) + 1] * dense_data[(2 * i) + 1]));
       }
     }
     if ((size_ret) != NULL) {
@@ -678,18 +675,17 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
         free(dense_data);
         return QDMI_ERROR_INVALIDARGUMENT;
       }
+      char *data_ptr = data;
       for (size_t i = 0, n = 0; i < (size_t)pow(2, num_qubits); i++) {
         if (dense_data[i] != 0.0) {
           for (size_t j = 0; j < num_qubits; j++) {
-            *(char *)data = (i & (1 << (num_qubits - j - 1))) ? '1' : '0';
-            data += 1;
+            *data_ptr++ = (i & (1 << (num_qubits - j - 1))) ? '1' : '0';
           }
           if (n < count - 1) {
-            *(char *)data = ',';
+            *data_ptr++ = ',';
           } else {
-            *(char *)data = '\0';
+            *data_ptr++ = '\0';
           }
-          data += 1;
           ++n;
         }
       }
@@ -722,10 +718,10 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
         free(dense_data);
         return QDMI_ERROR_INVALIDARGUMENT;
       }
+      double *data_ptr = data;
       for (size_t i = 0; i < (size_t)pow(2, num_qubits); i++) {
         if (dense_data[i] != 0.0) {
-          *(double *)data = dense_data[i];
-          data += sizeof(double);
+          *data_ptr++ = dense_data[i];
         }
       }
     }

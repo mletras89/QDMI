@@ -372,7 +372,7 @@ int QDMI_control_submit_job_dev(QDMI_Job job) {
     const double real_part = device_state.dis_real(device_state.gen);
     const double imag_part = device_state.dis_real(device_state.gen);
     norm += real_part * real_part + imag_part * imag_part;
-    job->state_vec[i] = {real_part, imag_part};
+    job->state_vec.emplace_back(real_part, imag_part);
   }
   // Normalize the vector
   norm = sqrt(norm);

@@ -208,7 +208,7 @@ measure q -> c;
   ASSERT_EQ(QDMI_control_get_data(device, job, QDMI_JOB_RESULT_HIST_KEYS, 0,
                                   nullptr, &size),
             QDMI_SUCCESS);
-  std::string key_list(static_cast<std::size_t>(size), '\0');
+  std::string key_list(static_cast<std::size_t>(size - 1), '\0');
   ASSERT_EQ(QDMI_control_get_data(device, job, QDMI_JOB_RESULT_HIST_KEYS, size,
                                   key_list.data(), nullptr),
             QDMI_SUCCESS);
@@ -251,7 +251,7 @@ measure q -> c;
   ASSERT_EQ(QDMI_control_wait(device, job), QDMI_SUCCESS);
   int num_qubits = 0;
   ASSERT_EQ(QDMI_query_device_property(device, QDMI_DEVICE_PROPERTY_QUBITSNUM,
-                                       0, &num_qubits, nullptr),
+                                       sizeof(int), &num_qubits, nullptr),
             QDMI_SUCCESS);
   std::vector<double> state_vector(
       static_cast<std::size_t>(std::pow(2, num_qubits)) * 2);
@@ -265,7 +265,7 @@ measure q -> c;
                                   QDMI_JOB_RESULT_STATEVECTOR_SPARSE_KEYS, 0,
                                   nullptr, &size),
             QDMI_SUCCESS);
-  std::string key_list(static_cast<std::size_t>(size), '\0');
+  std::string key_list(static_cast<std::size_t>(size - 1), '\0');
   ASSERT_EQ(QDMI_control_get_data(device, job,
                                   QDMI_JOB_RESULT_STATEVECTOR_SPARSE_KEYS, size,
                                   key_list.data(), nullptr),
