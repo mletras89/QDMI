@@ -14,6 +14,10 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 extern "C" {
 #endif
 
+// The following clang-tidy warning cannot be addressed because this header is
+// used from both C and C++ code.
+// NOLINTBEGIN(performance-enum-size)
+
 /// Enum of the device properties that can be queried.
 enum QDMI_DEVICE_PROPERTY_T {
   QDMI_DEVICE_PROPERTY_NAME, ///< `char*` (string) The name of the device.
@@ -343,6 +347,8 @@ enum QDMI_JOB_RESULT_T {
    */
   QDMI_JOB_RESULT_MAX
 };
+
+// NOLINTEND(performance-enum-size)
 
 #ifdef __cplusplus
 } // extern "C"
