@@ -34,11 +34,15 @@ QDMI_query_device_property_dev function. Below you find the respective implement
   \skip QDMI_query_device_property_dev
   \until QDMI_DEVICE_PROPERTY_LIBRARYVERSION
   \until size_ret)
+  \skip QDMI_ERROR_NOTSUPPORTED
+  \until DOXYGEN FUNCTION END
 - <b class="tab-title">C++</b>
   \dontinclude device.cpp
   \skip QDMI_query_device_property_dev
   \until QDMI_DEVICE_PROPERTY_LIBRARYVERSION
   \until size_ret)
+  \skip QDMI_ERROR_NOTSUPPORTED
+  \until DOXYGEN FUNCTION END
 </div>
 <!-- prettier-ignore-end -->
 
@@ -55,15 +59,11 @@ implementation of the @ref QDMI_query_device_property_dev function.
 - <b class="tab-title">C</b>
   \dontinclude device.c
   \skip #define ADD_STRING_PROPERTY
-  \until return QDMI_SUCCESS;
-  \until }
-  \until }
+  \until DOXYGEN MACRO END
 - <b class="tab-title">C++</b>
   \dontinclude device.cpp
   \skip #define ADD_STRING_PROPERTY
-  \until return QDMI_SUCCESS;
-  \until }
-  \until }
+  \until DOXYGEN MACRO END
 </div>
 <!-- prettier-ignore-end -->
 
@@ -74,15 +74,11 @@ A similar macro is defined for other (fixed length) data types, e.g., `int`, `do
 - <b class="tab-title">C</b>
   \dontinclude device.c
   \skip #define ADD_SINGLE_VALUE_PROPERTY
-  \until return QDMI_SUCCESS;
-  \until }
-  \until }
+  \until DOXYGEN MACRO END
 - <b class="tab-title">C++</b>
   \dontinclude device.cpp
   \skip #define ADD_SINGLE_VALUE_PROPERTY
-  \until return QDMI_SUCCESS;
-  \until }
-  \until }
+  \until DOXYGEN MACRO END
 </div>
 <!-- prettier-ignore-end -->
 
@@ -93,15 +89,11 @@ Another macro is defined for list properties of the data types above.
 - <b class="tab-title">C</b>
   \dontinclude device.c
   \skip #define ADD_LIST_PROPERTY
-  \until return QDMI_SUCCESS;
-  \until }
-  \until }
+  \until DOXYGEN MACRO END
 - <b class="tab-title">C++</b>
   \dontinclude device.cpp
   \skip #define ADD_LIST_PROPERTY
-  \until return QDMI_SUCCESS;
-  \until }
-  \until }
+  \until DOXYGEN MACRO END
 </div>
 <!-- prettier-ignore-end -->
 
@@ -121,6 +113,8 @@ device.
   \skip QDMI_DEVICE_PROPERTY_QUBITSNUM
   \until QDMI_DEVICE_PROPERTY_STATUS
   \until size_ret)
+  \skip QDMI_ERROR_NOTSUPPORTED
+  \until DOXYGEN FUNCTION END
 - <b class="tab-title">C++</b>
   \dontinclude device.cpp
   \skip QDMI_query_device_property_dev
@@ -128,6 +122,8 @@ device.
   \skip QDMI_DEVICE_PROPERTY_QUBITSNUM
   \until QDMI_DEVICE_PROPERTY_STATUS
   \until size_ret)
+  \skip QDMI_ERROR_NOTSUPPORTED
+  \until DOXYGEN FUNCTION END
 </div>
 <!-- prettier-ignore-end -->
 
@@ -144,7 +140,7 @@ flattened into a single list of @ref QDMI_Site's.
   \skip QDMI_query_device_property_dev
   \until {
   \skip ADD_LIST_PROPERTY
-  \until size_ret)
+  \until DOXYGEN FUNCTION END
 - <b class="tab-title">C++</b>
   \dontinclude device.cpp
   \skipline constexpr static std::array<const QDMI_Site_impl_d *const, 20>
@@ -152,8 +148,8 @@ flattened into a single list of @ref QDMI_Site's.
   \until ;
   \skip QDMI_query_device_property_dev
   \until {
-  \skip QDMI_DEVICE_PROPERTY_COUPLINGMAP
-  \until size_ret)
+  \skip ADD_LIST_PROPERTY
+  \until DOXYGEN FUNCTION END
 </div>
 <!-- prettier-ignore-end -->
 
