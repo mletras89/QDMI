@@ -6,3 +6,5 @@
 
 add_subdirectory(c)
 add_subdirectory(cxx)
+add_subdirectory(unprefixed_c)
+add_subdirectory(unprefixed_cxx)

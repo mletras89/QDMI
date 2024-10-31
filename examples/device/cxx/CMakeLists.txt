@@ -18,6 +18,6 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../device_shifted.h.in cxx_device.h
 # change. Hence, in the test you have to adopt the name of the shared library
 # accordingly.
 add_library(cxx_device SHARED device.cpp)
-target_link_libraries(cxx_device PRIVATE qdmi::qdmi)
+target_link_libraries(cxx_device PRIVATE qdmi::qdmi qdmi::project_warnings)
 target_include_directories(cxx_device PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 add_library(qdmi::cxx_device ALIAS cxx_device)
