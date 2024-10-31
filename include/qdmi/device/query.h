@@ -21,10 +21,11 @@ extern "C" {
  * @param[in] num_entries the number of entries that can be added to @p devices.
  * If @p devices is not @c NULL, @p num_entries must be greater than zero.
  * @param[out] sites returns a list of sites available on the device. The @ref
- * QDMI_Site values returned in @p sites can be used to identify a specific @ref
- * QDMI_Site. If @p sites is @c NULL, this argument is ignored. The number of
- * @ref QDMI_Site values returned is the minimum of the value specified by @p
- * num_entries and the number of sites found.
+ * QDMI_Device_Site values returned in @p sites can be used to identify a
+ * specific @ref QDMI_Site. If @p sites is @c NULL, this argument is ignored.
+ * The number of
+ * @ref QDMI_Device_Site values returned is the minimum of the value specified
+ * by @p num_entries and the number of sites found.
  * @param[out] num_sites returns the number of sites available. If @p num_sites
  * is @c NULL, this argument is ignored.
  * @return @ref QDMI_SUCCESS if the function is executed successfully.
@@ -34,18 +35,19 @@ extern "C" {
  * num_sites are @c NULL.
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
-int QDMI_query_get_sites_dev(int num_entries, QDMI_Site *sites, int *num_sites);
+int QDMI_query_get_sites_dev(int num_entries, QDMI_Device_Site *sites,
+                             int *num_sites);
 
 /**
  * @brief Get the operations available on the @p device.
  * @param[in] num_entries the number of entries that can be added to @p devices.
  * If @p devices is not @c NULL, @p num_entries must be greater than zero.
  * @param[out] operations returns a list of operations available on the device.
- * The @ref QDMI_Operation values returned in @p operations can be used to
- * identify a specific @ref QDMI_Operation. If @p operations is @c NULL, this
- * argument is ignored. The number of @ref QDMI_Operation values returned is the
- * minimum of the value specified by @p num_entries and the number of operations
- * found.
+ * The @ref QDMI_Device_Operation values returned in @p operations can be used
+ * to identify a specific @ref QDMI_Operation. If @p operations is @c NULL, this
+ * argument is ignored. The number of @ref QDMI_Device_Operation values returned
+ * is the minimum of the value specified by @p num_entries and the number of
+ * operations found.
  * @param[out] num_operations returns the number of operations available. If @p
  * num_operations is @c NULL, this argument is ignored.
  * @return @ref QDMI_SUCCESS if the function is executed successfully.
@@ -55,7 +57,8 @@ int QDMI_query_get_sites_dev(int num_entries, QDMI_Site *sites, int *num_sites);
  * @p num_operations are @c NULL.
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
-int QDMI_query_get_operations_dev(int num_entries, QDMI_Operation *operations,
+int QDMI_query_get_operations_dev(int num_entries,
+                                  QDMI_Device_Operation *operations,
                                   int *num_operations);
 
 /**
@@ -120,7 +123,7 @@ int QDMI_query_device_property_dev(QDMI_Device_Property prop, int size,
  * device.
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
-int QDMI_query_site_property_dev(QDMI_Site site, QDMI_Site_Property prop,
+int QDMI_query_site_property_dev(QDMI_Device_Site site, QDMI_Site_Property prop,
                                  int size, void *value, int *size_ret);
 
 /**
@@ -168,8 +171,9 @@ int QDMI_query_site_property_dev(QDMI_Site site, QDMI_Site_Property prop,
  * device or for the given list of sites.
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
-int QDMI_query_operation_property_dev(QDMI_Operation operation, int num_sites,
-                                      const QDMI_Site *sites,
+int QDMI_query_operation_property_dev(QDMI_Device_Operation operation,
+                                      int num_sites,
+                                      const QDMI_Device_Site *sites,
                                       QDMI_Operation_Property prop, int size,
                                       void *value, int *size_ret);
 
