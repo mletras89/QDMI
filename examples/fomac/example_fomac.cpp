@@ -108,11 +108,12 @@ auto FoMaC::get_operation_map() const -> std::map<std::string, QDMI_Operation> {
   std::map<std::string, QDMI_Operation> ops_map;
   for (const auto &op : ops) {
     int name_length = 0;
-    ret = QDMI_query_operation_property(
-        op, 0, nullptr, QDMI_OPERATION_PROPERTY_NAME, 0, nullptr, &name_length);
+    ret = QDMI_query_operation_property(device, op, 0, nullptr,
+                                        QDMI_OPERATION_PROPERTY_NAME, 0,
+                                        nullptr, &name_length);
     throw_if_error(ret, "Failed to retrieve operation name length.");
     std::string name(name_length, '\0');
-    ret = QDMI_query_operation_property(op, 0, nullptr,
+    ret = QDMI_query_operation_property(device, op, 0, nullptr,
                                         QDMI_OPERATION_PROPERTY_NAME,
                                         name_length, name.data(), nullptr);
     throw_if_error(ret, "Failed to retrieve operation name.");
@@ -158,7 +159,7 @@ auto FoMaC::get_sites() const -> std::vector<QDMI_Site> {
 int FoMaC::get_operands_num(const QDMI_Operation &op) const {
   int operands_num = 0;
   const int ret = QDMI_query_operation_property(
-      op, 0, nullptr, QDMI_OPERATION_PROPERTY_QUBITSNUM, sizeof(int),
+      device, op, 0, nullptr, QDMI_OPERATION_PROPERTY_QUBITSNUM, sizeof(int),
       &operands_num, nullptr);
   throw_if_error(ret, "Failed to query the operand number");
   return operands_num;
