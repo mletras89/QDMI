@@ -16,9 +16,9 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include "qdmi/device.h"
 
 int main() {
-  QDMI_Device_Job job = nullptr;
-  QDMI_Device_Site site = nullptr;
-  QDMI_Device_Operation operation = nullptr;
+  QDMI_Job job = nullptr;
+  QDMI_Site site = nullptr;
+  QDMI_Operation operation = nullptr;
   // query interface
   QDMI_query_get_sites_dev(1, &site, nullptr);
   QDMI_query_get_operations_dev(1, &operation, nullptr);
