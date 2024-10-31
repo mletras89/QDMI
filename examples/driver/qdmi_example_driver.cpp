@@ -31,11 +31,38 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  */
 
 /**
+ * @brief Definition of the QDMI Job.
+ */
+struct QDMI_Job_impl_d {
+  QDMI_Device device;
+  QDMI_Device_Job job;
+};
+
+/**
+ * @brief Definition of the QDMI Site.
+ */
+struct QDMI_Site_impl_d {
+  QDMI_Device device;
+  QDMI_Device_Site site;
+};
+
+/**
+ * @brief Definition of the QDMI Operation.
+ */
+struct QDMI_Operation_impl_d {
+  QDMI_Device device;
+  QDMI_Device_Operation operation;
+};
+
+/**
  * @brief Definition of the QDMI Device.
  */
 struct QDMI_Device_impl_d {
   void *lib_handle = nullptr;
   QDMI_Device_Mode mode = QDMI_DEVICE_MODE_READWRITE;
+  std::vector<QDMI_Job> job_list;
+  std::vector<QDMI_Site> site_list;
+  std::vector<QDMI_Operation> operation_list;
 
   /// Function pointer to @ref QDMI_query_get_sites_dev.
   decltype(QDMI_query_get_sites_dev) *query_get_sites{};
@@ -74,12 +101,19 @@ struct QDMI_Device_impl_d {
 
   // delete copy constructor, copy assignment, move constructor, move assignment
   QDMI_Device_impl_d(const QDMI_Device_impl_d &) = delete;
+
   QDMI_Device_impl_d &operator=(const QDMI_Device_impl_d &) = delete;
+
   QDMI_Device_impl_d(QDMI_Device_impl_d &&) = delete;
+
   QDMI_Device_impl_d &operator=(QDMI_Device_impl_d &&) = delete;
 
   // destructor
   ~QDMI_Device_impl_d() {
+    std::for_each(site_list.begin(), site_list.end(),
+                  [](QDMI_Site site) { delete site; });
+    std::for_each(operation_list.begin(), operation_list.end(),
+                  [](QDMI_Operation operation) { delete operation; });
     // Check if QDMI_control_finalize is not NULL before calling it
     if (control_finalize != nullptr) {
       control_finalize();
@@ -289,13 +323,65 @@ int QDMI_Driver_shutdown() {
  */
 
 int QDMI_query_get_sites(QDMI_Device device, const int num_entries,
-                         QDMI_Site *sites, int *num_sites_ret) {
-  return device->query_get_sites(num_entries, sites, num_sites_ret);
+                         QDMI_Site *sites, int *num_sites) {
+  if (device == nullptr || sites == nullptr && num_entries < 0 ||
+      sites == nullptr && num_sites == nullptr) {
+    return QDMI_ERROR_INVALIDARGUMENT;
+  }
+  if (sites == nullptr) {
+    return device->query_get_sites(0, nullptr, num_sites);
+  }
+  std::vector<QDMI_Device_Site> device_sites(num_entries);
+  int num_device_sites = 0;
+  const int ret =
+      device->query_get_sites(static_cast<int>(device_sites.size()),
+                              device_sites.data(), &num_device_sites);
+  if (ret < 0) {
+    return ret;
+  }
+  for (std::size_t i = 0; i < num_device_sites; ++i) {
+    if (i < device->site_list.size()) {
+      device->site_list.emplace_back(new QDMI_Site_impl_d());
+      device->site_list[i]->device = device;
+    }
+    device->site_list[i]->site = device_sites[i];
+    sites[i] = device->site_list[i];
+  }
+  if (num_sites != nullptr) {
+    *num_sites = num_device_sites;
+  }
+  return ret;
 }
 
 int QDMI_query_get_operations(QDMI_Device device, const int num_entries,
                               QDMI_Operation *operations, int *num_operations) {
-  return device->query_get_operations(num_entries, operations, num_operations);
+  if (device == nullptr || operations == nullptr && num_entries < 0 ||
+      operations == nullptr && num_operations == nullptr) {
+    return QDMI_ERROR_INVALIDARGUMENT;
+  }
+  if (operations == nullptr) {
+    return device->query_get_operations(0, nullptr, num_operations);
+  }
+  std::vector<QDMI_Device_Operation> device_operations(num_entries);
+  int num_device_operations = 0;
+  const int ret = device->query_get_operations(
+      static_cast<int>(device_operations.size()), device_operations.data(),
+      &num_device_operations);
+  if (ret < 0) {
+    return ret;
+  }
+  for (std::size_t i = 0; i < num_device_operations; ++i) {
+    if (i < device->operation_list.size()) {
+      device->operation_list.emplace_back(new QDMI_Operation_impl_d());
+      device->operation_list[i]->device = device;
+    }
+    device->operation_list[i]->operation = device_operations[i];
+    operations[i] = device->operation_list[i];
+  }
+  if (num_operations != nullptr) {
+    *num_operations = num_device_operations;
+  }
+  return ret;
 }
 
 int QDMI_query_device_property(QDMI_Device device, QDMI_Device_Property prop,
@@ -303,76 +389,96 @@ int QDMI_query_device_property(QDMI_Device device, QDMI_Device_Property prop,
   return device->query_device_property(prop, size, value, size_ret);
 }
 
-int QDMI_query_site_property(QDMI_Device device, QDMI_Site site,
-                             QDMI_Site_Property prop, const int size,
-                             void *value, int *size_ret) {
-  return device->query_site_property(site, prop, size, value, size_ret);
+int QDMI_query_site_property(QDMI_Site site, QDMI_Site_Property prop,
+                             const int size, void *value, int *size_ret) {
+  return site->device->query_site_property(site->site, prop, size, value,
+                                           size_ret);
 }
 
-int QDMI_query_operation_property(QDMI_Device device, QDMI_Operation operation,
-                                  const int num_sites, const QDMI_Site *sites,
+int QDMI_query_operation_property(QDMI_Operation operation, const int num_sites,
+                                  const QDMI_Site *sites,
                                   QDMI_Operation_Property prop, const int size,
                                   void *value, int *size_ret) {
-  return device->query_operation_property(operation, num_sites, sites, prop,
-                                          size, value, size_ret);
+  if (operation == nullptr) {
+    return QDMI_ERROR_INVALIDARGUMENT;
+  }
+  QDMI_Device_Site *device_sites = nullptr;
+  if (sites != nullptr) {
+    device_sites = new QDMI_Device_Site[num_sites];
+    for (std::size_t i = 0; i < num_sites; ++i) {
+      if (sites[i] == nullptr || sites[i]->device != operation->device) {
+        delete[] device_sites;
+        return QDMI_ERROR_INVALIDARGUMENT;
+      }
+      device_sites[i] = sites[i]->site;
+    }
+  }
+  const int ret = operation->device->query_operation_property(
+      operation->operation, num_sites, device_sites, prop, size, value,
+      size_ret);
+  delete[] device_sites;
+  return ret;
 }
 
 int QDMI_control_create_job(QDMI_Device dev, QDMI_Program_Format format,
                             const int size, const void *prog, QDMI_Job *job) {
   if ((dev->mode & QDMI_DEVICE_MODE_READWRITE) != 0) {
-    return dev->control_create_job(format, size, prog, job);
+    *job = new QDMI_Job_impl_d();
+    (*job)->device = dev;
+    return dev->control_create_job(format, size, prog, &((*job)->job));
   }
   return QDMI_ERROR_PERMISSIONDENIED;
 }
 
-int QDMI_control_set_parameter(QDMI_Device dev, QDMI_Job job,
-                               QDMI_Job_Parameter param, const int size,
-                               const void *value) {
-  if ((dev->mode & QDMI_DEVICE_MODE_READWRITE) != 0) {
-    return dev->control_set_parameter(job, param, size, value);
+int QDMI_control_set_parameter(QDMI_Job job, const QDMI_Job_Parameter param,
+                               const int size, const void *value) {
+  if ((job->device->mode & QDMI_DEVICE_MODE_READWRITE) != 0) {
+    return job->device->control_set_parameter(job->job, param, size, value);
   }
   return QDMI_ERROR_PERMISSIONDENIED;
 }
 
-int QDMI_control_submit_job(QDMI_Device dev, QDMI_Job job) {
-  if ((dev->mode & QDMI_DEVICE_MODE_READWRITE) != 0) {
-    return dev->control_submit_job(job);
+int QDMI_control_submit_job(QDMI_Job job) {
+  if ((job->device->mode & QDMI_DEVICE_MODE_READWRITE) != 0) {
+    return job->device->control_submit_job(job->job);
   }
   return QDMI_ERROR_PERMISSIONDENIED;
 }
 
-int QDMI_control_cancel(QDMI_Device dev, QDMI_Job job) {
-  if ((dev->mode & QDMI_DEVICE_MODE_READWRITE) != 0) {
-    return dev->control_cancel(job);
+int QDMI_control_cancel(QDMI_Job job) {
+  if ((job->device->mode & QDMI_DEVICE_MODE_READWRITE) != 0) {
+    return job->device->control_cancel(job->job);
   }
   return QDMI_ERROR_PERMISSIONDENIED;
 }
 
-int QDMI_control_check(QDMI_Device dev, QDMI_Job job, QDMI_Job_Status *status) {
-  if ((dev->mode & QDMI_DEVICE_MODE_READWRITE) != 0) {
-    return dev->control_check(job, status);
+int QDMI_control_check(QDMI_Job job, QDMI_Job_Status *status) {
+  if ((job->device->mode & QDMI_DEVICE_MODE_READWRITE) != 0) {
+    return job->device->control_check(job->job, status);
   }
   return QDMI_ERROR_PERMISSIONDENIED;
 }
 
-int QDMI_control_wait(QDMI_Device dev, QDMI_Job job) {
-  if ((dev->mode & QDMI_DEVICE_MODE_READWRITE) != 0) {
-    return dev->control_wait(job);
+int QDMI_control_wait(QDMI_Job job) {
+  if ((job->device->mode & QDMI_DEVICE_MODE_READWRITE) != 0) {
+    return job->device->control_wait(job->job);
   }
   return QDMI_ERROR_PERMISSIONDENIED;
 }
 
-int QDMI_control_get_data(QDMI_Device dev, QDMI_Job job, QDMI_Job_Result result,
-                          const int size, void *data, int *size_ret) {
-  if ((dev->mode & QDMI_DEVICE_MODE_READWRITE) != 0) {
-    return dev->control_get_data(job, result, size, data, size_ret);
+int QDMI_control_get_data(QDMI_Job job, QDMI_Job_Result result, const int size,
+                          void *data, int *size_ret) {
+  if ((job->device->mode & QDMI_DEVICE_MODE_READWRITE) != 0) {
+    return job->device->control_get_data(job->job, result, size, data,
+                                         size_ret);
   }
   return QDMI_ERROR_PERMISSIONDENIED;
 }
 
-void QDMI_control_free_job(QDMI_Device dev, QDMI_Job job) {
-  if ((dev->mode & QDMI_DEVICE_MODE_READWRITE) != 0) {
-    dev->control_free_job(job);
+void QDMI_control_free_job(QDMI_Job job) {
+  if ((job->device->mode & QDMI_DEVICE_MODE_READWRITE) != 0) {
+    job->device->control_free_job(job->job);
+    delete job;
   }
 }
 
