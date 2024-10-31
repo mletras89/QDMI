@@ -10,10 +10,12 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_library(qdmi_example_static_driver SHARED qdmi_example_static_driver.cpp
-                                              qdmi_example_static_driver.h)
-target_link_libraries(qdmi_example_static_driver
-                      PRIVATE qdmi::qdmi qdmi::c_device qdmi::cxx_device)
+add_library(qdmi_example_static_driver qdmi_example_static_driver.cpp
+                                       qdmi_example_static_driver.h)
+target_link_libraries(
+  qdmi_example_static_driver
+  PRIVATE qdmi::qdmi qdmi::c_device qdmi::cxx_device qdmi::unprefixed_c_device
+          qdmi::unprefixed_cxx_device qdmi::project_warnings)
 target_include_directories(qdmi_example_static_driver
                            PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 set_target_properties(qdmi_example_static_driver

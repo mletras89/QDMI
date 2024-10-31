@@ -64,7 +64,7 @@ target_link_libraries(
           qdmi::test_impl
           qdmi::example_tool
           qdmi::example_fomac
-          qdmi::example_dynamic_driver
+          qdmi::example_static_driver
           qdmi::project_warnings
           gtest_main)
 
