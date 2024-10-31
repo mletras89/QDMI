@@ -47,7 +47,6 @@ int QDMI_control_create_job(QDMI_Device dev, QDMI_Program_Format format,
  * @details Set a parameter for a job. The parameter can be one of the
  * predefined parameters in @ref QDMI_Job_Parameter. The value of the parameter
  * is passed as a pointer to the value and the size of the value.
- * @param[in] dev The device to set the parameter on.
  * @param[in] job The job to set the parameter for.
  * @param[in] param is the parameter to set.
  * @param[in] size is the size of the value.
@@ -59,8 +58,7 @@ int QDMI_control_create_job(QDMI_Device dev, QDMI_Program_Format format,
  * parameter.
  * @return @ref QDMI_ERROR_FATAL if the parameter could not be set.
  */
-int QDMI_control_set_parameter(QDMI_Device dev, QDMI_Job job,
-                               QDMI_Job_Parameter param, int size,
+int QDMI_control_set_parameter(QDMI_Job job, QDMI_Job_Parameter param, int size,
                                const void *value);
 
 /**
@@ -72,26 +70,24 @@ int QDMI_control_set_parameter(QDMI_Device dev, QDMI_Job job,
  * non-blocking and return while the job is running. In the latter case, there
  * are the functions @ref QDMI_control_check_dev and @ref QDMI_control_wait_dev
  * to check the status and wait for the job to finish.
- * @param[in] dev The device to submit the job to.
  * @param[in] job The job to submit.
  * @return @ref QDMI_SUCCESS if the job was successfully submitted.
  * @return @ref QDMI_ERROR_INVALIDARGUMENT if the job is in an invalid state
  * @return @ref QDMI_ERROR_FATAL if the job submission failed.
  */
-int QDMI_control_submit_job(QDMI_Device dev, QDMI_Job job);
+int QDMI_control_submit_job(QDMI_Job job);
 
 /**
  * @brief Cancel an already submitted job.
  * @details Remove the job from the queue of waiting jobs. This changes the
  * status of the job to @ref QDMI_JOB_STATUS_CANCELLED.
- * @param[in] dev The device to cancel the job on.
  * @param[in] job The job to cancel.
  * @return @ref QDMI_SUCCESS if the job was successfully cancelled.
  * @return @ref QDMI_ERROR_INVALIDARGUMENT if the job has already the status
  * QDMI_JOB_STATUS_DONE or the job does not exist.
  * @return @ref QDMI_ERROR_FATAL if the job could not be cancelled.
  */
-int QDMI_control_cancel(QDMI_Device dev, QDMI_Job job);
+int QDMI_control_cancel(QDMI_Job job);
 
 /**
  * @brief Check the status of a job.
@@ -99,31 +95,28 @@ int QDMI_control_cancel(QDMI_Device dev, QDMI_Job job);
  * status.
  * @note It is *not* necessary to call this function before calling
  * @ref QDMI_control_get_data_dev.
- * @param[in] dev The device to check the status on.
  * @param[in] job The job to check the status of.
  * @param[out] status The status of the job.
  * @return @ref QDMI_SUCCESS if the job status was successfully checked.
  * @return @ref QDMI_ERROR_INVALIDARGUMENT if the job does not exist.
  */
-int QDMI_control_check(QDMI_Device dev, QDMI_Job job, QDMI_Job_Status *status);
+int QDMI_control_check(QDMI_Job job, QDMI_Job_Status *status);
 
 /**
  * @brief Wait for a job to finish.
  * @details This function blocks until the job has either finished or has been
  * cancelled.
- * @param[in] dev The device to wait on.
  * @param[in] job The job to wait for.
  * @return @ref QDMI_SUCCESS if the job is finished or cancelled.
  * @return @ref QDMI_ERROR_INVALIDARGUMENT if the job does not exist.
  * @return @ref QDMI_ERROR_FATAL if the job could not be waited for and this
  * function returns before the job has finished or has been cancelled.
  */
-int QDMI_control_wait(QDMI_Device dev, QDMI_Job job);
+int QDMI_control_wait(QDMI_Job job);
 
 /**
  * @brief Retrieve the results of a job.
  * @details The results of a job can vary
- * @param[in] dev The device to retrieve the results from.
  * @param[in] job The job to retrieve the results from.
  * @param[in] result The result to retrieve.
  * @param[in] size The size of the data buffer in bytes.
@@ -134,16 +127,15 @@ int QDMI_control_wait(QDMI_Device dev, QDMI_Job job);
  * cancelled, or does not exist.
  * @return @ref QDMI_ERROR_FATAL if an error occurred during the retrieval.
  */
-int QDMI_control_get_data(QDMI_Device dev, QDMI_Job job, QDMI_Job_Result result,
-                          int size, void *data, int *size_ret);
+int QDMI_control_get_data(QDMI_Job job, QDMI_Job_Result result, int size,
+                          void *data, int *size_ret);
 
 /**
  * @brief Free a job.
  * @details Free the resources associated with a job.
- * @param[in] dev The device to free the job on.
  * @param[in] job The job to free.
  */
-void QDMI_control_free_job(QDMI_Device dev, QDMI_Job job);
+void QDMI_control_free_job(QDMI_Job job);
 
 #ifdef __cplusplus
 } // extern "C"
