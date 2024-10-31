@@ -116,7 +116,6 @@ std::vector<std::shared_ptr<QDMI_Device_impl_d>> device_list;
     std::stringstream symbol_name_builder;                                     \
     symbol_name_builder << (prefix) << "_QDMI_" << #symbol << "_dev";          \
     const std::string &symbol_name = symbol_name_builder.str();                \
-    std::cout << "Load symbol: " << symbol_name << std::endl;                  \
     (device).symbol = reinterpret_cast<decltype((device).symbol)>(             \
         dlsym((device).lib_handle, symbol_name.c_str()));                      \
     if ((device).symbol == nullptr) {                                          \
