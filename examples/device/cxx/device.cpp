@@ -25,7 +25,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <utility>
 #include <vector>
 
-struct QDMI_Device_Job_impl_d {
+struct QDMI_Job_impl_d {
   int id = 0;
   QDMI_Job_Status status = QDMI_JOB_STATUS_SUBMITTED;
   int num_shots = 0;
@@ -33,11 +33,11 @@ struct QDMI_Device_Job_impl_d {
   std::bernoulli_distribution binary_dist{0.5};
 };
 
-struct QDMI_Device_Site_impl_d {
+struct QDMI_Site_impl_d {
   int id;
 };
 
-struct QDMI_Device_Operation_impl_d {
+struct QDMI_Operation_impl_d {
   const char *name;
 };
 
@@ -53,18 +53,17 @@ namespace {
 // NOLINTBEGIN(cppcoreguidelines-avoid-non-const-global-variables)
 QDMI_Device_State device_state;
 
-std::array<QDMI_Device_Operation_impl_d, 4> device_operations = {
-    QDMI_Device_Operation_impl_d{"rx"}, QDMI_Device_Operation_impl_d{"ry"},
-    QDMI_Device_Operation_impl_d{"rz"}, QDMI_Device_Operation_impl_d{"cx"}};
+std::array<QDMI_Operation_impl_d, 4> device_operations = {
+    QDMI_Operation_impl_d{"rx"}, QDMI_Operation_impl_d{"ry"},
+    QDMI_Operation_impl_d{"rz"}, QDMI_Operation_impl_d{"cx"}};
 
-std::array<QDMI_Device_Site_impl_d, 7> device_sites = {
-    QDMI_Device_Site_impl_d{0}, QDMI_Device_Site_impl_d{1},
-    QDMI_Device_Site_impl_d{2}, QDMI_Device_Site_impl_d{3},
-    QDMI_Device_Site_impl_d{4}};
+std::array<QDMI_Site_impl_d, 7> device_sites = {
+    QDMI_Site_impl_d{0}, QDMI_Site_impl_d{1}, QDMI_Site_impl_d{2},
+    QDMI_Site_impl_d{3}, QDMI_Site_impl_d{4}};
 // NOLINTEND(cppcoreguidelines-avoid-non-const-global-variables)
 } // namespace
 
-constexpr static std::array<const QDMI_Device_Site_impl_d *const, 20>
+constexpr static std::array<const QDMI_Site_impl_d *const, 20>
     // clang-format off
     DEVICE_COUPLING_MAP = {
       device_sites.data(), &device_sites[1],
@@ -79,7 +78,7 @@ constexpr static std::array<const QDMI_Device_Site_impl_d *const, 20>
       device_sites.data(), &device_sites[4]};
 // clang-format on
 
-const static std::unordered_map<const QDMI_Device_Operation_impl_d *, double>
+const static std::unordered_map<const QDMI_Operation_impl_d *, double>
     OPERATION_DURATIONS = {
         {device_operations.data(), 0.01},
         {&device_operations[1], 0.01},
@@ -97,10 +96,10 @@ struct Pair_hash {
 }; /// [DOXYGEN FUNCTION END]
 
 const static std::unordered_map<
-    const QDMI_Device_Operation_impl_d *,
-    std::unordered_map<std::pair<const QDMI_Device_Site_impl_d *,
-                                 const QDMI_Device_Site_impl_d *>,
-                       double, Pair_hash>>
+    const QDMI_Operation_impl_d *,
+    std::unordered_map<
+        std::pair<const QDMI_Site_impl_d *, const QDMI_Site_impl_d *>, double,
+        Pair_hash>>
     OPERATION_FIDELITIES = {
         {&device_operations[3],
          {{{device_sites.data(), &device_sites[1]}, 0.99},
@@ -172,7 +171,7 @@ const static std::unordered_map<
   }
 // NOLINTEND(bugprone-macro-parentheses)
 
-int QDMI_query_get_sites_dev(const int num_entries, QDMI_Device_Site *sites,
+int QDMI_query_get_sites_dev(const int num_entries, QDMI_Site *sites,
                              int *num_sites) {
   if ((sites != nullptr && num_entries <= 0) ||
       (sites == nullptr && num_sites == nullptr)) {
@@ -192,7 +191,7 @@ int QDMI_query_get_sites_dev(const int num_entries, QDMI_Device_Site *sites,
 }
 
 int QDMI_query_get_operations_dev(const int num_entries,
-                                  QDMI_Device_Operation *operations,
+                                  QDMI_Operation *operations,
                                   int *num_operations) {
   if ((operations != nullptr && num_entries <= 0) ||
       (operations == nullptr && num_operations == nullptr)) {
@@ -227,12 +226,12 @@ int QDMI_query_device_property_dev(const QDMI_Device_Property prop,
                             value, size_ret)
   ADD_SINGLE_VALUE_PROPERTY(QDMI_DEVICE_PROPERTY_STATUS, QDMI_Device_Status,
                             device_state.status, prop, size, value, size_ret)
-  ADD_LIST_PROPERTY(QDMI_DEVICE_PROPERTY_COUPLINGMAP, QDMI_Device_Site,
+  ADD_LIST_PROPERTY(QDMI_DEVICE_PROPERTY_COUPLINGMAP, QDMI_Site,
                     DEVICE_COUPLING_MAP, prop, size, value, size_ret)
   return QDMI_ERROR_NOTSUPPORTED;
 } /// [DOXYGEN FUNCTION END]
 
-int QDMI_query_site_property_dev([[maybe_unused]] QDMI_Device_Site site,
+int QDMI_query_site_property_dev([[maybe_unused]] QDMI_Site site,
                                  QDMI_Site_Property prop, int size, void *value,
                                  int *size_ret) {
   if (prop >= QDMI_SITE_PROPERTY_MAX ||
@@ -246,9 +245,8 @@ int QDMI_query_site_property_dev([[maybe_unused]] QDMI_Device_Site site,
   return QDMI_ERROR_NOTSUPPORTED;
 } /// [DOXYGEN FUNCTION END]
 
-int QDMI_query_operation_property_dev(QDMI_Device_Operation operation,
-                                      int num_sites,
-                                      const QDMI_Device_Site *sites,
+int QDMI_query_operation_property_dev(QDMI_Operation operation, int num_sites,
+                                      const QDMI_Site *sites,
                                       QDMI_Operation_Property prop, int size,
                                       void *value, int *size_ret) {
   if (prop >= QDMI_OPERATION_PROPERTY_MAX || operation == nullptr ||
@@ -303,7 +301,7 @@ int QDMI_query_operation_property_dev(QDMI_Device_Operation operation,
 
 int QDMI_control_create_job_dev(const QDMI_Program_Format format,
                                 const int size, const void *prog,
-                                QDMI_Device_Job *job) {
+                                QDMI_Job *job) {
   if (device_state.status != QDMI_DEVICE_STATUS_IDLE) {
     return QDMI_ERROR_FATAL;
   }
@@ -317,15 +315,14 @@ int QDMI_control_create_job_dev(const QDMI_Program_Format format,
   }
 
   device_state.status = QDMI_DEVICE_STATUS_BUSY;
-  *job = new QDMI_Device_Job_impl_d;
+  *job = new QDMI_Job_impl_d;
   // set job id to current time for demonstration purposes
   (*job)->id = device_state.dis(device_state.gen);
   (*job)->status = QDMI_JOB_STATUS_CREATED;
   return QDMI_SUCCESS;
 } /// [DOXYGEN FUNCTION END]
 
-int QDMI_control_set_parameter_dev(QDMI_Device_Job job,
-                                   const QDMI_Job_Parameter param,
+int QDMI_control_set_parameter_dev(QDMI_Job job, const QDMI_Job_Parameter param,
                                    const int size, const void *value) {
   if (job == nullptr || param >= QDMI_JOB_PARAMETER_MAX || size <= 0 ||
       job->status != QDMI_JOB_STATUS_CREATED) {
@@ -338,7 +335,7 @@ int QDMI_control_set_parameter_dev(QDMI_Device_Job job,
   return QDMI_ERROR_NOTSUPPORTED;
 }
 
-int QDMI_control_submit_job_dev(QDMI_Device_Job job) {
+int QDMI_control_submit_job_dev(QDMI_Job job) {
   if (job == nullptr || job->status != QDMI_JOB_STATUS_CREATED) {
     return QDMI_ERROR_INVALIDARGUMENT;
   }
@@ -365,7 +362,7 @@ int QDMI_control_submit_job_dev(QDMI_Device_Job job) {
   return QDMI_SUCCESS;
 } /// [DOXYGEN FUNCTION END]
 
-int QDMI_control_cancel_dev(QDMI_Device_Job job) {
+int QDMI_control_cancel_dev(QDMI_Job job) {
   if (job->status == QDMI_JOB_STATUS_DONE) {
     return QDMI_ERROR_INVALIDARGUMENT;
   }
@@ -375,7 +372,7 @@ int QDMI_control_cancel_dev(QDMI_Device_Job job) {
   return QDMI_SUCCESS;
 } /// [DOXYGEN FUNCTION END]
 
-int QDMI_control_check_dev(QDMI_Device_Job job, QDMI_Job_Status *status) {
+int QDMI_control_check_dev(QDMI_Job job, QDMI_Job_Status *status) {
   // randomly decide whether job is done or not
   if (job->status == QDMI_JOB_STATUS_RUNNING &&
       job->binary_dist(device_state.gen)) {
@@ -386,13 +383,13 @@ int QDMI_control_check_dev(QDMI_Device_Job job, QDMI_Job_Status *status) {
   return QDMI_SUCCESS;
 } /// [DOXYGEN FUNCTION END]
 
-int QDMI_control_wait_dev(QDMI_Device_Job job) {
+int QDMI_control_wait_dev(QDMI_Job job) {
   job->status = QDMI_JOB_STATUS_DONE;
   device_state.status = QDMI_DEVICE_STATUS_IDLE;
   return QDMI_SUCCESS;
 } /// [DOXYGEN FUNCTION END]
 
-int QDMI_control_get_data_dev(QDMI_Device_Job job, const QDMI_Job_Result result,
+int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
                               const int size, void *data, int *size_ret) {
   if (job->status != QDMI_JOB_STATUS_DONE) {
     return QDMI_ERROR_INVALIDARGUMENT;
@@ -494,7 +491,7 @@ int QDMI_control_get_data_dev(QDMI_Device_Job job, const QDMI_Job_Result result,
   return QDMI_ERROR_NOTSUPPORTED;
 } /// [DOXYGEN FUNCTION END]
 
-void QDMI_control_free_job_dev(QDMI_Device_Job job) { delete job; }
+void QDMI_control_free_job_dev(QDMI_Job job) { delete job; }
 
 int QDMI_control_initialize_dev() {
   device_state.status = QDMI_DEVICE_STATUS_IDLE;
