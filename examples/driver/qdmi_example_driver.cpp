@@ -340,7 +340,7 @@ int QDMI_query_get_sites(QDMI_Device device, const int num_entries,
     return ret;
   }
   for (std::size_t i = 0; i < num_device_sites; ++i) {
-    if (i < device->site_list.size()) {
+    if (i == device->site_list.size()) {
       device->site_list.emplace_back(new QDMI_Site_impl_d());
       device->site_list[i]->device = device;
     }
@@ -371,7 +371,7 @@ int QDMI_query_get_operations(QDMI_Device device, const int num_entries,
     return ret;
   }
   for (std::size_t i = 0; i < num_device_operations; ++i) {
-    if (i < device->operation_list.size()) {
+    if (i == device->operation_list.size()) {
       device->operation_list.emplace_back(new QDMI_Operation_impl_d());
       device->operation_list[i]->device = device;
     }
