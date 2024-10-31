@@ -74,7 +74,6 @@ typedef struct QDMI_Device_impl_d *QDMI_Device;
  * This type is implemented by the driver.
  */
 typedef struct QDMI_Job_impl_d *QDMI_Job;
-// todo: test the existence of this type in test_defs.cpp
 
 /**
  * @brief Opaque type for a site.
