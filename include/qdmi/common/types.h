@@ -8,8 +8,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  * @brief Defines all types used within QDMI.
  */
 
-#ifndef QDMI_COMMON_TYPES_H
-#define QDMI_COMMON_TYPES_H
+#pragma once
 
 #include "qdmi/common/enums.h"
 
@@ -74,7 +73,7 @@ typedef struct QDMI_Device_impl_d *QDMI_Device;
  * @par
  * This type is implemented by the driver.
  */
-typedef struct QDMI_Job_impl_d *QDMI_Job;
+typedef void *QDMI_Job;
 
 /**
  * @brief Opaque type for a site.
@@ -89,7 +88,7 @@ typedef struct QDMI_Job_impl_d *QDMI_Job;
  * that is unique for each site on a device. The indices start at zero and go up
  * to the number of sites minus one.
  */
-typedef struct QDMI_Site_impl_d *QDMI_Site;
+typedef void *QDMI_Site;
 
 /**
  * @brief Opaque type for an operation.
@@ -97,14 +96,8 @@ typedef struct QDMI_Site_impl_d *QDMI_Site;
  * a device. The operation is defined by the device and can be executed on the
  * device.
  */
-typedef struct QDMI_Operation_impl_d *QDMI_Operation;
+typedef void *QDMI_Operation;
 
 #ifdef __cplusplus
 } // extern "C"
 #endif
-
-#ifdef QDMI_PREFIX
-#undef QDMI_COMMON_TYPES_H
-#endif // QDMI_PREFIX
-
-#endif // QDMI_COMMON_TYPES_H
