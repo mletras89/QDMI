@@ -86,20 +86,20 @@ const static std::unordered_map<const QDMI_Operation_impl_d *, double>
         {&device_operations[3], 0.1},
 };
 
-struct Pair_hash {
+struct QDMI_Pair_hash {
   template <class T1, class T2>
   std::size_t operator()(const std::pair<T1, T2> &p) const {
     auto hash1 = std::hash<T1>{}(p.first);
     auto hash2 = std::hash<T2>{}(p.second);
     return hash1 ^ hash2;
   }
-}; /// [DOXYGEN FUNCTION END]
+};
 
 const static std::unordered_map<
     const QDMI_Operation_impl_d *,
     std::unordered_map<
         std::pair<const QDMI_Site_impl_d *, const QDMI_Site_impl_d *>, double,
-        Pair_hash>>
+        QDMI_Pair_hash>>
     OPERATION_FIDELITIES = {
         {&device_operations[3],
          {{{device_sites.data(), &device_sites[1]}, 0.99},
@@ -188,7 +188,7 @@ int QDMI_query_get_sites_dev(const int num_entries, QDMI_Site *sites,
     *num_sites = static_cast<int>(device_sites.size());
   }
   return QDMI_SUCCESS;
-}
+} /// [DOXYGEN FUNCTION END]
 
 int QDMI_query_get_operations_dev(const int num_entries,
                                   QDMI_Operation *operations,
@@ -208,7 +208,7 @@ int QDMI_query_get_operations_dev(const int num_entries,
     *num_operations = static_cast<int>(device_operations.size());
   }
   return QDMI_SUCCESS;
-}
+} /// [DOXYGEN FUNCTION END]
 
 int QDMI_query_device_property_dev(const QDMI_Device_Property prop,
                                    const int size, void *value, int *size_ret) {
@@ -316,7 +316,7 @@ int QDMI_control_create_job_dev(const QDMI_Program_Format format,
 
   device_state.status = QDMI_DEVICE_STATUS_BUSY;
   *job = new QDMI_Job_impl_d;
-  // set job id to current time for demonstration purposes
+  // set job id to random number for demonstration purposes
   (*job)->id = device_state.dis(device_state.gen);
   (*job)->status = QDMI_JOB_STATUS_CREATED;
   return QDMI_SUCCESS;
@@ -333,7 +333,7 @@ int QDMI_control_set_parameter_dev(QDMI_Job job, const QDMI_Job_Parameter param,
     return QDMI_SUCCESS;
   }
   return QDMI_ERROR_NOTSUPPORTED;
-}
+} /// [DOXYGEN FUNCTION END]
 
 int QDMI_control_submit_job_dev(QDMI_Job job) {
   if (job == nullptr || job->status != QDMI_JOB_STATUS_CREATED) {
