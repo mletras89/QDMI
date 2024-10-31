@@ -86,6 +86,7 @@ typedef struct QDMI_Job_impl_d *QDMI_Job;
  * This type is implemented by the device.
  * @see QDMI_Job
  */
+// todo: test the existence of this type in test_defs.cpp
 typedef struct QDMI_Device_Job_impl_d *QDMI_Device_Job;
 
 /**
