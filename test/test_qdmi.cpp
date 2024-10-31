@@ -51,7 +51,7 @@ TEST_P(QDMIImplementationTest, QueryGateSet) {
     ASSERT_FALSE(k.empty());
     std::string name(k.length(), '\0');
     ASSERT_EQ(QDMI_query_operation_property(
-                  device, v, 0, nullptr, QDMI_OPERATION_PROPERTY_NAME,
+                  v, 0, nullptr, QDMI_OPERATION_PROPERTY_NAME,
                   static_cast<int>(name.length()) + 1, name.data(), nullptr),
               QDMI_SUCCESS);
     EXPECT_EQ(k, name);
@@ -83,17 +83,15 @@ TEST_P(QDMIImplementationTest, QueryGatePropertiesForEachGate) {
     if (gate_num_qubits == 1) {
       for (const auto &site : sites) {
         auto site_arr = std::array{site};
-        EXPECT_EQ(
-            QDMI_query_operation_property(device, op, 1, site_arr.data(),
-                                          QDMI_OPERATION_PROPERTY_DURATION,
-                                          sizeof(double), &duration, nullptr),
-            QDMI_SUCCESS)
+        EXPECT_EQ(QDMI_query_operation_property(
+                      op, 1, site_arr.data(), QDMI_OPERATION_PROPERTY_DURATION,
+                      sizeof(double), &duration, nullptr),
+                  QDMI_SUCCESS)
             << "Failed to query duration for operation " << name;
-        EXPECT_EQ(
-            QDMI_query_operation_property(device, op, 1, site_arr.data(),
-                                          QDMI_OPERATION_PROPERTY_FIDELITY,
-                                          sizeof(double), &fidelity, nullptr),
-            QDMI_SUCCESS)
+        EXPECT_EQ(QDMI_query_operation_property(
+                      op, 1, site_arr.data(), QDMI_OPERATION_PROPERTY_FIDELITY,
+                      sizeof(double), &fidelity, nullptr),
+                  QDMI_SUCCESS)
             << "Failed to query fidelity for operation " << name;
       }
     }
@@ -101,15 +99,13 @@ TEST_P(QDMIImplementationTest, QueryGatePropertiesForEachGate) {
       for (const auto &[control, target] : coupling_map) {
         auto site_arr = std::array{control, target};
         EXPECT_EQ(QDMI_query_operation_property(
-                      device, op, 2, site_arr.data(),
-                      QDMI_OPERATION_PROPERTY_DURATION, sizeof(double) * 2,
-                      &duration, nullptr),
+                      op, 2, site_arr.data(), QDMI_OPERATION_PROPERTY_DURATION,
+                      sizeof(double) * 2, &duration, nullptr),
                   QDMI_SUCCESS)
             << "Failed to query duration for gate " << op;
         EXPECT_EQ(QDMI_query_operation_property(
-                      device, op, 2, site_arr.data(),
-                      QDMI_OPERATION_PROPERTY_FIDELITY, sizeof(double) * 2,
-                      &fidelity, nullptr),
+                      op, 2, site_arr.data(), QDMI_OPERATION_PROPERTY_FIDELITY,
+                      sizeof(double) * 2, &fidelity, nullptr),
                   QDMI_SUCCESS)
             << "Failed to query fidelity for gate " << op;
       }
@@ -132,30 +128,29 @@ TEST_P(QDMIImplementationTest, ControlJob) {
                                     input.c_str(), &job),
             QDMI_SUCCESS);
   int shots = 5;
-  EXPECT_EQ(QDMI_control_set_parameter(device, nullptr,
-                                       QDMI_JOB_PARAMETER_SHOTS_NUM,
+  EXPECT_EQ(QDMI_control_set_parameter(nullptr, QDMI_JOB_PARAMETER_SHOTS_NUM,
                                        sizeof(int), &shots),
             QDMI_ERROR_INVALIDARGUMENT);
-  EXPECT_EQ(QDMI_control_set_parameter(
-                device, job, QDMI_JOB_PARAMETER_SHOTS_NUM, 0, nullptr),
-            QDMI_ERROR_INVALIDARGUMENT);
-  EXPECT_EQ(QDMI_control_set_parameter(device, job, QDMI_JOB_PARAMETER_CUSTOM_5,
+  EXPECT_EQ(
+      QDMI_control_set_parameter(job, QDMI_JOB_PARAMETER_SHOTS_NUM, 0, nullptr),
+      QDMI_ERROR_INVALIDARGUMENT);
+  EXPECT_EQ(QDMI_control_set_parameter(job, QDMI_JOB_PARAMETER_CUSTOM_5,
                                        sizeof(int), &shots),
             QDMI_ERROR_NOTSUPPORTED);
-  ASSERT_EQ(QDMI_control_set_parameter(
-                device, job, QDMI_JOB_PARAMETER_SHOTS_NUM, sizeof(int), &shots),
+  ASSERT_EQ(QDMI_control_set_parameter(job, QDMI_JOB_PARAMETER_SHOTS_NUM,
+                                       sizeof(int), &shots),
             QDMI_SUCCESS);
-  ASSERT_EQ(QDMI_control_submit_job(device, job), QDMI_SUCCESS);
-  EXPECT_EQ(QDMI_control_submit_job(device, job), QDMI_ERROR_INVALIDARGUMENT);
+  ASSERT_EQ(QDMI_control_submit_job(job), QDMI_SUCCESS);
+  EXPECT_EQ(QDMI_control_submit_job(job), QDMI_ERROR_INVALIDARGUMENT);
   QDMI_Job_Status status{};
-  EXPECT_EQ(QDMI_control_check(device, job, &status), QDMI_SUCCESS);
-  EXPECT_EQ(QDMI_control_wait(device, job), QDMI_SUCCESS);
-  ASSERT_EQ(QDMI_control_check(device, job, &status), QDMI_SUCCESS);
+  EXPECT_EQ(QDMI_control_check(job, &status), QDMI_SUCCESS);
+  EXPECT_EQ(QDMI_control_wait(job), QDMI_SUCCESS);
+  ASSERT_EQ(QDMI_control_check(job, &status), QDMI_SUCCESS);
   EXPECT_EQ(status, QDMI_JOB_STATUS_DONE);
-  EXPECT_EQ(QDMI_control_set_parameter(
-                device, job, QDMI_JOB_PARAMETER_SHOTS_NUM, sizeof(int), &shots),
+  EXPECT_EQ(QDMI_control_set_parameter(job, QDMI_JOB_PARAMETER_SHOTS_NUM,
+                                       sizeof(int), &shots),
             QDMI_ERROR_INVALIDARGUMENT);
-  QDMI_control_free_job(device, job);
+  QDMI_control_free_job(job);
 }
 
 TEST_P(QDMIImplementationTest, ToolCompile) {
@@ -195,18 +190,17 @@ measure q -> c;
                                     test_circuit.c_str(), &job),
             QDMI_SUCCESS);
   int shots_num = 6;
-  ASSERT_EQ(QDMI_control_set_parameter(device, job,
-                                       QDMI_JOB_PARAMETER_SHOTS_NUM,
+  ASSERT_EQ(QDMI_control_set_parameter(job, QDMI_JOB_PARAMETER_SHOTS_NUM,
                                        sizeof(int), &shots_num),
             QDMI_SUCCESS);
-  ASSERT_EQ(QDMI_control_submit_job(device, job), QDMI_SUCCESS);
-  ASSERT_EQ(QDMI_control_wait(device, job), QDMI_SUCCESS);
+  ASSERT_EQ(QDMI_control_submit_job(job), QDMI_SUCCESS);
+  ASSERT_EQ(QDMI_control_wait(job), QDMI_SUCCESS);
   int size = 0;
-  ASSERT_EQ(QDMI_control_get_data(device, job, QDMI_JOB_RESULT_HIST_KEYS, 0,
-                                  nullptr, &size),
-            QDMI_SUCCESS);
+  ASSERT_EQ(
+      QDMI_control_get_data(job, QDMI_JOB_RESULT_HIST_KEYS, 0, nullptr, &size),
+      QDMI_SUCCESS);
   std::string key_list(static_cast<std::size_t>(size), '\0');
-  ASSERT_EQ(QDMI_control_get_data(device, job, QDMI_JOB_RESULT_HIST_KEYS, size,
+  ASSERT_EQ(QDMI_control_get_data(job, QDMI_JOB_RESULT_HIST_KEYS, size,
                                   key_list.data(), nullptr),
             QDMI_SUCCESS);
   std::vector<std::string> key_vec;
@@ -217,7 +211,7 @@ measure q -> c;
   }
   size = static_cast<int>(key_vec.size());
   std::vector<int> val_vec(key_vec.size());
-  ASSERT_EQ(QDMI_control_get_data(device, job, QDMI_JOB_RESULT_HIST_VALUES,
+  ASSERT_EQ(QDMI_control_get_data(job, QDMI_JOB_RESULT_HIST_VALUES,
                                   static_cast<int>(sizeof(int)) * size,
                                   val_vec.data(), nullptr),
             QDMI_SUCCESS);
@@ -226,5 +220,5 @@ measure q -> c;
     results[key_vec[i]] = val_vec[i];
   }
   ASSERT_EQ(results.size(), static_cast<std::size_t>(size));
-  QDMI_control_free_job(device, job);
+  QDMI_control_free_job(job);
 }
