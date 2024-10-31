@@ -62,7 +62,7 @@ std::string Get_test_circuit() {
 } // namespace
 
 TEST_F(QDMIImplementationTest, ControlCreateJobImplemented) {
-  QDMI_Job job = nullptr;
+  QDMI_Device_Job job = nullptr;
   ASSERT_NE(QDMI_control_create_job_dev(
                 QDMI_PROGRAM_FORMAT_QASM2,
                 static_cast<int>(Get_test_circuit().length() + 1),
@@ -72,7 +72,7 @@ TEST_F(QDMIImplementationTest, ControlCreateJobImplemented) {
 }
 
 TEST_F(QDMIImplementationTest, ControlSetParameterImplemented) {
-  QDMI_Job job = nullptr;
+  QDMI_Device_Job job = nullptr;
   ASSERT_EQ(QDMI_control_create_job_dev(
                 QDMI_PROGRAM_FORMAT_QASM2,
                 static_cast<int>(Get_test_circuit().length() + 1),
@@ -85,7 +85,7 @@ TEST_F(QDMIImplementationTest, ControlSetParameterImplemented) {
 }
 
 TEST_F(QDMIImplementationTest, ControlSubmitJobImplemented) {
-  QDMI_Job job = nullptr;
+  QDMI_Device_Job job = nullptr;
   ASSERT_EQ(QDMI_control_create_job_dev(
                 QDMI_PROGRAM_FORMAT_QASM2,
                 static_cast<int>(Get_test_circuit().length() + 1),
@@ -96,7 +96,7 @@ TEST_F(QDMIImplementationTest, ControlSubmitJobImplemented) {
 }
 
 TEST_F(QDMIImplementationTest, ControlCancelImplemented) {
-  QDMI_Job job = nullptr;
+  QDMI_Device_Job job = nullptr;
   ASSERT_EQ(QDMI_control_create_job_dev(
                 QDMI_PROGRAM_FORMAT_QASM2,
                 static_cast<int>(Get_test_circuit().length() + 1),
@@ -107,7 +107,7 @@ TEST_F(QDMIImplementationTest, ControlCancelImplemented) {
 }
 
 TEST_F(QDMIImplementationTest, ControlCheckImplemented) {
-  QDMI_Job job = nullptr;
+  QDMI_Device_Job job = nullptr;
   QDMI_Job_Status status = QDMI_JOB_STATUS_RUNNING;
   ASSERT_EQ(QDMI_control_create_job_dev(
                 QDMI_PROGRAM_FORMAT_QASM2,
@@ -119,7 +119,7 @@ TEST_F(QDMIImplementationTest, ControlCheckImplemented) {
 }
 
 TEST_F(QDMIImplementationTest, ControlWaitImplemented) {
-  QDMI_Job job = nullptr;
+  QDMI_Device_Job job = nullptr;
   ASSERT_EQ(QDMI_control_create_job_dev(
                 QDMI_PROGRAM_FORMAT_QASM2,
                 static_cast<int>(Get_test_circuit().length() + 1),
@@ -130,7 +130,7 @@ TEST_F(QDMIImplementationTest, ControlWaitImplemented) {
 }
 
 TEST_F(QDMIImplementationTest, ControlGetHistImplemented) {
-  QDMI_Job job = nullptr;
+  QDMI_Device_Job job = nullptr;
   ASSERT_EQ(QDMI_control_create_job_dev(
                 QDMI_PROGRAM_FORMAT_QASM2,
                 static_cast<int>(Get_test_circuit().length() + 1),
