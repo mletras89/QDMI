@@ -121,6 +121,9 @@ int QDMI_query_device_property(QDMI_Device device, QDMI_Device_Property prop,
  * qubits can be placed on a device. Sites are identified by an integer index
  * that is unique for each site on a device. The indices start at zero and go up
  * to the number of sites minus one.
+ * @param[in] device refers to the device returned by @ref
+ * QDMI_session_get_devices or can be @c NULL. If @p session is @c NULL, the
+ * behavior is implementation-defined.
  * @param[in] site is the index of the site for which the property is queried.
  * @param[in] prop is an enumeration constant that identifies the platform
  * information being queried. It can be one of the values specified for @ref
@@ -144,8 +147,9 @@ int QDMI_query_device_property(QDMI_Device device, QDMI_Device_Property prop,
  * device.
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
-int QDMI_query_site_property(QDMI_Site site, QDMI_Site_Property prop, int size,
-                             void *value, int *size_ret);
+int QDMI_query_site_property(QDMI_Device device, QDMI_Site site,
+                             QDMI_Site_Property prop, int size, void *value,
+                             int *size_ret);
 
 /**
  * @brief Query an operation property.
@@ -161,6 +165,9 @@ int QDMI_query_site_property(QDMI_Site site, QDMI_Site_Property prop, int size,
  * only be available as an average value for all sites. Those may, nevertheless,
  * be queried through this function by providing no sites at all, i.e., passing
  * @c NULL to @p sites.
+ * @param[in] device refers to the device returned by @ref
+ * QDMI_session_get_devices or can be @c NULL. If @p session is @c NULL, the
+ * behavior is implementation-defined.
  * @param[in] operation is the name of the operation for which the property is
  * queried.
  * @param[in] num_sites is the number of sites for which the property is
@@ -185,15 +192,14 @@ int QDMI_query_site_property(QDMI_Site site, QDMI_Site_Property prop, int size,
  * if @p num_sites is less than or equal to zero and @p sites is not @c NULL, if
  * @p prop is not one of the defined values, if the size in bytes specified by
  * @p size is less than the size of the data being queried as specified for the
- * @ref QDMI_Site_Property @p prop and @p value is not a @c NULL value, if
- * both @p value and @p size_ret are @c NULL, or if @p operation and @p sites
- * belong to different devices.
+ * @ref QDMI_Site_Property @p prop and @p value is not a @c NULL value, or if
+ * both @p value and @p size_ret are @c NULL.
  * @return @ref QDMI_ERROR_NOTSUPPORTED if the property is not supported by the
  * device or for the given list of sites.
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
-int QDMI_query_operation_property(QDMI_Operation operation, int num_sites,
-                                  const QDMI_Site *sites,
+int QDMI_query_operation_property(QDMI_Device device, QDMI_Operation operation,
+                                  int num_sites, const QDMI_Site *sites,
                                   QDMI_Operation_Property prop, int size,
                                   void *value, int *size_ret);
 
