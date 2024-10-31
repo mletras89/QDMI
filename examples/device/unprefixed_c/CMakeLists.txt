@@ -8,6 +8,8 @@
 # change. Hence, in the test you have to adapt the name of the shared library
 # accordingly.
 set(prefix "UPC")
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../device_shifted.h.in upc_device.h
+               @ONLY)
 add_library(unprefixed_c_device SHARED device.c)
 target_link_libraries(unprefixed_c_device PRIVATE qdmi::qdmi
                                                   qdmi::project_warnings)
@@ -30,4 +32,6 @@ elseif(LINUX)
 else()
   message(FATAL_ERROR "Unsupported platform")
 endif()
+target_include_directories(unprefixed_c_device
+                           PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 add_library(qdmi::unprefixed_c_device ALIAS unprefixed_c_device)

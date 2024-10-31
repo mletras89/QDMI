@@ -11,9 +11,9 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include "qdmi_example_static_driver.h"
 
-#include "c_device.h"
 #include "cxx_device.h"
 #include "qdmi/driver.h"
+#include "upc_device.h"
 
 #include <algorithm>
 #include <cstdlib>
@@ -134,21 +134,21 @@ int QDMI_Driver_init() {
   // Load the C device library
   auto c_device = std::make_shared<QDMI_Device_impl_d>();
   c_device->mode = QDMI_DEVICE_MODE_READWRITE;
-  LOAD_SYMBOL(c_device, C, control_finalize);
-  LOAD_SYMBOL(c_device, C, query_get_sites);
-  LOAD_SYMBOL(c_device, C, query_get_operations);
-  LOAD_SYMBOL(c_device, C, query_device_property);
-  LOAD_SYMBOL(c_device, C, query_site_property);
-  LOAD_SYMBOL(c_device, C, query_operation_property);
-  LOAD_SYMBOL(c_device, C, control_create_job);
-  LOAD_SYMBOL(c_device, C, control_set_parameter);
-  LOAD_SYMBOL(c_device, C, control_submit_job);
-  LOAD_SYMBOL(c_device, C, control_cancel);
-  LOAD_SYMBOL(c_device, C, control_check);
-  LOAD_SYMBOL(c_device, C, control_wait);
-  LOAD_SYMBOL(c_device, C, control_get_data);
-  LOAD_SYMBOL(c_device, C, control_free_job);
-  LOAD_SYMBOL(c_device, C, control_initialize);
+  LOAD_SYMBOL(c_device, UPC, control_finalize);
+  LOAD_SYMBOL(c_device, UPC, query_get_sites);
+  LOAD_SYMBOL(c_device, UPC, query_get_operations);
+  LOAD_SYMBOL(c_device, UPC, query_device_property);
+  LOAD_SYMBOL(c_device, UPC, query_site_property);
+  LOAD_SYMBOL(c_device, UPC, query_operation_property);
+  LOAD_SYMBOL(c_device, UPC, control_create_job);
+  LOAD_SYMBOL(c_device, UPC, control_set_parameter);
+  LOAD_SYMBOL(c_device, UPC, control_submit_job);
+  LOAD_SYMBOL(c_device, UPC, control_cancel);
+  LOAD_SYMBOL(c_device, UPC, control_check);
+  LOAD_SYMBOL(c_device, UPC, control_wait);
+  LOAD_SYMBOL(c_device, UPC, control_get_data);
+  LOAD_SYMBOL(c_device, UPC, control_free_job);
+  LOAD_SYMBOL(c_device, UPC, control_initialize);
   // initialize the device
   c_device->control_initialize();
 
