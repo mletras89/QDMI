@@ -86,7 +86,7 @@ typedef struct QDMI_Job_impl_d *QDMI_Job;
  * This type is implemented by the device.
  * @see QDMI_Job
  */
-typedef struct QDMI_Device_Job_impl_d *QDMI_Device_Job;
+typedef void *QDMI_Device_Job;
 
 /**
  * @brief Opaque type for a site.
@@ -117,7 +117,7 @@ typedef struct QDMI_Site_impl_d *QDMI_Site;
  * This type is implemented by the device.
  * @see QDMI_Site
  */
-typedef struct QDMI_Device_Site_impl_d *QDMI_Device_Site;
+typedef void *QDMI_Device_Site;
 
 /**
  * @brief Opaque type for an operation.
@@ -140,7 +140,7 @@ typedef struct QDMI_Operation_impl_d *QDMI_Operation;
  * This type is implemented by the device.
  * @see QDMI_Operation
  */
-typedef struct QDMI_Device_Operation_impl_d *QDMI_Device_Operation;
+typedef void *QDMI_Device_Operation;
 
 #ifdef __cplusplus
 } // extern "C"
