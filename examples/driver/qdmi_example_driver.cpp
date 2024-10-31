@@ -289,8 +289,8 @@ int QDMI_Driver_shutdown() {
  */
 
 int QDMI_query_get_sites(QDMI_Device device, const int num_entries,
-                         QDMI_Site *sites, int *num_sites_ret) {
-  return device->query_get_sites(num_entries, sites, num_sites_ret);
+                         QDMI_Site *sites, int *num_sites) {
+  return device->query_get_sites(num_entries, sites, num_sites);
 }
 
 int QDMI_query_get_operations(QDMI_Device device, const int num_entries,

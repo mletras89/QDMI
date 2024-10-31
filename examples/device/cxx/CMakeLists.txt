@@ -14,5 +14,5 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # change. Hence, in the test you have to adopt the name of the shared library
 # accordingly.
 add_library(cxx_device SHARED device.cpp)
-target_link_libraries(cxx_device PRIVATE qdmi::qdmi)
+target_link_libraries(cxx_device PRIVATE qdmi::qdmi qdmi::project_warnings)
 add_library(qdmi::cxx_device ALIAS cxx_device)

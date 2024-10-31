@@ -12,6 +12,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <array>
 #include <cstdlib>
 #include <gtest/gtest.h>
+#include <map>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -43,7 +44,7 @@ TEST_P(QDMIImplementationTest, QueryNumQubits) {
   ASSERT_GT(fomac.get_qubits_num(), 0);
 }
 
-TEST_P(QDMIImplementationTest, QueryGateSet) {
+TEST_P(QDMIImplementationTest, QueryOperationSet) {
   const auto fomac = FoMaC(device);
   const auto gates = fomac.get_operation_map();
   ASSERT_GT(gates.size(), 0);

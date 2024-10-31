@@ -16,6 +16,10 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 extern "C" {
 #endif
 
+// The following disables the clang-tidy warning modernize-use-using.
+// Since this is C code, we cannot use the using keyword.
+// NOLINTBEGIN(modernize-use-using)
+
 /// Type of the device properties.
 typedef enum QDMI_DEVICE_PROPERTY_T QDMI_Device_Property;
 
@@ -97,6 +101,8 @@ typedef struct QDMI_Site_impl_d *QDMI_Site;
  * device.
  */
 typedef struct QDMI_Operation_impl_d *QDMI_Operation;
+
+// NOLINTEND(modernize-use-using)
 
 #ifdef __cplusplus
 } // extern "C"

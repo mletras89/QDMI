@@ -29,6 +29,18 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  */
 struct QDMI_Job_impl_d {};
 
+/**
+ * @brief Implementation of the QDMI_Site structure.
+ * @details This structure can, e.g., be used to store the site id.
+ */
+struct QDMI_Site_impl_d {};
+
+/**
+ * @brief Implementation of the QDMI_Operation structure.
+ * @details This structure can, e.g., be used to store the operation id.
+ */
+struct QDMI_Operation_impl_d {};
+
 int QDMI_query_get_sites_dev(int num_entries, QDMI_Site *sites,
                              int *num_sites) {
   return QDMI_ERROR_NOTIMPLEMENTED;
