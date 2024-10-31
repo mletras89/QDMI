@@ -18,8 +18,8 @@ extern "C" {
 
 /**
  * @brief Get the sites associated with @p device.
- * @param[in] num_entries the number of entries that can be added to @p devices.
- * If @p devices is not @c NULL, @p num_entries must be greater than zero.
+ * @param[in] num_entries the number of entries that can be added to @p sites.
+ * If @p sites is not @c NULL, @p num_entries must be greater than zero.
  * @param[out] sites returns a list of sites available on the device. The @ref
  * QDMI_Device_Site values returned in @p sites can be used to identify a
  * specific @ref QDMI_Site. If @p sites is @c NULL, this argument is ignored.
@@ -40,8 +40,9 @@ int QDMI_query_get_sites_dev(int num_entries, QDMI_Device_Site *sites,
 
 /**
  * @brief Get the operations available on the @p device.
- * @param[in] num_entries the number of entries that can be added to @p devices.
- * If @p devices is not @c NULL, @p num_entries must be greater than zero.
+ * @param[in] num_entries the number of entries that can be added to @p
+ * operations. If @p operations is not @c NULL, @p num_entries must be greater
+ * than zero.
  * @param[out] operations returns a list of operations available on the device.
  * The @ref QDMI_Device_Operation values returned in @p operations can be used
  * to identify a specific @ref QDMI_Operation. If @p operations is @c NULL, this
