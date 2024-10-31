@@ -68,12 +68,25 @@ typedef struct QDMI_Device_impl_d *QDMI_Device;
 /**
  * @brief Opaque type for a job.
  * @details A job is a handle to manage the job after it is submitted and to
- * access the results.
+ * access the results from the client side.
  *
  * @par
- * This type is implemented by the driver.
+ * This handle is supposed to contain a pointer to the device. The type is
+ * implemented by the driver.
+ * @see QDMI_Device_Job
  */
 typedef struct QDMI_Job_impl_d *QDMI_Job;
+
+/**
+ * @brief Opaque type for a job on a device.
+ * @details A job is a handle to manage the job after it is submitted and to
+ * access the results from the driver side.
+ *
+ * @par
+ * This type is implemented by the device.
+ * @see QDMI_Job
+ */
+typedef struct QDMI_Device_Job_impl_d *QDMI_Device_Job;
 
 /**
  * @brief Opaque type for a site.
@@ -87,16 +100,47 @@ typedef struct QDMI_Job_impl_d *QDMI_Job;
  * qubits can be placed on a device. Sites are identified by an integer index
  * that is unique for each site on a device. The indices start at zero and go up
  * to the number of sites minus one.
+ *
+ * @par
+ * This handle is supposed to contain a pointer to the device. The type is
+ * implemented by the driver.
+ * @see QDMI_Device_Site
  */
 typedef struct QDMI_Site_impl_d *QDMI_Site;
+
+/**
+ * @brief Opaque type for a site on a device.
+ * @details A site is a place that can potentially hold a qubit. For more
+ * details see @ref QDMI_Site.
+ *
+ * @par
+ * This type is implemented by the device.
+ * @see QDMI_Site
+ */
+typedef struct QDMI_Device_Site_impl_d *QDMI_Device_Site;
 
 /**
  * @brief Opaque type for an operation.
  * @details An operation represents a quantum operation that can be executed on
  * a device. The operation is defined by the device and can be executed on the
  * device.
+ *
+ * @par
+ * This handle is supposed to contain a pointer to the device. The type is
+ * implemented by the driver.
  */
 typedef struct QDMI_Operation_impl_d *QDMI_Operation;
+
+/**
+ * @brief Opaque type for an operation on a device.
+ * @details An operation represents a quantum operation that can be executed on
+ * a device.
+ *
+ * @par
+ * This type is implemented by the device.
+ * @see QDMI_Operation
+ */
+typedef struct QDMI_Device_Operation_impl_d *QDMI_Device_Operation;
 
 #ifdef __cplusplus
 } // extern "C"
