@@ -14,6 +14,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <gtest/gtest.h>
 #include <sstream>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 // Instantiate the test suite with different parameters
@@ -221,7 +222,7 @@ measure q -> c;
                                   static_cast<int>(sizeof(int)) * size,
                                   val_vec.data(), nullptr),
             QDMI_SUCCESS);
-  std::map<std::string, int> results;
+  std::unordered_map<std::string, int> results;
   for (size_t i = 0; i < key_vec.size(); ++i) {
     results[key_vec[i]] = val_vec[i];
   }
