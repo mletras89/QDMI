@@ -10,9 +10,8 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include "utils/test_impl.hpp"
 
 #include <array>
-#include <cmath>
 #include <complex>
-#include <cstdlib>
+#include <cstddef>
 #include <gtest/gtest.h>
 #include <map>
 #include <sstream>
@@ -434,5 +433,134 @@ TEST_P(QDMIImplementationTest, ControlGetProbsSparse) {
   }
   ASSERT_NEAR(sum, 1.0, 1e-6);
 
+  QDMI_control_free_job(device, job);
+}
+
+TEST_P(QDMIImplementationTest, ControlGetShotsBufferTooSmall) {
+  QDMI_Job job = Submit_test_job(device, 64);
+  size_t size = 0;
+  ASSERT_EQ(QDMI_control_get_data(device, job, QDMI_JOB_RESULT_SHOTS, 0,
+                                  nullptr, &size),
+            QDMI_SUCCESS);
+  std::vector<char> buffer(size - 1); // Buffer too small
+  EXPECT_EQ(QDMI_control_get_data(device, job, QDMI_JOB_RESULT_SHOTS,
+                                  buffer.size(), buffer.data(), nullptr),
+            QDMI_ERROR_INVALIDARGUMENT);
+  QDMI_control_free_job(device, job);
+}
+
+TEST_P(QDMIImplementationTest, ControlGetHistogramKeysBufferTooSmall) {
+  QDMI_Job job = Submit_test_job(device, 64);
+  size_t size = 0;
+  ASSERT_EQ(QDMI_control_get_data(device, job, QDMI_JOB_RESULT_HIST_KEYS, 0,
+                                  nullptr, &size),
+            QDMI_SUCCESS);
+  std::vector<char> buffer(size - 1); // Buffer too small
+  EXPECT_EQ(QDMI_control_get_data(device, job, QDMI_JOB_RESULT_HIST_KEYS,
+                                  buffer.size(), buffer.data(), nullptr),
+            QDMI_ERROR_INVALIDARGUMENT);
+  QDMI_control_free_job(device, job);
+}
+
+TEST_P(QDMIImplementationTest, ControlGetHistogramValuesBufferTooSmall) {
+  QDMI_Job job = Submit_test_job(device, 64);
+  size_t size = 0;
+  ASSERT_EQ(QDMI_control_get_data(device, job, QDMI_JOB_RESULT_HIST_VALUES, 0,
+                                  nullptr, &size),
+            QDMI_SUCCESS);
+  std::vector<char> buffer(size - 1); // Buffer too small
+  EXPECT_EQ(QDMI_control_get_data(device, job, QDMI_JOB_RESULT_HIST_VALUES,
+                                  buffer.size(), buffer.data(), nullptr),
+            QDMI_ERROR_INVALIDARGUMENT);
+  QDMI_control_free_job(device, job);
+}
+
+TEST_P(QDMIImplementationTest, ControlGetStateDenseBufferTooSmall) {
+  QDMI_Job job = Submit_test_job(device);
+  size_t size = 0;
+  ASSERT_EQ(QDMI_control_get_data(device, job,
+                                  QDMI_JOB_RESULT_STATEVECTOR_DENSE, 0, nullptr,
+                                  &size),
+            QDMI_SUCCESS);
+  std::vector<char> buffer(size - 1); // Buffer too small
+  EXPECT_EQ(QDMI_control_get_data(device, job,
+                                  QDMI_JOB_RESULT_STATEVECTOR_DENSE,
+                                  buffer.size(), buffer.data(), nullptr),
+            QDMI_ERROR_INVALIDARGUMENT);
+  QDMI_control_free_job(device, job);
+}
+
+TEST_P(QDMIImplementationTest, ControlGetStateSparseKeysBufferTooSmall) {
+  QDMI_Job job = Submit_test_job(device);
+  size_t size = 0;
+  ASSERT_EQ(QDMI_control_get_data(device, job,
+                                  QDMI_JOB_RESULT_STATEVECTOR_SPARSE_KEYS, 0,
+                                  nullptr, &size),
+            QDMI_SUCCESS);
+  std::vector<char> buffer(size - 1); // Buffer too small
+  EXPECT_EQ(QDMI_control_get_data(device, job,
+                                  QDMI_JOB_RESULT_STATEVECTOR_SPARSE_KEYS,
+                                  buffer.size(), buffer.data(), nullptr),
+            QDMI_ERROR_INVALIDARGUMENT);
+  QDMI_control_free_job(device, job);
+}
+
+TEST_P(QDMIImplementationTest, ControlGetStateSparseValuesBufferTooSmall) {
+  QDMI_Job job = Submit_test_job(device);
+  size_t size = 0;
+  ASSERT_EQ(QDMI_control_get_data(device, job,
+                                  QDMI_JOB_RESULT_STATEVECTOR_SPARSE_VALUES, 0,
+                                  nullptr, &size),
+            QDMI_SUCCESS);
+  std::vector<char> buffer(size - 1); // Buffer too small
+  EXPECT_EQ(QDMI_control_get_data(device, job,
+                                  QDMI_JOB_RESULT_STATEVECTOR_SPARSE_VALUES,
+                                  buffer.size(), buffer.data(), nullptr),
+            QDMI_ERROR_INVALIDARGUMENT);
+  QDMI_control_free_job(device, job);
+}
+
+TEST_P(QDMIImplementationTest, ControlGetProbsDenseBufferTooSmall) {
+  QDMI_Job job = Submit_test_job(device);
+  size_t size = 0;
+  ASSERT_EQ(QDMI_control_get_data(device, job,
+                                  QDMI_JOB_RESULT_PROBABILITIES_DENSE, 0,
+                                  nullptr, &size),
+            QDMI_SUCCESS);
+  std::vector<char> buffer(size - 1); // Buffer too small
+  EXPECT_EQ(QDMI_control_get_data(device, job,
+                                  QDMI_JOB_RESULT_PROBABILITIES_DENSE,
+                                  buffer.size(), buffer.data(), nullptr),
+            QDMI_ERROR_INVALIDARGUMENT);
+  QDMI_control_free_job(device, job);
+}
+
+TEST_P(QDMIImplementationTest, ControlGetProbsSparseKeysBufferTooSmall) {
+  QDMI_Job job = Submit_test_job(device);
+  size_t size = 0;
+  ASSERT_EQ(QDMI_control_get_data(device, job,
+                                  QDMI_JOB_RESULT_PROBABILITIES_SPARSE_KEYS, 0,
+                                  nullptr, &size),
+            QDMI_SUCCESS);
+  std::vector<char> buffer(size - 1); // Buffer too small
+  EXPECT_EQ(QDMI_control_get_data(device, job,
+                                  QDMI_JOB_RESULT_PROBABILITIES_SPARSE_KEYS,
+                                  buffer.size(), buffer.data(), nullptr),
+            QDMI_ERROR_INVALIDARGUMENT);
+  QDMI_control_free_job(device, job);
+}
+
+TEST_P(QDMIImplementationTest, ControlGetProbsSparseValuesBufferTooSmall) {
+  QDMI_Job job = Submit_test_job(device);
+  size_t size = 0;
+  ASSERT_EQ(QDMI_control_get_data(device, job,
+                                  QDMI_JOB_RESULT_PROBABILITIES_SPARSE_VALUES,
+                                  0, nullptr, &size),
+            QDMI_SUCCESS);
+  std::vector<char> buffer(size - 1); // Buffer too small
+  EXPECT_EQ(QDMI_control_get_data(device, job,
+                                  QDMI_JOB_RESULT_PROBABILITIES_SPARSE_VALUES,
+                                  buffer.size(), buffer.data(), nullptr),
+            QDMI_ERROR_INVALIDARGUMENT);
   QDMI_control_free_job(device, job);
 }
