@@ -10,14 +10,34 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(prefix "CXX")
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../device_shifted.h.in cxx_device.h
-               @ONLY)
-
 # NOTE: If you change the target name, the name of the shared library will also
 # change. Hence, in the test you have to adopt the name of the shared library
 # accordingly.
-add_library(cxx_device SHARED device.cpp)
-target_link_libraries(cxx_device PRIVATE qdmi::qdmi qdmi::project_warnings)
-target_include_directories(cxx_device PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-add_library(qdmi::cxx_device ALIAS cxx_device)
+set(prefix "UPCXX")
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../device_shifted.h.in
+               upcxx_device.h @ONLY)
+add_library(unprefixed_cxx_device SHARED device.cpp)
+target_link_libraries(unprefixed_cxx_device PRIVATE qdmi::qdmi
+                                                    qdmi::project_warnings)
+if(APPLE)
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../prefix.map.in prefix.map @ONLY)
+  add_custom_command(
+    TARGET unprefixed_cxx_device
+    PRE_LINK
+    COMMAND ld ARGS -r -alias_list ${CMAKE_CURRENT_BINARY_DIR}/prefix.map -o
+            device.o $<TARGET_OBJECTS:unprefixed_cxx_device>
+    COMMAND ${CMAKE_COMMAND} -E remove $<TARGET_OBJECTS:unprefixed_cxx_device>
+    COMMAND ${CMAKE_COMMAND} -E rename device.o
+            $<TARGET_OBJECTS:unprefixed_cxx_device>)
+elseif(LINUX)
+  add_custom_command(
+    TARGET unprefixed_cxx_device
+    PRE_LINK
+    COMMAND objcopy ARGS --prefix-symbols=${prefix}_
+            $<TARGET_OBJECTS:unprefixed_cxx_device>)
+else()
+  message(FATAL_ERROR "Unsupported platform")
+endif()
+target_include_directories(unprefixed_cxx_device
+                           PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+add_library(qdmi::unprefixed_cxx_device ALIAS unprefixed_cxx_device)
