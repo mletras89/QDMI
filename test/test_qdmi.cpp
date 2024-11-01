@@ -101,17 +101,17 @@ TEST_P(QDMIImplementationTest, QueryGatePropertiesForEachGate) {
     if (gate_num_qubits == 2) {
       for (const auto &[control, target] : coupling_map) {
         auto site_arr = std::array{control, target};
-        EXPECT_EQ(QDMI_query_operation_property(
-                      device, op, 2, site_arr.data(),
-                      QDMI_OPERATION_PROPERTY_DURATION, sizeof(double) * 2,
-                      &duration, nullptr),
-                  QDMI_SUCCESS)
+        EXPECT_EQ(
+            QDMI_query_operation_property(device, op, 2, site_arr.data(),
+                                          QDMI_OPERATION_PROPERTY_DURATION,
+                                          sizeof(double), &duration, nullptr),
+            QDMI_SUCCESS)
             << "Failed to query duration for gate " << op;
-        EXPECT_EQ(QDMI_query_operation_property(
-                      device, op, 2, site_arr.data(),
-                      QDMI_OPERATION_PROPERTY_FIDELITY, sizeof(double) * 2,
-                      &fidelity, nullptr),
-                  QDMI_SUCCESS)
+        EXPECT_EQ(
+            QDMI_query_operation_property(device, op, 2, site_arr.data(),
+                                          QDMI_OPERATION_PROPERTY_FIDELITY,
+                                          sizeof(double), &fidelity, nullptr),
+            QDMI_SUCCESS)
             << "Failed to query fidelity for gate " << op;
       }
     }
