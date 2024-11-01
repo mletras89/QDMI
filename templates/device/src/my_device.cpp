@@ -28,12 +28,16 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  * @details This structure can, e.g., be used to store the job id.
  */
 struct QDMI_Job_impl_d {};
+
 /**
  * @brief Implementation of the QDMI_Site structure.
+ * @details This structure can, e.g., be used to store the site id.
  */
 struct QDMI_Site_impl_d {};
+
 /**
  * @brief Implementation of the QDMI_Operation structure.
+ * @details This structure can, e.g., be used to store the operation id.
  */
 struct QDMI_Operation_impl_d {};
 
