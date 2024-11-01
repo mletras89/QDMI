@@ -520,10 +520,11 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
       result == QDMI_JOB_RESULT_PROBABILITIES_SPARSE_VALUES) {
     const size_t length = job->state_vec_length / 2;
     const size_t num_qubits = (size_t)log2((double)length);
+    const double *vec = job->state_vec;
     // count non-zero elements
     size_t count = 0;
     for (size_t i = 0; i < length; ++i) {
-      if (job->state_vec[2 * i] != 0.0 || job->state_vec[(2 * i) + 1] != 0.0) {
+      if (vec[2 * i] != 0.0 || vec[(2 * i) + 1] != 0.0) {
         count++;
       }
     }
@@ -536,8 +537,7 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
         }
         char *data_ptr = data;
         for (size_t i = 0; i < length; ++i) {
-          if (job->state_vec[2 * i] != 0.0 ||
-              job->state_vec[(2 * i) + 1] != 0.0) {
+          if (vec[2 * i] != 0.0 || vec[(2 * i) + 1] != 0.0) {
             for (size_t j = 0; j < num_qubits; j++) {
               *data_ptr++ = (i & (1ULL << (num_qubits - j - 1))) ? '1' : '0';
             }
@@ -559,10 +559,9 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
         }
         double *data_ptr = data;
         for (size_t i = 0; i < length; ++i) {
-          if (job->state_vec[2 * i] != 0.0 ||
-              job->state_vec[(2 * i) + 1] != 0.0) {
-            *data_ptr++ = job->state_vec[2 * i];
-            *data_ptr++ = job->state_vec[(2 * i) + 1];
+          if (vec[2 * i] != 0.0 || vec[(2 * i) + 1] != 0.0) {
+            *data_ptr++ = vec[2 * i];
+            *data_ptr++ = vec[(2 * i) + 1];
           }
         }
       }
@@ -577,11 +576,9 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
         }
         double *data_ptr = data;
         for (size_t i = 0; i < length; ++i) {
-          if (job->state_vec[2 * i] != 0.0 ||
-              job->state_vec[(2 * i) + 1] != 0.0) {
-            *data_ptr++ =
-                (job->state_vec[2 * i] * job->state_vec[2 * i]) +
-                (job->state_vec[(2 * i) + 1] * job->state_vec[(2 * i) + 1]);
+          if (vec[2 * i] != 0.0 || vec[(2 * i) + 1] != 0.0) {
+            *data_ptr++ = (vec[2 * i] * vec[2 * i]) +
+                          (vec[(2 * i) + 1] * vec[(2 * i) + 1]);
           }
         }
       }
