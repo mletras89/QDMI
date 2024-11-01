@@ -19,7 +19,6 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <gtest/gtest.h>
 #include <string>
-#include <utility>
 
 constexpr const char *Shared_library_file_extension() {
 #if defined(_WIN32)

@@ -22,33 +22,17 @@ add_subdirectory(utils)
 # test that a device implementation implements all functions
 #
 # NOTE: This executable is not meant to be ever executed, only linked.
-set(prefix "C")
-add_library(qdmi_c_device_defs_obj OBJECT utils/test_defs.cpp)
-target_link_libraries(qdmi_c_device_defs_obj PRIVATE qdmi::qdmi
-                                                     qdmi::project_warnings)
-add_custom_target(qdmi_c_device_defs_prefix)
-add_custom_command(
-  TARGET qdmi_c_device_defs_prefix
-  COMMAND
-    llvm-objcopy ARGS --prefix-symbols=${prefix}_
-    $<TARGET_OBJECTS:qdmi_c_device_defs_obj> DEPENDS
-    $<TARGET_OBJECTS:qdmi_c_device_defs_obj>
-  COMMENT "Running objcopy on test_defs.cpp.o")
-add_executable(qdmi_test_c_device_defs $<TARGET_OBJECTS:qdmi_c_device_defs_obj>)
-add_dependencies(qdmi_test_c_device_defs qdmi_c_device_defs_prefix)
-
+add_executable(qdmi_test_c_device_defs utils/test_defs.cpp)
 target_link_libraries(
-  qdmi_test_c_device_defs
-  PRIVATE qdmi::qdmi qdmi::c_device qdmi::example_dynamic_driver
-          qdmi::project_warnings)
+  qdmi_test_c_device_defs PRIVATE qdmi::qdmi qdmi::c_device
+                                  qdmi::example_driver qdmi::project_warnings)
 
 # test that a device implementation implements all functions NOTE: This
 # executable is not meant to be ever executed, only linked.
 add_executable(qdmi_test_cxx_device_defs utils/test_defs.cpp)
 target_link_libraries(
-  qdmi_test_cxx_device_defs
-  PRIVATE qdmi::qdmi qdmi::cxx_device qdmi::example_dynamic_driver
-          qdmi::project_warnings)
+  qdmi_test_cxx_device_defs PRIVATE qdmi::qdmi qdmi::cxx_device
+                                    qdmi::example_driver qdmi::project_warnings)
 
 # ------------------------------------------------------------------------------
 # Functional Tests
@@ -64,7 +48,7 @@ target_link_libraries(
           qdmi::test_impl
           qdmi::example_tool
           qdmi::example_fomac
-          qdmi::example_static_driver
+          qdmi::example_driver
           qdmi::project_warnings
           gtest_main)
 
@@ -77,14 +61,11 @@ gtest_discover_tests(
 
 # ensure c_device and cxx_device are built whenever qdmi_test is built. Those
 # targets build the dynamic libraries that are loaded in the tests.
-add_dependencies(qdmi_test qdmi::c_device qdmi::cxx_device
-                 qdmi::unprefixed_c_device qdmi::unprefixed_cxx_device)
+add_dependencies(qdmi_test qdmi::c_device qdmi::cxx_device)
 # ensure qdmi_test_c_device_defs and qdmi_test_cxx_device_defs are built
 # whenever qdmi_test is built. Those targets ensure that the respective devices
 # implement all interface functions.
-
-# add_dependencies(qdmi_test qdmi_test_c_device_defs qdmi_test_cxx_device_defs)
-
+add_dependencies(qdmi_test qdmi_test_c_device_defs qdmi_test_cxx_device_defs)
 # ensure my_device_test is built whenever qdmi_test is built. That target
 # ensures that there is no compilation error in the templates provided with QDMI
 # and their tests.
