@@ -15,16 +15,9 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  * entities defined @ref device/control.h and @ref device/query.h.
  */
 
-#ifndef QDMI_DEVICE_H
-#define QDMI_DEVICE_H
+#pragma once
 
 #include "qdmi/common/enums.h"   // IWYU pragma: export
 #include "qdmi/common/types.h"   // IWYU pragma: export
 #include "qdmi/device/control.h" // IWYU pragma: export
 #include "qdmi/device/query.h"   // IWYU pragma: export
-
-#ifdef QDMI_PREFIX
-#undef QDMI_DEVICE_H
-#endif // QDMI_PREFIX
-
-#endif // QDMI_DEVICE_H

@@ -14,10 +14,6 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 extern "C" {
 #endif
 
-// The following clang-tidy warning cannot be addressed because this header is
-// used from both C and C++ code.
-// NOLINTBEGIN(performance-enum-size)
-
 /// Enum of the device properties that can be queried.
 enum QDMI_DEVICE_PROPERTY_T {
   QDMI_DEVICE_PROPERTY_NAME, ///< `char*` (string) The name of the device.
@@ -259,7 +255,7 @@ enum QDMI_JOB_RESULT_T {
   /**
    * @brief `char*`(string) The keys for the histogram of the results.
    * @details The histogram of the measurement results is represented as a
-   * key-value mapping. This mapping is returned as a list of keys and an
+   * key-value mapping. This mapping is returned as a list of keys and a
    * equal-length list of values. The corresponding partners of keys and values
    * can be found at the same index in the lists.
    *
@@ -272,59 +268,6 @@ enum QDMI_JOB_RESULT_T {
    * @see QDMI_JOB_RESULT_HIST_KEY
    */
   QDMI_JOB_RESULT_HIST_VALUES,
-  /**
-   * @brief `double*` (double list) The state vector of the result.
-   * @details The complex amplitudes are stored as a list of real and imaginary
-   * parts. The real part of the amplitude is at index 2n and the imaginary part
-   * is at index 2n+1. For example, the state vector of a 2-qubit system with
-   * amplitudes (0.5, 0.5), (0.5, -0.5), (-0.5, 0.5), (-0.5, -0.5) would be
-   * represented as `{0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5}`.
-   */
-  QDMI_JOB_RESULT_STATEVECTOR_DENSE,
-  /**
-   * @brief `double*` (double list) The probabilities of the result.
-   * @details The probabilities are stored as a list of real numbers. The
-   * probability of the state with index n is at index n in the list. For
-   * example, the probabilities of a 2-qubit system with states 00, 01, 10, 11
-   * would be represented as `{0.25, 0.25, 0.25, 0.25}`.
-   */
-  QDMI_JOB_RESULT_PROBABILITIES_DENSE,
-  /**
-   * @brief `char*`(string) The keys for the sparse state vector of the result.
-   * @details The sparse state vector is represented as a key-value mapping.
-   * This mapping is returned as a list of keys and an equal-length list of
-   * values. The corresponding partners of keys and values can be found at the
-   * same index in the lists.
-   */
-  QDMI_JOB_RESULT_STATEVECTOR_SPARSE_KEYS,
-  /**
-   * @brief `double*` (double list) The values for the sparse state vector of
-   * the result.
-   * @details The complex amplitudes are stored in the same way as the dense
-   * state vector only that the values are only stored for the non-zero
-   * amplitudes.
-   * @see QDMI_JOB_RESULT_STATEVECTOR_DENSE
-   * @see QDMI_JOB_RESULT_STATEVECTOR_SPARSE_KEYS
-   */
-  QDMI_JOB_RESULT_STATEVECTOR_SPARSE_VALUES,
-  /**
-   * @brief `char*`(string) The keys for the sparse probabilities of the result.
-   * @details The sparse probabilities are represented as a key-value mapping.
-   * This mapping is returned as a list of keys and an equal-length list of
-   * values. The corresponding partners of keys and values can be found at the
-   * same index in the lists.
-   */
-  QDMI_JOB_RESULT_PROBABILITIES_SPARSE_KEYS,
-  /**
-   * @brief `double*` (double list) The values for the sparse probabilities of
-   * the result.
-   * @details The probabilities are stored in the same way as the dense
-   * probabilities only that the values are only stored for the non-zero
-   * probabilities.
-   * @see QDMI_JOB_RESULT_PROBABILITIES_DENSE
-   * @see QDMI_JOB_RESULT_PROBABILITIES_SPARSE_KEYS
-   */
-  QDMI_JOB_RESULT_PROBABILITIES_SPARSE_VALUES,
   /**
    * @brief This property is reserved for a custom property.
    * @details The meaning and the type of this property is defined by the
@@ -347,8 +290,6 @@ enum QDMI_JOB_RESULT_T {
    */
   QDMI_JOB_RESULT_MAX
 };
-
-// NOLINTEND(performance-enum-size)
 
 #ifdef __cplusplus
 } // extern "C"

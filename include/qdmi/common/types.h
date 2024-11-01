@@ -16,6 +16,10 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 extern "C" {
 #endif
 
+// The following disables the clang-tidy warning modernize-use-using.
+// Since this is C code, we cannot use the using keyword.
+// NOLINTBEGIN(modernize-use-using)
+
 /// Type of the device properties.
 typedef enum QDMI_DEVICE_PROPERTY_T QDMI_Device_Property;
 
@@ -73,7 +77,7 @@ typedef struct QDMI_Device_impl_d *QDMI_Device;
  * @par
  * This type is implemented by the driver.
  */
-typedef void *QDMI_Job;
+typedef struct QDMI_Job_impl_d *QDMI_Job;
 
 /**
  * @brief Opaque type for a site.
@@ -88,7 +92,7 @@ typedef void *QDMI_Job;
  * that is unique for each site on a device. The indices start at zero and go up
  * to the number of sites minus one.
  */
-typedef void *QDMI_Site;
+typedef struct QDMI_Site_impl_d *QDMI_Site;
 
 /**
  * @brief Opaque type for an operation.
@@ -96,7 +100,9 @@ typedef void *QDMI_Site;
  * a device. The operation is defined by the device and can be executed on the
  * device.
  */
-typedef void *QDMI_Operation;
+typedef struct QDMI_Operation_impl_d *QDMI_Operation;
+
+// NOLINTEND(modernize-use-using)
 
 #ifdef __cplusplus
 } // extern "C"
