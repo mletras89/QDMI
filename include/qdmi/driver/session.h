@@ -18,7 +18,11 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include "qdmi/common/types.h"
 
 #ifdef __cplusplus
+#include <cstddef>
+
 extern "C" {
+#else
+#include <stddef.h>
 #endif
 
 /**
@@ -49,13 +53,12 @@ int QDMI_session_alloc(QDMI_Session *session);
  * num_devices is `NULL`, this argument is ignored.
  * @return @ref QDMI_SUCCESS if the function is executed successfully.
  * Otherwise, it returns one of the following error codes:
- * @return @ref QDMI_ERROR_INVALIDARGUMENT if @p num_entries is less than or
- * equal to zero and @p devices is not `NULL` or if both @p devices and @p
- * num_devices are `NULL`.
+ * @return @ref QDMI_ERROR_INVALIDARGUMENT if @p num_entries is zero and
+ * @p devices is not `NULL` or if both @p devices and @p num_devices are `NULL`.
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
-int QDMI_session_get_devices(QDMI_Session session, int num_entries,
-                             QDMI_Device *devices, int *num_devices);
+int QDMI_session_get_devices(QDMI_Session session, size_t num_entries,
+                             QDMI_Device *devices, size_t *num_devices);
 
 /**
  * @brief Free a QDMI session.

@@ -63,20 +63,18 @@ std::string Get_test_circuit() {
 
 TEST_F(QDMIImplementationTest, ControlCreateJobImplemented) {
   QDMI_Job job = nullptr;
-  ASSERT_NE(QDMI_control_create_job_dev(
-                QDMI_PROGRAM_FORMAT_QASM2,
-                static_cast<int>(Get_test_circuit().length() + 1),
-                Get_test_circuit().c_str(), &job),
+  ASSERT_NE(QDMI_control_create_job_dev(QDMI_PROGRAM_FORMAT_QASM2,
+                                        Get_test_circuit().length() + 1,
+                                        Get_test_circuit().c_str(), &job),
             QDMI_ERROR_NOTIMPLEMENTED);
   QDMI_control_free_job_dev(job);
 }
 
 TEST_F(QDMIImplementationTest, ControlSetParameterImplemented) {
   QDMI_Job job = nullptr;
-  ASSERT_EQ(QDMI_control_create_job_dev(
-                QDMI_PROGRAM_FORMAT_QASM2,
-                static_cast<int>(Get_test_circuit().length() + 1),
-                Get_test_circuit().c_str(), &job),
+  ASSERT_EQ(QDMI_control_create_job_dev(QDMI_PROGRAM_FORMAT_QASM2,
+                                        Get_test_circuit().length() + 1,
+                                        Get_test_circuit().c_str(), &job),
             QDMI_SUCCESS);
   ASSERT_EQ(
       QDMI_control_set_parameter_dev(job, QDMI_JOB_PARAMETER_MAX, 0, nullptr),
@@ -86,10 +84,9 @@ TEST_F(QDMIImplementationTest, ControlSetParameterImplemented) {
 
 TEST_F(QDMIImplementationTest, ControlSubmitJobImplemented) {
   QDMI_Job job = nullptr;
-  ASSERT_EQ(QDMI_control_create_job_dev(
-                QDMI_PROGRAM_FORMAT_QASM2,
-                static_cast<int>(Get_test_circuit().length() + 1),
-                Get_test_circuit().c_str(), &job),
+  ASSERT_EQ(QDMI_control_create_job_dev(QDMI_PROGRAM_FORMAT_QASM2,
+                                        Get_test_circuit().length() + 1,
+                                        Get_test_circuit().c_str(), &job),
             QDMI_SUCCESS);
   ASSERT_NE(QDMI_control_submit_job_dev(job), QDMI_ERROR_NOTIMPLEMENTED);
   QDMI_control_free_job_dev(job);
@@ -97,10 +94,9 @@ TEST_F(QDMIImplementationTest, ControlSubmitJobImplemented) {
 
 TEST_F(QDMIImplementationTest, ControlCancelImplemented) {
   QDMI_Job job = nullptr;
-  ASSERT_EQ(QDMI_control_create_job_dev(
-                QDMI_PROGRAM_FORMAT_QASM2,
-                static_cast<int>(Get_test_circuit().length() + 1),
-                Get_test_circuit().c_str(), &job),
+  ASSERT_EQ(QDMI_control_create_job_dev(QDMI_PROGRAM_FORMAT_QASM2,
+                                        Get_test_circuit().length() + 1,
+                                        Get_test_circuit().c_str(), &job),
             QDMI_SUCCESS);
   ASSERT_NE(QDMI_control_cancel_dev(job), QDMI_ERROR_NOTIMPLEMENTED);
   QDMI_control_free_job_dev(job);
@@ -109,10 +105,9 @@ TEST_F(QDMIImplementationTest, ControlCancelImplemented) {
 TEST_F(QDMIImplementationTest, ControlCheckImplemented) {
   QDMI_Job job = nullptr;
   QDMI_Job_Status status = QDMI_JOB_STATUS_RUNNING;
-  ASSERT_EQ(QDMI_control_create_job_dev(
-                QDMI_PROGRAM_FORMAT_QASM2,
-                static_cast<int>(Get_test_circuit().length() + 1),
-                Get_test_circuit().c_str(), &job),
+  ASSERT_EQ(QDMI_control_create_job_dev(QDMI_PROGRAM_FORMAT_QASM2,
+                                        Get_test_circuit().length() + 1,
+                                        Get_test_circuit().c_str(), &job),
             QDMI_SUCCESS);
   ASSERT_NE(QDMI_control_check_dev(job, &status), QDMI_ERROR_NOTIMPLEMENTED);
   QDMI_control_free_job_dev(job);
@@ -120,10 +115,9 @@ TEST_F(QDMIImplementationTest, ControlCheckImplemented) {
 
 TEST_F(QDMIImplementationTest, ControlWaitImplemented) {
   QDMI_Job job = nullptr;
-  ASSERT_EQ(QDMI_control_create_job_dev(
-                QDMI_PROGRAM_FORMAT_QASM2,
-                static_cast<int>(Get_test_circuit().length() + 1),
-                Get_test_circuit().c_str(), &job),
+  ASSERT_EQ(QDMI_control_create_job_dev(QDMI_PROGRAM_FORMAT_QASM2,
+                                        Get_test_circuit().length() + 1,
+                                        Get_test_circuit().c_str(), &job),
             QDMI_SUCCESS);
   ASSERT_NE(QDMI_control_wait_dev(job), QDMI_ERROR_NOTIMPLEMENTED);
   QDMI_control_free_job_dev(job);
@@ -131,10 +125,9 @@ TEST_F(QDMIImplementationTest, ControlWaitImplemented) {
 
 TEST_F(QDMIImplementationTest, ControlGetHistImplemented) {
   QDMI_Job job = nullptr;
-  ASSERT_EQ(QDMI_control_create_job_dev(
-                QDMI_PROGRAM_FORMAT_QASM2,
-                static_cast<int>(Get_test_circuit().length() + 1),
-                Get_test_circuit().c_str(), &job),
+  ASSERT_EQ(QDMI_control_create_job_dev(QDMI_PROGRAM_FORMAT_QASM2,
+                                        Get_test_circuit().length() + 1,
+                                        Get_test_circuit().c_str(), &job),
             QDMI_SUCCESS);
   ASSERT_EQ(
       QDMI_control_get_data_dev(job, QDMI_JOB_RESULT_MAX, 0, nullptr, nullptr),
@@ -143,12 +136,12 @@ TEST_F(QDMIImplementationTest, ControlGetHistImplemented) {
 }
 
 TEST_F(QDMIImplementationTest, QueryDeviceNameImplemented) {
-  int size = 0;
+  size_t size = 0;
   ASSERT_EQ(QDMI_query_device_property_dev(QDMI_DEVICE_PROPERTY_NAME, 0,
                                            nullptr, &size),
             QDMI_SUCCESS)
       << "Devices must provide a name";
-  std::string value(static_cast<size_t>(size), '\0');
+  std::string value(size - 1, '\0');
   ASSERT_EQ(QDMI_query_device_property_dev(QDMI_DEVICE_PROPERTY_NAME, size,
                                            value.data(), nullptr),
             QDMI_SUCCESS)
@@ -157,12 +150,12 @@ TEST_F(QDMIImplementationTest, QueryDeviceNameImplemented) {
 }
 
 TEST_F(QDMIImplementationTest, QueryDeviceVersionImplemented) {
-  int size = 0;
+  size_t size = 0;
   ASSERT_EQ(QDMI_query_device_property_dev(QDMI_DEVICE_PROPERTY_VERSION, 0,
                                            nullptr, &size),
             QDMI_SUCCESS)
       << "Devices must provide a version";
-  std::string value(static_cast<size_t>(size), '\0');
+  std::string value(size - 1, '\0');
   ASSERT_EQ(QDMI_query_device_property_dev(QDMI_DEVICE_PROPERTY_VERSION, size,
                                            value.data(), nullptr),
             QDMI_SUCCESS)
@@ -171,12 +164,12 @@ TEST_F(QDMIImplementationTest, QueryDeviceVersionImplemented) {
 }
 
 TEST_F(QDMIImplementationTest, QueryDeviceLibraryVersionImplemented) {
-  int size = 0;
+  size_t size = 0;
   ASSERT_EQ(QDMI_query_device_property_dev(QDMI_DEVICE_PROPERTY_LIBRARYVERSION,
                                            0, nullptr, &size),
             QDMI_SUCCESS)
       << "Devices must provide a library version";
-  std::string value(static_cast<size_t>(size), '\0');
+  std::string value(size - 1, '\0');
   ASSERT_EQ(QDMI_query_device_property_dev(QDMI_DEVICE_PROPERTY_LIBRARYVERSION,
                                            size, value.data(), nullptr),
             QDMI_SUCCESS)
@@ -185,8 +178,9 @@ TEST_F(QDMIImplementationTest, QueryDeviceLibraryVersionImplemented) {
 }
 
 TEST_F(QDMIImplementationTest, QubitNum) {
-  int num_qubits = 0;
+  size_t num_qubits = 0;
   EXPECT_EQ(QDMI_query_device_property_dev(QDMI_DEVICE_PROPERTY_QUBITSNUM,
-                                           sizeof(int), &num_qubits, nullptr),
+                                           sizeof(size_t), &num_qubits,
+                                           nullptr),
             QDMI_SUCCESS);
 }

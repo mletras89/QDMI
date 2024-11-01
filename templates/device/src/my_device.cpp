@@ -13,6 +13,12 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include "qdmi/device.h"
 
+#ifdef __cplusplus
+#include <cstddef>
+#else
+#include <stddef.h>
+#endif
+
 // The following line ignores the unused parameters in the functions.
 // Please remove the following code block after populating the functions.
 // NOLINTBEGIN(misc-unused-parameters,clang-diagnostic-unused-parameter)
@@ -41,40 +47,41 @@ struct QDMI_Site_impl_d {};
  */
 struct QDMI_Operation_impl_d {};
 
-int QDMI_query_get_sites_dev(int num_entries, QDMI_Site *sites,
-                             int *num_sites) {
+int QDMI_query_get_sites_dev(size_t num_entries, QDMI_Site *sites,
+                             size_t *num_sites) {
   return QDMI_ERROR_NOTIMPLEMENTED;
 }
 
-int QDMI_query_get_operations_dev(int num_entries, QDMI_Operation *operations,
-                                  int *num_operations) {
+int QDMI_query_get_operations_dev(size_t num_entries,
+                                  QDMI_Operation *operations,
+                                  size_t *num_operations) {
   return QDMI_ERROR_NOTIMPLEMENTED;
 }
 
-int QDMI_query_device_property_dev(QDMI_Device_Property prop, int size,
-                                   void *value, int *size_ret) {
+int QDMI_query_device_property_dev(QDMI_Device_Property prop, size_t size,
+                                   void *value, size_t *size_ret) {
   return QDMI_ERROR_NOTIMPLEMENTED;
 }
 
 int QDMI_query_site_property_dev(QDMI_Site site, QDMI_Site_Property prop,
-                                 int size, void *value, int *size_ret) {
+                                 size_t size, void *value, size_t *size_ret) {
   return QDMI_ERROR_NOTIMPLEMENTED;
 }
 
-int QDMI_query_operation_property_dev(QDMI_Operation operation, int num_sites,
-                                      const QDMI_Site *sites,
-                                      QDMI_Operation_Property prop, int size,
-                                      void *value, int *size_ret) {
+int QDMI_query_operation_property_dev(QDMI_Operation operation,
+                                      size_t num_sites, const QDMI_Site *sites,
+                                      QDMI_Operation_Property prop, size_t size,
+                                      void *value, size_t *size_ret) {
   return QDMI_ERROR_NOTIMPLEMENTED;
 }
 
-int QDMI_control_create_job_dev(QDMI_Program_Format format, int size,
+int QDMI_control_create_job_dev(QDMI_Program_Format format, size_t size,
                                 const void *prog, QDMI_Job *job) {
   return QDMI_ERROR_NOTIMPLEMENTED;
 }
 
 int QDMI_control_set_parameter_dev(QDMI_Job job, QDMI_Job_Parameter param,
-                                   int size, const void *value) {
+                                   size_t size, const void *value) {
   return QDMI_ERROR_NOTIMPLEMENTED;
 }
 
@@ -90,8 +97,8 @@ int QDMI_control_check_dev(QDMI_Job job, QDMI_Job_Status *status) {
 
 int QDMI_control_wait_dev(QDMI_Job job) { return QDMI_ERROR_NOTIMPLEMENTED; }
 
-int QDMI_control_get_data_dev(QDMI_Job job, QDMI_Job_Result result, int size,
-                              void *data, int *size_ret) {
+int QDMI_control_get_data_dev(QDMI_Job job, QDMI_Job_Result result, size_t size,
+                              void *data, size_t *size_ret) {
   return QDMI_ERROR_NOTIMPLEMENTED;
 }
 
