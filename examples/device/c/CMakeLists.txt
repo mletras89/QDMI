@@ -7,31 +7,26 @@
 # NOTE: If you change the target name, the name of the shared library will also
 # change. Hence, in the test you have to adapt the name of the shared library
 # accordingly.
-set(prefix "UPC")
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../device_shifted.h.in upc_device.h
-               @ONLY)
-add_library(unprefixed_c_device SHARED device.c)
-target_link_libraries(unprefixed_c_device PRIVATE qdmi::qdmi
-                                                  qdmi::project_warnings)
+set(prefix "C")
+add_library(c_device SHARED device.c)
+target_link_libraries(c_device PRIVATE qdmi::qdmi qdmi::project_warnings)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../prefix.map.in prefix.map @ONLY)
 if(APPLE)
-  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../prefix.map.in prefix.map @ONLY)
   add_custom_command(
-    TARGET unprefixed_c_device
+    TARGET c_device
     PRE_LINK
     COMMAND ld ARGS -r -alias_list ${CMAKE_CURRENT_BINARY_DIR}/prefix.map -o
-            device.o $<TARGET_OBJECTS:unprefixed_c_device>
-    COMMAND ${CMAKE_COMMAND} -E remove $<TARGET_OBJECTS:unprefixed_c_device>
-    COMMAND ${CMAKE_COMMAND} -E rename device.o
-            $<TARGET_OBJECTS:unprefixed_c_device>)
+            device.o $<TARGET_OBJECTS:c_device>
+    COMMAND ${CMAKE_COMMAND} -E remove $<TARGET_OBJECTS:c_device>
+    COMMAND ${CMAKE_COMMAND} -E rename device.o $<TARGET_OBJECTS:c_device>)
 elseif(LINUX)
   add_custom_command(
-    TARGET unprefixed_c_device
+    TARGET c_device
     PRE_LINK
-    COMMAND objcopy ARGS --prefix-symbols=${prefix}_
-            $<TARGET_OBJECTS:unprefixed_c_device>)
+    COMMAND objcopy ARGS --redefine-syms=${CMAKE_CURRENT_BINARY_DIR}/prefix.map
+            $<TARGET_OBJECTS:c_device>)
 else()
   message(FATAL_ERROR "Unsupported platform")
 endif()
-target_include_directories(unprefixed_c_device
-                           PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-add_library(qdmi::unprefixed_c_device ALIAS unprefixed_c_device)
+target_include_directories(c_device PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+add_library(qdmi::c_device ALIAS c_device)

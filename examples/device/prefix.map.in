@@ -13,3 +13,9 @@ _QDMI_query_get_operations_dev _@prefix@_QDMI_query_get_operations_dev
 _QDMI_query_get_sites_dev _@prefix@_QDMI_query_get_sites_dev
 _QDMI_query_operation_property_dev _@prefix@_QDMI_query_operation_property_dev
 _QDMI_query_site_property_dev _@prefix@_QDMI_query_site_property_dev
+_QDMI_Job _@prefix@_QDMI_Job
+_QDMI_Job_impl_d _@prefix@_QDMI_Job_impl_d
+_QDMI_Site _@prefix@_QDMI_Site
+_QDMI_Site_impl_d _@prefix@_QDMI_Site_impl_d
+_QDMI_Operation _@prefix@_QDMI_Operation
+_QDMI_Operation_impl_d _@prefix@_QDMI_Operation_impl_d

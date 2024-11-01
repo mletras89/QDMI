@@ -13,31 +13,26 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # NOTE: If you change the target name, the name of the shared library will also
 # change. Hence, in the test you have to adopt the name of the shared library
 # accordingly.
-set(prefix "UPCXX")
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../device_shifted.h.in
-               upcxx_device.h @ONLY)
-add_library(unprefixed_cxx_device SHARED device.cpp)
-target_link_libraries(unprefixed_cxx_device PRIVATE qdmi::qdmi
-                                                    qdmi::project_warnings)
+set(prefix "CXX")
+add_library(cxx_device SHARED device.cpp)
+target_link_libraries(cxx_device PRIVATE qdmi::qdmi qdmi::project_warnings)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../prefix.map.in prefix.map @ONLY)
 if(APPLE)
-  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../prefix.map.in prefix.map @ONLY)
   add_custom_command(
-    TARGET unprefixed_cxx_device
+    TARGET cxx_device
     PRE_LINK
     COMMAND ld ARGS -r -alias_list ${CMAKE_CURRENT_BINARY_DIR}/prefix.map -o
-            device.o $<TARGET_OBJECTS:unprefixed_cxx_device>
-    COMMAND ${CMAKE_COMMAND} -E remove $<TARGET_OBJECTS:unprefixed_cxx_device>
-    COMMAND ${CMAKE_COMMAND} -E rename device.o
-            $<TARGET_OBJECTS:unprefixed_cxx_device>)
+            device.o $<TARGET_OBJECTS:cxx_device>
+    COMMAND ${CMAKE_COMMAND} -E remove $<TARGET_OBJECTS:cxx_device>
+    COMMAND ${CMAKE_COMMAND} -E rename device.o $<TARGET_OBJECTS:cxx_device>)
 elseif(LINUX)
   add_custom_command(
-    TARGET unprefixed_cxx_device
+    TARGET cxx_device
     PRE_LINK
-    COMMAND objcopy ARGS --prefix-symbols=${prefix}_
-            $<TARGET_OBJECTS:unprefixed_cxx_device>)
+    COMMAND objcopy ARGS --redefine-syms=${CMAKE_CURRENT_BINARY_DIR}/prefix.map
+            $<TARGET_OBJECTS:cxx_device>)
 else()
   message(FATAL_ERROR "Unsupported platform")
 endif()
-target_include_directories(unprefixed_cxx_device
-                           PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-add_library(qdmi::unprefixed_cxx_device ALIAS unprefixed_cxx_device)
+target_include_directories(cxx_device PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+add_library(qdmi::cxx_device ALIAS cxx_device)
