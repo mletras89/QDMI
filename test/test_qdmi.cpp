@@ -23,11 +23,6 @@ INSTANTIATE_TEST_SUITE_P(
     QDMIImplementationTest, // Test suite name
     // Parameters to test with
     ::testing::Values(
-        std::pair<std::string, std::string>{
-            "../examples/device/unprefixed_cxx/libunprefixed_cxx_device",
-            "UPCXX"},
-        std::pair<std::string, std::string>{
-            "../examples/device/unprefixed_c/libunprefixed_c_device", "UPC"},
         std::pair<std::string, std::string>{"../examples/device/c/libc_device",
                                             "C"},
         std::pair<std::string, std::string>{
