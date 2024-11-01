@@ -57,7 +57,7 @@ std::array<QDMI_Operation_impl_d, 4> device_operations = {
     QDMI_Operation_impl_d{"rx"}, QDMI_Operation_impl_d{"ry"},
     QDMI_Operation_impl_d{"rz"}, QDMI_Operation_impl_d{"cx"}};
 
-std::array<QDMI_Site_impl_d, 7> device_sites = {
+std::array<QDMI_Site_impl_d, 5> device_sites = {
     QDMI_Site_impl_d{0}, QDMI_Site_impl_d{1}, QDMI_Site_impl_d{2},
     QDMI_Site_impl_d{3}, QDMI_Site_impl_d{4}};
 // NOLINTEND(cppcoreguidelines-avoid-non-const-global-variables)
