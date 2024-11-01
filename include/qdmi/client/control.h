@@ -16,7 +16,11 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include "qdmi/common/types.h"
 
 #ifdef __cplusplus
+#include <cstddef>
+
 extern "C" {
+#else
+#include <stddef.h>
 #endif
 
 /**
@@ -33,14 +37,14 @@ extern "C" {
  * @param[in] prog is the program to run.
  * @param[out] job is a handle to the job created.
  * @return @ref QDMI_SUCCESS if the job was successfully created.
- * @return @ref QDMI_ERROR_INVALIDARGUMENT if @p size is less than or equal to
- * zero or the program @p prog is invalid, e.g. @c NULL.
+ * @return @ref QDMI_ERROR_INVALIDARGUMENT if @p size is zero or the program
+ * @p prog is invalid, e.g. @c NULL.
  * @return @ref QDMI_ERROR_NOTSUPPORTED if the device does not support the
  * program format.
  * @return @ref QDMI_ERROR_FATAL if the job creation failed.
  */
 int QDMI_control_create_job(QDMI_Device dev, QDMI_Program_Format format,
-                            int size, const void *prog, QDMI_Job *job);
+                            size_t size, const void *prog, QDMI_Job *job);
 
 /**
  * @brief Set a parameter for a job.
@@ -60,7 +64,7 @@ int QDMI_control_create_job(QDMI_Device dev, QDMI_Program_Format format,
  * @return @ref QDMI_ERROR_FATAL if the parameter could not be set.
  */
 int QDMI_control_set_parameter(QDMI_Device dev, QDMI_Job job,
-                               QDMI_Job_Parameter param, int size,
+                               QDMI_Job_Parameter param, size_t size,
                                const void *value);
 
 /**
@@ -135,7 +139,7 @@ int QDMI_control_wait(QDMI_Device dev, QDMI_Job job);
  * @return @ref QDMI_ERROR_FATAL if an error occurred during the retrieval.
  */
 int QDMI_control_get_data(QDMI_Device dev, QDMI_Job job, QDMI_Job_Result result,
-                          int size, void *data, int *size_ret);
+                          size_t size, void *data, size_t *size_ret);
 
 /**
  * @brief Free a job.

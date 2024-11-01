@@ -13,7 +13,11 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include "qdmi/common/types.h"
 
 #ifdef __cplusplus
+#include <cstddef>
+
 extern "C" {
+#else
+#include <stddef.h>
 #endif
 
 /**
@@ -35,7 +39,7 @@ extern "C" {
  * program format.
  * @return @ref QDMI_ERROR_FATAL if the job creation failed.
  */
-int QDMI_control_create_job_dev(QDMI_Program_Format format, int size,
+int QDMI_control_create_job_dev(QDMI_Program_Format format, size_t size,
                                 const void *prog, QDMI_Job *job);
 
 /**
@@ -55,7 +59,7 @@ int QDMI_control_create_job_dev(QDMI_Program_Format format, int size,
  * @return @ref QDMI_ERROR_FATAL if the parameter could not be set.
  */
 int QDMI_control_set_parameter_dev(QDMI_Job job, QDMI_Job_Parameter param,
-                                   int size, const void *value);
+                                   size_t size, const void *value);
 
 /**
  * @brief Submit a job to the device.
@@ -123,8 +127,8 @@ int QDMI_control_wait_dev(QDMI_Job job);
  * cancelled, or does not exist.
  * @return @ref QDMI_ERROR_FATAL if an error occurred during the retrieval.
  */
-int QDMI_control_get_data_dev(QDMI_Job job, QDMI_Job_Result result, int size,
-                              void *data, int *size_ret);
+int QDMI_control_get_data_dev(QDMI_Job job, QDMI_Job_Result result, size_t size,
+                              void *data, size_t *size_ret);
 
 /**
  * @brief Free a job.

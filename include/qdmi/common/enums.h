@@ -14,6 +14,10 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 extern "C" {
 #endif
 
+// The following clang-tidy warning cannot be addressed because this header is
+// used from both C and C++ code.
+// NOLINTBEGIN(performance-enum-size)
+
 /// Enum of the device properties that can be queried.
 enum QDMI_DEVICE_PROPERTY_T {
   QDMI_DEVICE_PROPERTY_NAME, ///< `char*` (string) The name of the device.
@@ -23,7 +27,7 @@ enum QDMI_DEVICE_PROPERTY_T {
   QDMI_DEVICE_PROPERTY_STATUS,
   /// `char*` (string) The implemented version of QDMI.
   QDMI_DEVICE_PROPERTY_LIBRARYVERSION,
-  /// `int` The number of qubits in the device.
+  /// `size_t` The number of qubits in the device.
   QDMI_DEVICE_PROPERTY_QUBITSNUM,
   /**
    * @brief `int*` (int list) The coupling map of the device.
@@ -106,7 +110,7 @@ enum QDMI_SITE_PROPERTY_T {
 enum QDMI_OPERATION_PROPERTY_T {
   /// `char*` (string) The string identifier of the operation.
   QDMI_OPERATION_PROPERTY_NAME,
-  /// `int` The number of qubits in the operation.
+  /// `size_t` The number of qubits in the operation.
   QDMI_OPERATION_PROPERTY_QUBITSNUM,
   /// `double` The duration of an operation in µs.
   QDMI_OPERATION_PROPERTY_DURATION,
@@ -189,7 +193,7 @@ enum QDMI_PROGRAM_FORMAT_T {
   QDMI_PROGRAM_FORMAT_QASM3,
   /// `char*`(string) The QIR program to run as a string.
   QDMI_PROGRAM_FORMAT_QIRSTRING,
-  /// `char*`(string) The QIR program as a binary module.
+  /// `void*` The QIR program as a binary module.
   QDMI_PROGRAM_FORMAT_QIRMODULE,
   /**
    * @brief This value is reserved for a custom format.
@@ -217,7 +221,7 @@ enum QDMI_PROGRAM_FORMAT_T {
  * @brief Enum of the job parameters that can be set.
  */
 enum QDMI_JOB_PARAMETER_T {
-  /// `int` The number of shots to take.
+  /// `size_t` The number of shots to take.
   QDMI_JOB_PARAMETER_SHOTS_NUM,
   /**
    * @brief This property is reserved for a custom property.
@@ -264,7 +268,7 @@ enum QDMI_JOB_RESULT_T {
    */
   QDMI_JOB_RESULT_HIST_KEYS,
   /**
-   * @brief `int*` (int list) The values for the histogram of the results.
+   * @brief `size_t*` (int list) The values for the histogram of the results.
    * @see QDMI_JOB_RESULT_HIST_KEY
    */
   QDMI_JOB_RESULT_HIST_VALUES,
@@ -290,6 +294,8 @@ enum QDMI_JOB_RESULT_T {
    */
   QDMI_JOB_RESULT_MAX
 };
+
+// NOLINTEND(performance-enum-size)
 
 #ifdef __cplusplus
 } // extern "C"
