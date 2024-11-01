@@ -21,7 +21,9 @@ typedef struct QDMI_Job_impl_d {
   QDMI_Job_Status status;
   size_t num_shots;
   char *results;
+  size_t results_length; // includes null terminator
   double *state_vec;
+  size_t state_vec_length;
 } QDMI_Job_impl_t;
 
 typedef struct QDMI_Site_impl_d {
@@ -336,21 +338,23 @@ int QDMI_control_submit_job_dev(QDMI_Job job) {
   size_t num_qubits = 0;
   QDMI_query_device_property_dev(QDMI_DEVICE_PROPERTY_QUBITSNUM, sizeof(size_t),
                                  &num_qubits, NULL);
-  job->results = (char *)malloc(job->num_shots * (num_qubits + 1));
+  job->results_length = job->num_shots * (num_qubits + 1);
+  job->results = (char *)malloc(job->results_length);
   for (size_t i = 0; i < job->num_shots; ++i) {
-    // generate random 5-bit string
-    for (size_t j = 0; j < 5; ++j) {
+    // generate random bitstring
+    for (size_t j = 0; j < num_qubits; ++j) {
       *(job->results + (i * (num_qubits + 1) + j)) = (rand() % 2) ? '1' : '0';
     }
     if (i < job->num_shots - 1) {
       *(job->results + ((i + 1) * (num_qubits + 1) - 1)) = ',';
     }
   }
-  *(job->results + (job->num_shots * (num_qubits + 1) - 1)) = '\0';
+  *(job->results + (job->results_length - 1)) = '\0';
   // Generate random complex numbers and calculate the norm
-  job->state_vec = (double *)malloc((2ULL << num_qubits) * sizeof(double));
+  job->state_vec_length = 2ULL << num_qubits;
+  job->state_vec = (double *)malloc(job->state_vec_length * sizeof(double));
   double norm = 0.0;
-  for (size_t i = 0; i < 1ULL << num_qubits; ++i) {
+  for (size_t i = 0; i < job->state_vec_length / 2; ++i) {
     const double real_part = (((double)rand() / RAND_MAX) * 2.0) - 1.0;
     const double imag_part = (((double)rand() / RAND_MAX) * 2.0) - 1.0;
     norm += real_part * real_part + imag_part * imag_part;
@@ -359,7 +363,7 @@ int QDMI_control_submit_job_dev(QDMI_Job job) {
   }
   // Normalize the vector
   norm = sqrt(norm);
-  for (size_t i = 0; i < 2ULL << num_qubits; ++i) {
+  for (size_t i = 0; i < job->state_vec_length; ++i) {
     // NOLINTNEXTLINE(*-core.UndefinedBinaryOperatorResult)
     job->state_vec[i] = job->state_vec[i] / norm;
   }
@@ -405,27 +409,22 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
     return QDMI_ERROR_INVALIDARGUMENT;
   }
   if (result == QDMI_JOB_RESULT_SHOTS) {
-    size_t num_qubits = 0;
-    QDMI_query_device_property_dev(QDMI_DEVICE_PROPERTY_QUBITSNUM,
-                                   sizeof(size_t), &num_qubits, NULL);
+    const size_t req_size = job->results_length;
     if (data != NULL) {
-      if (size < job->num_shots * (num_qubits + 1)) {
+      if (size < req_size) {
         return QDMI_ERROR_INVALIDARGUMENT;
       }
-      strcpy((char *)data, job->results);
+      strncpy((char *)data, job->results, req_size);
     }
     if ((size_ret) != NULL) {
-      *(size_ret) = job->num_shots * (num_qubits + 1);
+      *(size_ret) = req_size;
     }
     return QDMI_SUCCESS;
   }
   if (result == QDMI_JOB_RESULT_HIST_KEYS ||
       result == QDMI_JOB_RESULT_HIST_VALUES) {
-    size_t raw_size = 0;
-    QDMI_control_get_data_dev(job, QDMI_JOB_RESULT_SHOTS, 0, NULL, &raw_size);
-    char *raw_data = malloc(raw_size);
-    QDMI_control_get_data_dev(job, QDMI_JOB_RESULT_SHOTS, raw_size, raw_data,
-                              NULL);
+    char *raw_data = malloc(job->results_length);
+    strncpy(raw_data, job->results, job->results_length);
     // split the string at the commas
     char **raw_data_split = (char **)malloc(sizeof(char *) * job->num_shots);
     char *token = strtok(raw_data, ",");
@@ -439,15 +438,14 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
     qsort((void *)raw_data_split, job->num_shots, sizeof(char *),
           QDMI_Compare_results);
     // Count unique elements
+    const size_t num_qubits = strlen(raw_data_split[0]);
+
     size_t count = 1; // First element is always unique
     for (size_t j = 1; j < job->num_shots; ++j) {
-      if (strcmp(raw_data_split[j], raw_data_split[j - 1]) != 0) {
+      if (strncmp(raw_data_split[j], raw_data_split[j - 1], num_qubits) != 0) {
         count++;
       }
     }
-    size_t num_qubits = 0;
-    QDMI_query_device_property_dev(QDMI_DEVICE_PROPERTY_QUBITSNUM,
-                                   sizeof(size_t), &num_qubits, NULL);
 
     if (result == QDMI_JOB_RESULT_HIST_KEYS) {
       const size_t req_size = count * (num_qubits + 1);
@@ -462,12 +460,13 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
         }
 
         char *data_ptr = data;
-        strcpy(data_ptr, raw_data_split[0]);
+        strncpy(data_ptr, raw_data_split[0], num_qubits);
         data_ptr += num_qubits;
         for (size_t j = 1; j < job->num_shots; ++j) {
-          if (strcmp(raw_data_split[j], raw_data_split[j - 1]) != 0) {
+          if (strncmp(raw_data_split[j], raw_data_split[j - 1], num_qubits) !=
+              0) {
             *data_ptr++ = ',';
-            strcpy(data_ptr, raw_data_split[j]);
+            strncpy(data_ptr, raw_data_split[j], num_qubits);
             data_ptr += num_qubits;
           }
         }
@@ -503,105 +502,104 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
     return QDMI_SUCCESS;
   }
   if (result == QDMI_JOB_RESULT_STATEVECTOR_DENSE) {
-    size_t num_qubits = 0;
-    QDMI_query_device_property_dev(QDMI_DEVICE_PROPERTY_QUBITSNUM,
-                                   sizeof(size_t), &num_qubits, NULL);
+    const size_t req_size = job->state_vec_length * sizeof(double);
     if (data != NULL) {
-      if (size < (2ULL << num_qubits) * sizeof(double)) {
+      if (size < req_size) {
         return QDMI_ERROR_INVALIDARGUMENT;
       }
-      memcpy(data, job->state_vec, (2ULL << num_qubits) * sizeof(double));
+      memcpy(data, job->state_vec, req_size);
     }
     if ((size_ret) != NULL) {
-      *(size_ret) = (2ULL << num_qubits) * sizeof(double);
+      *(size_ret) = req_size;
     }
     return QDMI_SUCCESS;
   }
-  if (result == QDMI_JOB_RESULT_STATEVECTOR_SPARSE_KEYS) {
-    size_t dense_size = 0;
-    QDMI_control_get_data_dev(job, QDMI_JOB_RESULT_STATEVECTOR_DENSE, 0, NULL,
-                              &dense_size);
-    double *dense_data = malloc(dense_size);
-    QDMI_control_get_data_dev(job, QDMI_JOB_RESULT_STATEVECTOR_DENSE,
-                              dense_size, dense_data, NULL);
-    size_t num_qubits = 0;
-    QDMI_query_device_property_dev(QDMI_DEVICE_PROPERTY_QUBITSNUM,
-                                   sizeof(size_t), &num_qubits, NULL);
+  if (result == QDMI_JOB_RESULT_STATEVECTOR_SPARSE_KEYS ||
+      result == QDMI_JOB_RESULT_STATEVECTOR_SPARSE_VALUES ||
+      result == QDMI_JOB_RESULT_PROBABILITIES_SPARSE_KEYS ||
+      result == QDMI_JOB_RESULT_PROBABILITIES_SPARSE_VALUES) {
+    const size_t length = job->state_vec_length / 2;
+    const size_t num_qubits = (size_t)log2((double)length);
     // count non-zero elements
     size_t count = 0;
-    for (size_t i = 0; i < 1ULL << num_qubits; i++) {
-      if (dense_data[2 * i] != 0.0 || dense_data[(2 * i) + 1] != 0.0) {
+    for (size_t i = 0; i < length; ++i) {
+      if (job->state_vec[2 * i] != 0.0 || job->state_vec[(2 * i) + 1] != 0.0) {
         count++;
       }
     }
-    if (data != NULL) {
-      if (size < count * (num_qubits + 1)) {
-        free(dense_data);
-        return QDMI_ERROR_INVALIDARGUMENT;
-      }
-      char *data_ptr = data;
-      for (size_t i = 0; i < 1ULL << num_qubits; ++i) {
-        if (dense_data[2 * i] != 0.0 || dense_data[(2 * i) + 1] != 0.0) {
-          for (size_t j = 0; j < num_qubits; j++) {
-            *data_ptr++ = (i & (1 << (num_qubits - j - 1))) ? '1' : '0';
+    if (result == QDMI_JOB_RESULT_STATEVECTOR_SPARSE_KEYS ||
+        result == QDMI_JOB_RESULT_PROBABILITIES_SPARSE_KEYS) {
+      const size_t req_size = count * (num_qubits + 1);
+      if (data != NULL) {
+        if (size < req_size) {
+          return QDMI_ERROR_INVALIDARGUMENT;
+        }
+        char *data_ptr = data;
+        for (size_t i = 0; i < length; ++i) {
+          if (job->state_vec[2 * i] != 0.0 ||
+              job->state_vec[(2 * i) + 1] != 0.0) {
+            for (size_t j = 0; j < num_qubits; j++) {
+              *data_ptr++ = (i & (1ULL << (num_qubits - j - 1))) ? '1' : '0';
+            }
+            *data_ptr++ = ',';
           }
-          *data_ptr++ = ',';
+        }
+        *(data_ptr - 1) = '\0'; // replace the last comma with a null terminator
+      }
+      if ((size_ret) != NULL) {
+        *(size_ret) = req_size;
+      }
+      return QDMI_SUCCESS;
+    }
+    if (result == QDMI_JOB_RESULT_STATEVECTOR_SPARSE_VALUES) {
+      const size_t req_size = count * 2 * sizeof(double);
+      if (data != NULL) {
+        if (size < req_size) {
+          return QDMI_ERROR_INVALIDARGUMENT;
+        }
+        double *data_ptr = data;
+        for (size_t i = 0; i < length; ++i) {
+          if (job->state_vec[2 * i] != 0.0 ||
+              job->state_vec[(2 * i) + 1] != 0.0) {
+            *data_ptr++ = job->state_vec[2 * i];
+            *data_ptr++ = job->state_vec[(2 * i) + 1];
+          }
         }
       }
-      *(data_ptr - 1) = '\0'; // replace the last comma with a null terminator
-    }
-    if ((size_ret) != NULL) {
-      *(size_ret) = count * (num_qubits + 1);
-    }
-    free(dense_data);
-    return QDMI_SUCCESS;
-  }
-  if (result == QDMI_JOB_RESULT_STATEVECTOR_SPARSE_VALUES) {
-    size_t dense_size = 0;
-    QDMI_control_get_data_dev(job, QDMI_JOB_RESULT_STATEVECTOR_DENSE, 0, NULL,
-                              &dense_size);
-    double *dense_data = malloc(dense_size);
-    QDMI_control_get_data_dev(job, QDMI_JOB_RESULT_STATEVECTOR_DENSE,
-                              dense_size, dense_data, NULL);
-    size_t num_qubits = 0;
-    QDMI_query_device_property_dev(QDMI_DEVICE_PROPERTY_QUBITSNUM,
-                                   sizeof(size_t), &num_qubits, NULL);
-    // count non-zero elements
-    size_t count = 0;
-    for (size_t i = 0; i < 1ULL << num_qubits; ++i) {
-      if (dense_data[2 * i] != 0.0 || dense_data[(2 * i) + 1] != 0.0) {
-        count++;
+      if ((size_ret) != NULL) {
+        *(size_ret) = req_size;
       }
-    }
-    if (data != NULL) {
-      if (size < count * 2 * sizeof(double)) {
-        free(dense_data);
-        return QDMI_ERROR_INVALIDARGUMENT;
-      }
-      double *data_ptr = data;
-      for (size_t i = 0; i < 1ULL << num_qubits; ++i) {
-        if (dense_data[2 * i] != 0.0 || dense_data[(2 * i) + 1] != 0.0) {
-          *data_ptr++ = dense_data[2 * i];
-          *data_ptr++ = dense_data[(2 * i) + 1];
+    } else {
+      const size_t req_size = count * sizeof(double);
+      if (data != NULL) {
+        if (size < req_size) {
+          return QDMI_ERROR_INVALIDARGUMENT;
+        }
+        double *data_ptr = data;
+        for (size_t i = 0; i < length; ++i) {
+          if (job->state_vec[2 * i] != 0.0 ||
+              job->state_vec[(2 * i) + 1] != 0.0) {
+            *data_ptr++ =
+                (job->state_vec[2 * i] * job->state_vec[2 * i]) +
+                (job->state_vec[(2 * i) + 1] * job->state_vec[(2 * i) + 1]);
+          }
         }
       }
+      if ((size_ret) != NULL) {
+        *(size_ret) = req_size;
+      }
     }
-    if ((size_ret) != NULL) {
-      *(size_ret) = count * 2 * sizeof(double);
-    }
-    free(dense_data);
     return QDMI_SUCCESS;
   }
   if (result == QDMI_JOB_RESULT_PROBABILITIES_DENSE) {
-    size_t num_qubits = 0;
-    QDMI_query_device_property_dev(QDMI_DEVICE_PROPERTY_QUBITSNUM,
-                                   sizeof(size_t), &num_qubits, NULL);
+    const size_t length = job->state_vec_length / 2;
+    const size_t req_size = length * sizeof(double);
     if (data != NULL) {
-      if (size < (1ULL << num_qubits) * sizeof(double)) {
+      if (size < req_size) {
         return QDMI_ERROR_INVALIDARGUMENT;
       }
       double *data_ptr = data;
-      for (size_t i = 0; i < 1ULL << num_qubits; ++i) {
+      for (size_t i = 0; i < length; ++i) {
         // Calculate the probability of the state
         *data_ptr++ =
             (job->state_vec[2 * i] * job->state_vec[2 * i]) +
@@ -609,82 +607,8 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
       }
     }
     if ((size_ret) != NULL) {
-      *(size_ret) = (1ULL << num_qubits) * sizeof(double);
+      *(size_ret) = req_size;
     }
-    return QDMI_SUCCESS;
-  }
-  if (result == QDMI_JOB_RESULT_PROBABILITIES_SPARSE_KEYS) {
-    size_t dense_size = 0;
-    QDMI_control_get_data_dev(job, QDMI_JOB_RESULT_PROBABILITIES_DENSE, 0, NULL,
-                              &dense_size);
-    double *dense_data = malloc(dense_size);
-    QDMI_control_get_data_dev(job, QDMI_JOB_RESULT_PROBABILITIES_DENSE,
-                              dense_size, dense_data, NULL);
-    size_t num_qubits = 0;
-    QDMI_query_device_property_dev(QDMI_DEVICE_PROPERTY_QUBITSNUM,
-                                   sizeof(size_t), &num_qubits, NULL);
-    // count non-zero elements
-    size_t count = 0;
-    for (size_t i = 0; i < 1ULL << num_qubits; ++i) {
-      if (dense_data[i] != 0.0) {
-        count++;
-      }
-    }
-    if (data != NULL) {
-      if (size < count * (num_qubits + 1)) {
-        free(dense_data);
-        return QDMI_ERROR_INVALIDARGUMENT;
-      }
-      char *data_ptr = data;
-      for (size_t i = 0; i < 1ULL << num_qubits; ++i) {
-        if (dense_data[i] != 0.0) {
-          for (size_t j = 0; j < num_qubits; j++) {
-            *data_ptr++ = (i & (1 << (num_qubits - j - 1))) ? '1' : '0';
-          }
-          *data_ptr++ = ',';
-        }
-      }
-      *(data_ptr - 1) = '\0'; // replace the last comma with a null terminator
-    }
-    if ((size_ret) != NULL) {
-      *(size_ret) = count * (num_qubits + 1);
-    }
-    free(dense_data);
-    return QDMI_SUCCESS;
-  }
-  if (result == QDMI_JOB_RESULT_PROBABILITIES_SPARSE_VALUES) {
-    size_t dense_size = 0;
-    QDMI_control_get_data_dev(job, QDMI_JOB_RESULT_PROBABILITIES_DENSE, 0, NULL,
-                              &dense_size);
-    double *dense_data = malloc(dense_size);
-    QDMI_control_get_data_dev(job, QDMI_JOB_RESULT_PROBABILITIES_DENSE,
-                              dense_size, dense_data, NULL);
-    size_t num_qubits = 0;
-    QDMI_query_device_property_dev(QDMI_DEVICE_PROPERTY_QUBITSNUM,
-                                   sizeof(size_t), &num_qubits, NULL);
-    // count non-zero elements
-    size_t count = 0;
-    for (size_t i = 0; i < 1ULL << num_qubits; ++i) {
-      if (dense_data[i] != 0.0) {
-        count++;
-      }
-    }
-    if (data != NULL) {
-      if (size < count * sizeof(double)) {
-        free(dense_data);
-        return QDMI_ERROR_INVALIDARGUMENT;
-      }
-      double *data_ptr = data;
-      for (size_t i = 0; i < 1ULL << num_qubits; ++i) {
-        if (dense_data[i] != 0.0) {
-          *data_ptr++ = dense_data[i];
-        }
-      }
-    }
-    if ((size_ret) != NULL) {
-      *(size_ret) = count * sizeof(double);
-    }
-    free(dense_data);
     return QDMI_SUCCESS;
   }
   return QDMI_ERROR_NOTSUPPORTED;
