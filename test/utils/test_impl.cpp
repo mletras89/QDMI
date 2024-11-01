@@ -19,9 +19,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <string>
 
 void QDMIImplementationTest::SetUp() {
-  auto param = GetParam();
-  library_name = param.first;
-  prefix = param.second;
+  library_name = GetParam();
 
   // Get the current test info
   const ::testing::TestInfo *test_info =
@@ -33,9 +31,9 @@ void QDMIImplementationTest::SetUp() {
 
   config_file_name = "qdmi_" + test_name + ".conf";
   std::ofstream conf_file(config_file_name);
-  conf_file << library_name << Shared_library_file_extension() << " " << prefix
+  conf_file << library_name << Shared_library_file_extension()
             << " read_write\n";
-  conf_file << library_name << Shared_library_file_extension() << " " << prefix
+  conf_file << library_name << Shared_library_file_extension()
             << " read_only\n";
   conf_file.close();
 

@@ -30,8 +30,7 @@ constexpr const char *Shared_library_file_extension() {
 #endif
 }
 
-class QDMIImplementationTest
-    : public ::testing::TestWithParam<std::pair<std::string, std::string>> {
+class QDMIImplementationTest : public ::testing::TestWithParam<std::string> {
 protected:
   void SetUp() override;
 
