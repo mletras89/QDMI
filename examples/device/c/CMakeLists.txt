@@ -10,23 +10,14 @@
 set(prefix "C")
 add_library(c_device SHARED device.c)
 target_link_libraries(c_device PRIVATE qdmi::qdmi qdmi::project_warnings)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../prefix.map.in prefix.map @ONLY)
-if(APPLE)
-  add_custom_command(
-    TARGET c_device
-    PRE_LINK
-    COMMAND ld ARGS -r -alias_list ${CMAKE_CURRENT_BINARY_DIR}/prefix.map -o
-            device.o $<TARGET_OBJECTS:c_device>
-    COMMAND ${CMAKE_COMMAND} -E remove $<TARGET_OBJECTS:c_device>
-    COMMAND ${CMAKE_COMMAND} -E rename device.o $<TARGET_OBJECTS:c_device>)
-elseif(LINUX)
-  add_custom_command(
-    TARGET c_device
-    PRE_LINK
-    COMMAND objcopy ARGS --redefine-syms=${CMAKE_CURRENT_BINARY_DIR}/prefix.map
-            $<TARGET_OBJECTS:c_device>)
-else()
-  message(FATAL_ERROR "Unsupported platform")
-endif()
-target_include_directories(c_device PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+# configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../prefix.map.in prefix.map @ONLY)
+# if(APPLE) add_custom_command( TARGET c_device PRE_LINK COMMAND ld ARGS -r
+# -alias_list ${CMAKE_CURRENT_BINARY_DIR}/prefix.map -o device.o
+# $<TARGET_OBJECTS:c_device> COMMAND ${CMAKE_COMMAND} -E remove
+# $<TARGET_OBJECTS:c_device> COMMAND ${CMAKE_COMMAND} -E rename device.o
+# $<TARGET_OBJECTS:c_device>) elseif(LINUX) add_custom_command( TARGET c_device
+# PRE_LINK COMMAND objcopy ARGS
+# --redefine-syms=${CMAKE_CURRENT_BINARY_DIR}/prefix.map
+# $<TARGET_OBJECTS:c_device>) else() message(FATAL_ERROR "Unsupported platform")
+# endif()
 add_library(qdmi::c_device ALIAS c_device)

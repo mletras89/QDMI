@@ -107,22 +107,6 @@ namespace {
  */
 // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
 std::vector<std::shared_ptr<QDMI_Device_impl_d>> device_list;
-
-bool Is_path_allowed(const std::filesystem::path &path) {
-  // Define the whitelist of allowed directories
-  const std::vector<std::filesystem::path> whitelist = {
-      std::filesystem::current_path(),
-      std::filesystem::path(std::getenv("HOME"))};
-
-  // Resolve the provided path to its absolute form
-  std::filesystem::path resolved_path = std::filesystem::absolute(path);
-
-  // Check if the resolved path starts with any of the whitelisted directories
-  return std::any_of(
-      whitelist.begin(), whitelist.end(), [&](const auto &allowed_path) {
-        return resolved_path.string().rfind(allowed_path.string(), 0) == 0;
-      });
-}
 } // namespace
 
 #define LOAD_SYMBOL(device, prefix, symbol)                                    \
@@ -134,21 +118,21 @@ int QDMI_Driver_init() {
   // Load the C device library
   auto c_device = std::make_shared<QDMI_Device_impl_d>();
   c_device->mode = QDMI_DEVICE_MODE_READWRITE;
-  LOAD_SYMBOL(c_device, UPC, control_finalize);
-  LOAD_SYMBOL(c_device, UPC, query_get_sites);
-  LOAD_SYMBOL(c_device, UPC, query_get_operations);
-  LOAD_SYMBOL(c_device, UPC, query_device_property);
-  LOAD_SYMBOL(c_device, UPC, query_site_property);
-  LOAD_SYMBOL(c_device, UPC, query_operation_property);
-  LOAD_SYMBOL(c_device, UPC, control_create_job);
-  LOAD_SYMBOL(c_device, UPC, control_set_parameter);
-  LOAD_SYMBOL(c_device, UPC, control_submit_job);
-  LOAD_SYMBOL(c_device, UPC, control_cancel);
-  LOAD_SYMBOL(c_device, UPC, control_check);
-  LOAD_SYMBOL(c_device, UPC, control_wait);
-  LOAD_SYMBOL(c_device, UPC, control_get_data);
-  LOAD_SYMBOL(c_device, UPC, control_free_job);
-  LOAD_SYMBOL(c_device, UPC, control_initialize);
+  LOAD_SYMBOL(c_device, C, control_finalize);
+  LOAD_SYMBOL(c_device, C, query_get_sites);
+  LOAD_SYMBOL(c_device, C, query_get_operations);
+  LOAD_SYMBOL(c_device, C, query_device_property);
+  LOAD_SYMBOL(c_device, C, query_site_property);
+  LOAD_SYMBOL(c_device, C, query_operation_property);
+  LOAD_SYMBOL(c_device, C, control_create_job);
+  LOAD_SYMBOL(c_device, C, control_set_parameter);
+  LOAD_SYMBOL(c_device, C, control_submit_job);
+  LOAD_SYMBOL(c_device, C, control_cancel);
+  LOAD_SYMBOL(c_device, C, control_check);
+  LOAD_SYMBOL(c_device, C, control_wait);
+  LOAD_SYMBOL(c_device, C, control_get_data);
+  LOAD_SYMBOL(c_device, C, control_free_job);
+  LOAD_SYMBOL(c_device, C, control_initialize);
   // initialize the device
   c_device->control_initialize();
 

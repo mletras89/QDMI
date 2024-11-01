@@ -442,7 +442,7 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
         *data_ptr++ = ',';
       }
       int k = 1;
-      for (int j = 1; j < c_job->num_shots; j++) {
+      for (int j = 1; j < job->num_shots; j++) {
         if (strcmp(raw_data_split[j], raw_data_split[j - 1]) != 0) {
           strcpy(data_ptr, raw_data_split[j]);
           data_ptr += num_qubits;
@@ -497,7 +497,7 @@ int QDMI_control_get_data_dev(QDMI_Job job, const QDMI_Job_Result result,
       }
       int n = 1;
       int *data_ptr = data;
-      for (size_t j = 1; j < c_job->num_shots; j++) {
+      for (size_t j = 1; j < job->num_shots; j++) {
         if (strcmp(raw_data_split[j], raw_data_split[j - 1]) != 0) {
           *data_ptr++ = n;
           n = 1;
