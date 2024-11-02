@@ -15,17 +15,30 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # accordingly.
 set(QDMI_PREFIX "CXX")
 string(TOLOWER ${QDMI_PREFIX} QDMI_prefix)
+file(COPY ${QDMI_INCLUDE_BUILD_DIR} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 configure_file(${CMAKE_SOURCE_DIR}/utils/prefix_defs.h.in
                ${CMAKE_CURRENT_BINARY_DIR}/prefix_defs.h @ONLY)
 set(QDMI_PREFIX_HEADER "${QDMI_prefix}_device.h")
 execute_process(
-  COMMAND
-    ${CMAKE_C_COMPILER} -CC -I${QDMI_INCLUDE_BUILD_DIR} -include prefix_defs.h
-    -E ${QDMI_INCLUDE_BUILD_DIR}/qdmi/device.h -o ${QDMI_PREFIX_HEADER}
+  COMMAND find include -type f -name "*.h" -exec sed -i
+          "/#ifdef __cplusplus/,/#endif/{s/#/--/;}" {} \;
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+execute_process(
+  COMMAND ${CMAKE_C_COMPILER} -CC -I./include -include prefix_defs.h -E
+          ${QDMI_INCLUDE_BUILD_DIR}/qdmi/device.h -o ${QDMI_PREFIX_HEADER}
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 execute_process(COMMAND sed -i "/^#/d" ${QDMI_PREFIX_HEADER}
                 WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+execute_process(COMMAND sed -i "/^$/d" ${QDMI_PREFIX_HEADER}
+                WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+execute_process(COMMAND sed -i "s/^--/#/" ${QDMI_PREFIX_HEADER}
+                WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+execute_process(
+  COMMAND sed -i "/\\/\\*\\* @file/,/\\*\\//{/.*/d;}" ${QDMI_PREFIX_HEADER}
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 execute_process(COMMAND ${CMAKE_COMMAND} -E remove prefix_defs.h
+                WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory include
                 WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 add_library(cxx_device SHARED device.cpp)
 target_link_libraries(cxx_device PRIVATE qdmi::project_warnings)
