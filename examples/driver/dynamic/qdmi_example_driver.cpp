@@ -111,10 +111,10 @@ namespace {
 // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
 std::vector<std::shared_ptr<QDMI_Device_impl_d>> device_list;
 
-#define LOAD_SYMBOL(device, symbol)                                            \
+#define LOAD_SYMBOL(device, prefix, symbol)                                    \
   {                                                                            \
     std::stringstream symbol_name_builder;                                     \
-    symbol_name_builder << "QDMI_" << #symbol << "_dev";                       \
+    symbol_name_builder << (prefix) << "_QDMI_" << #symbol << "_dev";          \
     const std::string &symbol_name = symbol_name_builder.str();                \
     (device).symbol = reinterpret_cast<decltype((device).symbol)>(             \
         dlsym((device).lib_handle, symbol_name.c_str()));                      \
@@ -126,7 +126,8 @@ std::vector<std::shared_ptr<QDMI_Device_impl_d>> device_list;
   }
 
 std::shared_ptr<QDMI_Device_impl_d>
-QDMI_Device_open(const std::string &lib_name, const QDMI_Device_Mode mode) {
+QDMI_Device_open(const std::string &lib_name, const std::string &prefix,
+                 const QDMI_Device_Mode mode) {
   auto device_handle = std::make_shared<QDMI_Device_impl_d>();
   auto &device = *device_handle;
   device.mode = mode;
@@ -139,21 +140,21 @@ QDMI_Device_open(const std::string &lib_name, const QDMI_Device_Mode mode) {
     // NOLINTBEGIN(cppcoreguidelines-pro-type-reinterpret-cast)
 
     // load the function symbols from the dynamic library
-    LOAD_SYMBOL(device, control_finalize)
-    LOAD_SYMBOL(device, query_get_sites)
-    LOAD_SYMBOL(device, query_get_operations)
-    LOAD_SYMBOL(device, query_device_property)
-    LOAD_SYMBOL(device, query_site_property)
-    LOAD_SYMBOL(device, query_operation_property)
-    LOAD_SYMBOL(device, control_create_job)
-    LOAD_SYMBOL(device, control_set_parameter)
-    LOAD_SYMBOL(device, control_submit_job)
-    LOAD_SYMBOL(device, control_cancel)
-    LOAD_SYMBOL(device, control_check)
-    LOAD_SYMBOL(device, control_wait)
-    LOAD_SYMBOL(device, control_get_data)
-    LOAD_SYMBOL(device, control_free_job)
-    LOAD_SYMBOL(device, control_initialize)
+    LOAD_SYMBOL(device, prefix, control_finalize)
+    LOAD_SYMBOL(device, prefix, query_get_sites)
+    LOAD_SYMBOL(device, prefix, query_get_operations)
+    LOAD_SYMBOL(device, prefix, query_device_property)
+    LOAD_SYMBOL(device, prefix, query_site_property)
+    LOAD_SYMBOL(device, prefix, query_operation_property)
+    LOAD_SYMBOL(device, prefix, control_create_job)
+    LOAD_SYMBOL(device, prefix, control_set_parameter)
+    LOAD_SYMBOL(device, prefix, control_submit_job)
+    LOAD_SYMBOL(device, prefix, control_cancel)
+    LOAD_SYMBOL(device, prefix, control_check)
+    LOAD_SYMBOL(device, prefix, control_wait)
+    LOAD_SYMBOL(device, prefix, control_get_data)
+    LOAD_SYMBOL(device, prefix, control_free_job)
+    LOAD_SYMBOL(device, prefix, control_initialize)
 
     // NOLINTEND(cppcoreguidelines-pro-type-reinterpret-cast)
   } catch (const std::exception &e) {
@@ -209,8 +210,9 @@ int QDMI_Driver_init() {
 
     std::istringstream iss(line);
     std::string lib_name;
+    std::string prefix;
     std::string mode_str;
-    if (!(iss >> lib_name >> mode_str)) {
+    if (!(iss >> lib_name >> prefix >> mode_str)) {
       std::cerr << "Invalid configuration line: " << line << "\n";
       continue;
     }
@@ -226,7 +228,7 @@ int QDMI_Driver_init() {
     }
 
     try {
-      device_list.emplace_back(QDMI_Device_open(lib_name, mode));
+      device_list.emplace_back(QDMI_Device_open(lib_name, prefix, mode));
     } catch (const std::exception &e) {
       std::cerr << "Failed to open device: " << e.what() << "\n";
       return QDMI_ERROR_FATAL;
