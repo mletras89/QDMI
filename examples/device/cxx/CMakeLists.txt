@@ -13,15 +13,15 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # NOTE: If you change the target name, the name of the shared library will also
 # change. Hence, in the test you have to adopt the name of the shared library
 # accordingly.
-set(PREFIX "CXX")
+set(QDMI_PREFIX "CXX")
+string(TOLOWER ${QDMI_PREFIX} QDMI_prefix)
 configure_file(${CMAKE_SOURCE_DIR}/utils/prefix_defs.h.in
                ${CMAKE_CURRENT_BINARY_DIR}/prefix_defs.h @ONLY)
-string(TOLOWER ${PREFIX} prefix)
-set(PREFIX_HEADER "${prefix}_device.h")
+set(QDMI_PREFIX_HEADER "${QDMI_prefix}_device.h")
 execute_process(
   COMMAND
     ${CMAKE_C_COMPILER} -CC -I${QDMI_INCLUDE_BUILD_DIR} -include prefix_defs.h
-    -E ${QDMI_INCLUDE_BUILD_DIR}/qdmi/device.h -o ${PREFIX_HEADER}
+    -E ${QDMI_INCLUDE_BUILD_DIR}/qdmi/device.h -o ${QDMI_PREFIX_HEADER}
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 execute_process(COMMAND ${CMAKE_COMMAND} -E remove prefix_defs.h
                 WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
