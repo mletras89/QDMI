@@ -12,14 +12,13 @@ string(TOLOWER ${QDMI_PREFIX} QDMI_prefix)
 configure_file(${CMAKE_SOURCE_DIR}/utils/prefix_defs.h.in
                ${CMAKE_CURRENT_BINARY_DIR}/prefix_defs.h @ONLY)
 set(QDMI_PREFIX_HEADER "${QDMI_prefix}_device.h")
-execute_process(
-  COMMAND
-    ${CMAKE_C_COMPILER} -CC -I${QDMI_INCLUDE_BUILD_DIR} -include prefix_defs.h
-    -E ${QDMI_INCLUDE_BUILD_DIR}/qdmi/device.h -o ${QDMI_PREFIX_HEADER}
-  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+execute_process(COMMAND sed -i "/^#/d" ${QDMI_PREFIX_HEADER}
+                WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+execute_process(COMMAND ${CMAKE_COMMAND} -E remove prefix_defs.h
+                WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 execute_process(COMMAND ${CMAKE_COMMAND} -E remove prefix_defs.h
                 WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 add_library(c_device SHARED device.c)
-target_link_libraries(c_device PRIVATE qdmi::qdmi qdmi::project_warnings)
+target_link_libraries(c_device PRIVATE qdmi::project_warnings)
 target_include_directories(c_device PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 add_library(qdmi::c_device ALIAS c_device)

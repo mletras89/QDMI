@@ -1,3 +1,4 @@
+#define __cplusplus
 #define QDMI_control_cancel_dev @QDMI_PREFIX@_QDMI_control_cancel_dev
 #define QDMI_control_check_dev @QDMI_PREFIX@_QDMI_control_check_dev
 #define QDMI_control_create_job_dev @QDMI_PREFIX@_QDMI_control_create_job_dev

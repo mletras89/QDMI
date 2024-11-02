@@ -36,7 +36,7 @@ typedef struct C_QDMI_Operation_impl_d {
  * @note This function is considered private and should not be used outside of
  * this file. Hence, it is not part of any header file.
  */
-static QDMI_Device_Status *QDMI_get_device_status() {
+static QDMI_Device_Status *QDMI_get_device_status(void) {
   static QDMI_Device_Status device_status = QDMI_DEVICE_STATUS_OFFLINE;
   return &device_status;
 }
@@ -57,7 +57,7 @@ void C_QDMI_set_device_status(QDMI_Device_Status status) {
  * @note This function is considered private and should not be used outside of
  * this file. Hence, it is not part of any header file.
  */
-QDMI_Device_Status C_QDMI_read_device_status() {
+QDMI_Device_Status C_QDMI_read_device_status(void) {
   return *QDMI_get_device_status();
 }
 

@@ -23,8 +23,8 @@ configure_file(${QDMI_TEST_DIR}/utils/test_defs.cpp.in
                ${CMAKE_CURRENT_BINARY_DIR}/test_defs.cpp @ONLY)
 add_executable(qdmi_test_my_device_defs
                ${CMAKE_CURRENT_BINARY_DIR}/test_defs.cpp)
-target_link_libraries(qdmi_test_my_device_defs
-                      PRIVATE qdmi::qdmi qdmi::my_device qdmi::project_warnings)
+target_link_libraries(qdmi_test_my_device_defs PRIVATE qdmi::my_device
+                                                       qdmi::project_warnings)
 
 # ------------------------------------------------------------------------------
 # Functional Tests
