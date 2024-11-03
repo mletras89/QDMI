@@ -154,6 +154,7 @@ TEST_F(QDMIImplementationTest, QueryDeviceNameImplemented) {
             QDMI_SUCCESS)
       << "Devices must provide a name";
   ASSERT_FALSE(value.empty()) << "Devices must provide a name";
+  std::cout << "Device name: " << value << std::endl;
 }
 
 TEST_F(QDMIImplementationTest, QueryDeviceVersionImplemented) {
