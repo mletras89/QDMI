@@ -9,7 +9,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  * @details This file can be used as a template for implementing a device in C.
  */
 
-#include "c_device.h"
+#include "c_qdmi/device.h"
 
 #include <stddef.h>
 #include <stdlib.h>

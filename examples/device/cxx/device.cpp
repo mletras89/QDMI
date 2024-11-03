@@ -10,7 +10,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  * C++. For more implemented functions, see also the \ref device5.c file.
  */
 
-#include "cxx_device.h"
+#include "cxx_qdmi/device.h"
 
 #include <algorithm>
 #include <array>

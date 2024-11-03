@@ -11,7 +11,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  * For the documentation of the functions, see the official documentation.
  */
 
-#include "my_device.h"
+#include "my_qdmi/device.h"
 
 // The following line ignores the unused parameters in the functions.
 // Please remove the following code block after populating the functions.
