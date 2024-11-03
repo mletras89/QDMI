@@ -93,7 +93,7 @@ const static std::unordered_map<const CXX_QDMI_Operation_impl_d *, double>
 
 struct CXX_QDMI_Pair_hash {
   template <class T1, class T2>
-  std::size_t operator()(const std::pair<T1, T2> &p) const {
+  size_t operator()(const std::pair<T1, T2> &p) const {
     auto hash1 = std::hash<T1>{}(p.first);
     auto hash2 = std::hash<T2>{}(p.second);
     return hash1 ^ hash2;
@@ -481,7 +481,7 @@ int CXX_QDMI_control_get_data_dev(CXX_QDMI_Job job,
     return QDMI_SUCCESS;
   }
   if (result == QDMI_JOB_RESULT_STATEVECTOR_DENSE) {
-    const std::size_t req_size = job->state_vec.size() * 2 * sizeof(double);
+    const size_t req_size = job->state_vec.size() * 2 * sizeof(double);
     if (data != nullptr) {
       if (size < req_size) {
         return QDMI_ERROR_INVALIDARGUMENT;

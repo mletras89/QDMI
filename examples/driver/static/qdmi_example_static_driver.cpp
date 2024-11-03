@@ -16,6 +16,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include "qdmi/driver.h"
 
 #include <algorithm>
+#include <array>
 #include <cctype>
 #include <cstdlib>
 #include <exception>
@@ -26,7 +27,9 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <string_view>
 #include <unordered_map>
+#include <utility>
 #include <vector>
 
 /** @name Definition of the QDMI Device and Session data structures
@@ -34,36 +37,38 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  */
 
 #define ADD_DEVICE(prefix)                                                     \
-  int prefix##_QDMI_query_get_sites(int num_entries, QDMI_Site *sites,         \
-                                    int *num_sites) {                          \
+  int prefix##_QDMI_query_get_sites(size_t num_entries, QDMI_Site *sites,      \
+                                    size_t *num_sites) {                       \
     return prefix##_QDMI_query_get_sites_dev(                                  \
         num_entries,                                                           \
         static_cast<prefix##_QDMI_Site *>(static_cast<void *>(sites)),         \
         num_sites);                                                            \
   }                                                                            \
-  int prefix##_QDMI_query_get_operations(                                      \
-      int num_entries, QDMI_Operation *operations, int *num_operations) {      \
+  int prefix##_QDMI_query_get_operations(size_t num_entries,                   \
+                                         QDMI_Operation *operations,           \
+                                         size_t *num_operations) {             \
     return prefix##_QDMI_query_get_operations_dev(                             \
         num_entries,                                                           \
         static_cast<prefix##_QDMI_Operation *>(                                \
             static_cast<void *>(operations)),                                  \
         num_operations);                                                       \
   }                                                                            \
-  int prefix##_QDMI_query_device_property(QDMI_Device_Property prop, int size, \
-                                          void *value, int *size_ret) {        \
+  int prefix##_QDMI_query_device_property(                                     \
+      QDMI_Device_Property prop, size_t size, void *value, size_t *size_ret) { \
     return prefix##_QDMI_query_device_property_dev(prop, size, value,          \
                                                    size_ret);                  \
   }                                                                            \
   int prefix##_QDMI_query_site_property(QDMI_Site site,                        \
-                                        QDMI_Site_Property prop, int size,     \
-                                        void *value, int *size_ret) {          \
+                                        QDMI_Site_Property prop, size_t size,  \
+                                        void *value, size_t *size_ret) {       \
     return prefix##_QDMI_query_site_property_dev(                              \
         static_cast<prefix##_QDMI_Site>(static_cast<void *>(site)), prop,      \
         size, value, size_ret);                                                \
   }                                                                            \
   int prefix##_QDMI_query_operation_property(                                  \
-      QDMI_Operation operation, int num_sites, const QDMI_Site *sites,         \
-      QDMI_Operation_Property prop, int size, void *value, int *size_ret) {    \
+      QDMI_Operation operation, size_t num_sites, const QDMI_Site *sites,      \
+      QDMI_Operation_Property prop, size_t size, void *value,                  \
+      size_t *size_ret) {                                                      \
     return prefix##_QDMI_query_operation_property_dev(                         \
         static_cast<prefix##_QDMI_Operation>(static_cast<void *>(operation)),  \
         num_sites,                                                             \
@@ -71,14 +76,16 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
             static_cast<const void *>(sites)),                                 \
         prop, size, value, size_ret);                                          \
   }                                                                            \
-  int prefix##_QDMI_control_create_job(QDMI_Program_Format format, int size,   \
-                                       const void *prog, QDMI_Job *job) {      \
+  int prefix##_QDMI_control_create_job(QDMI_Program_Format format,             \
+                                       size_t size, const void *prog,          \
+                                       QDMI_Job *job) {                        \
     return prefix##_QDMI_control_create_job_dev(                               \
         format, size, prog,                                                    \
         static_cast<prefix##_QDMI_Job *>(static_cast<void *>(job)));           \
   }                                                                            \
-  int prefix##_QDMI_control_set_parameter(                                     \
-      QDMI_Job job, QDMI_Job_Parameter param, int size, const void *value) {   \
+  int prefix##_QDMI_control_set_parameter(QDMI_Job job,                        \
+                                          QDMI_Job_Parameter param,            \
+                                          size_t size, const void *value) {    \
     return prefix##_QDMI_control_set_parameter_dev(                            \
         static_cast<prefix##_QDMI_Job>(static_cast<void *>(job)), param, size, \
         value);                                                                \
@@ -100,7 +107,8 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
         static_cast<prefix##_QDMI_Job>(static_cast<void *>(job)));             \
   }                                                                            \
   int prefix##_QDMI_control_get_data(QDMI_Job job, QDMI_Job_Result result,     \
-                                     int size, void *data, int *size_ret) {    \
+                                     size_t size, void *data,                  \
+                                     size_t *size_ret) {                       \
     return prefix##_QDMI_control_get_data_dev(                                 \
         static_cast<prefix##_QDMI_Job>(static_cast<void *>(job)), result,      \
         size, data, size_ret);                                                 \
@@ -210,10 +218,10 @@ std::string toUpperCase(const std::string &str) {
     (device).symbol = prefix##_QDMI_##symbol;                                  \
   }
 
-constexpr std::array<std::pair<std::string_view, int>, 2> id_of_prefix = {
+constexpr std::array<std::pair<std::string_view, size_t>, 2> id_of_prefix = {
     {{"C", 1}, {"CXX", 2}}};
 
-constexpr int get_id_of_prefix(std::string_view prefix) {
+constexpr size_t get_id_of_prefix(const std::string_view prefix) {
   for (const auto &pair : id_of_prefix) {
     if (pair.first == prefix) {
       return pair.second;
@@ -335,8 +343,8 @@ int QDMI_session_alloc(QDMI_Session *session) {
   return QDMI_SUCCESS;
 }
 
-int QDMI_session_get_devices(QDMI_Session session, const int num_entries,
-                             QDMI_Device *devices, int *num_devices) {
+int QDMI_session_get_devices(QDMI_Session session, const size_t num_entries,
+                             QDMI_Device *devices, size_t *num_devices) {
   if ((num_entries <= 0 && devices != nullptr) ||
       (devices == nullptr && num_devices == nullptr)) {
     return QDMI_ERROR_INVALIDARGUMENT;
@@ -351,15 +359,15 @@ int QDMI_session_get_devices(QDMI_Session session, const int num_entries,
     return QDMI_SUCCESS;
   }
 
-  const auto num_devices_in_session =
-      static_cast<int>(session->device_list.size());
+  const auto num_devices_in_session = session->device_list.size();
   if (devices == nullptr) {
     *num_devices = num_devices_in_session;
     return QDMI_SUCCESS;
   }
 
-  const int num_devices_to_copy = std::min(num_entries, num_devices_in_session);
-  for (std::size_t i = 0; i < num_devices_to_copy; ++i) {
+  const auto num_devices_to_copy =
+      std::min(num_entries, num_devices_in_session);
+  for (size_t i = 0; i < num_devices_to_copy; ++i) {
     devices[i] = session->device_list[i].get();
   }
   if (num_devices != nullptr) {
@@ -382,37 +390,42 @@ int QDMI_Driver_shutdown() {
  * @{
  */
 
-int QDMI_query_get_sites(QDMI_Device device, const int num_entries,
-                         QDMI_Site *sites, int *num_sites_ret) {
+int QDMI_query_get_sites(QDMI_Device device, const size_t num_entries,
+                         QDMI_Site *sites, size_t *num_sites_ret) {
   return device->query_get_sites(num_entries, sites, num_sites_ret);
 }
 
-int QDMI_query_get_operations(QDMI_Device device, const int num_entries,
-                              QDMI_Operation *operations, int *num_operations) {
+int QDMI_query_get_operations(QDMI_Device device, const size_t num_entries,
+                              QDMI_Operation *operations,
+                              size_t *num_operations) {
   return device->query_get_operations(num_entries, operations, num_operations);
 }
 
 int QDMI_query_device_property(QDMI_Device device, QDMI_Device_Property prop,
-                               const int size, void *value, int *size_ret) {
+                               const size_t size, void *value,
+                               size_t *size_ret) {
   return device->query_device_property(prop, size, value, size_ret);
 }
 
 int QDMI_query_site_property(QDMI_Device device, QDMI_Site site,
-                             QDMI_Site_Property prop, const int size,
-                             void *value, int *size_ret) {
+                             QDMI_Site_Property prop, const size_t size,
+                             void *value, size_t *size_ret) {
   return device->query_site_property(site, prop, size, value, size_ret);
 }
 
 int QDMI_query_operation_property(QDMI_Device device, QDMI_Operation operation,
-                                  const int num_sites, const QDMI_Site *sites,
-                                  QDMI_Operation_Property prop, const int size,
-                                  void *value, int *size_ret) {
+                                  const size_t num_sites,
+                                  const QDMI_Site *sites,
+                                  QDMI_Operation_Property prop,
+                                  const size_t size, void *value,
+                                  size_t *size_ret) {
   return device->query_operation_property(operation, num_sites, sites, prop,
                                           size, value, size_ret);
 }
 
 int QDMI_control_create_job(QDMI_Device dev, QDMI_Program_Format format,
-                            const int size, const void *prog, QDMI_Job *job) {
+                            const size_t size, const void *prog,
+                            QDMI_Job *job) {
   if ((dev->mode & QDMI_DEVICE_MODE_READWRITE) != 0) {
     return dev->control_create_job(format, size, prog, job);
   }
@@ -420,7 +433,7 @@ int QDMI_control_create_job(QDMI_Device dev, QDMI_Program_Format format,
 }
 
 int QDMI_control_set_parameter(QDMI_Device dev, QDMI_Job job,
-                               QDMI_Job_Parameter param, const int size,
+                               QDMI_Job_Parameter param, const size_t size,
                                const void *value) {
   if ((dev->mode & QDMI_DEVICE_MODE_READWRITE) != 0) {
     return dev->control_set_parameter(job, param, size, value);
@@ -457,7 +470,7 @@ int QDMI_control_wait(QDMI_Device dev, QDMI_Job job) {
 }
 
 int QDMI_control_get_data(QDMI_Device dev, QDMI_Job job, QDMI_Job_Result result,
-                          const int size, void *data, int *size_ret) {
+                          const size_t size, void *data, size_t *size_ret) {
   if ((dev->mode & QDMI_DEVICE_MODE_READWRITE) != 0) {
     return dev->control_get_data(job, result, size, data, size_ret);
   }

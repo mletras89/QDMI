@@ -209,7 +209,7 @@ measure q -> c;
   ASSERT_EQ(QDMI_control_get_data(device, job, QDMI_JOB_RESULT_HIST_KEYS, 0,
                                   nullptr, &size),
             QDMI_SUCCESS);
-  std::string key_list(static_cast<std::size_t>(size - 1), '\0');
+  std::string key_list(static_cast<size_t>(size - 1), '\0');
   ASSERT_EQ(QDMI_control_get_data(device, job, QDMI_JOB_RESULT_HIST_KEYS, size,
                                   key_list.data(), nullptr),
             QDMI_SUCCESS);
@@ -229,6 +229,6 @@ measure q -> c;
   for (size_t i = 0; i < key_vec.size(); ++i) {
     results[key_vec[i]] = val_vec[i];
   }
-  ASSERT_EQ(results.size(), static_cast<std::size_t>(size));
+  ASSERT_EQ(results.size(), static_cast<size_t>(size));
   QDMI_control_free_job(device, job);
 }
