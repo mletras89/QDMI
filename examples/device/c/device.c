@@ -21,12 +21,12 @@ typedef struct C_QDMI_Job_impl_d {
   QDMI_Job_Status status;
   size_t num_shots;
   char *results;
+  size_t results_length; // includes null terminator
+  double *state_vec;
+  size_t state_vec_length;
 } C_QDMI_Job_impl_t;
-size_t results_length; // includes null terminator
-double *state_vec;
-size_t state_vec_length;
 
-typedef struct QDMI_Site_impl_d {
+typedef struct C_QDMI_Site_impl_d {
   size_t id;
 } C_QDMI_Site_impl_t;
 
@@ -472,7 +472,6 @@ int C_QDMI_control_get_data_dev(C_QDMI_Job job, const QDMI_Job_Result result,
             strncpy(data_ptr, raw_data_split[j], num_qubits);
             data_ptr += num_qubits;
           }
-          ++k;
         }
         *data_ptr = '\0';
       }
