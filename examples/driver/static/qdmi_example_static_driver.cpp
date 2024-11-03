@@ -11,13 +11,13 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include "qdmi_example_static_driver.h"
 
-#include "cxx_device.h"
+#include "c_qdmi/device.h"
+#include "cxx_qdmi/device.h"
 #include "qdmi/driver.h"
-#include "upc_device.h"
 
 #include <algorithm>
+#include <cctype>
 #include <cstdlib>
-#include <dlfcn.h>
 #include <exception>
 #include <filesystem>
 #include <fstream>
@@ -26,11 +26,102 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 /** @name Definition of the QDMI Device and Session data structures
  * @{
  */
+
+#define ADD_DEVICE(prefix)                                                     \
+  int prefix##_QDMI_query_get_sites(int num_entries, QDMI_Site *sites,         \
+                                    int *num_sites) {                          \
+    return prefix##_QDMI_query_get_sites_dev(                                  \
+        num_entries,                                                           \
+        static_cast<prefix##_QDMI_Site *>(static_cast<void *>(sites)),         \
+        num_sites);                                                            \
+  }                                                                            \
+  int prefix##_QDMI_query_get_operations(                                      \
+      int num_entries, QDMI_Operation *operations, int *num_operations) {      \
+    return prefix##_QDMI_query_get_operations_dev(                             \
+        num_entries,                                                           \
+        static_cast<prefix##_QDMI_Operation *>(                                \
+            static_cast<void *>(operations)),                                  \
+        num_operations);                                                       \
+  }                                                                            \
+  int prefix##_QDMI_query_device_property(QDMI_Device_Property prop, int size, \
+                                          void *value, int *size_ret) {        \
+    return prefix##_QDMI_query_device_property_dev(prop, size, value,          \
+                                                   size_ret);                  \
+  }                                                                            \
+  int prefix##_QDMI_query_site_property(QDMI_Site site,                        \
+                                        QDMI_Site_Property prop, int size,     \
+                                        void *value, int *size_ret) {          \
+    return prefix##_QDMI_query_site_property_dev(                              \
+        static_cast<prefix##_QDMI_Site>(static_cast<void *>(site)), prop,      \
+        size, value, size_ret);                                                \
+  }                                                                            \
+  int prefix##_QDMI_query_operation_property(                                  \
+      QDMI_Operation operation, int num_sites, const QDMI_Site *sites,         \
+      QDMI_Operation_Property prop, int size, void *value, int *size_ret) {    \
+    return prefix##_QDMI_query_operation_property_dev(                         \
+        static_cast<prefix##_QDMI_Operation>(static_cast<void *>(operation)),  \
+        num_sites,                                                             \
+        static_cast<const prefix##_QDMI_Site *>(                               \
+            static_cast<const void *>(sites)),                                 \
+        prop, size, value, size_ret);                                          \
+  }                                                                            \
+  int prefix##_QDMI_control_create_job(QDMI_Program_Format format, int size,   \
+                                       const void *prog, QDMI_Job *job) {      \
+    return prefix##_QDMI_control_create_job_dev(                               \
+        format, size, prog,                                                    \
+        static_cast<prefix##_QDMI_Job *>(static_cast<void *>(job)));           \
+  }                                                                            \
+  int prefix##_QDMI_control_set_parameter(                                     \
+      QDMI_Job job, QDMI_Job_Parameter param, int size, const void *value) {   \
+    return prefix##_QDMI_control_set_parameter_dev(                            \
+        static_cast<prefix##_QDMI_Job>(static_cast<void *>(job)), param, size, \
+        value);                                                                \
+  }                                                                            \
+  int prefix##_QDMI_control_submit_job(QDMI_Job job) {                         \
+    return prefix##_QDMI_control_submit_job_dev(                               \
+        static_cast<prefix##_QDMI_Job>(static_cast<void *>(job)));             \
+  }                                                                            \
+  int prefix##_QDMI_control_cancel(QDMI_Job job) {                             \
+    return prefix##_QDMI_control_cancel_dev(                                   \
+        static_cast<prefix##_QDMI_Job>(static_cast<void *>(job)));             \
+  }                                                                            \
+  int prefix##_QDMI_control_check(QDMI_Job job, QDMI_Job_Status *status) {     \
+    return prefix##_QDMI_control_check_dev(                                    \
+        static_cast<prefix##_QDMI_Job>(static_cast<void *>(job)), status);     \
+  }                                                                            \
+  int prefix##_QDMI_control_wait(QDMI_Job job) {                               \
+    return prefix##_QDMI_control_wait_dev(                                     \
+        static_cast<prefix##_QDMI_Job>(static_cast<void *>(job)));             \
+  }                                                                            \
+  int prefix##_QDMI_control_get_data(QDMI_Job job, QDMI_Job_Result result,     \
+                                     int size, void *data, int *size_ret) {    \
+    return prefix##_QDMI_control_get_data_dev(                                 \
+        static_cast<prefix##_QDMI_Job>(static_cast<void *>(job)), result,      \
+        size, data, size_ret);                                                 \
+  }                                                                            \
+  void prefix##_QDMI_control_free_job(QDMI_Job job) {                          \
+    return prefix##_QDMI_control_free_job_dev(                                 \
+        static_cast<prefix##_QDMI_Job>(static_cast<void *>(job)));             \
+  }                                                                            \
+  int prefix##_QDMI_control_initialize(void) {                                 \
+    return prefix##_QDMI_control_initialize_dev();                             \
+  }                                                                            \
+  int prefix##_QDMI_control_finalize(void) {                                   \
+    return prefix##_QDMI_control_finalize_dev();                               \
+  }
+
+namespace {
+// NOLINTBEGIN(*-casting-through-void)
+ADD_DEVICE(C)
+ADD_DEVICE(CXX)
+// NOLINTEND(*-casting-through-void)
+} // namespace
 
 /**
  * @brief Definition of the QDMI Device.
@@ -107,59 +198,133 @@ namespace {
  */
 // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
 std::vector<std::shared_ptr<QDMI_Device_impl_d>> device_list;
-} // namespace
+
+std::string toUpperCase(const std::string &str) {
+  std::string result = str;
+  std::transform(result.begin(), result.end(), result.begin(), ::toupper);
+  return result;
+}
 
 #define LOAD_SYMBOL(device, prefix, symbol)                                    \
   {                                                                            \
-    (device)->symbol = prefix##_QDMI_##symbol##_dev;                           \
+    (device).symbol = prefix##_QDMI_##symbol;                                  \
   }
 
+constexpr std::array<std::pair<std::string_view, int>, 2> id_of_prefix = {
+    {{"C", 1}, {"CXX", 2}}};
+
+constexpr int get_id_of_prefix(std::string_view prefix) {
+  for (const auto &pair : id_of_prefix) {
+    if (pair.first == prefix) {
+      return pair.second;
+    }
+  }
+  throw std::runtime_error("Unknown prefix");
+}
+
+#define DEVICE_CASE(prefix)                                                    \
+  case get_id_of_prefix(#prefix):                                              \
+    LOAD_SYMBOL(device, prefix, query_get_sites);                              \
+    LOAD_SYMBOL(device, prefix, query_get_operations);                         \
+    LOAD_SYMBOL(device, prefix, query_device_property);                        \
+    LOAD_SYMBOL(device, prefix, query_site_property);                          \
+    LOAD_SYMBOL(device, prefix, query_operation_property);                     \
+    LOAD_SYMBOL(device, prefix, control_create_job);                           \
+    LOAD_SYMBOL(device, prefix, control_set_parameter);                        \
+    LOAD_SYMBOL(device, prefix, control_submit_job);                           \
+    LOAD_SYMBOL(device, prefix, control_cancel);                               \
+    LOAD_SYMBOL(device, prefix, control_check);                                \
+    LOAD_SYMBOL(device, prefix, control_wait);                                 \
+    LOAD_SYMBOL(device, prefix, control_get_data);                             \
+    LOAD_SYMBOL(device, prefix, control_free_job);                             \
+    LOAD_SYMBOL(device, prefix, control_initialize);                           \
+    break;
+
+std::shared_ptr<QDMI_Device_impl_d>
+QDMI_Device_open(const std::string &prefix, const QDMI_Device_Mode mode) {
+  auto device_handle = std::make_shared<QDMI_Device_impl_d>();
+  auto &device = *device_handle;
+  device.mode = mode;
+  switch (get_id_of_prefix(prefix)) {
+    DEVICE_CASE(C)
+    DEVICE_CASE(CXX)
+  default:
+    throw std::runtime_error("Unknown device prefix: " + prefix);
+  }
+  // initialize the device
+  device.control_initialize();
+  return device_handle;
+}
+
+bool Is_path_allowed(const std::filesystem::path &path) {
+  // Define the whitelist of allowed directories
+  const std::vector<std::filesystem::path> whitelist = {
+      std::filesystem::current_path(),
+      std::filesystem::path(std::getenv("HOME"))};
+
+  // Resolve the provided path to its absolute form
+  std::filesystem::path resolved_path = std::filesystem::absolute(path);
+
+  // Check if the resolved path starts with any of the whitelisted directories
+  return std::any_of(
+      whitelist.begin(), whitelist.end(), [&](const auto &allowed_path) {
+        return resolved_path.string().rfind(allowed_path.string(), 0) == 0;
+      });
+}
+} // namespace
+
 int QDMI_Driver_init() {
-  // Load the C device library
-  auto c_device = std::make_shared<QDMI_Device_impl_d>();
-  c_device->mode = QDMI_DEVICE_MODE_READWRITE;
-  LOAD_SYMBOL(c_device, C, control_finalize);
-  LOAD_SYMBOL(c_device, C, query_get_sites);
-  LOAD_SYMBOL(c_device, C, query_get_operations);
-  LOAD_SYMBOL(c_device, C, query_device_property);
-  LOAD_SYMBOL(c_device, C, query_site_property);
-  LOAD_SYMBOL(c_device, C, query_operation_property);
-  LOAD_SYMBOL(c_device, C, control_create_job);
-  LOAD_SYMBOL(c_device, C, control_set_parameter);
-  LOAD_SYMBOL(c_device, C, control_submit_job);
-  LOAD_SYMBOL(c_device, C, control_cancel);
-  LOAD_SYMBOL(c_device, C, control_check);
-  LOAD_SYMBOL(c_device, C, control_wait);
-  LOAD_SYMBOL(c_device, C, control_get_data);
-  LOAD_SYMBOL(c_device, C, control_free_job);
-  LOAD_SYMBOL(c_device, C, control_initialize);
-  // initialize the device
-  c_device->control_initialize();
+  const char *config_file = std::getenv("QDMI_CONF");
+  if (config_file == nullptr) {
+    config_file = "qdmi.conf";
+  }
 
-  // Load the C++ device library
-  auto cxx_device = std::make_shared<QDMI_Device_impl_d>();
-  cxx_device->mode = QDMI_DEVICE_MODE_READWRITE;
-  LOAD_SYMBOL(cxx_device, CXX, control_finalize);
-  LOAD_SYMBOL(cxx_device, CXX, query_get_sites);
-  LOAD_SYMBOL(cxx_device, CXX, query_get_operations);
-  LOAD_SYMBOL(cxx_device, CXX, query_device_property);
-  LOAD_SYMBOL(cxx_device, CXX, query_site_property);
-  LOAD_SYMBOL(cxx_device, CXX, query_operation_property);
-  LOAD_SYMBOL(cxx_device, CXX, control_create_job);
-  LOAD_SYMBOL(cxx_device, CXX, control_set_parameter);
-  LOAD_SYMBOL(cxx_device, CXX, control_submit_job);
-  LOAD_SYMBOL(cxx_device, CXX, control_cancel);
-  LOAD_SYMBOL(cxx_device, CXX, control_check);
-  LOAD_SYMBOL(cxx_device, CXX, control_wait);
-  LOAD_SYMBOL(cxx_device, CXX, control_get_data);
-  LOAD_SYMBOL(cxx_device, CXX, control_free_job);
-  LOAD_SYMBOL(cxx_device, CXX, control_initialize);
-  // initialize the device
-  cxx_device->control_initialize();
+  // Validate the configuration file path
+  if (!Is_path_allowed(config_file)) {
+    std::cerr << "Config file path is not allowed: " << config_file << "\n";
+    return QDMI_ERROR_FATAL;
+  }
 
-  device_list.emplace_back(c_device);
-  device_list.emplace_back(cxx_device);
+  std::ifstream file(config_file);
+  if (!file.is_open()) {
+    std::cerr << "Failed to open configuration file: " << config_file << "\n";
+    return QDMI_ERROR_FATAL;
+  }
 
+  std::string line;
+  while (std::getline(file, line)) {
+    if (line.empty() || line[0] == '#') {
+      continue; // Skip empty lines and comments
+    }
+
+    std::istringstream iss(line);
+    std::string lib_name;
+    std::string prefix;
+    std::string mode_str;
+    if (!(iss >> lib_name >> prefix >> mode_str)) {
+      std::cerr << "Invalid configuration line: " << line << "\n";
+      continue;
+    }
+
+    QDMI_Device_Mode mode{};
+    if (mode_str == "read_only") {
+      mode = QDMI_Device_Mode::QDMI_DEVICE_MODE_READONLY;
+    } else if (mode_str == "read_write") {
+      mode = QDMI_Device_Mode::QDMI_DEVICE_MODE_READWRITE;
+    } else {
+      std::cerr << "Invalid mode: " << mode_str << " in line: " << line << "\n";
+      continue;
+    }
+
+    try {
+      device_list.emplace_back(QDMI_Device_open(prefix, mode));
+    } catch (const std::exception &e) {
+      std::cerr << "Failed to open device: " << e.what() << "\n";
+      return QDMI_ERROR_FATAL;
+    }
+  }
+
+  file.close();
   return QDMI_SUCCESS;
 }
 
@@ -194,7 +359,7 @@ int QDMI_session_get_devices(QDMI_Session session, const int num_entries,
   }
 
   const int num_devices_to_copy = std::min(num_entries, num_devices_in_session);
-  for (int i = 0; i < num_devices_to_copy; ++i) {
+  for (std::size_t i = 0; i < num_devices_to_copy; ++i) {
     devices[i] = session->device_list[i].get();
   }
   if (num_devices != nullptr) {

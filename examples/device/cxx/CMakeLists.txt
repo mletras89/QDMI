@@ -20,8 +20,9 @@ set(QDMI_HEADERS ${QDMI_INCLUDE_BUILD_DIR}/qdmi/device.h
 file(COPY ${QDMI_HEADERS}
      DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/include/${QDMI_prefix}_qdmi)
 execute_process(
-  COMMAND find include -type f -name "*.h" -exec sed -i
-          "s/#include \"qdmi/#include \"${QDMI_prefix}_qdmi/g" {} \;
+  COMMAND
+    find include -type f -name "*.h" -exec sed -i
+    "s/#include \"qdmi\\/device/#include \"${QDMI_prefix}_qdmi\\/device/g" {} \;
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 execute_process(
   COMMAND
