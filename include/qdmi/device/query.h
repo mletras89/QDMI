@@ -14,7 +14,11 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include "qdmi/device/types.h"
 
 #ifdef __cplusplus
+#include <cstddef>
+
 extern "C" {
+#else
+#include <stddef.h>
 #endif
 
 /**
@@ -30,12 +34,12 @@ extern "C" {
  * is @c NULL, this argument is ignored.
  * @return @ref QDMI_SUCCESS if the function is executed successfully.
  * Otherwise, it returns one of the following error codes:
- * @return @ref QDMI_ERROR_INVALIDARGUMENT if @p num_entries is less than or
- * equal to zero and @p sites is not @c NULL or if both @p sites and @p
- * num_sites are @c NULL.
+ * @return @ref QDMI_ERROR_INVALIDARGUMENT if @p num_entries is zero and
+ * @p sites is not @c NULL or if both @p sites and @p num_sites are @c NULL.
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
-int QDMI_query_get_sites_dev(int num_entries, QDMI_Site *sites, int *num_sites);
+int QDMI_query_get_sites_dev(size_t num_entries, QDMI_Site *sites,
+                             size_t *num_sites);
 
 /**
  * @brief Get the operations available on the @p device.
@@ -52,13 +56,14 @@ int QDMI_query_get_sites_dev(int num_entries, QDMI_Site *sites, int *num_sites);
  * num_operations is @c NULL, this argument is ignored.
  * @return @ref QDMI_SUCCESS if the function is executed successfully.
  * Otherwise, it returns one of the following error codes:
- * @return @ref QDMI_ERROR_INVALIDARGUMENT if @p num_entries is less than or
- * equal to zero and @p operations is not @c NULL or if both @p operations and
- * @p num_operations are @c NULL.
+ * @return @ref QDMI_ERROR_INVALIDARGUMENT if @p num_entries is zero and
+ * @p operations is not @c NULL or if both @p operations and @p num_operations
+ * are @c NULL.
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
-int QDMI_query_get_operations_dev(int num_entries, QDMI_Operation *operations,
-                                  int *num_operations);
+int QDMI_query_get_operations_dev(size_t num_entries,
+                                  QDMI_Operation *operations,
+                                  size_t *num_operations);
 
 /**
  * @brief Query a device property.
@@ -89,8 +94,8 @@ int QDMI_query_get_operations_dev(int num_entries, QDMI_Operation *operations,
  * device.
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
-int QDMI_query_device_property_dev(QDMI_Device_Property prop, int size,
-                                   void *value, int *size_ret);
+int QDMI_query_device_property_dev(QDMI_Device_Property prop, size_t size,
+                                   void *value, size_t *size_ret);
 
 /**
  * @brief Query a site property.
@@ -123,7 +128,7 @@ int QDMI_query_device_property_dev(QDMI_Device_Property prop, int size,
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
 int QDMI_query_site_property_dev(QDMI_Site site, QDMI_Site_Property prop,
-                                 int size, void *value, int *size_ret);
+                                 size_t size, void *value, size_t *size_ret);
 
 /**
  * @brief Query an operation property.
@@ -160,20 +165,19 @@ int QDMI_query_site_property_dev(QDMI_Site site, QDMI_Site_Property prop,
  * @return @ref QDMI_SUCCESS if the function is executed successfully.
  * Otherwise, it returns one of the following error codes:
  * @return @ref QDMI_ERROR_INVALIDARGUMENT if @p operation is an invalid
- * operation, if @p num_sites is less than or equal to zero and @p sites is not
- * @c NULL, if
- * @p prop is not one of the defined values, if the size in bytes specified by
- * @p size is less than the size of the data being queried as specified for the
+ * operation, if @p num_sites is zero and @p sites is not @c NULL, if @p prop is
+ * not one of the defined values, if the size in bytes specified by @p size is
+ * less than the size of the data being queried as specified for the
  * @ref QDMI_Site_Property @p prop and @p value is not a @c NULL value, or if
  * both @p value and @p size_ret are @c NULL.
  * @return @ref QDMI_ERROR_NOTSUPPORTED if the property is not supported by the
  * device or for the given list of sites.
  * @return @ref QDMI_ERROR_FATAL if an unexpected error occurred.
  */
-int QDMI_query_operation_property_dev(QDMI_Operation operation, int num_sites,
-                                      const QDMI_Site *sites,
-                                      QDMI_Operation_Property prop, int size,
-                                      void *value, int *size_ret);
+int QDMI_query_operation_property_dev(QDMI_Operation operation,
+                                      size_t num_sites, const QDMI_Site *sites,
+                                      QDMI_Operation_Property prop, size_t size,
+                                      void *value, size_t *size_ret);
 
 #ifdef __cplusplus
 } // extern "C"
