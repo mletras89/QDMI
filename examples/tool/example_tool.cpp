@@ -45,7 +45,7 @@ std::string Tool::compile(const std::string &qasm_string) {
   }
   const std::smatch &match = *begin;
   const auto num_qubits_str = match.str(1);
-  const auto num_qubits = std::stoi(num_qubits_str);
+  const auto num_qubits = std::stoul(num_qubits_str);
   if (num_qubits > 2) {
     throw std::invalid_argument("The circuit uses more than two qubits but "
                                 "this tool only supports up to two qubits.");
