@@ -11,7 +11,7 @@ set(QDMI_PREFIX "C")
 string(TOLOWER ${QDMI_PREFIX} QDMI_prefix)
 file(GLOB_RECURSE QDMI_DEVICE_HEADERS ${QDMI_INCLUDE_BUILD_DIR}/qdmi/device.h
      ${QDMI_INCLUDE_BUILD_DIR}/qdmi/device/**.h)
-file(READ ${CMAKE_SOURCE_DIR}/utils/prefix_defs.txt replacements)
+file(READ ${QDMI_UTILS_DIR}/prefix_defs.txt replacements)
 string(REPLACE "\n" ";" replacements "${replacements}")
 foreach(header ${QDMI_DEVICE_HEADERS})
   file(RELATIVE_PATH rel_header ${QDMI_INCLUDE_BUILD_DIR}/qdmi ${header})

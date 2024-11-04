@@ -66,13 +66,13 @@ include(cmake/ExternalDependencies.cmake)
 # set the include directory for the build tree
 set(QDMI_INCLUDE_BUILD_DIR
     "${CMAKE_CURRENT_SOURCE_DIR}/include"
-    PARENT_SCOPE)
+    CACHE INTERNAL "Include directory")
 set(QDMI_TEST_DIR
     "${CMAKE_CURRENT_SOURCE_DIR}/test"
-    PARENT_SCOPE)
+    CACHE INTERNAL "Test directory")
 set(QDMI_UTILS_DIR
     "${CMAKE_CURRENT_SOURCE_DIR}/utils"
-    PARENT_SCOPE)
+    CACHE INTERNAL "Utility directory")
 
 # add main library code
 if(QDMI_INSTALL)
