@@ -64,8 +64,15 @@ set(CMAKE_C_EXTENSIONS False)
 include(cmake/ExternalDependencies.cmake)
 
 # set the include directory for the build tree
-set(QDMI_INCLUDE_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
-set(QDMI_TEST_DIR "${CMAKE_CURRENT_SOURCE_DIR}/test")
+set(QDMI_INCLUDE_BUILD_DIR
+    "${CMAKE_CURRENT_SOURCE_DIR}/include"
+    PARENT_SCOPE)
+set(QDMI_TEST_DIR
+    "${CMAKE_CURRENT_SOURCE_DIR}/test"
+    PARENT_SCOPE)
+set(QDMI_UTILS_DIR
+    "${CMAKE_CURRENT_SOURCE_DIR}/utils"
+    PARENT_SCOPE)
 
 # add main library code
 if(QDMI_INSTALL)
