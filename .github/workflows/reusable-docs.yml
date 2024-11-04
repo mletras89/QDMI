@@ -20,7 +20,7 @@ jobs:
           cmake --build build --target qdmi_docs
           mv build/docs/html/ static
       - name: Deploy 🚀
-        if: ${{ github.event.inputs.branch == 'develop' && github.event.inputs.action == 'push' }}
+        if: github.ref == 'refs/heads/develop'
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: static
