@@ -9,9 +9,9 @@ include(CMakeDependentOption)
 set(FETCH_PACKAGES "")
 
 if(TARGET qdmi::qdmi)
-  message(STATUS "Device template: QDMI is already available.")
+  message(STATUS "[qdmi][template] QDMI is already available.")
 else()
-  message(STATUS "Device template: QDMI will be included via FetchContent")
+  message(STATUS "[qdmi][template] QDMI will be included via FetchContent")
   # cmake-format: off
   set(QDMI_VERSION 1.0.0
           CACHE STRING "QDMI version")
@@ -38,6 +38,8 @@ else()
       list(APPEND FETCH_PACKAGES qdmi)
     endif()
   endif()
+  message(
+    STATUS "[qdmi][template] QDMI will be included via FetchContent - done")
 endif()
 
 if(BUILD_MY_DEVICE_TESTS)
