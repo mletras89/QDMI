@@ -186,5 +186,5 @@ if(BUILD_QDMI_TEMPLATES OR BUILD_QDMI_TESTS)
   set(BUILD_MY_DEVICE_TESTS
       ${BUILD_QDMI_TESTS}
       CACHE BOOL "Build tests for MyDevice" FORCE)
-  add_subdirectory(templates/device)
+  add_subdirectory(templates)
 endif()
