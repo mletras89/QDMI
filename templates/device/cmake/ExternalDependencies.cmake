@@ -15,7 +15,7 @@ else()
   # cmake-format: off
   set(QDMI_VERSION 1.0.0
           CACHE STRING "QDMI version")
-  set(QDMI_REV "146f887ad887fbe81d831863d346e7554b5b1505"
+  set(QDMI_REV "8437294755f5ede43e8c1aa1d3a895c8d22164a5"
           CACHE STRING "QDMI identifier (tag, branch or commit hash)")
   set(QDMI_REPO_OWNER "Munich-Quantum-Software-Stack"
           CACHE STRING "QDMI repository owner (change when using a fork)")
