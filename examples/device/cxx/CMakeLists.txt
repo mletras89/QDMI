@@ -24,7 +24,7 @@ foreach(header ${QDMI_DEVICE_HEADERS})
   get_filename_component(rel_dir ${rel_header} DIRECTORY)
   file(MAKE_DIRECTORY
        ${CMAKE_CURRENT_BINARY_DIR}/include/${QDMI_prefix}_qdmi/${rel_dir})
-  file(READ ${header} header_content NEWLINE_CONSUME)
+  file(READ ${header} header_content)
   string(
     REGEX
     REPLACE "#include (\"|<)qdmi/device"
@@ -39,7 +39,7 @@ foreach(header ${QDMI_DEVICE_HEADERS})
   endforeach()
   file(WRITE
        ${CMAKE_CURRENT_BINARY_DIR}/include/${QDMI_prefix}_qdmi/${rel_header}
-       ${header_content})
+       "${header_content}")
 endforeach()
 add_library(cxx_device SHARED device.cpp)
 target_link_libraries(cxx_device PRIVATE qdmi::qdmi qdmi::project_warnings)

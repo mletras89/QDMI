@@ -31,7 +31,7 @@ if(CONFIGURE_TEMPLATE)
     string(REGEX REPLACE "my_" "${TEMPLATE_prefix}_" file_content
                          "${file_content}")
     string(REGEX REPLACE "my_" "${TEMPLATE_prefix}_" file_name "${file_name}")
-    file(WRITE ${TEMPLATE_PATH}/${rel_dir}/${file_name} ${file_content})
+    file(WRITE ${TEMPLATE_PATH}/${rel_dir}/${file_name} "${file_content}")
   endforeach()
   message(
     STATUS
