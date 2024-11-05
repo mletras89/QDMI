@@ -233,11 +233,11 @@ std::vector<std::shared_ptr<QDMI_Device_impl_d>> device_list;
     (device).symbol = prefix##_QDMI_##symbol;                                  \
   }
 
-constexpr std::array<std::pair<std::string_view, size_t>, 2> id_of_prefix = {
+constexpr std::array<std::pair<std::string_view, size_t>, 2> ID_OF_PREFIX = {
     {{"C", 1}, {"CXX", 2}}};
 
 constexpr size_t get_id_of_prefix(const std::string_view prefix) {
-  for (const auto &pair : id_of_prefix) {
+  for (const auto &pair : ID_OF_PREFIX) {
     if (pair.first == prefix) {
       return pair.second;
     }
