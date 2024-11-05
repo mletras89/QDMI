@@ -35,7 +35,9 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <utility>
 #include <vector>
 
-#define INCLUDE(prefix) APPLY(STR, CAT(prefix, _qdmi / device.h))
+// clang-format off
+#define INCLUDE(prefix) APPLY(STR, CAT(prefix, _qdmi/device.h))
+// clang-format on
 #define STR(x) #x
 
 #include INCLUDE(NTH_MAX(0, DEVICE_LIST_LOWERCASE))
