@@ -9,11 +9,15 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  * @details This file can be used as a template for implementing a driver in C.
  */
 
+// * * * Define the devices  * * * * * * * * * * * * * * * * * * * * * * * * * *
+#define DEVICE_LIST_UPPERCASE (C)(CXX)
+#define DEVICE_LIST_LOWERCASE (c)(cxx)
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
 #include "qdmi_example_static_driver.h"
 
-#include "c_qdmi/device.h"
-#include "cxx_qdmi/device.h"
 #include "qdmi/driver.h"
+#include "qdmi_example_static_driver_macros.h"
 
 #include <algorithm>
 #include <array>
@@ -28,9 +32,22 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <stdexcept>
 #include <string>
 #include <string_view>
-#include <unordered_map>
 #include <utility>
 #include <vector>
+
+#define INCLUDE(prefix) APPLY(STR, CAT(prefix, _qdmi / device.h))
+#define STR(x) #x
+
+#include INCLUDE(NTH_MAX(0, DEVICE_LIST_LOWERCASE))
+#include INCLUDE(NTH_MAX(1, DEVICE_LIST_LOWERCASE))
+#include INCLUDE(NTH_MAX(2, DEVICE_LIST_LOWERCASE))
+#include INCLUDE(NTH_MAX(3, DEVICE_LIST_LOWERCASE))
+#include INCLUDE(NTH_MAX(4, DEVICE_LIST_LOWERCASE))
+#include INCLUDE(NTH_MAX(5, DEVICE_LIST_LOWERCASE))
+#include INCLUDE(NTH_MAX(6, DEVICE_LIST_LOWERCASE))
+#include INCLUDE(NTH_MAX(7, DEVICE_LIST_LOWERCASE))
+#include INCLUDE(NTH_MAX(8, DEVICE_LIST_LOWERCASE))
+#include INCLUDE(NTH_MAX(9, DEVICE_LIST_LOWERCASE))
 
 /** @name Definition of the QDMI Device and Session data structures
  * @{
@@ -125,9 +142,11 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
   }
 
 namespace {
+// to handle the different types defined by the multiple devices for jobs,
+// sites, and operations, we must cast through void pointers. This should be
+// done with caution
 // NOLINTBEGIN(*-casting-through-void)
-ADD_DEVICE(C)
-ADD_DEVICE(CXX)
+ITERATE(ADD_DEVICE, DEVICE_LIST_UPPERCASE)
 // NOLINTEND(*-casting-through-void)
 } // namespace
 
@@ -207,12 +226,6 @@ namespace {
 // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
 std::vector<std::shared_ptr<QDMI_Device_impl_d>> device_list;
 
-std::string toUpperCase(const std::string &str) {
-  std::string result = str;
-  std::transform(result.begin(), result.end(), result.begin(), ::toupper);
-  return result;
-}
-
 #define LOAD_SYMBOL(device, prefix, symbol)                                    \
   {                                                                            \
     (device).symbol = prefix##_QDMI_##symbol;                                  \
@@ -232,6 +245,7 @@ constexpr size_t get_id_of_prefix(const std::string_view prefix) {
 
 #define DEVICE_CASE(prefix)                                                    \
   case get_id_of_prefix(#prefix):                                              \
+    LOAD_SYMBOL(device, prefix, control_finalize);                             \
     LOAD_SYMBOL(device, prefix, query_get_sites);                              \
     LOAD_SYMBOL(device, prefix, query_get_operations);                         \
     LOAD_SYMBOL(device, prefix, query_device_property);                        \
@@ -254,8 +268,7 @@ QDMI_Device_open(const std::string &prefix, const QDMI_Device_Mode mode) {
   auto &device = *device_handle;
   device.mode = mode;
   switch (get_id_of_prefix(prefix)) {
-    DEVICE_CASE(C)
-    DEVICE_CASE(CXX)
+    ITERATE(DEVICE_CASE, DEVICE_LIST_UPPERCASE)
   default:
     throw std::runtime_error("Unknown device prefix: " + prefix);
   }
