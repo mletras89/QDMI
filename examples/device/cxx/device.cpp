@@ -33,7 +33,6 @@ struct CXX_QDMI_Job_impl_d {
   size_t num_shots = 0;
   std::vector<std::string> results;
   std::vector<std::complex<double>> state_vec;
-  std::bernoulli_distribution binary_dist{0.5};
 };
 
 struct CXX_QDMI_Site_impl_d {
@@ -50,14 +49,77 @@ struct CXX_QDMI_Device_State {
   std::mt19937 gen{rd()};
   std::uniform_int_distribution<> dis =
       std::uniform_int_distribution<>(0, std::numeric_limits<int>::max());
+  std::bernoulli_distribution dis_bin{0.5};
   std::uniform_real_distribution<> dis_real =
       std::uniform_real_distribution<>(-1.0, 1.0);
 };
 
 namespace {
-// NOLINTBEGIN(cppcoreguidelines-avoid-non-const-global-variables)
-CXX_QDMI_Device_State device_state;
+/**
+ * @brief Static function to maintain the device state.
+ * @return a pointer to the device state.
+ * @note This function is considered private and should not be used outside of
+ * this file. Hence, it is not part of any header file.
+ */
+CXX_QDMI_Device_State *CXX_QDMI_get_device_state() {
+  static CXX_QDMI_Device_State device_state;
+  return &device_state;
+}
 
+/**
+ * @brief Local function to read the device status.
+ * @return the current device status.
+ * @note This function is considered private and should not be used outside of
+ * this file. Hence, it is not part of any header file.
+ */
+QDMI_Device_Status CXX_QDMI_get_device_status() {
+  return CXX_QDMI_get_device_state()->status;
+}
+
+/**
+ * @brief Local function to set the device status.
+ * @param status the new device status.
+ * @note This function is considered private and should not be used outside of
+ * this file. Hence, it is not part of any header file.
+ */
+void CXX_QDMI_set_device_status(QDMI_Device_Status status) {
+  CXX_QDMI_get_device_state()->status = status;
+}
+
+/**
+ * @brief Generate a random job id.
+ * @return a random job id.
+ * @note This function is considered private and should not be used outside of
+ * this file. Hence, it is not part of any header file.
+ */
+int CXX_QDMI_generate_job_id() {
+  auto *state = CXX_QDMI_get_device_state();
+  return state->dis(state->gen);
+}
+
+/**
+ * @brief Generate a random bit.
+ * @return a random bit.
+ * @note This function is considered private and should not be used outside of
+ * this file. Hence, it is not part of any header file.
+ */
+bool CXX_QDMI_generate_bit() {
+  auto *state = CXX_QDMI_get_device_state();
+  return state->dis_bin(state->gen);
+}
+
+/**
+ * @brief Generate a random real number.
+ * @return a random real number.
+ * @note This function is considered private and should not be used outside of
+ * this file. Hence, it is not part of any header file.
+ */
+double CXX_QDMI_generate_real() {
+  auto *state = CXX_QDMI_get_device_state();
+  return state->dis_real(state->gen);
+}
+
+// NOLINTBEGIN(cppcoreguidelines-avoid-non-const-global-variables)
 std::array<CXX_QDMI_Operation_impl_d, 4> device_operations = {
     CXX_QDMI_Operation_impl_d{"rx"}, CXX_QDMI_Operation_impl_d{"ry"},
     CXX_QDMI_Operation_impl_d{"rz"}, CXX_QDMI_Operation_impl_d{"cx"}};
@@ -228,7 +290,8 @@ int CXX_QDMI_query_device_property_dev(const QDMI_Device_Property prop,
   ADD_SINGLE_VALUE_PROPERTY(QDMI_DEVICE_PROPERTY_QUBITSNUM, size_t, 5, prop,
                             size, value, size_ret)
   ADD_SINGLE_VALUE_PROPERTY(QDMI_DEVICE_PROPERTY_STATUS, QDMI_Device_Status,
-                            device_state.status, prop, size, value, size_ret)
+                            CXX_QDMI_get_device_status(), prop, size, value,
+                            size_ret)
   ADD_LIST_PROPERTY(QDMI_DEVICE_PROPERTY_COUPLINGMAP, CXX_QDMI_Site,
                     DEVICE_COUPLING_MAP, prop, size, value, size_ret)
   return QDMI_ERROR_NOTSUPPORTED;
@@ -305,7 +368,7 @@ int CXX_QDMI_query_operation_property_dev(
 int CXX_QDMI_control_create_job_dev(const QDMI_Program_Format format,
                                     const size_t size, const void *prog,
                                     CXX_QDMI_Job *job) {
-  if (device_state.status != QDMI_DEVICE_STATUS_IDLE) {
+  if (CXX_QDMI_get_device_status() != QDMI_DEVICE_STATUS_IDLE) {
     return QDMI_ERROR_FATAL;
   }
   if (size == 0 || prog == nullptr || job == nullptr) {
@@ -319,7 +382,7 @@ int CXX_QDMI_control_create_job_dev(const QDMI_Program_Format format,
 
   *job = new CXX_QDMI_Job_impl_d;
   // set job id to random number for demonstration purposes
-  (*job)->id = device_state.dis(device_state.gen);
+  (*job)->id = CXX_QDMI_generate_job_id();
   (*job)->status = QDMI_JOB_STATUS_CREATED;
   return QDMI_SUCCESS;
 } /// [DOXYGEN FUNCTION END]
@@ -342,7 +405,7 @@ int CXX_QDMI_control_submit_job_dev(CXX_QDMI_Job job) {
   if (job == nullptr || job->status != QDMI_JOB_STATUS_CREATED) {
     return QDMI_ERROR_INVALIDARGUMENT;
   }
-  device_state.status = QDMI_DEVICE_STATUS_BUSY;
+  CXX_QDMI_set_device_status(QDMI_DEVICE_STATUS_BUSY);
   job->status = QDMI_JOB_STATUS_SUBMITTED;
   // here, the actual submission of the problem to the device would happen
   // ...
@@ -357,9 +420,8 @@ int CXX_QDMI_control_submit_job_dev(CXX_QDMI_Job job) {
   for (size_t i = 0; i < job->num_shots; ++i) {
     // generate random bitstring
     std::string result(num_qubits, '0');
-    std::generate(result.begin(), result.end(), [&]() {
-      return device_state.dis(device_state.gen) % 2 ? '1' : '0';
-    });
+    std::generate(result.begin(), result.end(),
+                  [&]() { return CXX_QDMI_generate_bit() ? '1' : '0'; });
     job->results.emplace_back(std::move(result));
   }
   // Generate random complex numbers and calculate the norm
@@ -367,9 +429,8 @@ int CXX_QDMI_control_submit_job_dev(CXX_QDMI_Job job) {
   job->state_vec.reserve(1U << num_qubits);
   double norm = 0.0;
   for (size_t i = 0; i < 1U << num_qubits; ++i) {
-    const auto &c =
-        job->state_vec.emplace_back(device_state.dis_real(device_state.gen),
-                                    device_state.dis_real(device_state.gen));
+    const auto &c = job->state_vec.emplace_back(CXX_QDMI_generate_real(),
+                                                CXX_QDMI_generate_real());
     norm += std::norm(c);
   }
   // Normalize the vector
@@ -386,15 +447,14 @@ int CXX_QDMI_control_cancel_dev(CXX_QDMI_Job job) {
   }
 
   job->status = QDMI_JOB_STATUS_CANCELLED;
-  device_state.status = QDMI_DEVICE_STATUS_IDLE;
+  CXX_QDMI_set_device_status(QDMI_DEVICE_STATUS_IDLE);
   return QDMI_SUCCESS;
 } /// [DOXYGEN FUNCTION END]
 
 int CXX_QDMI_control_check_dev(CXX_QDMI_Job job, QDMI_Job_Status *status) {
   // randomly decide whether job is done or not
-  if (job->status == QDMI_JOB_STATUS_RUNNING &&
-      job->binary_dist(device_state.gen)) {
-    device_state.status = QDMI_DEVICE_STATUS_IDLE;
+  if (job->status == QDMI_JOB_STATUS_RUNNING && CXX_QDMI_generate_bit()) {
+    CXX_QDMI_set_device_status(QDMI_DEVICE_STATUS_IDLE);
     job->status = QDMI_JOB_STATUS_DONE;
   }
   *status = job->status;
@@ -403,7 +463,7 @@ int CXX_QDMI_control_check_dev(CXX_QDMI_Job job, QDMI_Job_Status *status) {
 
 int CXX_QDMI_control_wait_dev(CXX_QDMI_Job job) {
   job->status = QDMI_JOB_STATUS_DONE;
-  device_state.status = QDMI_DEVICE_STATUS_IDLE;
+  CXX_QDMI_set_device_status(QDMI_DEVICE_STATUS_IDLE);
   return QDMI_SUCCESS;
 } /// [DOXYGEN FUNCTION END]
 
@@ -588,11 +648,11 @@ int CXX_QDMI_control_get_data_dev(CXX_QDMI_Job job,
 void CXX_QDMI_control_free_job_dev(CXX_QDMI_Job job) { delete job; }
 
 int CXX_QDMI_control_initialize_dev() {
-  device_state.status = QDMI_DEVICE_STATUS_IDLE;
+  CXX_QDMI_set_device_status(QDMI_DEVICE_STATUS_IDLE);
   return QDMI_SUCCESS;
 } /// [DOXYGEN FUNCTION END]
 
 int CXX_QDMI_control_finalize_dev() {
-  device_state.status = QDMI_DEVICE_STATUS_OFFLINE;
+  CXX_QDMI_set_device_status(QDMI_DEVICE_STATUS_OFFLINE);
   return QDMI_SUCCESS;
 } /// [DOXYGEN FUNCTION END]
