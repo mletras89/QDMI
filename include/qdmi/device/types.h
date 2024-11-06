@@ -24,7 +24,7 @@ extern "C" {
  * access the results.
  *
  * @par
- * This type is implemented by the driver.
+ * This type is implemented by the device.
  */
 typedef struct QDMI_Job_impl_d *QDMI_Job;
 
