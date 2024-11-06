@@ -17,8 +17,10 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #pragma once
 
-#include "qdmi/common/enums.h"   // IWYU pragma: export
-#include "qdmi/common/types.h"   // IWYU pragma: export
-#include "qdmi/device/control.h" // IWYU pragma: export
-#include "qdmi/device/query.h"   // IWYU pragma: export
-#include "qdmi/device/types.h"   // IWYU pragma: export
+// IWYU pragma: begin_exports
+#include "qdmi/common/enums.h"
+#include "qdmi/common/types.h"
+#include "qdmi/device/control.h"
+#include "qdmi/device/query.h"
+#include "qdmi/device/types.h"
+// IWYU pragma: end_exports

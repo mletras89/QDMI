@@ -5,7 +5,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
 /** @file
- * @brief Defines all types used within QDMI.
+ * @brief Defines all common types used throughout QDMI.
  */
 
 #pragma once
@@ -46,28 +46,6 @@ typedef enum QDMI_JOB_PARAMETER_T QDMI_Job_Parameter;
 
 /// Type of the job result.
 typedef enum QDMI_JOB_RESULT_T QDMI_Job_Result;
-
-/**
- * @brief Opaque type for a QDMI session.
- * @details A handle for making devices (@ref QDMI_Device) available to a
- * client. It is implementation-defined how the session is represented and how
- * the session manages the devices it has access to.
- *
- * @par
- * This type is implemented by the driver.
- */
-typedef struct QDMI_Session_impl_d *QDMI_Session;
-
-/**
- * @brief Opaque type for a device.
- * @details A handle for an implementation of the QDMI device interface. It is
- * implementation-defined how the device is represented and how the symbols
- * provided by the implementation are made available to the client.
- *
- * @par
- * This type is implemented by the driver.
- */
-typedef struct QDMI_Device_impl_d *QDMI_Device;
 
 // NOLINTEND(modernize-use-using)
 

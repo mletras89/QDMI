@@ -5,7 +5,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
 /** @file
- * @brief Defines all types used within QDMI.
+ * @brief Defines all types implemented by a QDMI device.
  */
 
 #pragma once
