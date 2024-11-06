@@ -16,15 +16,7 @@ endif()
 # Non-Functional Tests
 # ------------------------------------------------------------------------------
 
-# test that a device implementation implements all functions
-#
-# NOTE: This executable is not meant to be ever executed, only linked.
-configure_file(${QDMI_TEST_DIR}/utils/test_defs.cpp.in
-               ${CMAKE_CURRENT_BINARY_DIR}/test_defs.cpp @ONLY)
-add_executable(qdmi_test_my_device_defs
-               ${CMAKE_CURRENT_BINARY_DIR}/test_defs.cpp)
-target_link_libraries(qdmi_test_my_device_defs
-                      PRIVATE qdmi::qdmi qdmi::my_device qdmi::project_warnings)
+generate_device_defs_executable(${QDMI_PREFIX})
 
 # ------------------------------------------------------------------------------
 # Functional Tests
