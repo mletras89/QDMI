@@ -10,7 +10,6 @@ cmake_minimum_required(VERSION 3.19...3.30)
 option(CXX_DEVICE "Build a C++ device" ON)
 
 set(QDMI_PREFIX "MY")
-string(TOLOWER ${QDMI_PREFIX} QDMI_prefix)
 
 project(
   MyDevice
