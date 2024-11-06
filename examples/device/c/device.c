@@ -198,10 +198,12 @@ int C_QDMI_query_device_property_dev(const QDMI_Device_Property prop,
   return QDMI_ERROR_NOTSUPPORTED;
 } /// [DOXYGEN FUNCTION END]
 
-int C_QDMI_query_site_property_dev(
-    C_QDMI_Site site, QDMI_Site_Property prop, // NOLINT(*-unused-parameter*)
-    size_t size, void *value, size_t *size_ret) {
-  if (prop >= QDMI_SITE_PROPERTY_MAX || (value == NULL && size_ret == NULL)) {
+int C_QDMI_query_site_property_dev(C_QDMI_Site site,
+                                   const QDMI_Site_Property prop,
+                                   const size_t size, void *value,
+                                   size_t *size_ret) {
+  if (site == NULL || prop >= QDMI_SITE_PROPERTY_MAX ||
+      (value == NULL && size_ret == NULL)) {
     return QDMI_ERROR_INVALIDARGUMENT;
   }
   ADD_SINGLE_VALUE_PROPERTY(QDMI_SITE_PROPERTY_TIME_T1, double, 1000.0, prop,

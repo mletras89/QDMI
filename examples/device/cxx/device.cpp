@@ -234,10 +234,11 @@ int CXX_QDMI_query_device_property_dev(const QDMI_Device_Property prop,
   return QDMI_ERROR_NOTSUPPORTED;
 } /// [DOXYGEN FUNCTION END]
 
-int CXX_QDMI_query_site_property_dev([[maybe_unused]] CXX_QDMI_Site site,
-                                     QDMI_Site_Property prop, size_t size,
-                                     void *value, size_t *size_ret) {
-  if (prop >= QDMI_SITE_PROPERTY_MAX ||
+int CXX_QDMI_query_site_property_dev(CXX_QDMI_Site site,
+                                     const QDMI_Site_Property prop,
+                                     const size_t size, void *value,
+                                     size_t *size_ret) {
+  if (site == nullptr || prop >= QDMI_SITE_PROPERTY_MAX ||
       (value == nullptr && size_ret == nullptr)) {
     return QDMI_ERROR_INVALIDARGUMENT;
   }
