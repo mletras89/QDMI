@@ -143,7 +143,7 @@ flattened into a single list of @ref QDMI_Site's.
   \until DOXYGEN FUNCTION END
 - <b class="tab-title">C++</b>
   \dontinclude device.cpp
-  \skipline constexpr static std::array<const QDMI_Site_impl_d *const, 20>
+  \skipline constexpr static std::array<const CXX_QDMI_Site_impl_d *const, 20>
   \skip DEVICE_COUPLING_MAP
   \until ;
   \skip QDMI_query_device_property_dev

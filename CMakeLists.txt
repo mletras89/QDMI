@@ -13,8 +13,19 @@ project(
   VERSION 1.0.0 # Beta 1
   DESCRIPTION "QDMI –– Quantum Device Management Interface")
 
+# set some important directories
+set(QDMI_INCLUDE_BUILD_DIR
+    "${CMAKE_CURRENT_SOURCE_DIR}/include"
+    CACHE INTERNAL "Include directory")
+set(QDMI_TEST_DIR
+    "${CMAKE_CURRENT_SOURCE_DIR}/test"
+    CACHE INTERNAL "Test directory")
+set(QDMI_CMAKE_DIR
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake"
+    CACHE INTERNAL "CMake directory")
+
 # make scripts available to cmake
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+list(APPEND CMAKE_MODULE_PATH ${QDMI_CMAKE_DIR})
 
 include(cmake/Cache.cmake)
 
@@ -62,40 +73,22 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 set(CMAKE_C_EXTENSIONS False)
 
 include(cmake/ExternalDependencies.cmake)
+include(cmake/PrefixHandling.cmake)
 
-# set the include directory for the build tree
-set(QDMI_INCLUDE_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
-set(QDMI_TEST_DIR "${CMAKE_CURRENT_SOURCE_DIR}/test")
-
-# add main library code
-if(QDMI_INSTALL)
-  include(GNUInstallDirs)
-  set(QDMI_CONFIG_INSTALL_DIR "${CMAKE_INSTALL_DATADIR}/cmake/qdmi")
-  set(QDMI_INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR}/qdmi")
-  set(QDMI_TARGETS_EXPORT_NAME "qdmi-targets")
-  set(QDMI_CMAKE_CONFIG_TEMPLATE
-      "${PROJECT_SOURCE_DIR}/cmake/qdmi-config.cmake.in")
-  set(QDMI_CMAKE_CONFIG_DIR "${CMAKE_CURRENT_BINARY_DIR}")
-  set(QDMI_CMAKE_VERSION_CONFIG_FILE
-      "${QDMI_CMAKE_CONFIG_DIR}/qdmi-config-version.cmake")
-  set(QDMI_CMAKE_PROJECT_CONFIG_FILE
-      "${QDMI_CMAKE_CONFIG_DIR}/qdmi-config.cmake")
-  set(QDMI_CMAKE_PROJECT_TARGETS_FILE
-      "${QDMI_CMAKE_CONFIG_DIR}/qdmi-targets.cmake")
-endif()
-
+# add warnings target
 if(NOT TARGET project_warnings)
-  # Use the warnings specified in CompilerWarnings.cmake
+  # use the warnings specified in CompilerWarnings.cmake
   add_library(project_warnings INTERFACE)
 
-  # Standard compiler warnings
+  # standard compiler warnings
   include(${PROJECT_SOURCE_DIR}/cmake/CompilerWarnings.cmake)
   set_project_warnings(project_warnings)
 
-  # Add alias
+  # add alias
   add_library(qdmi::project_warnings ALIAS project_warnings)
 endif()
 
+# add main library code
 if(NOT TARGET qdmi)
   # add main library code
   add_library(qdmi INTERFACE)
@@ -127,8 +120,49 @@ if(NOT TARGET qdmi)
   add_library(qdmi::qdmi ALIAS qdmi)
 endif()
 
+# add documentation
+if(BUILD_QDMI_DOCS)
+  add_subdirectory(docs)
+endif()
+
+# add examples (used by tests)
+if(BUILD_QDMI_EXAMPLES OR BUILD_QDMI_TESTS)
+  add_subdirectory(examples)
+endif()
+
+# add test code
+if(BUILD_QDMI_TESTS)
+  enable_testing()
+  include(GoogleTest)
+  # include the tests itself
+  add_subdirectory(test)
+endif()
+
+# add templates
+if(BUILD_QDMI_TEMPLATES OR BUILD_QDMI_TESTS)
+  # if testing is enabled, also enable building the tests in the templates
+  set(BUILD_MY_DEVICE_TESTS
+      ${BUILD_QDMI_TESTS}
+      CACHE BOOL "Build tests for MyDevice" FORCE)
+  add_subdirectory(templates)
+endif()
+
 # Installation instructions for the main library
 if(QDMI_INSTALL)
+  include(GNUInstallDirs)
+  set(QDMI_CONFIG_INSTALL_DIR "${CMAKE_INSTALL_DATADIR}/cmake/qdmi")
+  set(QDMI_INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR}/qdmi")
+  set(QDMI_TARGETS_EXPORT_NAME "qdmi-targets")
+  set(QDMI_CMAKE_CONFIG_TEMPLATE
+      "${PROJECT_SOURCE_DIR}/cmake/qdmi-config.cmake.in")
+  set(QDMI_CMAKE_CONFIG_DIR "${CMAKE_CURRENT_BINARY_DIR}")
+  set(QDMI_CMAKE_VERSION_CONFIG_FILE
+      "${QDMI_CMAKE_CONFIG_DIR}/qdmi-config-version.cmake")
+  set(QDMI_CMAKE_PROJECT_CONFIG_FILE
+      "${QDMI_CMAKE_CONFIG_DIR}/qdmi-config.cmake")
+  set(QDMI_CMAKE_PROJECT_TARGETS_FILE
+      "${QDMI_CMAKE_CONFIG_DIR}/qdmi-targets.cmake")
+
   include(CMakePackageConfigHelpers)
   configure_package_config_file(
     ${QDMI_CMAKE_CONFIG_TEMPLATE} ${QDMI_CMAKE_PROJECT_CONFIG_FILE}
@@ -160,31 +194,4 @@ if(QDMI_INSTALL)
     NAMESPACE qdmi::
     DESTINATION ${QDMI_CONFIG_INSTALL_DIR}
     COMPONENT QDMI_Development)
-endif()
-
-# add documentation
-if(BUILD_QDMI_DOCS)
-  add_subdirectory(docs)
-endif()
-
-# add examples (used by tests)
-if(BUILD_QDMI_EXAMPLES OR BUILD_QDMI_TESTS)
-  add_subdirectory(examples)
-endif()
-
-# add test code
-if(BUILD_QDMI_TESTS)
-  enable_testing()
-  include(GoogleTest)
-  # include the tests itself
-  add_subdirectory(test)
-endif()
-
-# add templates
-if(BUILD_QDMI_TEMPLATES OR BUILD_QDMI_TESTS)
-  # if testing is enabled, also enable building the tests in the templates
-  set(BUILD_MY_DEVICE_TESTS
-      ${BUILD_QDMI_TESTS}
-      CACHE BOOL "Build tests for MyDevice" FORCE)
-  add_subdirectory(templates/device)
 endif()

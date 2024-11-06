@@ -11,6 +11,8 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #pragma once
 
 #include "qdmi/common/types.h"
+#include "qdmi/device/types.h"
+#include "qdmi/driver/types.h"
 
 #ifdef __cplusplus
 #include <cstddef>

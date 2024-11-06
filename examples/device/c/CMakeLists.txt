@@ -9,4 +9,6 @@
 # accordingly.
 add_library(c_device SHARED device.c)
 target_link_libraries(c_device PRIVATE qdmi::qdmi qdmi::project_warnings)
+generate_prefixed_qdmi_headers("C")
+target_include_directories(c_device PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/include)
 add_library(qdmi::c_device ALIAS c_device)

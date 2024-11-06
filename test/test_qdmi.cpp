@@ -13,7 +13,6 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <complex>
 #include <cstddef>
 #include <gtest/gtest.h>
-#include <map>
 #include <sstream>
 #include <string>
 #include <unordered_map>
@@ -25,13 +24,14 @@ INSTANTIATE_TEST_SUITE_P(
     QDMIDevice,             // Custom instantiation name
     QDMIImplementationTest, // Test suite name
     // Parameters to test with
-    ::testing::Values("../examples/device/c/libc_device",
-                      "../examples/device/cxx/libcxx_device"),
-    [](const testing::TestParamInfo<std::string> &inf) {
+    ::testing::Values(std::pair{"../examples/device/c/libc_device", "C"},
+                      std::pair{"../examples/device/cxx/libcxx_device", "CXX"}),
+    [](const testing::TestParamInfo<std::pair<std::string, std::string>> &inf) {
       // Extract the last part of the file path
-      const size_t pos = inf.param.find_last_of("/\\");
-      std::string filename =
-          (pos == std::string::npos) ? inf.param : inf.param.substr(pos + 1);
+      const size_t pos = inf.param.first.find_last_of("/\\");
+      std::string filename = (pos == std::string::npos)
+                                 ? inf.param.first
+                                 : inf.param.first.substr(pos + 1);
 
       // Strip the 'lib' prefix if it exists
       const std::string prefix = "lib";
@@ -39,6 +39,7 @@ INSTANTIATE_TEST_SUITE_P(
         filename = filename.substr(prefix.size());
       }
 
+      // return name for the test
       return filename;
     });
 

@@ -19,20 +19,8 @@ add_subdirectory(utils)
 # ------------------------------------------------------------------------------
 # Non-Functional Tests
 # ------------------------------------------------------------------------------
-# test that a device implementation implements all functions
-#
-# NOTE: This executable is not meant to be ever executed, only linked.
-add_executable(qdmi_test_c_device_defs utils/test_defs.cpp)
-target_link_libraries(
-  qdmi_test_c_device_defs PRIVATE qdmi::qdmi qdmi::c_device
-                                  qdmi::example_driver qdmi::project_warnings)
-
-# test that a device implementation implements all functions NOTE: This
-# executable is not meant to be ever executed, only linked.
-add_executable(qdmi_test_cxx_device_defs utils/test_defs.cpp)
-target_link_libraries(
-  qdmi_test_cxx_device_defs PRIVATE qdmi::qdmi qdmi::cxx_device
-                                    qdmi::example_driver qdmi::project_warnings)
+generate_device_defs_executable("C")
+generate_device_defs_executable("CXX")
 
 # ------------------------------------------------------------------------------
 # Functional Tests

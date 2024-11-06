@@ -15,4 +15,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # accordingly.
 add_library(cxx_device SHARED device.cpp)
 target_link_libraries(cxx_device PRIVATE qdmi::qdmi qdmi::project_warnings)
+generate_prefixed_qdmi_headers("CXX")
+target_include_directories(cxx_device
+                           PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/include)
 add_library(qdmi::cxx_device ALIAS cxx_device)

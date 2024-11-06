@@ -9,13 +9,13 @@ include(CMakeDependentOption)
 set(FETCH_PACKAGES "")
 
 if(TARGET qdmi::qdmi)
-  message(STATUS "Device template: QDMI is already available.")
+  message(STATUS "[qdmi][template] QDMI is already available.")
 else()
-  message(STATUS "Device template: QDMI will be included via FetchContent")
+  message(STATUS "[qdmi][template] QDMI will be included via FetchContent")
   # cmake-format: off
   set(QDMI_VERSION 1.0.0
           CACHE STRING "QDMI version")
-  set(QDMI_REV "146f887ad887fbe81d831863d346e7554b5b1505"
+  set(QDMI_REV "5e7e8c60f30483427bf28d899f3b4a309faced52"
           CACHE STRING "QDMI identifier (tag, branch or commit hash)")
   set(QDMI_REPO_OWNER "Munich-Quantum-Software-Stack"
           CACHE STRING "QDMI repository owner (change when using a fork)")
@@ -38,6 +38,8 @@ else()
       list(APPEND FETCH_PACKAGES qdmi)
     endif()
   endif()
+  message(
+    STATUS "[qdmi][template] QDMI will be included via FetchContent - done")
 endif()
 
 if(BUILD_MY_DEVICE_TESTS)

@@ -9,6 +9,8 @@ cmake_minimum_required(VERSION 3.19...3.30)
 
 option(CXX_DEVICE "Build a C++ device" ON)
 
+set(QDMI_PREFIX "MY")
+
 project(
   MyDevice
   LANGUAGES C
