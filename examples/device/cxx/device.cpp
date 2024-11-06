@@ -317,7 +317,6 @@ int CXX_QDMI_control_create_job_dev(const QDMI_Program_Format format,
     return QDMI_ERROR_NOTSUPPORTED;
   }
 
-  device_state.status = QDMI_DEVICE_STATUS_BUSY;
   *job = new CXX_QDMI_Job_impl_d;
   // set job id to random number for demonstration purposes
   (*job)->id = device_state.dis(device_state.gen);

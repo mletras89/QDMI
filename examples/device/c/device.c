@@ -303,7 +303,6 @@ int C_QDMI_control_create_job_dev(const QDMI_Program_Format format,
     return QDMI_ERROR_NOTSUPPORTED;
   }
 
-  C_QDMI_set_device_status(QDMI_DEVICE_STATUS_BUSY);
   *job = (C_QDMI_Job)malloc(sizeof(C_QDMI_Job_impl_t));
   // set job id to random number for demonstration purposes
   (*job)->id = rand();
