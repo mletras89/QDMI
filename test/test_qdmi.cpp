@@ -13,7 +13,6 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <complex>
 #include <cstddef>
 #include <gtest/gtest.h>
-#include <map>
 #include <sstream>
 #include <string>
 #include <unordered_map>
