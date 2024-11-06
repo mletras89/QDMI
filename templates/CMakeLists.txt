@@ -26,6 +26,11 @@ if(CONFIGURE_TEMPLATE)
     get_filename_component(file_name ${rel_file} NAME)
     file(MAKE_DIRECTORY ${TEMPLATE_PATH}/${rel_dir})
     file(READ ${file} file_content)
+    string(
+      REGEX
+      REPLACE "set\\(QDMI_PREFIX \"MY\"\\)"
+              "set(QDMI_PREFIX \"${TEMPLATE_PREFIX}\")" file_content
+              "${file_content}")
     string(REGEX REPLACE "MY_" "${TEMPLATE_PREFIX}_" file_content
                          "${file_content}")
     string(REGEX REPLACE "my_" "${TEMPLATE_prefix}_" file_content
