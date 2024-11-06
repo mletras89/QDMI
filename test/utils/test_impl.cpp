@@ -16,7 +16,6 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <filesystem>
 #include <fstream>
 #include <gtest/gtest.h>
-#include <iostream>
 #include <string>
 
 void QDMIImplementationTest::SetUp() {
@@ -192,7 +191,6 @@ TEST_P(QDMIImplementationTest, QueryDeviceNameImplemented) {
             QDMI_SUCCESS)
       << "Devices must provide a name";
   ASSERT_FALSE(value.empty()) << "Devices must provide a name";
-  std::cout << "Device name: " << value << "\n";
 }
 
 TEST_P(QDMIImplementationTest, QueryDeviceVersionImplemented) {
