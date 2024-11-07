@@ -26,8 +26,9 @@ the query interface. The corresponding properties are
 - @ref QDMI_DEVICE_PROPERTY_VERSION
 - @ref QDMI_DEVICE_PROPERTY_LIBRARYVERSION
 
-All of those properties are of type `char*` (string). Hence, they are returned by the @ref
-QDMI_query_device_property_dev function. Below you find the respective implementation in C and C++.
+All of those properties are of type `char*` (string). Since they are properties of the device, they
+are returned by the @ref QDMI_query_device_property_dev function. Below you find the respective
+implementation in C++ and C.
 
 <!-- prettier-ignore-start -->
 <div class="tabbed">
@@ -158,10 +159,9 @@ flattened into a single list of @ref QDMI_Site's.
 ### Complex Properties {#device-complex}
 
 The properties that are returned by @ref QDMI_query_operation_property_dev may depend on the actual
-site. The available @ref QDMI_Operation operations and @ref QDMI_Site sites, first, need to be
-retrieved through @ref QDMI_query_get_operations_dev and @ref QDMI_query_get_sites_dev,
-respectively. Following is an example of how to implement the @ref QDMI_query_get_sites_dev
-function.
+site. The available @ref QDMI_Operation's and @ref QDMI_Site's, first, need to be retrieved through
+@ref QDMI_query_get_operations_dev and @ref QDMI_query_get_sites_dev, respectively. Following is an
+example of how to implement the @ref QDMI_query_get_sites_dev function.
 
 <!-- prettier-ignore-start -->
 <div class="tabbed">
@@ -180,7 +180,7 @@ function.
 </div>
 <!-- prettier-ignore-end -->
 
-With the handles for @ref QDMI_Operation and @ref QDMI_Site, corresponding properties can be
+With the handles for a @ref QDMI_Operation and @ref QDMI_Site, corresponding properties can be
 queried. The following example demonstrates how different properties of operations, e.g., varying
 fidelities of two-qubit gates can be returned.
 
@@ -250,3 +250,10 @@ implementation of @ref QDMI_control_submit_job_dev.
   \until DOXYGEN FUNCTION END
 </div>
 <!-- prettier-ignore-end -->
+
+For the full implementation of the example device we refer to the respective source files in the
+QDMI repository, i.e.,
+[`device.cpp`](https://github.com/Munich-Quantum-Software-Stack/QDMI/blob/develop/examples/device/cxx/device.cpp)
+for the C++ implementation and
+[`device.c`](https://github.com/Munich-Quantum-Software-Stack/QDMI/blob/develop/examples/device/c/device.c)
+for the C implementation.
