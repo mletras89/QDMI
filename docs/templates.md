@@ -12,8 +12,10 @@ device. The following sections describe how to use and setup the template.
 
 The template is contained in the `template/` directory. However, this is the wrong place to start a
 new implementation of a device. Instead, perform the following CMake command. Keep in mind to
-replace the prefix and the path as desired. To comply with the style standard of the code in QDMI,
-choose a prefix with uppercase letters.
+replace the prefix and the path as desired. To comply with the naming conventions in QDMI, choose a
+prefix with uppercase letters.
+
+\note You need internet connection for this step as QDMI will be fetched in this step.
 
 ```sh
 cmake -DCONFIGURE_TEMPLATE=ON \     # activate template creation
@@ -22,15 +24,18 @@ cmake -DCONFIGURE_TEMPLATE=ON \     # activate template creation
     -S . -B build
 ```
 
-If this option is not given it will be placed in `PREFIX_qdmi_device` relative to the parent
-directory where QDMI was cloned in. After this step you can directly start implementing your device
-in C++. If you want to implement in C, see also the next section. See \ref examples.md examples for
-concrete implementation examples.
+This command should add a directory `build/` to your project where all the build files are stored.
+The configure step above only needs to be performed once. If the option `TEMPLATE_PATH` is not given
+it will be placed in `PREFIX_qdmi_device` relative to the parent directory where QDMI was cloned in.
+After this step you can directly start implementing your device in C++. If you want to implement in
+C, see also the next section. See [Examples](examples.md) for concrete implementation examples.
 
 ## Configuring the Template {#template-configure}
 
 The default template is setup with the specified prefix and as a C++ project. You can easily switch
-the project to a purely C project by setting the option `CXX_DEVICE` to `OFF`.
+the project to a purely C project by setting the option `CXX_DEVICE` to `OFF` by either appending
+the option `-DCXX_DEVICE=OFF` to the `cmake` command above or by changing the value in line 10 of
+the `CMakeLists.txt` file in the root directory of the template.
 
 For stability, we recommend to fix the commit hash of QDMI that you use during your implementation.
 To this end, change the line 18 in `cmake/ExternalDependecies.cmake` as follows where you replace
@@ -61,29 +66,20 @@ required dependencies is outsourced into `cmake/`.
 
 The most important directory for your implementation is `src/` and the `.cpp` file located in that
 directory. Here you find stubs for all functions that have to be implemented by a device. For every
-function the `return QDMI_NOT_IMPLEMENTED;` should be replaced by a proper implementation of the
-function. In particular, there should not be any computation path at the end anymore that returns
-`QDMI_NOT_IMPLEMENTED`, instead some other error code should be returned in an erroneous state.
+function the `return QDMI_ERROR_NOTIMPLEMENTED;` should be replaced by a proper implementation of
+the function. In particular, there should not be any computation path at the end anymore that
+returns \ref QDMI_ERROR_NOTIMPLEMENTED, instead some other error code from \ref QDMI_STATUS should
+be returned in an erroneous state.
 
 The implementation in the `src/` directory is complemented with a testing framework in `test/`. The
-`.cpp` source file already contains some examples for test. They are meant to serve as an
-inspiration and more tests should be covered to cover everything of your device implementation.
+`.cpp` source file already contains some examples for tests. They are meant to serve as an
+inspiration and more tests should be implemented to cover everything of your device implementation.
 
-## Building the Template and Running the Tests
+## Building the Template and Running the Tests {#template-building}
 
-Before to start working on the implementation, the CMake project should be configured once to
-resolve all references. All of the following commands are meant to be executed from the root
-directory of the template. For that run the following CMake command:
-
-\note You need internet connection for this step as QDMI will be fetched in this step.
-
-```sh
-cmake -S . -B build
-```
-
-This command should add a directory `build/` to your project where all the build files are stored.
-The configure step above only needs to be performed once. After that, when you want to build your
-implementation, run the following command:
+All of the following commands are meant to be executed from the root directory of the template.
+After configuring your project (see [Configuring the Template](#template-configure)), you can build
+your project with the following command:
 
 ```sh
 cmake --build build
@@ -99,4 +95,4 @@ To run the tests perform the following command:
 ctest --test-dir build
 ```
 
-For more details on the development process, also check out the \ref guide.md "Development Guide".
+For more details on the development process, also check out the [Development Guide](guide.md).
