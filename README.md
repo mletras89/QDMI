@@ -4,7 +4,7 @@
   SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 -->
 
-![QDMI](docs/_static/qdmi.png)
+![QDMI](docs/_static/qdmi.svg)
 
 # QDMI — Quantum Device Management Interface
 

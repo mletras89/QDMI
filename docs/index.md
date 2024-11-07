@@ -6,7 +6,7 @@
 
 ## Quantum Device Management Interface
 
-![](_static/qdmi.png)
+![](_static/qdmi.svg)
 
 <!-- Include the content of README.md between the pair of markers DOXYGEN MAIN. -->
 
