@@ -4,7 +4,7 @@
   SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 -->
 
-![QDMI](docs/_static/qdmi.svg)
+![MQSS Logo](docs/\_static/mqss_logo_dark.svg =200)
 
 # QDMI — Quantum Device Management Interface
 
@@ -27,6 +27,8 @@ these platforms. QDMI is provided as a collection of C header files to allow fas
 an HPC environment.
 
 <!-- [DOXYGEN MAIN] -->
+
+![QDMI](docs/_static/qdmi.svg)
 
 > [!IMPORTANT]
 >
