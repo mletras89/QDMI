@@ -21,6 +21,7 @@ set(DOXYGEN_INPUT_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/index.md
     ${CMAKE_CURRENT_SOURCE_DIR}/faq.md
     ${CMAKE_CURRENT_SOURCE_DIR}/support.md
+    ${CMAKE_CURRENT_SOURCE_DIR}/rationale.md
     ${CMAKE_CURRENT_SOURCE_DIR}/examples.md
     ${CMAKE_CURRENT_SOURCE_DIR}/templates.md
     ${CMAKE_CURRENT_SOURCE_DIR}/guide.md)
