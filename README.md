@@ -5,7 +5,10 @@
 -->
 
 <p align="center">
-  <img style="width:200px;" src="docs/_static/mqss_logo_dark.svg"/>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Munich-Quantum-Software-Stack/QDMI/develop/docs/_static/mqss_logo.svg" width="20%">
+    <img src="https://raw.githubusercontent.com/Munich-Quantum-Software-Stack/QDMI/develop/docs/_static/mqss_logo_dark.svg" width="20%">
+  </picture>
 </p>
 
 # QDMI — Quantum Device Management Interface
