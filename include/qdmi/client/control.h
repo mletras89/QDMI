@@ -81,7 +81,7 @@ int QDMI_control_set_parameter(QDMI_Device dev, QDMI_Job job,
  * @param[in] dev The device to submit the job to.
  * @param[in] job The job to submit.
  * @return @ref QDMI_SUCCESS if the job was successfully submitted.
- * @return @ref QDMI_ERROR_INVALIDARGUMENT if the job is in an invalid state
+ * @return @ref QDMI_ERROR_INVALIDARGUMENT if the job is in an invalid state.
  * @return @ref QDMI_ERROR_FATAL if the job submission failed.
  */
 int QDMI_control_submit_job(QDMI_Device dev, QDMI_Job job);
@@ -94,7 +94,7 @@ int QDMI_control_submit_job(QDMI_Device dev, QDMI_Job job);
  * @param[in] job The job to cancel.
  * @return @ref QDMI_SUCCESS if the job was successfully cancelled.
  * @return @ref QDMI_ERROR_INVALIDARGUMENT if the job has already the status
- * QDMI_JOB_STATUS_DONE or the job does not exist.
+ * @ref QDMI_JOB_STATUS_DONE or the job does not exist.
  * @return @ref QDMI_ERROR_FATAL if the job could not be cancelled.
  */
 int QDMI_control_cancel(QDMI_Device dev, QDMI_Job job);
