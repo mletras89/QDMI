@@ -32,6 +32,15 @@ concrete implementation examples.
 The default template is setup with the specified prefix and as a C++ project. You can easily switch
 the project to a purely C project by setting the option `CXX_DEVICE` to `OFF`.
 
+For stability, we recommend to fix the commit hash of QDMI that you use during your implementation.
+To this end, change the line 18 in `cmake/ExternalDependecies.cmake` as follows where you replace
+the commit hash with the commit hash you want to use for your implementation:
+
+```diff
+-   set(QDMI_REV "develop"
++   set(QDMI_REV "123456789"
+```
+
 When you want to change the prefix after creation of the template, you need to change the prefix in
 a couple of places. We want to give you some hints where you have to change it but depending on your
 personal project setup they might be different or there might be more than the listed once. All
