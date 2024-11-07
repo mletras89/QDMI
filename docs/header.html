@@ -104,8 +104,21 @@
           animation: octocat-wave 560ms ease-in-out;
         }
       }
-    </style>
 
+      /* image path depending on the color scheme */
+      /* Default (light mode) */
+      .logo {
+        width: 130px;
+        height: auto;
+      }
+      .logo {
+        content: url("$relpath^$projectlogo"); /* this is set by doxygen, see PROJECT_LOGO in the Doxyfile.in */
+      }
+      /* Dark mode */
+      html.dark-mode .logo {
+        content: url("$relpath^mqss_logo_dark.svg");
+      }
+    </style>
     <!--BEGIN DISABLE_INDEX-->
     <!--BEGIN FULL_SIDEBAR-->
     <div id="side-nav" class="ui-resizable side-nav-resizable">
@@ -122,7 +135,7 @@
             <tbody>
               <tr id="projectrow">
                 <!--BEGIN PROJECT_LOGO-->
-                <td id="projectlogo"><img alt="Logo" src="$relpath^$projectlogo" $logosize /></td>
+                <td id="projectlogo"><img class="logo" alt="Logo"/></td>
                 <!--END PROJECT_LOGO-->
                 <!--BEGIN PROJECT_NAME-->
                 <td id="projectalign">
