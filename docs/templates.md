@@ -66,6 +66,8 @@ Before to start working on the implementation, the CMake project should be confi
 resolve all references. All of the following commands are meant to be executed from the root
 directory of the template. For that run the following CMake command:
 
+\note You need internet connection for this step as QDMI will be fetched in this step.
+
 ```sh
 cmake -S . -B build
 ```
