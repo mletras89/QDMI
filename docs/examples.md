@@ -11,9 +11,11 @@ repository.
 
 ## Implementing a Device {#device}
 
-Below you find a mock implementation of two QDMI devices: One is implemented in C and the other one
-in C++. Keep in mind, that even though the device can be implemented in C++ it has to provide a C
-interface.
+Below you find a mock implementation of two QDMI devices: One is implemented in C++ and the other
+one in C.
+
+\note Keep in mind, that even though the interface is defined in C, the device can be implemented in
+C++.
 
 ### Basic String Properties {#device-string}
 
@@ -29,15 +31,15 @@ QDMI_query_device_property_dev function. Below you find the respective implement
 
 <!-- prettier-ignore-start -->
 <div class="tabbed">
-- <b class="tab-title">C</b>
-  \dontinclude device.c
+- <b class="tab-title">C++</b>
+  \dontinclude device.cpp
   \skip QDMI_query_device_property_dev
   \until QDMI_DEVICE_PROPERTY_LIBRARYVERSION
   \until size_ret)
   \skip QDMI_ERROR_NOTSUPPORTED
   \until DOXYGEN FUNCTION END
-- <b class="tab-title">C++</b>
-  \dontinclude device.cpp
+- <b class="tab-title">C</b>
+  \dontinclude device.c
   \skip QDMI_query_device_property_dev
   \until QDMI_DEVICE_PROPERTY_LIBRARYVERSION
   \until size_ret)
@@ -56,12 +58,12 @@ implementation of the @ref QDMI_query_device_property_dev function.
 
 <!-- prettier-ignore-start -->
 <div class="tabbed">
-- <b class="tab-title">C</b>
-  \dontinclude device.c
-  \skip #define ADD_STRING_PROPERTY
-  \until DOXYGEN MACRO END
 - <b class="tab-title">C++</b>
   \dontinclude device.cpp
+  \skip #define ADD_STRING_PROPERTY
+  \until DOXYGEN MACRO END
+- <b class="tab-title">C</b>
+  \dontinclude device.c
   \skip #define ADD_STRING_PROPERTY
   \until DOXYGEN MACRO END
 </div>
@@ -71,12 +73,12 @@ A similar macro is defined for other (fixed length) data types, e.g., `int`, `do
 
 <!-- prettier-ignore-start -->
 <div class="tabbed">
-- <b class="tab-title">C</b>
-  \dontinclude device.c
-  \skip #define ADD_SINGLE_VALUE_PROPERTY
-  \until DOXYGEN MACRO END
 - <b class="tab-title">C++</b>
   \dontinclude device.cpp
+  \skip #define ADD_SINGLE_VALUE_PROPERTY
+  \until DOXYGEN MACRO END
+- <b class="tab-title">C</b>
+  \dontinclude device.c
   \skip #define ADD_SINGLE_VALUE_PROPERTY
   \until DOXYGEN MACRO END
 </div>
@@ -86,12 +88,12 @@ Another macro is defined for list properties of the data types above.
 
 <!-- prettier-ignore-start -->
 <div class="tabbed">
-- <b class="tab-title">C</b>
-  \dontinclude device.c
-  \skip #define ADD_LIST_PROPERTY
-  \until DOXYGEN MACRO END
 - <b class="tab-title">C++</b>
   \dontinclude device.cpp
+  \skip #define ADD_LIST_PROPERTY
+  \until DOXYGEN MACRO END
+- <b class="tab-title">C</b>
+  \dontinclude device.c
   \skip #define ADD_LIST_PROPERTY
   \until DOXYGEN MACRO END
 </div>
@@ -106,8 +108,8 @@ device.
 
 <!-- prettier-ignore-start -->
 <div class="tabbed">
-- <b class="tab-title">C</b>
-  \dontinclude device.c
+- <b class="tab-title">C++</b>
+  \dontinclude device.cpp
   \skip QDMI_query_device_property_dev
   \until {
   \skip QDMI_DEVICE_PROPERTY_QUBITSNUM
@@ -115,8 +117,8 @@ device.
   \until size_ret)
   \skip QDMI_ERROR_NOTSUPPORTED
   \until DOXYGEN FUNCTION END
-- <b class="tab-title">C++</b>
-  \dontinclude device.cpp
+- <b class="tab-title">C</b>
+  \dontinclude device.c
   \skip QDMI_query_device_property_dev
   \until {
   \skip QDMI_DEVICE_PROPERTY_QUBITSNUM
@@ -135,17 +137,17 @@ flattened into a single list of @ref QDMI_Site's.
 
 <!-- prettier-ignore-start -->
 <div class="tabbed">
-- <b class="tab-title">C</b>
-  \dontinclude device.c
-  \skip QDMI_query_device_property_dev
-  \until {
-  \skip ADD_LIST_PROPERTY
-  \until DOXYGEN FUNCTION END
 - <b class="tab-title">C++</b>
   \dontinclude device.cpp
   \skipline constexpr static std::array<const CXX_QDMI_Site_impl_d *const, 20>
   \skip DEVICE_COUPLING_MAP
   \until ;
+  \skip QDMI_query_device_property_dev
+  \until {
+  \skip ADD_LIST_PROPERTY
+  \until DOXYGEN FUNCTION END
+- <b class="tab-title">C</b>
+  \dontinclude device.c
   \skip QDMI_query_device_property_dev
   \until {
   \skip ADD_LIST_PROPERTY
@@ -163,15 +165,15 @@ function.
 
 <!-- prettier-ignore-start -->
 <div class="tabbed">
-- <b class="tab-title">C</b>
-  \dontinclude device.c
-  \skip DEVICE_SITES
-  \until ;
-  \skip QDMI_query_get_sites_dev
-  \until DOXYGEN FUNCTION END
 - <b class="tab-title">C++</b>
   \dontinclude device.cpp
   \skip device_sites
+  \until ;
+  \skip QDMI_query_get_sites_dev
+  \until DOXYGEN FUNCTION END
+- <b class="tab-title">C</b>
+  \dontinclude device.c
+  \skip DEVICE_SITES
   \until ;
   \skip QDMI_query_get_sites_dev
   \until DOXYGEN FUNCTION END
@@ -184,15 +186,15 @@ fidelities of two-qubit gates can be returned.
 
 <!-- prettier-ignore-start -->
 <div class="tabbed">
-- <b class="tab-title">C</b>
-  \dontinclude device.c
-  \skip QDMI_query_operation_property_dev
-  \until DOXYGEN FUNCTION END
 - <b class="tab-title">C++</b>
   \dontinclude device.cpp
   \skip QDMI_Pair_hash
   \until OPERATION_FIDELITIES
   \until ;
+  \skip QDMI_query_operation_property_dev
+  \until DOXYGEN FUNCTION END
+- <b class="tab-title">C</b>
+  \dontinclude device.c
   \skip QDMI_query_operation_property_dev
   \until DOXYGEN FUNCTION END
 </div>
@@ -206,12 +208,12 @@ first example shows a mock implementation of @ref QDMI_control_create_job_dev.
 
 <!-- prettier-ignore-start -->
 <div class="tabbed">
-- <b class="tab-title">C</b>
-  \dontinclude device.c
-  \skip QDMI_control_create_job_dev
-  \until DOXYGEN FUNCTION END
 - <b class="tab-title">C++</b>
   \dontinclude device.cpp
+  \skip QDMI_control_create_job_dev
+  \until DOXYGEN FUNCTION END
+- <b class="tab-title">C</b>
+  \dontinclude device.c
   \skip QDMI_control_create_job_dev
   \until DOXYGEN FUNCTION END
 </div>
@@ -222,12 +224,12 @@ e.g., the number of shots (@ref QDMI_JOB_PARAMETER_SHOTS_NUM).
 
 <!-- prettier-ignore-start -->
 <div class="tabbed">
-- <b class="tab-title">C</b>
-  \dontinclude device.c
-  \skip QDMI_control_set_parameter_dev
-  \until DOXYGEN FUNCTION END
 - <b class="tab-title">C++</b>
   \dontinclude device.cpp
+  \skip QDMI_control_set_parameter_dev
+  \until DOXYGEN FUNCTION END
+- <b class="tab-title">C</b>
+  \dontinclude device.c
   \skip QDMI_control_set_parameter_dev
   \until DOXYGEN FUNCTION END
 </div>
@@ -238,12 +240,12 @@ implementation of @ref QDMI_control_submit_job_dev.
 
 <!-- prettier-ignore-start -->
 <div class="tabbed">
-- <b class="tab-title">C</b>
-  \dontinclude device.c
-  \skip QDMI_control_submit_job_dev
-  \until DOXYGEN FUNCTION END
 - <b class="tab-title">C++</b>
   \dontinclude device.cpp
+  \skip QDMI_control_submit_job_dev
+  \until DOXYGEN FUNCTION END
+- <b class="tab-title">C</b>
+  \dontinclude device.c
   \skip QDMI_control_submit_job_dev
   \until DOXYGEN FUNCTION END
 </div>
