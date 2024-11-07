@@ -5,7 +5,9 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
 /** @file
- * @brief The control interface implemented by a QDMI device.
+ * @brief Defines functions to be implemented by a device for controlling it.
+ * @details The control interface allows submitting jobs to a device, managing
+ * the jobs, and retrieving the results.
  * @see qdmi/client/control.h for the client interface.
  */
 #pragma once

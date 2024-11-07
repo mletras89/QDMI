@@ -5,7 +5,10 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
 /** @file
- * @brief Define the interface for querying properties of a device.
+ * @brief Defines the interface for querying properties of a device.
+ * @details The query interface enables to query static and dynamic properties
+ * of the device in a unified fashion.
+ * @see qdmi/device/query.h for the device interface.
  */
 
 #pragma once

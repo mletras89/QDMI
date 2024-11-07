@@ -9,12 +9,11 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  * @details The purpose of the driver is to connect QDMI device interface
  * implementations to the client interface. The driver is responsible for
  * loading the available devices from their libraries and making them available
- * to the clients. It is also intended to facilitate user management and access
- * control via sessions.
+ * to the clients.
  *
  * @par
- * A driver must include this header and implement all entities defined in this
- * header and @ref driver/session.h.
+ * A driver must include this header and implement all entities defined in @ref
+ * driver/session.h and @ref driver/types.h.
  */
 
 #pragma once
