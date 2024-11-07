@@ -22,6 +22,7 @@ set(DOXYGEN_INPUT_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/faq.md
     ${CMAKE_CURRENT_SOURCE_DIR}/support.md
     ${CMAKE_CURRENT_SOURCE_DIR}/examples.md
+    ${CMAKE_CURRENT_SOURCE_DIR}/templates.md
     ${CMAKE_CURRENT_SOURCE_DIR}/guide.md)
 # By default the files are separated by a semicolon. This is not what Doxygen
 # wants, so we replace it with a space.
