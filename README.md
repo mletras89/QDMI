@@ -4,7 +4,9 @@
   SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 -->
 
-![MQSS Logo](docs/\_static/mqss_logo_dark.svg =200)
+<p align="center">
+  <img style="width:200px;" src="docs/_static/mqss_logo_dark.svg"/>
+</p>
 
 # QDMI — Quantum Device Management Interface
 
