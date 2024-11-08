@@ -11,3 +11,23 @@
 <!-- Include the content of README.md between the pair of markers DOXYGEN MAIN. -->
 
 \snippet{doc} README.md DOXYGEN MAIN
+
+### How to Use this Documentation?
+
+This documentation tries to provide helpful information to get you started with QDMI.
+
+#### General Information
+
+The [FQA](faq.md) page gives an overview over frequently asked questions. More details about the
+design and implementation can be found in the [Rationale](rationale.md) page.
+
+#### Hands-On
+
+The [Examples](examples.md) page provides a collection of examples to see QDMI in action. When you
+want to start your own implementation of QDMI, the [Template](template.md) page is a good starting
+point.
+
+#### Nitty-Gritty Details
+
+When you are interested in the details of the semantics of function, the [API Reference](api.md)
+page is the right place to look for.
