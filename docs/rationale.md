@@ -48,9 +48,15 @@ client can access the devices. To this end, the driver has to implement the type
 store information about itself. Similar to the device's type, the session is just an opaque handle
 for the client and only the driver knows about its implementation.
 
+The interplay of the components is illustrated in the following schematic. It also contains the
+various interfaces that are described in the next section.
+
+![](_static/qdmi_schematic.pdf)
+
 ## Session, Control and Query Interface {#rationale-interfaces}
 
-The components of QDMI communicate through three different interfaces, namely:
+As depicted in the schematic above, the components of QDMI communicate through three different
+interfaces, namely:
 
 - the session interface,
 - the control interface, and
