@@ -21,10 +21,10 @@ QDMI consists of three components, namely:
 The device represents the physical quantum computer or also a classical simulator imitating a
 quantum computer. Multiple devices are managed by the driver. For that the driver maintains a list
 of devices that are currently available. A driver can decide for itself how it implements the
-connection to the devices. For example, the example implementation of a driver @ref
-qdmi_example_driver.cpp loads the devices as dynamic libraries. For that the device implementations
-must be compiled to dynamic libraries and the location of those libraries must be made known to the
-driver. A different approach would be to link the device implementations statically into the driver.
+connection to the devices. For example, the implementation of a driver contained in the examples
+directory loads the devices as dynamic libraries. For that the device implementations must be
+compiled to dynamic libraries and the location of those libraries must be made known to the driver.
+A different approach would be to link the device implementations statically into the driver.
 
 The client is the user of the QDMI library. The driver provides access to various devices for the
 client. The client can use the different functions defined by the interface to gather information
