@@ -52,8 +52,8 @@ set(DOXYGEN_CONFIG_FILE_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
 FetchContent_GetProperties(doxygen-awesome-css SOURCE_DIR AWESOME_CSS_DIR)
 
 # Copy over the dark logo as there can only be one be specified in doxygen
-file(COPY _static/mqss_logo_dark.svg DESTINATION ${DOXYGEN_OUTPUT_DIR}/html)
-file(COPY _static/qdmi_schematic_dark.svg
+file(COPY _static/mqss_logo_dark.svg _static/qdmi_schematic.svg _static/qdmi.svg
+          _static/qdmi_schematic_dark.svg _static/qdmi_dark.svg
      DESTINATION ${DOXYGEN_OUTPUT_DIR}/html)
 # However, one logo must be set in Doxygen to enable the corresponding HTML
 # element

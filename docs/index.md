@@ -6,7 +6,7 @@
 
 ## Quantum Device Management Interface
 
-![](_static/qdmi.svg)
+<img class="qdmi" alt="QDMI in Quantum Software Stack" src="qdmi.svg">
 
 <!-- Include the content of README.md between the pair of markers DOXYGEN MAIN. -->
 
