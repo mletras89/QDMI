@@ -29,3 +29,11 @@
 html {
   --top-height: 160px;
 }
+
+#qdmi-schematic {
+  width: 100%;
+  height: auto;
+}
+html.dark-mode .qdmi-schematic {
+  content: url("qdmi_schematic_dark.svg");
+}

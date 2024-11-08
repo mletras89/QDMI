@@ -53,6 +53,8 @@ FetchContent_GetProperties(doxygen-awesome-css SOURCE_DIR AWESOME_CSS_DIR)
 
 # Copy over the dark logo as there can only be one be specified in doxygen
 file(COPY _static/mqss_logo_dark.svg DESTINATION ${DOXYGEN_OUTPUT_DIR}/html)
+file(COPY _static/qdmi_schematic_dark.svg
+     DESTINATION ${DOXYGEN_OUTPUT_DIR}/html)
 # However, one logo must be set in Doxygen to enable the corresponding HTML
 # element
 set(PROJECT_LOGO "mqss_logo.svg")

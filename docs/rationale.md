@@ -51,7 +51,7 @@ for the client and only the driver knows about its implementation.
 The interplay of the components is illustrated in the following schematic. It also contains the
 various interfaces that are described in the next section.
 
-![](_static/qdmi_schematic.pdf)
+<img class="qdmi-schematic" alt="QDMI Components and Interfaces" src="qdmi_schematic.svg"/>
 
 ## Session, Control and Query Interface {#rationale-interfaces}
 
