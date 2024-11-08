@@ -34,19 +34,21 @@ purpose the function invoked on the driver contains a handle to the device such 
 knows the device to forward the request to.
 
 This setup results in the following responsibilities for the components: The device must implement
-all functions defined by QDMI such that they can be called by the driver. Additionally, the device
-must implement the types for sites, operations, and jobs. Handles to those are passed to the driver
-and further to the clients to refer to the respective object. However, only the device knows the
-implementation of those; for the other components those handles are only opaque pointers. The
-implementation of those types can be used by the device to store information about the sites,
-operations, and jobs, respectively.
+all functions defined by the QDMI \ref device/control.h "control" and \ref device/query.h "query"
+interface such that they can be called by the driver. Additionally, the device must implement the
+types for \ref QDMI_Site "sites", \ref QDMI_Operation "operations", and \ref QDMI_Job "jobs".
+Handles to those are passed to the driver and further to the clients to refer to the respective
+object. However, only the device knows the implementation of those; for the other components those
+handles are only opaque pointers. The implementation of those types can be used by the device to
+store information about the sites, operations, and jobs, respectively.
 
-The driver must implement the client interface since it receives the calls by the client.
-Furthermore, the driver is responsible for the management of the devices. The devices for a client
-are managed in sessions. Hence, a client must first create a session and through the session the
-client can access the devices. To this end, the driver has to implement the type session that can
-store information about itself. Similar to the device's type, the session is just an opaque handle
-for the client and only the driver knows about its implementation.
+The driver must implement the \ref client.h "client" interface since it receives the calls by the
+client. Furthermore, the driver is responsible for the management of the devices. The devices for a
+client are managed in \ref QDMI_Session "sessions". Hence, a client must first create a session and
+through the session the client can access the devices. To this end, the driver has to implement the
+type \ref QDMI_Session "session" that can store information about itself. Similar to the device's
+type, the session is just an opaque handle for the client and only the driver knows about its
+implementation.
 
 The interplay of the components is illustrated in the following schematic. It also contains the
 various interfaces that are described in the next section.
