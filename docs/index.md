@@ -18,7 +18,7 @@ This documentation tries to provide helpful information to get you started with 
 
 #### General Information
 
-The [FQA](faq.md) page gives an overview over frequently asked questions. More details about the
+The [FAQ](faq.md) page gives an overview over frequently asked questions. More details about the
 design and implementation can be found in the [Rationale](rationale.md) page.
 
 #### Hands-On
@@ -29,5 +29,5 @@ point.
 
 #### Nitty-Gritty Details
 
-When you are interested in the details of the semantics of function, the [API Reference](files.html)
+When you are interested in the details of the semantics of functions and the whole API, the [Reference Documentation](files.html)
 page is the right place to look for.
