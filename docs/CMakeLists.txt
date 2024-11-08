@@ -51,12 +51,10 @@ set(DOXYGEN_CONFIG_FILE_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
 # also see the occurrences of @AWESOME_CSS_DIR@ in the Doxyfile.in.
 FetchContent_GetProperties(doxygen-awesome-css SOURCE_DIR AWESOME_CSS_DIR)
 
-# Copy over the dark logo as there can only be one be specified in doxygen
-file(COPY _static/mqss_logo_dark.svg _static/qdmi_schematic.svg _static/qdmi.svg
-          _static/qdmi_schematic_dark.svg _static/qdmi_dark.svg
-     DESTINATION ${DOXYGEN_OUTPUT_DIR}/html)
-# However, one logo must be set in Doxygen to enable the corresponding HTML
-# element
+# Copy over the dark mode logos as they are not automatically copied by Doxygen.
+file(COPY _static/mqss_logo_dark.svg _static/qdmi_schematic_dark.svg
+          _static/qdmi_dark.svg DESTINATION ${DOXYGEN_OUTPUT_DIR}/html)
+# Set the logo for the project.
 set(PROJECT_LOGO "mqss_logo.svg")
 
 # Replace variables inside @@ with the current values, e.g., the placeholder
