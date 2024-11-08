@@ -11,11 +11,11 @@ repository.
 
 ## Implementing a Device {#device}
 
-Below you find a mock implementation of two QDMI devices: One is implemented in C++ and the other
-one in C.
+Below you find mock implementations of two QDMI devices: One is implemented in C++ and the other one
+in C.
 
 \note Keep in mind, that even though the interface is defined in C, the device can be implemented in
-C++.
+C++ or any other language that supports the C ABI.
 
 ### Basic String Properties {#device-string}
 
@@ -251,7 +251,7 @@ implementation of @ref QDMI_control_submit_job_dev.
 </div>
 <!-- prettier-ignore-end -->
 
-For the full implementation of the example device we refer to the respective source files in the
+For the full implementation of the example devices we refer to the respective source files in the
 QDMI repository, i.e.,
 [`device.cpp`](https://github.com/Munich-Quantum-Software-Stack/QDMI/blob/develop/examples/device/cxx/device.cpp)
 for the C++ implementation and
