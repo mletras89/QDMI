@@ -33,7 +33,12 @@ an HPC environment.
 
 <!-- [DOXYGEN MAIN] -->
 
-![QDMI](docs/_static/qdmi.svg)
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Munich-Quantum-Software-Stack/QDMI/develop/docs/_static/qdmi.svg" width="80%">
+    <img src="https://raw.githubusercontent.com/Munich-Quantum-Software-Stack/QDMI/develop/docs/_static/qdmi_dark.svg" width="80%">
+  </picture>
+</p>
 
 > [!IMPORTANT]
 >
