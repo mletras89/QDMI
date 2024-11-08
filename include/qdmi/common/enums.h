@@ -62,7 +62,7 @@ enum QDMI_DEVICE_PROPERTY_T {
   QDMI_DEVICE_PROPERTY_MAX
 };
 
-/// Enum of the site properties that can be queried.
+/// Enum of different status the device can be in.
 enum QDMI_DEVICE_STATUS_T {
   QDMI_DEVICE_STATUS_OFFLINE,     ///< The device is offline.
   QDMI_DEVICE_STATUS_IDLE,        ///< The device is idle.
@@ -139,7 +139,10 @@ enum QDMI_OPERATION_PROPERTY_T {
   QDMI_OPERATION_PROPERTY_MAX
 };
 
-/// Enum of the device properties that can be queried.
+/**
+ * @brief Enum of the status a job can have.
+ * @details See also @ref rationale.md for a description of the job's lifecycle.
+ */
 enum QDMI_JOB_STATUS_T {
   /**
    * @brief The job was created and can be configured via @ref
@@ -157,7 +160,7 @@ enum QDMI_JOB_STATUS_T {
 };
 
 /**
- * @brief Enum of the device properties that can be queried.
+ * @brief Enum of the modes a device can be opened in.
  * @note The values of this enum are meant to be used as bitflags. Hence, their
  * values must be powers of 2.
  */
@@ -247,7 +250,7 @@ enum QDMI_JOB_PARAMETER_T {
 };
 
 /**
- * @brief Enum of data-types of the result.
+ * @brief Enum of the formats the results can be returned in.
  */
 enum QDMI_JOB_RESULT_T {
   /**

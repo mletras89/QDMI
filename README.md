@@ -4,7 +4,12 @@
   SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 -->
 
-![QDMI](docs/_static/qdmi.png)
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Munich-Quantum-Software-Stack/QDMI/develop/docs/_static/mqss_logo.svg" width="20%">
+    <img src="https://raw.githubusercontent.com/Munich-Quantum-Software-Stack/QDMI/develop/docs/_static/mqss_logo_dark.svg" width="20%">
+  </picture>
+</p>
 
 # QDMI — Quantum Device Management Interface
 
@@ -27,6 +32,13 @@ these platforms. QDMI is provided as a collection of C header files to allow fas
 an HPC environment.
 
 <!-- [DOXYGEN MAIN] -->
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Munich-Quantum-Software-Stack/QDMI/develop/docs/_static/qdmi.svg" width="80%">
+    <img src="https://raw.githubusercontent.com/Munich-Quantum-Software-Stack/QDMI/develop/docs/_static/qdmi_dark.svg" width="80%">
+  </picture>
+</p>
 
 > [!IMPORTANT]
 >

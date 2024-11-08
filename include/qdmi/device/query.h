@@ -5,7 +5,11 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
 /** @file
- * @brief Define the interface for querying properties of a device.
+ * @brief Defines the functions to be implemented by the device for querying its
+ * properties.
+ * @details The query interface enables to query static and dynamic properties
+ * of the device in a unified fashion.
+ * @see qdmi/client/query.h for the client interface.
  */
 
 #pragma once
@@ -104,7 +108,8 @@ int QDMI_query_device_property_dev(QDMI_Device_Property prop, size_t size,
  * can be of different types, such as defined for the individual property. The
  * function returns the value of the property in the memory pointed to by @p
  * value.
- * @param[in] site is the index of the site for which the property is queried.
+ * @param[in] site is the site returned by @ref QDMI_query_get_sites for which
+ * the property is queried.
  * @param[in] prop is an enumeration constant that identifies the platform
  * information being queried. It can be one of the values specified for @ref
  * QDMI_Site_Property.
@@ -144,11 +149,11 @@ int QDMI_query_site_property_dev(QDMI_Site site, QDMI_Site_Property prop,
  * only be available as an average value for all sites. Those may, nevertheless,
  * be queried through this function by providing no sites at all, i.e., passing
  * @c NULL to @p sites.
- * @param[in] operation is the name of the operation for which the property is
- * queried.
+ * @param[in] operation is the operation returned by @ref
+ * QDMI_query_get_operations for which the property is queried.
  * @param[in] num_sites is the number of sites for which the property is
  * queried.
- * @param[in] sites is a list of indices of the sites for which the property is
+ * @param[in] sites is a list sites for which the property is
  * queried or can be @c NULL. If @p sites is @c NULL, the property is queried
  * for all sites, e.g., as an average value over all sites.
  * @param[in] prop is an enumeration constant that identifies the platform

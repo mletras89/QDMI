@@ -12,7 +12,8 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  *
  * @par
  * An implementation of a device must include this header and implement all
- * entities defined @ref device/control.h and @ref device/query.h.
+ * entities defined in @ref device/control.h, @ref device/query.h, and @ref
+ * device/types.h.
  */
 
 #pragma once

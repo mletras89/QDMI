@@ -21,7 +21,9 @@ set(DOXYGEN_INPUT_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/index.md
     ${CMAKE_CURRENT_SOURCE_DIR}/faq.md
     ${CMAKE_CURRENT_SOURCE_DIR}/support.md
+    ${CMAKE_CURRENT_SOURCE_DIR}/rationale.md
     ${CMAKE_CURRENT_SOURCE_DIR}/examples.md
+    ${CMAKE_CURRENT_SOURCE_DIR}/templates.md
     ${CMAKE_CURRENT_SOURCE_DIR}/guide.md)
 # By default the files are separated by a semicolon. This is not what Doxygen
 # wants, so we replace it with a space.
@@ -48,6 +50,12 @@ set(DOXYGEN_CONFIG_FILE_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
 # into. This allows us to get the path to doxygen-awesome.css. For its usage
 # also see the occurrences of @AWESOME_CSS_DIR@ in the Doxyfile.in.
 FetchContent_GetProperties(doxygen-awesome-css SOURCE_DIR AWESOME_CSS_DIR)
+
+# Copy over the dark mode logos as they are not automatically copied by Doxygen.
+file(COPY _static/mqss_logo_dark.svg _static/qdmi_schematic_dark.svg
+          _static/qdmi_dark.svg DESTINATION ${DOXYGEN_OUTPUT_DIR}/html)
+# Set the logo for the project.
+set(PROJECT_LOGO "mqss_logo.svg")
 
 # Replace variables inside @@ with the current values, e.g., the placeholder
 # @DOXYGEN_INPUT_DIRS@ is replaced by the content of the variable

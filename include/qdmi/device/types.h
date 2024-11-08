@@ -34,20 +34,21 @@ typedef struct QDMI_Job_impl_d *QDMI_Job;
  * superconducting qubits, sites can be used synonymously with qubits. In the
  * case of neutral atoms, sites represent individual traps that can confine
  * atoms. Those atoms are then used as qubits.
+ * To this end, sites are a generalization of qubits that denote locations where
+ * qubits can be placed on a device.
  *
  * @par
- * To this end, sites are a generalization of qubits that denote locations where
- * qubits can be placed on a device. Sites are identified by an integer index
- * that is unique for each site on a device. The indices start at zero and go up
- * to the number of sites minus one.
+ * This type is implemented by the device.
  */
 typedef struct QDMI_Site_impl_d *QDMI_Site;
 
 /**
  * @brief Opaque type for an operation.
  * @details An operation represents a quantum operation that can be executed on
- * a device. The operation is defined by the device and can be executed on the
- * device.
+ * a device.
+ *
+ * @par
+ * This type is implemented by the device.
  */
 typedef struct QDMI_Operation_impl_d *QDMI_Operation;
 

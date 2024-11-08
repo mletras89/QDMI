@@ -5,7 +5,9 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 ------------------------------------------------------------------------------*/
 
 /** @file
- * @brief The control interface implemented by a QDMI device.
+ * @brief Defines functions to be implemented by a device for controlling it.
+ * @details The control interface allows submitting jobs to a device, managing
+ * the jobs, and retrieving the results.
  * @see qdmi/client/control.h for the client interface.
  */
 #pragma once
@@ -73,7 +75,7 @@ int QDMI_control_set_parameter_dev(QDMI_Job job, QDMI_Job_Parameter param,
  * to check the status and wait for the job to finish.
  * @param[in] job The job to submit.
  * @return @ref QDMI_SUCCESS if the job was successfully submitted.
- * @return @ref QDMI_ERROR_INVALIDARGUMENT if the job is in an invalid state
+ * @return @ref QDMI_ERROR_INVALIDARGUMENT if the job is in an invalid state.
  * @return @ref QDMI_ERROR_FATAL if the job submission failed.
  */
 int QDMI_control_submit_job_dev(QDMI_Job job);
@@ -85,7 +87,7 @@ int QDMI_control_submit_job_dev(QDMI_Job job);
  * @param[in] job The job to cancel.
  * @return @ref QDMI_SUCCESS if the job was successfully cancelled.
  * @return @ref QDMI_ERROR_INVALIDARGUMENT if the job has already the status
- * QDMI_JOB_STATUS_DONE or the job does not exist.
+ * @ref QDMI_JOB_STATUS_DONE or the job does not exist.
  * @return @ref QDMI_ERROR_FATAL if the job could not be cancelled.
  */
 int QDMI_control_cancel_dev(QDMI_Job job);

@@ -10,7 +10,7 @@ cmake_minimum_required(VERSION 3.19...3.30)
 project(
   qdmi
   LANGUAGES C
-  VERSION 1.0.0 # Beta 1
+  VERSION 1.0.0 # Beta 2
   DESCRIPTION "QDMI –– Quantum Device Management Interface")
 
 # set some important directories
