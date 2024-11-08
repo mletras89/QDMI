@@ -14,9 +14,9 @@ this page is useful for everyone working with QDMI.
 
 QDMI consists of three components, namely:
 
-- the client,
-- the device, and
-- the driver.
+- the \ref client.h "client",
+- the \ref device.h "device", and
+- the \ref driver.h "driver".
 
 The device represents the physical quantum computer or also a classical simulator imitating a
 quantum computer. Multiple devices are managed by the driver. For that, the driver maintains a list
@@ -58,9 +58,9 @@ various interfaces that are described in the next section.
 As depicted in the schematic above, the components of QDMI communicate through three different
 interfaces, namely:
 
-- the session interface,
-- the control interface, and
-- the query interface.
+- the \ref session.h "session interface",
+- the \ref client/control.h "control interface", and
+- the \ref client/query.h "query interface".
 
 However, those interfaces do not map directly to the components of QDMI. Instead, the session
 interface is exclusively used for the communication between the client and the driver. The client
