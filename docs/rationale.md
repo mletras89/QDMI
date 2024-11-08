@@ -3,7 +3,7 @@
 <!-- IMPORTANT: Keep the line above as the first line. -->
 <!-- This file is a static page and included in the ./CMakeLists.txt file. -->
 
-During the development of QDMI, we had to take several design decision, which we want to outline in
+During the development of QDMI, we had to make several design decision, which we want to outline in
 the following. This page is supposed to serve as a reference for why things are as they are in QDMI.
 Simultaneously, it should help to get a better understanding of the principles of QDMI. To this end,
 this page is useful for everyone working with QDMI.
@@ -19,7 +19,7 @@ QDMI consists of three components, namely:
 - the driver.
 
 The device represents the physical quantum computer or also a classical simulator imitating a
-quantum computer. Multiple devices are managed by the driver. For that the driver maintains a list
+quantum computer. Multiple devices are managed by the driver. For that, the driver maintains a list
 of devices that are currently available. A driver can decide for itself how it implements the
 connection to the devices. For example, the implementation of a driver contained in the examples
 directory loads the devices as dynamic libraries. For that the device implementations must be
@@ -63,15 +63,15 @@ interfaces, namely:
 - the query interface.
 
 However, those interfaces do not map directly to the components of QDMI. Instead, the session
-interface is exclusively used for the communication between the client and the driver. The clients
-calls function of the session interface that is implemented by the driver.
+interface is exclusively used for the communication between the client and the driver. The client
+calls functions of the session interface that is implemented by the driver.
 
 The control and query interfaces facilitate the communication between the client and the device.
-Nevertheless, the communication does not take place directly between those components and goes
-always through the driver. To this end, the control and query interface have two sides, the client
-and device side. The device side of the control and query interface are implemented by the device
-and consumed by the driver. In turn, the client side is implemented by the driver and consumed by
-the client.
+Nevertheless, the communication does not take place directly between those components and always
+goes through the driver. To this end, the control and query interface have two sides, the client and
+device side. The device side of the control and query interface are implemented by the device and
+consumed by the driver. In turn, the client side is implemented by the driver and consumed by the
+client.
 
 The split of this part of QDMI into the control and query interface is motivated by the fact that
 the control interface is used to control job execution and everything connected to it. The
@@ -80,15 +80,14 @@ interface is purely unidirectional from the device to the client.
 
 ## Prefixing Device Implementations {#rationale-prefix}
 
-All symbols and types defined by each device must be prefixed with a unique prefix. First, hardware
-vendors can define their own prefix and make their implementation to their own. Besides the branding
-aspect this eases debugging and maintenance of the code. When an error occurs, the error message
-will contain the function name where the error occurred. By having a unique prefix, it is clear in
-which device the error occurred.
+All symbols and types defined by each device must be prefixed with a unique prefix. Besides the
+branding aspect for hardware vendors, this eases debugging and maintenance of the code. When an
+error occurs, the error message will contain the function name where the error occurred. By having a
+unique prefix, it is clear in which device the error occurred.
 
-Moreover, a unique prefix is necessary to facilitate the static linking of the device
-implementations. When the device implementations are linked statically into the driver, the symbols
-must be unique otherwise the linker will report name conflicts.
+Moreover, a unique prefix is necessary to facilitate static linking of the device implementations.
+When the device implementations are linked statically into the driver, the symbols must be unique
+otherwise the linker will report name conflicts.
 
 ## Data Retrieval Management {#rationale-retrieval}
 
@@ -98,18 +97,18 @@ Before we explain the usage of the function, we shortly highlight the advantages
 Another alternative to the chosen one, would be to introduce a new function for each type that can
 be retrieved. Since the type of data is very individual to the property whose value should be
 retrieved, this would require a specific function for almost every property. Even though some
-properties of the same type could be poold into one function, this design would make the interface
-inflexible. For every new property that should be added that brings a new type a new function would
-have to be added to the interface which introduces a breaking change. Hence, devices not
-implementing this newly added property could not be used with the updated interface. One extreme
-variant of the above would be to have a function for each individual property which is not desired
-because of the same reasoning.
+properties of the same type could be put into one function, this design would make the interface
+very rigid. For every new property that should be added that brings a new type, a new function would
+have to be added to the interface, which introduces a breaking change. Hence, devices not
+implementing this newly added property could not be used with the updated interface. An extreme
+variant of the above would be to have a dedicated function for each individual property, which is
+not desirable for the same reasons.
 
 The chosen design allows for a better compatibility with future versions of the interface. When a
-new property is added, this can simply added to the list of properties. The retrieval of its value
-can be implemented via the same functions and the interface does not break. Device implementations
-of an older interface version might just return \ref QDMI_ERROR_INVALIDARGUMENT for the newly added
-properties but no segmentation fault or similar happens.
+new property is added, this can simply be added to the list of properties. The retrieval of its
+value can be implemented via the same functions and the interface does not break. Device
+implementations of an older interface version might just return \ref QDMI_ERROR_INVALIDARGUMENT for
+the newly added properties but no segmentation fault or similar happens.
 
 In the following, the general usage of functions for data retrieval is explained by the aid of the
 example of \ref QDMI_query_device_property. This function receives a handle to a device that is—in
@@ -127,9 +126,9 @@ come to know the size of a single device handle by calling the function `sizeof(
 use that to allocate a properly sized memory region. The parameter `num_devices` is a pointer to a
 variable that will store the number of devices that were actually written into the allocated memory
 after calling the function. The function can also be called with a `NULL` pointer for `devices` to
-only retrieve the number of devices that are available which will in this case be returned in
-`num_devices`. Simultaneously, if `num_devices` is `NULL`it is ignored and the function only writes
-the number of devices into the memory pointed to by `devices`.
+only retrieve the number of devices that are available which will, in this case, be returned in
+`num_devices`. Simultaneously, if `num_devices` is `NULL`, it is ignored, and the function only
+writes the number of devices into the memory pointed to by `devices`.
 
 With the device handles at hand, the function \ref QDMI_query_device_property can be called for one
 device. The signature of the function is:
