@@ -29,5 +29,5 @@ point.
 
 #### Nitty-Gritty Details
 
-When you are interested in the details of the semantics of functions and the whole API, the [Reference Documentation](files.html)
-page is the right place to look for.
+When you are interested in the details of the semantics of functions and the whole API, the
+[Reference Documentation](files.html) page is the right place to look for.
