@@ -80,6 +80,9 @@ if(BUILD_QDMI_TESTS)
   set(GTEST_URL
       https://github.com/google/googletest/archive/refs/tags/v${GTEST_VERSION}.tar.gz
   )
+  set(INSTALL_GTEST
+      OFF
+      CACHE BOOL "Disable GoogleTest installation")
   if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.24)
     FetchContent_Declare(googletest URL ${GTEST_URL} FIND_PACKAGE_ARGS
                                         ${GTEST_VERSION} NAMES GTest)
@@ -95,3 +98,7 @@ endif()
 
 # Make all declared dependencies available.
 FetchContent_MakeAvailable(${FETCH_PACKAGES})
+
+if(USE_INSTALLED_QDMI)
+  find_package(QDMI ${PROJECT_VERSION} REQUIRED)
+endif()

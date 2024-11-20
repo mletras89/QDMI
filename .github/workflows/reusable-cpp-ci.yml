@@ -33,6 +33,12 @@ jobs:
     with:
       cmake-args: ${{ inputs.cmake-args }} ${{ inputs.cmake-args-macos }}
 
+  cpp-tests-install:
+    name: 📦 Install
+    uses: ./.github/workflows/reusable-cpp-install-tests.yml
+    with:
+      cmake-args: ${{ inputs.cmake-args }}
+
   coverage:
     name: 📈
     uses: cda-tum/mqt-workflows/.github/workflows/reusable-cpp-coverage.yml@v1.4
