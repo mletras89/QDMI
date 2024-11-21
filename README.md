@@ -54,11 +54,9 @@ an HPC environment.
 
 > [!IMPORTANT]
 >
-> The Quantum Device Management Interface (QDMI) is in an active development phase. Our development
-> process is open to the community, encouraging contributions and feedback. Please be aware that
-> QDMI is experimental at this stage, and significant changes, including breaking changes, are
-> anticipated in upcoming releases. We value your input and invite you to participate in shaping
-> QDMI's future. For the latest updates and to contribute, visit our
+> QDMI's development process is open to the community, encouraging contributions and feedback. We
+> value your input and invite you to participate in shaping QDMI's future. For the latest updates
+> and to contribute, visit our
 > [issues page](https://github.com/Munich-Quantum-Software-Stack/QDMI/issues).
 
 ## FAQ
