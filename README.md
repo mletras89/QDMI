@@ -122,6 +122,20 @@ approaches to be used as front-ends, feeding into a natively implemented compile
 which then relies on QDMI. This is very similar to how Python is used in many other parts of
 high-performance computing.
 
+### How do I cite QDMI?
+
+If you use QDMI in your research, please cite the following paper:
+
+```bibtex
+@inproceedings{qdmi,
+    title = {{QDMI -- Quantum Device Management Interface: A Standardized Interface for Quantum Computing Platforms}},
+    shorttitle = {{QDMI -- Quantum Device Management Interface}},
+    booktitle = {IEEE International Conference on Quantum Computing and Engineering (QCE)},
+    author = {Wille, Robert and Schmid, Ludwig and Stade, Yannick and Echavarria, Jorge and Schulz, Martin and Schulz, Laura and Burgholzer, Lukas},
+    date = {2024},
+}
+```
+
 <!-- [DOXYGEN FAQ] -->
 
 ## Contact

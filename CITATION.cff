@@ -1,0 +1,52 @@
+cff-version: 1.2.0
+title: Quantum Device Management Interface (QDMI)
+message: >-
+  Please cite QDMI using the metadata from 'preferred-citation'.
+type: software
+authors:
+  - name: The Munich Quantum Software Stack Project
+    email: mqss@munich-quantum-valley.de
+    affiliation: 'Munich Quantum Valley, Germany'
+url: 'https://munich-quantum-software-stack.github.io/QDMI/'
+license: Apache-2.0 WITH LLVM-exception
+preferred-citation:
+    type: conference-paper
+    title: "QDMI -- Quantum Device Management Interface: Hardware-Software Interface for the Munich Quantum Software Stack"
+    conference: "IEEE International Conference on Quantum Computing and Engineering (QCE)"
+    year: 2024
+    month: 9
+    authors:
+      - given-names: Robert
+        family-names: Wille
+        email: robert.wille@tum.de
+        affiliation: 'Technical University of Munich, Germany'
+        orcid: 'https://orcid.org/0000-0002-4993-7860'
+      - given-names: Ludwig
+        family-names: Schmid
+        email: ludwig.s.schmid@tum.de
+        affiliation: 'Technical University of Munich, Germany'
+        orcid: 'https://orcid.org/0000-0002-4246-8125'
+      - given-names: Yannick
+        family-names: Stade
+        email: yannick.stade@tum.de
+        affiliation: 'Technical University of Munich, Germany'
+        orcid: 'https://orcid.org/0000-0001-5785-2528'
+      - given-names: Jorge
+        family-names: Echavarria
+        email: jorge.echavarria@lrz.de
+        affiliation: 'Leibniz Supercomputing Centre, Germany'
+      - given-names: Martin
+        family-names: Schulz
+        email: martin.w.j.schulz@tum.de
+        affiliation: 'Technical University of Munich, Germany'
+        orcid: 'https://orcid.org/0000-0002-5876-7322'
+      - given-names: Laura
+        family-names: Schulz
+        email: laura.schulz@lrz.de
+        affiliation: 'Leibniz Supercomputing Centre, Germany'
+        orcid: 'https://orcid.org/0000-0002-4702-3440'
+      - given-names: Lukas
+        family-names: Burgholzer
+        email: lukas.burgholzer@tum.de
+        affiliation: 'Technical University of Munich, Germany'
+        orcid: 'https://orcid.org/0000-0003-4699-1316'
